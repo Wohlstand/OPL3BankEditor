@@ -4,13 +4,10 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core gui widgets multimedia
 
 TARGET = FMBankEdit
 TEMPLATE = app
-
 
 SOURCES += main.cpp\
         bank_editor.cpp \
