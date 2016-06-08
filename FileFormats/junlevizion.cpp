@@ -197,14 +197,20 @@ int JunleVizion::saveFile(QString filePath, FmBank &bank)
         }
         count_percusive -= 1;
     }
+
     //Find tail
-    for(unsigned short i=127; i>=startAt_percusive; i--)
+    if( count_percusive != 0 )
     {
-        if( (memcmp(&bank.Ins_Percussion[i], &null, sizeof(FmBank::Instrument))!=0) && (startAt_melodic==0) )
+        for(unsigned short i=127; i>=startAt_percusive; i--)
         {
-            break;
+            if( (memcmp(&bank.Ins_Percussion[i], &null, sizeof(FmBank::Instrument))!=0) && (startAt_melodic==0) )
+            {
+                break;
+            }
+            count_percusive -= 1;
         }
-        count_percusive -= 1;
+    } else {
+        startAt_percusive = 0;
     }
 
     QFile file(filePath);

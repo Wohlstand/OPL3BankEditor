@@ -22,9 +22,13 @@ public:
     ~BankEditor();
     QString m_recentPath;
     FmBank  m_bank;
+    int     m_recentMelodicNote;
     FmBank::Instrument* m_curInst;
+
     void setCurrentInstrument(int num, bool isPerc);
     void loadInstrument();
+
+    void sendPatch();
 
 public slots:
     void setMelodic();

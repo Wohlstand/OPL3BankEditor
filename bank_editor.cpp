@@ -6,6 +6,7 @@
 #include "ins_names.h"
 #include "FileFormats/junlevizion.h"
 #include "version.h"
+#include <QtDebug>
 
 BankEditor::BankEditor(QWidget *parent) :
     QDialog(parent),
@@ -13,6 +14,7 @@ BankEditor::BankEditor(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
+    m_recentMelodicNote = ui->noteToTest->value();
     setMelodic();
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
@@ -20,10 +22,12 @@ BankEditor::BankEditor(QWidget *parent) :
     m_lock = false;
     loadInstrument();
 
+    /*INIT AUDIO!!!*/
+    qDebug() << "Init buffer";
     m_buffer.resize(4096);
     m_buffer.fill(0, 4096);
 
-    /*INIT AUDIO!!!*/
+    qDebug() << "Get device spec";
     m_device = QAudioDeviceInfo::defaultOutputDevice();
     connect(&m_pushTimer, SIGNAL(timeout()), SLOT(pushTimerExpired()));
 
@@ -40,6 +44,11 @@ BankEditor::BankEditor(QWidget *parent) :
         m_format = info.nearestFormat(m_format);
     }
 
+    qDebug() << "Init audio";
+    m_audioOutput = new QAudioOutput(m_device, m_format, this);
+    m_audioOutput->setVolume(1.0);
+
+    qDebug() << "Init generator";
     m_generator = new Generator(44100, this);
     connect(ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(PlayNote()));
     connect(ui->testNote,  SIGNAL(released()), m_generator,  SLOT(MuteNote()));
@@ -53,10 +62,13 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->noteToTest, SIGNAL(valueChanged(int)), m_generator, SLOT(changeNote(int)));
     m_generator->changeNote(ui->noteToTest->value());
 
-    m_audioOutput = new QAudioOutput(m_device, m_format, this);
-    m_audioOutput->setVolume(1.0);
+    connect(ui->deepVibrato,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepVibrato(bool)));
+    connect(ui->deepTremolo,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepTremolo(bool)));
+
+    qDebug() << "Start generator";
     m_generator->start();
 
+    qDebug() << "Start audio";
     m_output = m_audioOutput->start();
     m_pushTimer.start(1);
 }
@@ -71,6 +83,22 @@ BankEditor::~BankEditor()
     delete ui;
 }
 
+void BankEditor::pushTimerExpired()
+{
+    if (m_audioOutput && m_audioOutput->state() != QAudio::StoppedState)
+    {
+        int chunks = m_audioOutput->bytesFree()/m_audioOutput->periodSize();
+        while (chunks) {
+           const qint64 len = m_generator->read(m_buffer.data(), m_audioOutput->periodSize());
+           if (len)
+               m_output->write(m_buffer.data(), len);
+           if (len != m_audioOutput->periodSize())
+               break;
+           --chunks;
+        }
+    }
+}
+
 void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QListWidgetItem *)
 {
     if(!current)
@@ -82,6 +110,11 @@ void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QLi
         setCurrentInstrument(current->data(Qt::UserRole).toInt(), ui->percussion->isChecked() );
     }
     loadInstrument();
+    if( m_curInst && ui->percussion->isChecked() )
+    {
+        ui->noteToTest->setValue( m_curInst->percNoteNum );
+    }
+    sendPatch();
 }
 
 void BankEditor::setCurrentInstrument(int num, bool isPerc)
@@ -172,6 +205,13 @@ void BankEditor::loadInstrument()
     m_lock = false;
 }
 
+void BankEditor::sendPatch()
+{
+    if(!m_curInst) return;
+    if(!m_generator) return;
+    m_generator->changePatch(*m_curInst);
+}
+
 void BankEditor::setMelodic()
 {
     ui->instruments->clear();
@@ -183,10 +223,15 @@ void BankEditor::setMelodic()
         item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
         ui->instruments->addItem(item);
     }
+    ui->noteToTest->setValue(m_recentMelodicNote);
+    ui->noteToTest->setDisabled(false);
 }
 
 void BankEditor::setDrums()
 {
+    if(ui->noteToTest->isEnabled())
+        m_recentMelodicNote = ui->noteToTest->value();
+    ui->noteToTest->setDisabled(true);
     ui->instruments->clear();
     for(int i=0; i<128; i++)
     {
@@ -256,6 +301,7 @@ void BankEditor::on_feedback1_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->feedback1 = arg1;
+    sendPatch();
 }
 
 void BankEditor::on_am1_clicked(bool checked)
@@ -264,6 +310,7 @@ void BankEditor::on_am1_clicked(bool checked)
     if(!m_curInst) return;
     if(checked)
         m_curInst->connection1 = FmBank::Instrument::AM;
+    sendPatch();
 }
 
 void BankEditor::on_fm1_clicked(bool checked)
@@ -272,6 +319,7 @@ void BankEditor::on_fm1_clicked(bool checked)
     if(!m_curInst) return;
     if(checked)
         m_curInst->connection1 = FmBank::Instrument::FM;
+    sendPatch();
 }
 
 void BankEditor::on_perc_noteNum_valueChanged(int arg1)
@@ -279,6 +327,9 @@ void BankEditor::on_perc_noteNum_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->percNoteNum = arg1;
+    if(ui->percussion->isChecked())
+        ui->noteToTest->setValue(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_feedback2_valueChanged(int arg1)
@@ -286,6 +337,7 @@ void BankEditor::on_feedback2_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->feedback2 = arg1;
+    sendPatch();
 }
 
 void BankEditor::on_am2_clicked(bool checked)
@@ -294,14 +346,16 @@ void BankEditor::on_am2_clicked(bool checked)
     if(!m_curInst) return;
     if(checked)
         m_curInst->connection2 = FmBank::Instrument::AM;
+    sendPatch();
 }
 
 void BankEditor::on_fm2_clicked(bool checked)
 {
     if(m_lock) return;
     if(!m_curInst) return;
-    if(checked)
+    if( checked )
         m_curInst->connection2 = FmBank::Instrument::FM;
+    sendPatch();
 }
 
 void BankEditor::on_op4mode_clicked(bool checked)
@@ -309,6 +363,7 @@ void BankEditor::on_op4mode_clicked(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->en_4op = checked;
+    sendPatch();
 }
 
 
@@ -319,6 +374,7 @@ void BankEditor::on_op1_attack_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].attack = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op1_sustain_valueChanged(int arg1)
@@ -326,6 +382,7 @@ void BankEditor::on_op1_sustain_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].sustain = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op1_decay_valueChanged(int arg1)
@@ -333,6 +390,7 @@ void BankEditor::on_op1_decay_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].decay = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op1_release_valueChanged(int arg1)
@@ -340,6 +398,7 @@ void BankEditor::on_op1_release_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].release = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op1_level_valueChanged(int arg1)
@@ -347,6 +406,7 @@ void BankEditor::on_op1_level_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].level = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op1_freqmult_valueChanged(int arg1)
@@ -354,6 +414,7 @@ void BankEditor::on_op1_freqmult_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].fmult = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op1_ksl_valueChanged(int arg1)
@@ -361,6 +422,7 @@ void BankEditor::on_op1_ksl_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].ksl = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op1_waveform_currentIndexChanged(int index)
@@ -368,6 +430,7 @@ void BankEditor::on_op1_waveform_currentIndexChanged(int index)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].waveform = uchar(index);
+    sendPatch();
 }
 
 void BankEditor::on_op1_am_toggled(bool checked)
@@ -375,6 +438,7 @@ void BankEditor::on_op1_am_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].am = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op1_vib_toggled(bool checked)
@@ -382,6 +446,7 @@ void BankEditor::on_op1_vib_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].vib = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op1_eg_toggled(bool checked)
@@ -389,6 +454,7 @@ void BankEditor::on_op1_eg_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].eg = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op1_ksr_toggled(bool checked)
@@ -396,6 +462,7 @@ void BankEditor::on_op1_ksr_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].ksr = checked;
+    sendPatch();
 }
 
 
@@ -411,6 +478,7 @@ void BankEditor::on_op2_attack_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].attack = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op2_sustain_valueChanged(int arg1)
@@ -418,6 +486,7 @@ void BankEditor::on_op2_sustain_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].sustain = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op2_decay_valueChanged(int arg1)
@@ -425,6 +494,7 @@ void BankEditor::on_op2_decay_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].decay = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op2_release_valueChanged(int arg1)
@@ -432,6 +502,7 @@ void BankEditor::on_op2_release_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].release = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op2_level_valueChanged(int arg1)
@@ -439,6 +510,7 @@ void BankEditor::on_op2_level_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].level = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op2_freqmult_valueChanged(int arg1)
@@ -446,6 +518,7 @@ void BankEditor::on_op2_freqmult_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].fmult = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op2_ksl_valueChanged(int arg1)
@@ -453,6 +526,7 @@ void BankEditor::on_op2_ksl_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].ksl = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op2_waveform_currentIndexChanged(int index)
@@ -460,6 +534,7 @@ void BankEditor::on_op2_waveform_currentIndexChanged(int index)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].waveform = uchar(index);
+    sendPatch();
 }
 
 void BankEditor::on_op2_am_toggled(bool checked)
@@ -467,6 +542,7 @@ void BankEditor::on_op2_am_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].am = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op2_vib_toggled(bool checked)
@@ -474,6 +550,7 @@ void BankEditor::on_op2_vib_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].vib = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op2_eg_toggled(bool checked)
@@ -481,6 +558,7 @@ void BankEditor::on_op2_eg_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].eg = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op2_ksr_toggled(bool checked)
@@ -488,6 +566,7 @@ void BankEditor::on_op2_ksr_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].ksr = checked;
+    sendPatch();
 }
 
 
@@ -504,6 +583,7 @@ void BankEditor::on_op3_attack_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].attack = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op3_sustain_valueChanged(int arg1)
@@ -511,6 +591,7 @@ void BankEditor::on_op3_sustain_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].sustain = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op3_decay_valueChanged(int arg1)
@@ -518,6 +599,7 @@ void BankEditor::on_op3_decay_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].decay = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op3_release_valueChanged(int arg1)
@@ -525,6 +607,7 @@ void BankEditor::on_op3_release_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].release = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op3_level_valueChanged(int arg1)
@@ -532,6 +615,7 @@ void BankEditor::on_op3_level_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].level = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op3_freqmult_valueChanged(int arg1)
@@ -539,6 +623,7 @@ void BankEditor::on_op3_freqmult_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].fmult = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op3_ksl_valueChanged(int arg1)
@@ -546,6 +631,7 @@ void BankEditor::on_op3_ksl_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].ksl = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op3_waveform_currentIndexChanged(int index)
@@ -553,6 +639,7 @@ void BankEditor::on_op3_waveform_currentIndexChanged(int index)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].waveform = uchar(index);
+    sendPatch();
 }
 
 void BankEditor::on_op3_am_toggled(bool checked)
@@ -560,6 +647,7 @@ void BankEditor::on_op3_am_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].am = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op3_vib_toggled(bool checked)
@@ -567,6 +655,7 @@ void BankEditor::on_op3_vib_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].vib = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op3_eg_toggled(bool checked)
@@ -574,6 +663,7 @@ void BankEditor::on_op3_eg_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].eg = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op3_ksr_toggled(bool checked)
@@ -581,6 +671,7 @@ void BankEditor::on_op3_ksr_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].ksr = checked;
+    sendPatch();
 }
 
 
@@ -601,6 +692,7 @@ void BankEditor::on_op4_attack_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].attack = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op4_sustain_valueChanged(int arg1)
@@ -608,6 +700,7 @@ void BankEditor::on_op4_sustain_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].sustain = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op4_decay_valueChanged(int arg1)
@@ -615,6 +708,7 @@ void BankEditor::on_op4_decay_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].decay = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op4_release_valueChanged(int arg1)
@@ -622,6 +716,7 @@ void BankEditor::on_op4_release_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].release = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op4_level_valueChanged(int arg1)
@@ -629,6 +724,7 @@ void BankEditor::on_op4_level_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].level = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op4_freqmult_valueChanged(int arg1)
@@ -636,6 +732,7 @@ void BankEditor::on_op4_freqmult_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].fmult = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op4_ksl_valueChanged(int arg1)
@@ -643,6 +740,7 @@ void BankEditor::on_op4_ksl_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].ksl = uchar(arg1);
+    sendPatch();
 }
 
 void BankEditor::on_op4_waveform_currentIndexChanged(int index)
@@ -650,6 +748,7 @@ void BankEditor::on_op4_waveform_currentIndexChanged(int index)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].waveform = uchar(index);
+    sendPatch();
 }
 
 void BankEditor::on_op4_am_toggled(bool checked)
@@ -657,6 +756,7 @@ void BankEditor::on_op4_am_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].am = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op4_vib_toggled(bool checked)
@@ -664,6 +764,7 @@ void BankEditor::on_op4_vib_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].vib = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op4_eg_toggled(bool checked)
@@ -671,6 +772,7 @@ void BankEditor::on_op4_eg_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].eg = checked;
+    sendPatch();
 }
 
 void BankEditor::on_op4_ksr_toggled(bool checked)
@@ -678,22 +780,13 @@ void BankEditor::on_op4_ksr_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].ksr = checked;
+    sendPatch();
 }
 
-void BankEditor::pushTimerExpired()
-{
-    if (m_audioOutput && m_audioOutput->state() != QAudio::StoppedState) {
-        int chunks = m_audioOutput->bytesFree()/m_audioOutput->periodSize();
-        while (chunks) {
-           const qint64 len = m_generator->read(m_buffer.data(), m_audioOutput->periodSize());
-           if (len)
-               m_output->write(m_buffer.data(), len);
-           if (len != m_audioOutput->periodSize())
-               break;
-           --chunks;
-        }
-    }
-}
+
+
+
+
 
 
 

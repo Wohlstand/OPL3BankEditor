@@ -4,7 +4,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    a.setStyle("Windows");
+    //a.setStyle("Windows");
     BankEditor w;
     w.show();
 
