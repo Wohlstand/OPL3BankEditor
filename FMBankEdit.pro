@@ -14,9 +14,8 @@ SOURCES += main.cpp\
     ins_names.cpp \
     bank.cpp \
     FileFormats/junlevizion.cpp \
-    opl/adldata.cpp \
-    opl/adlmidi.cpp \
-    opl/dbopl.cpp
+    opl/dbopl.cpp \
+    opl/generator.cpp
 
 HEADERS  += bank_editor.h \
     ins_names.h \
@@ -26,6 +25,7 @@ HEADERS  += bank_editor.h \
     opl/adldata.hh \
     opl/adlmidi.h \
     opl/dbopl.h \
-    opl/fraction.h
+    opl/fraction.h \
+    opl/generator.h
 
 FORMS    += bank_editor.ui

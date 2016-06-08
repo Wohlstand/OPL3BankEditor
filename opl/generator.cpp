@@ -1,57 +1,5 @@
-/****************************************************************************
-**
-** Copyright (C) 2015 The Qt Company Ltd.
-** Contact: http://www.qt.io/licensing/
-**
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** You may use this file under the terms of the BSD license as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of The Qt Company Ltd nor the names of its
-**     contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
-#include <QAudioDeviceInfo>
-#include <QAudioOutput>
-#include <QDebug>
-#include <QVBoxLayout>
-#include <qmath.h>
+#include "generator.h"
 #include <qendian.h>
-
-#include "audiooutput.h"
-
-#define PUSH_MODE_LABEL "Enable push mode"
-#define PULL_MODE_LABEL "Enable pull mode"
-#define SUSPEND_LABEL   "Suspend playback"
-#define RESUME_LABEL    "Resume playback"
-#define VOLUME_LABEL    "Volume:"
 
 const int DataSampleRateHz = 44100;
 const int BufferSize      = 4096;
@@ -540,95 +488,39 @@ void Generator::PlayNoteF(int noteID, int patch, int chan2op1, int chan2op2, int
     }
 }
 
-void Generator::PlayChord()
+void Generator::MuteNote()
 {
-    qDebug() <<"Play!";
+    for(unsigned c=0; c<NumChannels; ++c) { NoteOff(c); }
+}
+
+void Generator::PlayNote()
+{
+    PlayNoteF(note,   metainstr, 7,  6,    1,  4);
+}
+
+void Generator::PlayMajorChord()
+{
     PlayNoteF(note,   metainstr, 7,  6,    1,  4);
     PlayNoteF(note+4, metainstr, 15, 8,   2,  5);
     PlayNoteF(note-5, metainstr, 17, 16,  9,  12);
 }
 
-void Generator::PlayNote()
+void Generator::PlayMinorChord()
 {
-    qDebug() <<"Play!";
     PlayNoteF(note,   metainstr, 7,  6,    1,  4);
     PlayNoteF(note+3, metainstr, 15, 8,   2,  5);
     PlayNoteF(note-5, metainstr, 17, 16,  9,  12);
-}
-
-//________________________Old_code________________________
-//  adlchannel[ccount] = c;
-//    for(unsigned ccount = 0; ccount < 2; ++ccount)
-//    {
-//        if(ccount == 1)
-//        {
-//            if(i[0] == i[1]) {/*twoChans=false;*/ break; } // No secondary channel
-//            if(adlchannel[0] == -1) { /*twoChans=false;*/ break;} // No secondary if primary failed
-//        }
-
-//        int c = -1;
-//        //long bs = -0x7FFFFFFFl;
-//        for(int a = adlchannel[0]; a <= adlchannel[1]/*(int)NumChannels*/; a += 3)
-//        {
-//            if(ccount == 1 && a == adlchannel[0]) continue;
-//            // ^ Don't use the same channel for primary&secondary
-
-//            if(i[0] == i[1] || pseudo_4op)
-//            {
-//                // Only use regular channels
-//                int expected_mode = 0;
-//                if(four_op_category[a] != expected_mode)
-//                    continue;
-//            }
-//            else
-//            {
-//                if(ccount == 0)
-//                {
-//                    // Only use four-op master channels
-//                    if(four_op_category[a] != 1)
-//                        continue;
-//                }
-//                else
-//                {
-//                    // The secondary must be played on a specific channel.
-//                    if(a != adlchannel[0] + 3)
-//                        continue;
-//                }
-//            }
-//            //long s = CalculateAdlChannelGoodness(a, i[ccount], MidCh);
-//            //if(s > bs) { bs=s; c = a; } // Best candidate wins
-//            c = a;
-//        }
-
-//        if(c < 0)
-//        {
-//            //UI.PrintLn("ignored unplaceable note");
-//            continue; // Could not play this note. Ignore it.
-//        }
-//        //PrepareAdlChannelForNewNote(c, i[ccount]);
-//        g_ins[c] = i[ccount];
-//        adlchannel[ccount] = c;
-//    }
-//    if(adlchannel[0] < 0 && adlchannel[1] < 0)
-//    {
-//        saySomething("crap");
-//        // The note could not be played, at all.
-//        //return;
-//    }
-
-void Generator::MuteNote()
-{
-    qDebug() <<"Mute!";
-    //Shutup!
-    for(unsigned c=0; c<NumChannels; ++c) { NoteOff(c); }
-    //NoteOff(1);
-    //NoteOff(4);
 }
 
 void Generator::changePatch(int patch)
 {
     for(unsigned c=0; c<NumChannels; ++c) { NoteOff(c); }
     metainstr = patch;
+}
+
+void Generator::changeNote(int newnote)
+{
+    note = newnote;
 }
 
 Generator::~Generator()
@@ -690,192 +582,64 @@ qint64 Generator::bytesAvailable() const
     return 2048;// + QIODevice::bytesAvailable();
 }
 
-AudioTest::AudioTest()
-    :   m_pushTimer(new QTimer(this))
-    ,   m_modeButton(0)
-    ,   m_suspendResumeButton(0)
-    ,   m_deviceBox(0)
-    ,   m_device(QAudioDeviceInfo::defaultOutputDevice())
-    ,   m_generator(0)
-    ,   m_audioOutput(0)
-    ,   m_output(0)
-    ,   m_buffer(BufferSize, 0)
-{
-    initializeWindow();
-    initializeAudio();
-}
 
-void AudioTest::initializeWindow()
-{
-    QScopedPointer<QWidget> window(new QWidget);
-    QScopedPointer<QVBoxLayout> layout(new QVBoxLayout);
 
-    m_deviceBox = new QComboBox(this);
-    const QAudioDeviceInfo &defaultDeviceInfo = QAudioDeviceInfo::defaultOutputDevice();
-    m_deviceBox->addItem(defaultDeviceInfo.deviceName(), qVariantFromValue(defaultDeviceInfo));
-    foreach (const QAudioDeviceInfo &deviceInfo, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput)) {
-        if (deviceInfo != defaultDeviceInfo)
-            m_deviceBox->addItem(deviceInfo.deviceName(), qVariantFromValue(deviceInfo));
-    }
-    connect(m_deviceBox,SIGNAL(activated(int)),SLOT(deviceChanged(int)));
-    layout->addWidget(m_deviceBox);
+//________________________Old_code________________________
+//  adlchannel[ccount] = c;
+//    for(unsigned ccount = 0; ccount < 2; ++ccount)
+//    {
+//        if(ccount == 1)
+//        {
+//            if(i[0] == i[1]) {/*twoChans=false;*/ break; } // No secondary channel
+//            if(adlchannel[0] == -1) { /*twoChans=false;*/ break;} // No secondary if primary failed
+//        }
 
-    m_modeButton = new QPushButton(this);
-    m_modeButton->setText(tr(PULL_MODE_LABEL));
-    connect(m_modeButton, SIGNAL(clicked()), SLOT(toggleMode()));
-    layout->addWidget(m_modeButton);
+//        int c = -1;
+//        //long bs = -0x7FFFFFFFl;
+//        for(int a = adlchannel[0]; a <= adlchannel[1]/*(int)NumChannels*/; a += 3)
+//        {
+//            if(ccount == 1 && a == adlchannel[0]) continue;
+//            // ^ Don't use the same channel for primary&secondary
 
-    m_suspendResumeButton = new QPushButton(this);
-    m_suspendResumeButton->setText(tr(SUSPEND_LABEL));
-    connect(m_suspendResumeButton, SIGNAL(clicked()), SLOT(toggleSuspendResume()));
-    layout->addWidget(m_suspendResumeButton);
+//            if(i[0] == i[1] || pseudo_4op)
+//            {
+//                // Only use regular channels
+//                int expected_mode = 0;
+//                if(four_op_category[a] != expected_mode)
+//                    continue;
+//            }
+//            else
+//            {
+//                if(ccount == 0)
+//                {
+//                    // Only use four-op master channels
+//                    if(four_op_category[a] != 1)
+//                        continue;
+//                }
+//                else
+//                {
+//                    // The secondary must be played on a specific channel.
+//                    if(a != adlchannel[0] + 3)
+//                        continue;
+//                }
+//            }
+//            //long s = CalculateAdlChannelGoodness(a, i[ccount], MidCh);
+//            //if(s > bs) { bs=s; c = a; } // Best candidate wins
+//            c = a;
+//        }
 
-    QHBoxLayout *volumeBox = new QHBoxLayout;
-    m_volumeLabel = new QLabel;
-    m_volumeLabel->setText(tr(VOLUME_LABEL));
-    m_volumeSlider = new QSlider(Qt::Horizontal);
-    m_volumeSlider->setMinimum(0);
-    m_volumeSlider->setMaximum(100);
-    m_volumeSlider->setSingleStep(10);
-    connect(m_volumeSlider, SIGNAL(valueChanged(int)), this, SLOT(volumeChanged(int)));
-
-    m_patchChange = new QSpinBox;
-    m_patchChange->setMinimum(1);
-    m_patchChange->setMaximum(36);
-    m_patchChange->setValue(36);
-
-    m_pokeNote = new QPushButton(this);
-    m_pokeNote->setText("NOTE!");
-
-    m_counter = new QLabel;
-    m_counter->setText("0");
-
-    volumeBox->addWidget(m_volumeLabel);
-    volumeBox->addWidget(m_volumeSlider);
-    volumeBox->addWidget(m_counter);
-    volumeBox->addWidget(m_pokeNote);
-    volumeBox->addWidget(m_patchChange);
-    layout->addLayout(volumeBox);
-
-    window->setLayout(layout.data());
-    layout.take(); // ownership transferred
-
-    setCentralWidget(window.data());
-    QWidget *const windowPtr = window.take(); // ownership transferred
-    windowPtr->show();
-}
-
-void AudioTest::initializeAudio()
-{
-    connect(m_pushTimer, SIGNAL(timeout()), SLOT(pushTimerExpired()));
-
-    m_pullMode = false;
-
-    m_format.setSampleRate(DataSampleRateHz);
-    m_format.setChannelCount(2);
-    m_format.setSampleSize(16);
-    m_format.setCodec("audio/pcm");
-    m_format.setByteOrder(QAudioFormat::LittleEndian);
-    m_format.setSampleType(QAudioFormat::SignedInt);
-
-    QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
-    if (!info.isFormatSupported(m_format)) {
-        qWarning() << "Default format not supported - trying to use nearest";
-        m_format = info.nearestFormat(m_format);
-    }
-
-    m_generator = new Generator(DataSampleRateHz, this);
-    connect(m_generator, SIGNAL(saySomething(QString)), m_counter, SLOT(setText(QString)));
-
-    connect(m_pokeNote, SIGNAL(pressed()),  m_generator, SLOT(PlayNote()));
-    connect(m_pokeNote, SIGNAL(released()), m_generator, SLOT(MuteNote()));
-
-    connect(m_patchChange, SIGNAL(valueChanged(int)), m_generator, SLOT(changePatch(int)));
-
-    createAudioOutput();
-}
-
-void AudioTest::createAudioOutput()
-{
-    delete m_audioOutput;
-    m_audioOutput = 0;
-    m_audioOutput = new QAudioOutput(m_device, m_format, this);
-    m_generator->start();
-    //m_audioOutput->start(m_generator);
-    m_output = m_audioOutput->start();
-    m_pushTimer->start(1);
-    m_volumeSlider->setValue(int(m_audioOutput->volume()*100.0f));
-}
-
-AudioTest::~AudioTest()
-{
-
-}
-
-void AudioTest::deviceChanged(int index)
-{
-    m_pushTimer->stop();
-    m_generator->stop();
-    m_audioOutput->stop();
-    m_audioOutput->disconnect(this);
-    m_device = m_deviceBox->itemData(index).value<QAudioDeviceInfo>();
-    createAudioOutput();
-}
-
-void AudioTest::volumeChanged(int value)
-{
-    if (m_audioOutput)
-        m_audioOutput->setVolume(qreal(value/100.0f));
-}
-
-void AudioTest::pushTimerExpired()
-{
-    if (m_audioOutput && m_audioOutput->state() != QAudio::StoppedState) {
-        int chunks = m_audioOutput->bytesFree()/m_audioOutput->periodSize();
-        while (chunks) {
-           const qint64 len = m_generator->read(m_buffer.data(), m_audioOutput->periodSize());
-           if (len)
-               m_output->write(m_buffer.data(), len);
-           if (len != m_audioOutput->periodSize())
-               break;
-           --chunks;
-        }
-    }
-}
-
-void AudioTest::toggleMode()
-{
-    m_pushTimer->stop();
-    m_audioOutput->stop();
-
-    if (m_pullMode) {
-        //switch to push mode (periodically push to QAudioOutput using a timer)
-        m_modeButton->setText(tr(PULL_MODE_LABEL));
-        m_output = m_audioOutput->start();
-        m_pullMode = false;
-        m_pushTimer->start(1);
-    } else {
-        //switch to pull mode (QAudioOutput pulls from Generator as needed)
-        m_modeButton->setText(tr(PUSH_MODE_LABEL));
-        m_pullMode = true;
-        m_audioOutput->start(m_generator);
-    }
-
-    m_suspendResumeButton->setText(tr(SUSPEND_LABEL));
-}
-
-void AudioTest::toggleSuspendResume()
-{
-    if (m_audioOutput->state() == QAudio::SuspendedState) {
-        m_audioOutput->resume();
-        m_suspendResumeButton->setText(tr(SUSPEND_LABEL));
-    } else if (m_audioOutput->state() == QAudio::ActiveState) {
-        m_audioOutput->suspend();
-        m_suspendResumeButton->setText(tr(RESUME_LABEL));
-    } else if (m_audioOutput->state() == QAudio::StoppedState) {
-        m_audioOutput->resume();
-        m_suspendResumeButton->setText(tr(SUSPEND_LABEL));
-    } else if (m_audioOutput->state() == QAudio::IdleState) {
-        // no-op
-    }
-}
+//        if(c < 0)
+//        {
+//            //UI.PrintLn("ignored unplaceable note");
+//            continue; // Could not play this note. Ignore it.
+//        }
+//        //PrepareAdlChannelForNewNote(c, i[ccount]);
+//        g_ins[c] = i[ccount];
+//        adlchannel[ccount] = c;
+//    }
+//    if(adlchannel[0] < 0 && adlchannel[1] < 0)
+//    {
+//        saySomething("crap");
+//        // The note could not be played, at all.
+//        //return;
+//    }

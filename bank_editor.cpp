@@ -19,10 +19,55 @@ BankEditor::BankEditor(QWidget *parent) :
     m_curInst = NULL;
     m_lock = false;
     loadInstrument();
+
+    m_buffer.resize(4096);
+    m_buffer.fill(0, 4096);
+
+    /*INIT AUDIO!!!*/
+    m_device = QAudioDeviceInfo::defaultOutputDevice();
+    connect(&m_pushTimer, SIGNAL(timeout()), SLOT(pushTimerExpired()));
+
+    m_format.setSampleRate(44100);
+    m_format.setChannelCount(2);
+    m_format.setSampleSize(16);
+    m_format.setCodec("audio/pcm");
+    m_format.setByteOrder(QAudioFormat::LittleEndian);
+    m_format.setSampleType(QAudioFormat::SignedInt);
+
+    QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+    if (!info.isFormatSupported(m_format)) {
+        //qWarning() << "Default format not supported - trying to use nearest";
+        m_format = info.nearestFormat(m_format);
+    }
+
+    m_generator = new Generator(44100, this);
+    connect(ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(PlayNote()));
+    connect(ui->testNote,  SIGNAL(released()), m_generator,  SLOT(MuteNote()));
+
+    connect(ui->testMajor, SIGNAL(pressed()),  m_generator, SLOT(PlayMajorChord()));
+    connect(ui->testMajor, SIGNAL(released()), m_generator, SLOT(MuteNote()));
+
+    connect(ui->testMinor, SIGNAL(pressed()),  m_generator, SLOT(PlayMinorChord()));
+    connect(ui->testMinor, SIGNAL(released()), m_generator, SLOT(MuteNote()));
+
+    connect(ui->noteToTest, SIGNAL(valueChanged(int)), m_generator, SLOT(changeNote(int)));
+    m_generator->changeNote(ui->noteToTest->value());
+
+    m_audioOutput = new QAudioOutput(m_device, m_format, this);
+    m_audioOutput->setVolume(1.0);
+    m_generator->start();
+
+    m_output = m_audioOutput->start();
+    m_pushTimer.start(1);
 }
 
 BankEditor::~BankEditor()
 {
+    m_pushTimer.stop();
+    m_audioOutput->stop();
+    m_generator->stop();
+    delete m_audioOutput;
+    delete m_generator;
     delete ui;
 }
 
@@ -633,6 +678,21 @@ void BankEditor::on_op4_ksr_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].ksr = checked;
+}
+
+void BankEditor::pushTimerExpired()
+{
+    if (m_audioOutput && m_audioOutput->state() != QAudio::StoppedState) {
+        int chunks = m_audioOutput->bytesFree()/m_audioOutput->periodSize();
+        while (chunks) {
+           const qint64 len = m_generator->read(m_buffer.data(), m_audioOutput->periodSize());
+           if (len)
+               m_output->write(m_buffer.data(), len);
+           if (len != m_audioOutput->periodSize())
+               break;
+           --chunks;
+        }
+    }
 }
 
 

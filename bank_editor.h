@@ -1,10 +1,13 @@
 #ifndef BANK_EDITOR_H
 #define BANK_EDITOR_H
 
+#include <QAudioOutput>
+#include <QTimer>
 #include <QDialog>
 #include <QList>
 #include <QListWidgetItem>
 #include "bank.h"
+#include "opl/generator.h"
 
 namespace Ui {
 class BankEditor;
@@ -97,9 +100,19 @@ private slots:
     void on_op4_eg_toggled(bool checked);
     void on_op4_ksr_toggled(bool checked);
 
+    void pushTimerExpired();
+
 private:
     Ui::BankEditor *ui;
     bool m_lock;
+
+    QAudioDeviceInfo m_device;
+    Generator       *m_generator;
+    QAudioOutput    *m_audioOutput;
+    QIODevice       *m_output; // not owned
+    QAudioFormat     m_format;
+    QTimer           m_pushTimer;
+    QByteArray       m_buffer;
 };
 
 #endif // BANK_EDITOR_H

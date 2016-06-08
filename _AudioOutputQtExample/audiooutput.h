@@ -51,6 +51,7 @@
 #include <QLabel>
 #include <QMainWindow>
 #include <QObject>
+#include <QSpinBox>
 #include <QPushButton>
 #include <QSlider>
 #include <QTimer>
@@ -76,15 +77,19 @@ public:
     void Touch(unsigned c, unsigned volume);
     void Patch(unsigned c, unsigned i);
     void Pan(unsigned c, unsigned value);
-
+    void PlayNoteF(int noteID, int patch, int chan2op1 = 8, int chan2op2 = 7, int chan4op1 = 1, int chan4op2 = 4);
 public slots:
+    void PlayChord();
     void PlayNote();
     void MuteNote();
+    void changePatch(int patch);
 
 signals:
     void saySomething(QString text);
 
 private:
+    int note;
+    int metainstr;
     DBOPL::Handler chip;
     qint64 m_pos;
     QByteArray m_buffer;
@@ -113,6 +118,8 @@ private:
     QLabel *m_volumeLabel;
     QSlider *m_volumeSlider;
     QLabel *m_counter;
+
+    QSpinBox *m_patchChange;
 
     QPushButton *m_pokeNote;
 
