@@ -6,7 +6,7 @@
 #include "ins_names.h"
 #include "FileFormats/junlevizion.h"
 #include "version.h"
-#include <QtDebug>
+//#include <QtDebug>
 
 BankEditor::BankEditor(QWidget *parent) :
     QDialog(parent),
@@ -23,11 +23,11 @@ BankEditor::BankEditor(QWidget *parent) :
     loadInstrument();
 
     /*INIT AUDIO!!!*/
-    qDebug() << "Init buffer";
+    //qDebug() << "Init buffer";
     m_buffer.resize(4096);
     m_buffer.fill(0, 4096);
 
-    qDebug() << "Get device spec";
+    //qDebug() << "Get device spec";
     m_device = QAudioDeviceInfo::defaultOutputDevice();
     connect(&m_pushTimer, SIGNAL(timeout()), SLOT(pushTimerExpired()));
 
@@ -44,11 +44,11 @@ BankEditor::BankEditor(QWidget *parent) :
         m_format = info.nearestFormat(m_format);
     }
 
-    qDebug() << "Init audio";
+    //qDebug() << "Init audio";
     m_audioOutput = new QAudioOutput(m_device, m_format, this);
     m_audioOutput->setVolume(1.0);
 
-    qDebug() << "Init generator";
+    //qDebug() << "Init generator";
     m_generator = new Generator(44100, this);
     connect(ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(PlayNote()));
     connect(ui->testNote,  SIGNAL(released()), m_generator,  SLOT(MuteNote()));
@@ -65,10 +65,10 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->deepVibrato,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepVibrato(bool)));
     connect(ui->deepTremolo,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepTremolo(bool)));
 
-    qDebug() << "Start generator";
+    //qDebug() << "Start generator";
     m_generator->start();
 
-    qDebug() << "Start audio";
+    //qDebug() << "Start audio";
     m_output = m_audioOutput->start();
     m_pushTimer.start(1);
 }

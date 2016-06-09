@@ -1,6 +1,6 @@
 #include "generator.h"
 #include <qendian.h>
-#include <QtDebug>
+//#include <QtDebug>
 
 const int DataSampleRateHz = 44100;
 const int BufferSize      = 4096;
