@@ -44,7 +44,10 @@ SOURCES += main.cpp\
     FileFormats/junlevizion.cpp \
     opl/dbopl.cpp \
     opl/generator.cpp \
-    piano.cpp
+    piano.cpp \
+    common.cpp \
+    controlls.cpp \
+    audio.cpp
 
 HEADERS  += bank_editor.h \
     ins_names.h \
@@ -53,7 +56,8 @@ HEADERS  += bank_editor.h \
     version.h \
     opl/dbopl.h \
     opl/generator.h \
-    piano.h
+    piano.h \
+    common.h
 
 FORMS    += bank_editor.ui
 

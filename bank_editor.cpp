@@ -1,3 +1,21 @@
+/*
+ * OPL Bank Editor by Wohlstand, a free tool for music bank editing
+ * Copyright (c) 2016 Vitaly Novichkov <admin@wohlnet.ru>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -6,75 +24,26 @@
 #include "ins_names.h"
 #include "FileFormats/junlevizion.h"
 #include "version.h"
-//#include <QtDebug>
 
 BankEditor::BankEditor(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::BankEditor)
 {
+    memset(&m_clipboard, 0, sizeof(FmBank::Instrument));
+    m_curInst = NULL;
+    m_lock = false;
+
     ui->setupUi(this);
     ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     m_recentMelodicNote = ui->noteToTest->value();
     setMelodic();
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
-    m_curInst = NULL;
-    m_lock = false;
     loadInstrument();
 
-    /*INIT AUDIO!!!*/
-    //qDebug() << "Init buffer";
-    m_buffer.resize(4096);
-    m_buffer.fill(0, 4096);
-
-    //qDebug() << "Get device spec";
-    m_device = QAudioDeviceInfo::defaultOutputDevice();
-    connect(&m_pushTimer, SIGNAL(timeout()), SLOT(pushTimerExpired()));
-
-    m_format.setSampleRate(44100);
-    m_format.setChannelCount(2);
-    m_format.setSampleSize(16);
-    m_format.setCodec("audio/pcm");
-    m_format.setByteOrder(QAudioFormat::LittleEndian);
-    m_format.setSampleType(QAudioFormat::SignedInt);
-
-    QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
-    if (!info.isFormatSupported(m_format)) {
-        //qWarning() << "Default format not supported - trying to use nearest";
-        m_format = info.nearestFormat(m_format);
-    }
-
-    //qDebug() << "Init audio";
-    m_audioOutput = new QAudioOutput(m_device, m_format, this);
-    m_audioOutput->setVolume(1.0);
-
-    //qDebug() << "Init generator";
-    m_generator = new Generator(44100, this);
-    connect(ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(PlayNote()));
-    connect(ui->testNote,  SIGNAL(released()), m_generator,  SLOT(MuteNote()));
-
-    connect(ui->testMajor, SIGNAL(pressed()),  m_generator, SLOT(PlayMajorChord()));
-    connect(ui->testMajor, SIGNAL(released()), m_generator, SLOT(MuteNote()));
-
-    connect(ui->testMinor, SIGNAL(pressed()),  m_generator, SLOT(PlayMinorChord()));
-    connect(ui->testMinor, SIGNAL(released()), m_generator, SLOT(MuteNote()));
-
-    connect(ui->noteToTest, SIGNAL(valueChanged(int)), m_generator, SLOT(changeNote(int)));
-    m_generator->changeNote(ui->noteToTest->value());
-
-    connect(ui->deepVibrato,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepVibrato(bool)));
-    connect(ui->deepTremolo,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepTremolo(bool)));
-
-    connect(ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
-    connect(ui->piano, SIGNAL(pressed()),    m_generator, SLOT(PlayNote()));
-    connect(ui->piano, SIGNAL(released()),   m_generator, SLOT(MuteNote()));
-
-    //qDebug() << "Start generator";
-    m_generator->start();
-
-    //qDebug() << "Start audio";
-    m_output = m_audioOutput->start();
-    m_pushTimer.start(1);
+    m_buffer.resize(8192);
+    m_buffer.fill(0, 8192);
+    initAudio();
 }
 
 BankEditor::~BankEditor()
@@ -87,25 +56,15 @@ BankEditor::~BankEditor()
     delete ui;
 }
 
+
+
+
+
 void BankEditor::on_actionNew_triggered()
 {
     ui->currentFile->setText(tr("<Untitled>"));
     m_bank.reset();
     on_instruments_currentItemChanged(NULL, NULL);
-}
-
-void BankEditor::on_actionAbout_triggered()
-{
-    QMessageBox::information(this,
-                             tr("About bank editor"),
-                             tr("FM Bank Editor for Yamaha OPL3/OPL2 chip, Version %1\n\n"
-                                "(c) 2016, Vitaly Novichkov \"Wohlstand\"\n"
-                                "\n"
-                                "Licensed under GNU GPLv3\n\n"
-                                "Source code available on GitHub:\n"
-                                "%2").arg(VERSION).arg("https://github.com/Wohlstand/OPL3BankEditor"),
-                             QMessageBox::Ok);
-
 }
 
 void BankEditor::on_actionOpen_triggered()
@@ -162,21 +121,38 @@ void BankEditor::on_actionExit_triggered()
 }
 
 
-
-void BankEditor::pushTimerExpired()
+void BankEditor::on_actionCopy_triggered()
 {
-    if (m_audioOutput && m_audioOutput->state() != QAudio::StoppedState)
+    if(!m_curInst) return;
+    memcpy(&m_clipboard, m_curInst, sizeof(FmBank::Instrument));
+}
+
+void BankEditor::on_actionPaste_triggered()
+{
+    if(!m_curInst) return;
+
+    memcpy(m_curInst, &m_clipboard, sizeof(FmBank::Instrument));
+
+    loadInstrument();
+    if( m_curInst && ui->percussion->isChecked() )
     {
-        int chunks = m_audioOutput->bytesFree()/m_audioOutput->periodSize();
-        while (chunks) {
-           const qint64 len = m_generator->read(m_buffer.data(), m_audioOutput->periodSize());
-           if (len)
-               m_output->write(m_buffer.data(), len);
-           if (len != m_audioOutput->periodSize())
-               break;
-           --chunks;
-        }
+        ui->noteToTest->setValue( m_curInst->percNoteNum );
     }
+    sendPatch();
+}
+
+
+void BankEditor::on_actionAbout_triggered()
+{
+    QMessageBox::information(this,
+                             tr("About bank editor"),
+                             tr("FM Bank Editor for Yamaha OPL3/OPL2 chip, Version %1\n\n"
+                                "(c) 2016, Vitaly Novichkov \"Wohlstand\"\n"
+                                "\n"
+                                "Licensed under GNU GPLv3\n\n"
+                                "Source code available on GitHub:\n"
+                                "%2").arg(VERSION).arg("https://github.com/Wohlstand/OPL3BankEditor"),
+                             QMessageBox::Ok);
 }
 
 void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QListWidgetItem *)
@@ -196,6 +172,7 @@ void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QLi
     }
     sendPatch();
 }
+
 
 void BankEditor::setCurrentInstrument(int num, bool isPerc)
 {
@@ -341,498 +318,4 @@ void BankEditor::setDrums()
         ui->instruments->addItem(item);
     }
 }
-
-
-
-
-
-
-
-void BankEditor::on_feedback1_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->feedback1 = arg1;
-    sendPatch();
-}
-
-void BankEditor::on_am1_clicked(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    if(checked)
-        m_curInst->connection1 = FmBank::Instrument::AM;
-    sendPatch();
-}
-
-void BankEditor::on_fm1_clicked(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    if(checked)
-        m_curInst->connection1 = FmBank::Instrument::FM;
-    sendPatch();
-}
-
-void BankEditor::on_perc_noteNum_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->percNoteNum = arg1;
-    if(ui->percussion->isChecked())
-        ui->noteToTest->setValue(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_feedback2_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->feedback2 = arg1;
-    sendPatch();
-}
-
-void BankEditor::on_am2_clicked(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    if(checked)
-        m_curInst->connection2 = FmBank::Instrument::AM;
-    sendPatch();
-}
-
-void BankEditor::on_fm2_clicked(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    if( checked )
-        m_curInst->connection2 = FmBank::Instrument::FM;
-    sendPatch();
-}
-
-void BankEditor::on_op4mode_clicked(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->en_4op = checked;
-    sendPatch();
-}
-
-
-
-
-void BankEditor::on_op1_attack_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].attack = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op1_sustain_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].sustain = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op1_decay_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].decay = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op1_release_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].release = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op1_level_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].level = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op1_freqmult_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].fmult = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op1_ksl_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].ksl = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op1_waveform_currentIndexChanged(int index)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].waveform = uchar(index);
-    sendPatch();
-}
-
-void BankEditor::on_op1_am_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].am = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op1_vib_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].vib = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op1_eg_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].eg = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op1_ksr_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER1].ksr = checked;
-    sendPatch();
-}
-
-
-
-
-
-
-
-
-
-void BankEditor::on_op2_attack_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].attack = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op2_sustain_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].sustain = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op2_decay_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].decay = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op2_release_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].release = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op2_level_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].level = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op2_freqmult_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].fmult = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op2_ksl_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].ksl = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op2_waveform_currentIndexChanged(int index)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].waveform = uchar(index);
-    sendPatch();
-}
-
-void BankEditor::on_op2_am_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].am = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op2_vib_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].vib = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op2_eg_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].eg = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op2_ksr_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR1].ksr = checked;
-    sendPatch();
-}
-
-
-
-
-
-
-
-
-
-
-void BankEditor::on_op3_attack_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].attack = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op3_sustain_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].sustain = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op3_decay_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].decay = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op3_release_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].release = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op3_level_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].level = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op3_freqmult_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].fmult = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op3_ksl_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].ksl = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op3_waveform_currentIndexChanged(int index)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].waveform = uchar(index);
-    sendPatch();
-}
-
-void BankEditor::on_op3_am_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].am = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op3_vib_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].vib = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op3_eg_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].eg = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op3_ksr_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[CARRIER2].ksr = checked;
-    sendPatch();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void BankEditor::on_op4_attack_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].attack = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op4_sustain_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].sustain = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op4_decay_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].decay = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op4_release_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].release = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op4_level_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].level = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op4_freqmult_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].fmult = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op4_ksl_valueChanged(int arg1)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].ksl = uchar(arg1);
-    sendPatch();
-}
-
-void BankEditor::on_op4_waveform_currentIndexChanged(int index)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].waveform = uchar(index);
-    sendPatch();
-}
-
-void BankEditor::on_op4_am_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].am = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op4_vib_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].vib = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op4_eg_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].eg = checked;
-    sendPatch();
-}
-
-void BankEditor::on_op4_ksr_toggled(bool checked)
-{
-    if(m_lock) return;
-    if(!m_curInst) return;
-    m_curInst->OP[MODULATOR2].ksr = checked;
-    sendPatch();
-}
-
 

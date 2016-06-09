@@ -1,9 +1,24 @@
+/*
+ * OPL Bank Editor by Wohlstand, a free tool for music bank editing
+ * Copyright (c) 2016 Vitaly Novichkov <admin@wohlnet.ru>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "generator.h"
 #include <qendian.h>
 //#include <QtDebug>
-
-const int DataSampleRateHz = 44100;
-const int BufferSize      = 4096;
 
 static const unsigned short Operators[23*2] =
     {0x000,0x003,0x001,0x004,0x002,0x005, // operators  0, 3,  1, 4,  2, 5
@@ -23,33 +38,21 @@ static const unsigned short Channels[23] =
      0x100,0x101,0x102, 0x103,0x104,0x105, 0x106,0x107,0x108, // 9..17 (secondary set)
      0x006,0x007,0x008,0xFFF,0xFFF }; // <- hw percussions, 0xFFF = no support for pitch/pan
 
-unsigned char regBD = 0;
-//unsigned char pit = 0;
-
-const unsigned NumChannels = 23;
-
-char four_op_category[NumChannels];
-                            // 1 = quad-master, 2 = quad-slave, 0 = regular
-                            // 3 = percussion BassDrum
-                            // 4 = percussion Snare
-                            // 5 = percussion Tom
-                            // 6 = percussion Crash cymbal
-                            // 7 = percussion Hihat
-                            // 8 = percussion slave
-
-//unsigned short ins[NumChannels];
-unsigned short g_ins[NumChannels]; // index to adl[], cached, needed by Touch()
-unsigned char  pit[NumChannels];  // value poked to B0, cached, needed by NoteOff)(
-
 Generator::Generator(int sampleRate,
                      QObject *parent)
     :   QIODevice(parent)
 {
-
     note = 57;
-
     m_patch =
     {
+          //    ,---------+-------- Wave select settings
+          //    | ,-------+-+------ Sustain/release rates
+          //    | | ,-----+-+-+---- Attack/decay rates
+          //    | | | ,---+-+-+-+-- AM/VIB/EG/KSR/Multiple bits
+          //    | | | |   | | | |
+          //    | | | |   | | | |    ,----+-- KSL/attenuation settings
+          //    | | | |   | | | |    |    |    ,----- Feedback/connection bits
+          //    | | | |   | | | |    |    |    |    +- Fine tuning
         {
             { 0x104C060,0x10455B1, 0x51,0x80, 0x4, +12 },
             { 0x10490A0,0x1045531, 0x52,0x80, 0x6, +12 },
@@ -58,20 +61,26 @@ Generator::Generator(int sampleRate,
         OPL_PatchSetup::Flag_Pseudo4op,
         40000,
         0,
-        -0.125000
+        -0.125000 // Fine tuning
     };
+    m_regBD = 0;
+    memset(m_ins, 0, sizeof(unsigned short)*NUM_OF_CHANNELS);
+    memset(m_pit, 0, sizeof(unsigned char)*NUM_OF_CHANNELS);
+    memset(m_four_op_category, 0, NUM_OF_CHANNELS);
 
-    memset(g_ins, 0, sizeof(unsigned short)*NumChannels);
-    memset(pit, 0, sizeof(unsigned char)*NumChannels);
-    memset(four_op_category, 0, NumChannels);
     unsigned p=0;
-    for(unsigned b=0; b<18; ++b) four_op_category[p++] = 0;
-    for(unsigned b=0; b< 5; ++b) four_op_category[p++] = 8;
+    for(unsigned b=0; b<18; ++b) m_four_op_category[p++] = 0;
+    for(unsigned b=0; b< 5; ++b) m_four_op_category[p++] = 8;
+
+    DeepTremoloMode   = 0;
+    DeepVibratoMode   = 0;
+    unsigned char AdlPercussionMode = 0;
 
     static const short data[] =
-    { 0x004,96, 0x004,128,        // Pulse timer
-      0x105, 0, 0x105,1, 0x105,0, // Pulse OPL3 enable
-      0x001,32, 0x105,1           // Enable wave, OPL3 extensions
+    {
+        0x004, 96, 0x004, 128,          // Pulse timer
+        0x105,  0, 0x105, 1,  0x105, 0, // Pulse OPL3 enable
+        0x001, 32, 0x105, 1             // Enable wave, OPL3 extensions
     };
 
     chip.Init(sampleRate);
@@ -80,12 +89,7 @@ Generator::Generator(int sampleRate,
     for(unsigned a=0; a< sizeof(data)/sizeof(*data); a+=2)
         chip.WriteReg(data[a], data[a+1]);
 
-
-    DeepTremoloMode   = 0;
-    DeepVibratoMode   = 0;
-    unsigned char AdlPercussionMode = 0;
-
-    chip.WriteReg(0x0BD, regBD = (DeepTremoloMode*0x80
+    chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode*0x80
                                 + DeepVibratoMode*0x40
                                 + AdlPercussionMode*0x20) );
 
@@ -97,8 +101,8 @@ Generator::Generator(int sampleRate,
     unsigned nextfour = 0;
     for(unsigned a=0; a<fours; ++a)
     {
-        four_op_category[nextfour  ] = 1;
-        four_op_category[nextfour+3] = 2;
+        m_four_op_category[nextfour  ] = 1;
+        m_four_op_category[nextfour+3] = 2;
         switch(a % 6)
         {
             case 0: case 1: nextfour += 1; break;
@@ -108,12 +112,7 @@ Generator::Generator(int sampleRate,
         }
     }
 
-    //Shutup!
-    for(unsigned c=0; c<NumChannels; ++c)
-    {
-        NoteOff(c);
-        Touch_Real(c, 0);
-    }
+    Silence();
 }
 
 Generator::~Generator()
@@ -124,11 +123,11 @@ void Generator::NoteOff(unsigned c)
     unsigned cc = c%23;
     if(cc >= 18)
     {
-        regBD &= ~(0x10 >> (cc-18));
-        chip.WriteReg(0xBD, regBD);
+        m_regBD &= ~(0x10 >> (cc-18));
+        chip.WriteReg(0xBD, m_regBD);
         return;
     }
-    chip.WriteReg(0xB0 + Channels[cc], pit[c] & 0xDF);
+    chip.WriteReg(0xB0 + Channels[cc], m_pit[c] & 0xDF);
 }
 
 void Generator::NoteOn(unsigned c, double hertz) // Hertz range: 0..131071
@@ -142,15 +141,15 @@ void Generator::NoteOn(unsigned c, double hertz) // Hertz range: 0..131071
     unsigned chn = Channels[cc];
     if(cc >= 18)
     {
-        regBD |= (0x10 >> (cc-18));
-        chip.WriteReg(0x0BD, regBD);
+        m_regBD |= (0x10 >> (cc-18));
+        chip.WriteReg(0x0BD, m_regBD);
         x &= ~0x2000;
         //x |= 0x800; // for test
     }
     if(chn != 0xFFF)
     {
         chip.WriteReg(0xA0 + chn, x & 0xFF);
-        chip.WriteReg(0xB0 + chn, pit[c] = x >> 8);
+        chip.WriteReg(0xB0 + chn, m_pit[c] = x >> 8);
     }
 }
 
@@ -158,29 +157,29 @@ void Generator::Touch_Real(unsigned c, unsigned volume)
 {
     if(volume > 63) volume = 63;
     unsigned /*card = c/23,*/ cc = c%23;
-    unsigned i = g_ins[c], o1 = Operators[cc*2], o2 = Operators[cc*2+1];
+    unsigned i = m_ins[c], o1 = Operators[cc*2], o2 = Operators[cc*2+1];
     unsigned x = m_patch.OPS[i].modulator_40,
              y = m_patch.OPS[i].carrier_40;
     bool do_modulator;
     bool do_carrier;
 
     unsigned mode = 1; // 2-op AM
-    if(four_op_category[c] == 0 || four_op_category[c] == 3)
+    if(m_four_op_category[c] == 0 || m_four_op_category[c] == 3)
     {
         mode = m_patch.OPS[i].feedconn & 1; // 2-op FM or 2-op AM
     }
-    else if(four_op_category[c] == 1 || four_op_category[c] == 2)
+    else if(m_four_op_category[c] == 1 || m_four_op_category[c] == 2)
     {
         unsigned i0, i1;
-        if ( four_op_category[c] == 1 )
+        if ( m_four_op_category[c] == 1 )
         {
             i0 = i;
-            i1 = g_ins[c + 3];
+            i1 = m_ins[c + 3];
             mode = 2; // 4-op xx-xx ops 1&2
         }
         else
         {
-            i0 = g_ins[c - 3];
+            i0 = m_ins[c - 3];
             i1 = i;
             mode = 6; // 4-op xx-xx ops 3&4
         }
@@ -225,7 +224,7 @@ void Generator::Patch(unsigned c, unsigned i)
 {
     unsigned cc = c%23;
     static const unsigned char data[4] = {0x20,0x60,0x80,0xE0};
-    g_ins[c] = i;
+    m_ins[c] = i;
     unsigned o1 = Operators[cc*2+0], o2 = Operators[cc*2+1];
     unsigned x = m_patch.OPS[i].modulator_E862, y = m_patch.OPS[i].carrier_E862;
     for(unsigned a=0; a<4; ++a)
@@ -240,7 +239,7 @@ void Generator::Pan(unsigned c, unsigned value)
 {
     unsigned cc = c%23;
     if(Channels[cc] != 0xFFF)
-        chip.WriteReg(0xC0 + Channels[cc], m_patch.OPS[g_ins[c]].feedconn | value);
+        chip.WriteReg(0xC0 + Channels[cc], m_patch.OPS[m_ins[c]].feedconn | value);
 }
 
 void Generator::PlayNoteF(int noteID, int chan2op1, int chan2op2, int chan4op1, int chan4op2)
@@ -266,10 +265,9 @@ void Generator::PlayNoteF(int noteID, int chan2op1, int chan2op2, int chan4op1, 
         adlchannel[1] = chan2op2;
     }
 
-    g_ins[adlchannel[0]] = i[0];
-    g_ins[adlchannel[1]] = i[1];
+    m_ins[adlchannel[0]] = i[0];
+    m_ins[adlchannel[1]] = i[1];
 
-    //0x0014F671,0x0007F131, 0x92,0x00, 0x2, +0
     double bend = 0.0;
     double phase = 0.0;
 
@@ -292,9 +290,19 @@ void Generator::PlayNoteF(int noteID, int chan2op1, int chan2op2, int chan4op1, 
     }
 }
 
-void Generator::MuteNote()
+void Generator::Silence()
 {
-    for(unsigned c=0; c<NumChannels; ++c)
+    //Shutup!
+    for(unsigned c=0; c < NUM_OF_CHANNELS; ++c)
+    {
+        NoteOff(c);
+        Touch_Real(c, 0);
+    }
+}
+
+void Generator::NoteOffAllChans()
+{
+    for(unsigned c=0; c < NUM_OF_CHANNELS; ++c)
     {
         NoteOff(c);
     }
@@ -323,40 +331,19 @@ void Generator::PlayMajorChord()
 
 void Generator::PlayMinorChord()
 {
-    PlayNoteF(note,   7,  6,    1,4);
-    PlayNoteF(note+3, 15, 8,    2,5);
-    PlayNoteF(note-5, 17, 16,   9,12);
+    PlayNoteF(note,   7,  6,    1, 4);
+    PlayNoteF(note+3, 15, 8,    2, 5);
+    PlayNoteF(note-5, 17, 16,   9, 12);
 }
 
 void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
     //Shutup everything
-    for(unsigned c=0; c < NumChannels; ++c)
+    for(unsigned c=0; c < NUM_OF_CHANNELS; ++c)
     {
         NoteOff(c);
     }
 
-    /*
-        "const adldata adl[%u] =\n"
-        "{ //    ,---------+-------- Wave select settings\n"
-        "  //    | ,-------ч-+------ Sustain/release rates\n"
-        "  //    | | ,-----ч-ч-+---- Attack/decay rates\n"
-        "  //    | | | ,---ч-ч-ч-+-- AM/VIB/EG/KSR/Multiple bits\n"
-        "  //    | | | |   | | | |\n"
-        "  //    | | | |   | | | |     ,----+-- KSL/attenuation settings\n"
-        "  //    | | | |   | | | |     |    |    ,----- Feedback/connection bits\n"
-        "  //    | | | |   | | | |     |    |    |\n"
-    */
-//    unsigned int  modulator_E862, carrier_E862;  // See below
-//    unsigned char modulator_40, carrier_40; // KSL/attenuation settings
-//    unsigned char feedconn; // Feedback/connection bits for the channel
-//    signed char   finetune;
-    /*
-    (i->first.data[6] << 24)
-  + (i->first.data[4] << 16)
-  + (i->first.data[2] << 8)
-  + (i->first.data[0] << 0);
-    */
     m_patch.OPS[0].modulator_E862 =
                  (uint(instrument.OP[MODULATOR1].waveform) << 24)
                 |(uint( (0xF0&(uchar(0x0F-instrument.OP[MODULATOR1].sustain)<<4))
@@ -474,7 +461,7 @@ void Generator::changeDeepTremolo(bool enabled)
     DeepTremoloMode   = uchar(enabled);
     unsigned char AdlPercussionMode = 0;
 
-    chip.WriteReg(0x0BD, regBD = (DeepTremoloMode*0x80
+    chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode*0x80
                                 + DeepVibratoMode*0x40
                                 + AdlPercussionMode*0x20) );
 }
@@ -484,7 +471,7 @@ void Generator::changeDeepVibrato(bool enabled)
     DeepVibratoMode   = uchar(enabled);
     unsigned char AdlPercussionMode = 0;
 
-    chip.WriteReg(0x0BD, regBD = (DeepTremoloMode*0x80
+    chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode*0x80
                                 + DeepVibratoMode*0x40
                                 + AdlPercussionMode*0x20) );
 }
@@ -492,7 +479,6 @@ void Generator::changeDeepVibrato(bool enabled)
 void Generator::start()
 {
     open(QIODevice::ReadOnly);
-    saySomething("Meow");
 }
 
 void Generator::stop()
@@ -505,11 +491,9 @@ qint64 Generator::readData(char *data, qint64 len)
     short* _out = (short*)data;
     qint64 total = 0, lenS = (len/4);
     int samples[4096];
-    if(lenS > BufferSize/4)
-        lenS = BufferSize/4;
+    if(lenS > MAX_OPLGEN_BUFFER_SIZE/4)
+        lenS = MAX_OPLGEN_BUFFER_SIZE/4;
     unsigned long lenL = 512;
-    //unsigned long lenBytes = lenL*4;
-    //FILE* shit = fopen("C:/_Repos/OPL3BankEditor/_AudioOutputQtExample/shit.raw", "ab");
     while( (total+512) < lenS )
     {
         chip.GenerateArr(samples, &lenL);
@@ -522,13 +506,10 @@ qint64 Generator::readData(char *data, qint64 len)
                 out    = samples[p*2+w];
                 offset = total+p*2+w;
                 _out[offset] = out;
-                //fwrite(&out, 1, 2, shit);
             }
         }
         total += lenL;
-    };
-
-    saySomething(QString::number(total*4));
+    }; //saySomething(QString::number(total*4));
     return total*4;
 }
 
@@ -541,67 +522,5 @@ qint64 Generator::writeData(const char *data, qint64 len)
 
 qint64 Generator::bytesAvailable() const
 {
-    return 2048;// + QIODevice::bytesAvailable();
+    return 4096;// + QIODevice::bytesAvailable();
 }
-
-
-
-//________________________Old_code________________________
-//  adlchannel[ccount] = c;
-//    for(unsigned ccount = 0; ccount < 2; ++ccount)
-//    {
-//        if(ccount == 1)
-//        {
-//            if(i[0] == i[1]) {/*twoChans=false;*/ break; } // No secondary channel
-//            if(adlchannel[0] == -1) { /*twoChans=false;*/ break;} // No secondary if primary failed
-//        }
-
-//        int c = -1;
-//        //long bs = -0x7FFFFFFFl;
-//        for(int a = adlchannel[0]; a <= adlchannel[1]/*(int)NumChannels*/; a += 3)
-//        {
-//            if(ccount == 1 && a == adlchannel[0]) continue;
-//            // ^ Don't use the same channel for primary&secondary
-
-//            if(i[0] == i[1] || pseudo_4op)
-//            {
-//                // Only use regular channels
-//                int expected_mode = 0;
-//                if(four_op_category[a] != expected_mode)
-//                    continue;
-//            }
-//            else
-//            {
-//                if(ccount == 0)
-//                {
-//                    // Only use four-op master channels
-//                    if(four_op_category[a] != 1)
-//                        continue;
-//                }
-//                else
-//                {
-//                    // The secondary must be played on a specific channel.
-//                    if(a != adlchannel[0] + 3)
-//                        continue;
-//                }
-//            }
-//            //long s = CalculateAdlChannelGoodness(a, i[ccount], MidCh);
-//            //if(s > bs) { bs=s; c = a; } // Best candidate wins
-//            c = a;
-//        }
-
-//        if(c < 0)
-//        {
-//            //UI.PrintLn("ignored unplaceable note");
-//            continue; // Could not play this note. Ignore it.
-//        }
-//        //PrepareAdlChannelForNewNote(c, i[ccount]);
-//        g_ins[c] = i[ccount];
-//        adlchannel[ccount] = c;
-//    }
-//    if(adlchannel[0] < 0 && adlchannel[1] < 0)
-//    {
-//        saySomething("crap");
-//        // The note could not be played, at all.
-//        //return;
-//    }

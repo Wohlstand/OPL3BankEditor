@@ -1,3 +1,21 @@
+/*
+ * OPL Bank Editor by Wohlstand, a free tool for music bank editing
+ * Copyright (c) 2016 Vitaly Novichkov <admin@wohlnet.ru>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <QPainter>
 #include <QLayout>
 #include "piano.h"
@@ -49,9 +67,10 @@ void Piano::mousePressEvent(QMouseEvent *evt)
     double  x       = double(evt->pos().x());
     double  width   = double(this->width());
     int     note    = int(floor(128.0*(x/width)));
-    if(note>127) note=127;
-    m_recentNote = note;
-    m_highlightNotes[note] = true;
+    if( note > 127 )
+        note=127;
+    m_recentNote            = note;
+    m_highlightNotes[note]  = true;
     emit    gotNote(note);
     emit    pressed();
     repaint();
@@ -75,11 +94,9 @@ void Piano::paintEvent(QPaintEvent *evt)
     double widthOfCell = double(this->width())/128.0;
     for(int i=0; i<=128; i++)
     {
-        double Offset = ((i%12==0)) ? 0.0 : offsets[(i-1)%12];
-        //double halfOffset = widthOfCell/2.0;
-        bool curHalf  = isHalfToneKey[(i)%12];
-        //bool nextHalf = !isHalfToneKey[(i+1)%12];
-        double posX = i*widthOfCell + widthOfCell*Offset;
+        double  Offset  = ((i%12==0)) ? 0.0 : offsets[(i-1)%12];
+        bool    curHalf = isHalfToneKey[(i)%12];
+        double  posX    = i*widthOfCell + widthOfCell*Offset;
 
         QLineF line(posX, 0, posX, this->height());
         pen.setWidth( ((i%12)==0) ? 2 : 1 );
@@ -87,12 +104,12 @@ void Piano::paintEvent(QPaintEvent *evt)
         paint.drawLine(line);
         if( curHalf )
         {
-            QLine line(i*widthOfCell+widthOfCell/2, 0, i*widthOfCell+widthOfCell/2, this->height()/2);
+            QLine line(i*widthOfCell + widthOfCell/2.0, 0, i*widthOfCell + widthOfCell/2.0, this->height()/2);
             pen.setWidth(widthOfCell);
             paint.setPen(pen);
             paint.drawLine(line);
         }
-        if(i<128)
+        if( i < 128 )
         {
             if(m_highlightNotes[i])
             {
@@ -108,7 +125,6 @@ void Piano::paintEvent(QPaintEvent *evt)
             }
         }
     }
-
     paint.end();
     QFrame::paintEvent(evt);
 }
