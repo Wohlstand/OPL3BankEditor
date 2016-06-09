@@ -302,7 +302,16 @@ void Generator::MuteNote()
 
 void Generator::PlayNote()
 {
-    PlayNoteF(note, 7,  6,    1,  4);
+    int channels1[3]     = {7, 15, 17};
+    int channels2[3]     = {6,  8, 16};
+    int channels1_4op[3] = {1,  2, 9};
+    int channels2_4op[3] = {4,  5, 12};
+    static int chan = 0;
+
+    PlayNoteF(note, channels1[chan],  channels2[chan],  channels1_4op[chan],  channels2_4op[chan]);
+
+    /* Rotating channels to have nicer poliphony on key spam */
+    chan++; if(chan>2) chan=0;
 }
 
 void Generator::PlayMajorChord()

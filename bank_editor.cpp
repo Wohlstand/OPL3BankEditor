@@ -9,7 +9,7 @@
 //#include <QtDebug>
 
 BankEditor::BankEditor(QWidget *parent) :
-    QDialog(parent),
+    QMainWindow(parent),
     ui(new Ui::BankEditor)
 {
     ui->setupUi(this);
@@ -65,6 +65,10 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->deepVibrato,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepVibrato(bool)));
     connect(ui->deepTremolo,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepTremolo(bool)));
 
+    connect(ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
+    connect(ui->piano, SIGNAL(pressed()),    m_generator, SLOT(PlayNote()));
+    connect(ui->piano, SIGNAL(released()),   m_generator, SLOT(MuteNote()));
+
     //qDebug() << "Start generator";
     m_generator->start();
 
@@ -82,6 +86,82 @@ BankEditor::~BankEditor()
     delete m_generator;
     delete ui;
 }
+
+void BankEditor::on_actionNew_triggered()
+{
+    ui->currentFile->setText(tr("<Untitled>"));
+    m_bank.reset();
+    on_instruments_currentItemChanged(NULL, NULL);
+}
+
+void BankEditor::on_actionAbout_triggered()
+{
+    QMessageBox::information(this,
+                             tr("About bank editor"),
+                             tr("FM Bank Editor for Yamaha OPL3/OPL2 chip, Version %1\n\n"
+                                "(c) 2016, Vitaly Novichkov \"Wohlstand\"\n"
+                                "\n"
+                                "Licensed under GNU GPLv3\n\n"
+                                "Source code available on GitHub:\n"
+                                "%2").arg(VERSION).arg("https://github.com/Wohlstand/OPL3BankEditor"),
+                             QMessageBox::Ok);
+
+}
+
+void BankEditor::on_actionOpen_triggered()
+{
+    QString fileToOpen;
+    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, "JunleVision bank (*.op3)");
+    if(fileToOpen.isEmpty())
+        return;
+
+    int err = JunleVizion::loadFile(fileToOpen, m_bank);
+    if(err != JunleVizion::ERR_OK)
+    {
+        QString errText;
+        switch(err)
+        {
+            case JunleVizion::ERR_BADFORMAT: errText = "Bad file format"; break;
+            case JunleVizion::ERR_NOFILE:    errText = "Can't open file"; break;
+        }
+        QMessageBox::warning(this, "Can't open bank file!", "Can't open bank file because "+errText, QMessageBox::Ok);
+    } else {
+        m_recentPath = fileToOpen;
+        if(!ui->instruments->selectedItems().isEmpty())
+            on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
+        else
+            on_instruments_currentItemChanged(NULL, NULL);
+        ui->currentFile->setText(fileToOpen);
+    }
+}
+
+void BankEditor::on_actionSave_triggered()
+{
+    QString fileToSave;
+    fileToSave = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, "JunleVision bank (*.op3)");
+    if(fileToSave.isEmpty())
+        return;
+
+    int err = JunleVizion::saveFile(fileToSave, m_bank);
+    if(err != JunleVizion::ERR_OK)
+    {
+        QString errText;
+        switch(err)
+        {
+            case JunleVizion::ERR_NOFILE:    errText = "Can't open file for write!"; break;
+        }
+        QMessageBox::warning(this, "Can't save bank file!", "Can't save bank file because "+errText, QMessageBox::Ok);
+    } else {
+        ui->currentFile->setText(fileToSave);
+    }
+}
+
+void BankEditor::on_actionExit_triggered()
+{
+    this->close();
+}
+
+
 
 void BankEditor::pushTimerExpired()
 {
@@ -127,9 +207,14 @@ void BankEditor::loadInstrument()
     if(!m_curInst)
     {
         ui->editzone->setEnabled(false);
+        ui->testNoteBox->setEnabled(false);
+        ui->piano->setEnabled(false);
         return;
     }
+
     ui->editzone->setEnabled(true);
+    ui->testNoteBox->setEnabled(true);
+    ui->piano->setEnabled(ui->melodic->isChecked());
 
     m_lock = true;
     ui->perc_noteNum->setValue( m_curInst->percNoteNum );
@@ -212,8 +297,26 @@ void BankEditor::sendPatch()
     m_generator->changePatch(*m_curInst);
 }
 
+void BankEditor::setDrumMode(bool dmode)
+{
+    if(dmode)
+    {
+        if(ui->noteToTest->isEnabled())
+        {
+            m_recentMelodicNote = ui->noteToTest->value();
+        }
+    } else {
+        ui->noteToTest->setValue(m_recentMelodicNote);
+    }
+    ui->noteToTest->setDisabled(dmode);
+    ui->testMajor->setDisabled(dmode);
+    ui->testMinor->setDisabled(dmode);
+    ui->piano->setDisabled(dmode);
+}
+
 void BankEditor::setMelodic()
 {
+    setDrumMode(false);
     ui->instruments->clear();
     for(int i=0; i<128; i++)
     {
@@ -223,15 +326,11 @@ void BankEditor::setMelodic()
         item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
         ui->instruments->addItem(item);
     }
-    ui->noteToTest->setValue(m_recentMelodicNote);
-    ui->noteToTest->setDisabled(false);
 }
 
 void BankEditor::setDrums()
 {
-    if(ui->noteToTest->isEnabled())
-        m_recentMelodicNote = ui->noteToTest->value();
-    ui->noteToTest->setDisabled(true);
+    setDrumMode(true);
     ui->instruments->clear();
     for(int i=0; i<128; i++)
     {
@@ -242,53 +341,6 @@ void BankEditor::setDrums()
         ui->instruments->addItem(item);
     }
 }
-
-void BankEditor::on_openBank_clicked()
-{
-    QString fileToOpen;
-    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, "JunleVision bank (*.op3)");
-    if(fileToOpen.isEmpty())
-        return;
-
-    int err = JunleVizion::loadFile(fileToOpen, m_bank);
-    if(err != JunleVizion::ERR_OK)
-    {
-        QString errText;
-        switch(err)
-        {
-            case JunleVizion::ERR_BADFORMAT: errText = "Bad file format"; break;
-            case JunleVizion::ERR_NOFILE:    errText = "Can't open file"; break;
-        }
-        QMessageBox::warning(this, "Can't open bank file!", "Can't open bank file because "+errText, QMessageBox::Ok);
-    } else {
-        m_recentPath = fileToOpen;
-        if(!ui->instruments->selectedItems().isEmpty())
-            on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
-        else
-            on_instruments_currentItemChanged(NULL, NULL);
-    }
-}
-
-void BankEditor::on_SaveBank_clicked()
-{
-    QString fileToOpen;
-    fileToOpen = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, "JunleVision bank (*.op3)");
-    if(fileToOpen.isEmpty())
-        return;
-
-    int err = JunleVizion::saveFile(fileToOpen, m_bank);
-    if(err != JunleVizion::ERR_OK)
-    {
-        QString errText;
-        switch(err)
-        {
-            case JunleVizion::ERR_NOFILE:    errText = "Can't open file for write!"; break;
-        }
-        QMessageBox::warning(this, "Can't save bank file!", "Can't save bank file because "+errText, QMessageBox::Ok);
-    }
-}
-
-
 
 
 
@@ -782,12 +834,5 @@ void BankEditor::on_op4_ksr_toggled(bool checked)
     m_curInst->OP[MODULATOR2].ksr = checked;
     sendPatch();
 }
-
-
-
-
-
-
-
 
 

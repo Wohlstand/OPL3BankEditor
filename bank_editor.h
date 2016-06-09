@@ -3,7 +3,7 @@
 
 #include <QAudioOutput>
 #include <QTimer>
-#include <QDialog>
+#include <QMainWindow>
 #include <QList>
 #include <QListWidgetItem>
 #include "bank.h"
@@ -13,7 +13,7 @@ namespace Ui {
 class BankEditor;
 }
 
-class BankEditor : public QDialog
+class BankEditor : public QMainWindow
 {
     Q_OBJECT
 
@@ -30,6 +30,8 @@ public:
 
     void sendPatch();
 
+    void setDrumMode(bool dmode);
+
 public slots:
     void setMelodic();
     void setDrums();
@@ -37,8 +39,11 @@ public slots:
 private slots:
     void on_instruments_currentItemChanged(QListWidgetItem *current, QListWidgetItem *);
 
-    void on_openBank_clicked();
-    void on_SaveBank_clicked();
+    void on_actionAbout_triggered();
+    void on_actionOpen_triggered();
+    void on_actionSave_triggered();
+    void on_actionExit_triggered();
+
 
     void on_feedback1_valueChanged(int arg1);
     void on_am1_clicked(bool checked);
@@ -105,6 +110,9 @@ private slots:
     void on_op4_ksr_toggled(bool checked);
 
     void pushTimerExpired();
+
+
+    void on_actionNew_triggered();
 
 private:
     Ui::BankEditor *ui;

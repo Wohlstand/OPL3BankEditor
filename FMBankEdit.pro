@@ -35,6 +35,7 @@ MOC_DIR     = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.moc
 RCC_DIR     = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.rcc
 UI_DIR      = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.ui
 
+win32: RC_FILE = $$PWD/resources/res.rc
 
 SOURCES += main.cpp\
         bank_editor.cpp \
@@ -42,7 +43,8 @@ SOURCES += main.cpp\
     bank.cpp \
     FileFormats/junlevizion.cpp \
     opl/dbopl.cpp \
-    opl/generator.cpp
+    opl/generator.cpp \
+    piano.cpp
 
 HEADERS  += bank_editor.h \
     ins_names.h \
@@ -50,6 +52,10 @@ HEADERS  += bank_editor.h \
     FileFormats/junlevizion.h \
     version.h \
     opl/dbopl.h \
-    opl/generator.h
+    opl/generator.h \
+    piano.h
 
 FORMS    += bank_editor.ui
+
+RESOURCES += \
+    resources/resources.qrc
