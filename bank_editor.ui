@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>BankEditor</string>
+   <string>Bank editor for Yamaha OPL3/OPL2 sound generator</string>
   </property>
   <widget class="QPushButton" name="openBank">
    <property name="geometry">
