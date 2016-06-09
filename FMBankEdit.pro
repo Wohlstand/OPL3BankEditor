@@ -9,6 +9,33 @@ QT       += core gui widgets multimedia
 TARGET = FMBankEdit
 TEMPLATE = app
 
+android:{
+    ARCH=android_arm
+} else {
+    !contains(QMAKE_TARGET.arch, x86_64) {
+    ARCH=x32
+    } else {
+    ARCH=x64
+    }
+}
+
+debug: {
+BUILDTP=debug
+DEFINES += DEBUG_BUILD=1
+DESTDIR = $$PWD/bin-debug/
+} else: release: {
+BUILDTP=release
+DESTDIR = $$PWD/bin-release/
+}
+
+BUILD_OBJ_DIR = $$PWD/_build_data
+
+OBJECTS_DIR = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.obj
+MOC_DIR     = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.moc
+RCC_DIR     = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.rcc
+UI_DIR      = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.ui
+
+
 SOURCES += main.cpp\
         bank_editor.cpp \
     ins_names.cpp \
@@ -22,10 +49,7 @@ HEADERS  += bank_editor.h \
     bank.h \
     FileFormats/junlevizion.h \
     version.h \
-    opl/adldata.hh \
-    opl/adlmidi.h \
     opl/dbopl.h \
-    opl/fraction.h \
     opl/generator.h
 
 FORMS    += bank_editor.ui
