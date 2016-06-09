@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>914</width>
+    <width>916</width>
     <height>665</height>
    </rect>
   </property>
@@ -110,12 +110,12 @@
      <rect>
       <x>260</x>
       <y>330</y>
-      <width>161</width>
+      <width>211</width>
       <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string>Enable 4-op/Double-voice</string>
+     <string>Enable 4-operator / Double-voice mode</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="op4">
@@ -518,7 +518,7 @@
      </rect>
     </property>
     <property name="title">
-     <string>Connection 1</string>
+     <string>Connection 2</string>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
@@ -1038,7 +1038,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Feedback 1</string>
+     <string>Feedback 2</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox">
