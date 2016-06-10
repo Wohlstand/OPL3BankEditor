@@ -18,12 +18,17 @@
 
 #include "bank_editor.h"
 #include <QApplication>
+#include <QStringList>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     BankEditor w;
     w.show();
+
+    QStringList args = a.arguments();
+    if(args.size()>1)
+        w.openFile(args[1]);
 
     return a.exec();
 }

@@ -19,7 +19,12 @@
 #ifndef VERSION_H
 #define VERSION_H
 
+#define _COMPANY "Wohlhabend Networks"
+
+#define _PGE_URL "wohlsoft.ru"
+
 #define PROGRAM_NAME "FM Bank Editor by Wohlstand"
-#define VERSION "1.1.1"
+
+#define VERSION "1.1.2"
 
 #endif // VERSION_H

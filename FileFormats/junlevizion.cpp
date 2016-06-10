@@ -1,5 +1,3 @@
-
-#include <QFile>
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
  * Copyright (c) 2016 Vitaly Novichkov <admin@wohlnet.ru>

@@ -53,6 +53,20 @@ void BankEditor::initAudio()
     connect(ui->testMinor, SIGNAL(pressed()),  m_generator, SLOT(PlayMinorChord()));
     connect(ui->testMinor, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
 
+    connect(ui->testAugmented, SIGNAL(pressed()),  m_generator, SLOT(PlayAugmentedChord()));
+    connect(ui->testAugmented, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
+
+    connect(ui->testDiminished, SIGNAL(pressed()),  m_generator, SLOT(PlayDiminishedChord()));
+    connect(ui->testDiminished, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
+
+    connect(ui->testMajor7, SIGNAL(pressed()),  m_generator, SLOT(PlayMajor7Chord()));
+    connect(ui->testMajor7, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
+
+    connect(ui->testMinor7, SIGNAL(pressed()),  m_generator, SLOT(PlayMinor7Chord()));
+    connect(ui->testMinor7, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
+
+    connect(ui->shutUp, SIGNAL(clicked()), m_generator, SLOT(Silence()));
+
     connect(ui->noteToTest, SIGNAL(valueChanged(int)), m_generator, SLOT(changeNote(int)));
     m_generator->changeNote(ui->noteToTest->value());
 
@@ -67,7 +81,6 @@ void BankEditor::initAudio()
     m_output = m_audioOutput->start();
     m_pushTimer.start(4);
 }
-
 
 void BankEditor::pushTimerExpired()
 {

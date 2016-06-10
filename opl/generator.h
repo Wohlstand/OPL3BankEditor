@@ -82,14 +82,21 @@ public:
     void Touch(unsigned c, unsigned volume);
     void Patch(unsigned c, unsigned i);
     void Pan(unsigned c, unsigned value);
-    void PlayNoteF(int noteID, int chan2op1 = 8, int chan2op2 = 7, int chan4op1 = 1, int chan4op2 = 4);
+    void PlayNoteF(int noteID);
+    void switch4op(bool enabled);
 
 public slots:
     void Silence();
     void NoteOffAllChans();
+
     void PlayNote();
     void PlayMajorChord();
     void PlayMinorChord();
+    void PlayAugmentedChord();
+    void PlayDiminishedChord();
+    void PlayMajor7Chord();
+    void PlayMinor7Chord();
+
     void changePatch(const FmBank::Instrument &instrument, bool isDrum=false);
     void changeNote(int newnote);
     void changeDeepTremolo(bool enabled);

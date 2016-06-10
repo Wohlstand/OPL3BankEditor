@@ -32,6 +32,8 @@ class FmBank
 public:
     FmBank();
     FmBank(const FmBank &fb);
+    bool operator==(const FmBank &fb);
+    bool operator!=(const FmBank &fb);
 
     /**
      * @brief Set everything to zero

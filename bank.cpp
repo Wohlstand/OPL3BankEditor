@@ -26,9 +26,23 @@ FmBank::FmBank()
 
 FmBank::FmBank(const FmBank &fb)
 {
-    int size=sizeof(Instrument)*128;
+    int size = sizeof(Instrument)*128;
     memcpy(Ins_Melodic,    fb.Ins_Melodic,    size);
     memcpy(Ins_Percussion, fb.Ins_Percussion, size);
+}
+
+bool FmBank::operator==(const FmBank &fb)
+{
+    int size = sizeof(Instrument)*128;
+    bool res = true;
+    res &= (memcmp(Ins_Melodic,    fb.Ins_Melodic,    size)==0);
+    res &= (memcmp(Ins_Percussion, fb.Ins_Percussion, size)==0);
+    return res;
+}
+
+bool FmBank::operator!=(const FmBank &fb)
+{
+    return !this->operator==(fb);
 }
 
 void FmBank::reset()

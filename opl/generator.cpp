@@ -38,11 +38,32 @@ static const unsigned short Channels[23] =
      0x100,0x101,0x102, 0x103,0x104,0x105, 0x106,0x107,0x108, // 9..17 (secondary set)
      0x006,0x007,0x008,0xFFF,0xFFF }; // <- hw percussions, 0xFFF = no support for pitch/pan
 
+#define USED_CHANNELS_2OP       18
+#define USED_CHANNELS_2OP_PS4   9
+#define USED_CHANNELS_4OP       6
+
+//! Regular 2-operator channels map
+static const int channels[USED_CHANNELS_2OP] =
+    {
+        0,  1,  2,  3,  4,  5,  6,  7,  8,
+        9,  10, 11, 12, 13, 14, 15, 16, 17
+    };
+
+//! Pseudo 4-operators 2-operator channels map 1
+static const int channels1[USED_CHANNELS_2OP_PS4] = {0, 2, 4, 6, 8, 10, 12, 14, 16};
+//! Pseudo 4-operators 2-operator channels map 1
+static const int channels2[USED_CHANNELS_2OP_PS4]  = {1, 3, 5, 7, 9, 11, 13, 15, 17};
+
+//! 4-operator channels map 1
+int channels1_4op[USED_CHANNELS_4OP] = {0,  1,  2,  9,  10, 11};
+//! 4-operator channels map 1
+int channels2_4op[USED_CHANNELS_4OP] = {3,  4,  5,  12, 13, 14};
+
 Generator::Generator(int sampleRate,
                      QObject *parent)
     :   QIODevice(parent)
 {
-    note = 57;
+    note = 60;
     m_patch =
     {
           //    ,---------+-------- Wave select settings
@@ -83,35 +104,19 @@ Generator::Generator(int sampleRate,
         0x001, 32, 0x105, 1             // Enable wave, OPL3 extensions
     };
 
-    chip.Init(sampleRate);
+    chip.Init( sampleRate );
 
     for(unsigned a=0; a< 18; ++a)
         chip.WriteReg(0xB0+Channels[a], 0x00);
     for(unsigned a=0; a<sizeof(data)/sizeof(*data); a+=2)
         chip.WriteReg(data[a], data[a+1]);
 
-    chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode*0x80
-                                + DeepVibratoMode*0x40
-                                + AdlPercussionMode*0x20) );
+    chip.WriteReg(0x0BD, m_regBD = ( DeepTremoloMode*0x80
+                                    +DeepVibratoMode*0x40
+                                    +AdlPercussionMode*0x20 ) );
 
-    unsigned fours = 7;
 
-    unsigned fours_this_card = std::min(fours, 6u);
-    chip.WriteReg(0x104, (1 << fours_this_card) - 1);
-
-    unsigned nextfour = 0;
-    for(unsigned a=0; a<fours; ++a)
-    {
-        m_four_op_category[nextfour  ] = 1;
-        m_four_op_category[nextfour+3] = 2;
-        switch(a % 6)
-        {
-            case 0: case 1: nextfour += 1; break;
-            case 2:         nextfour += 9-2; break;
-            case 3: case 4: nextfour += 1; break;
-            case 5:         nextfour += 23-9-2; break;
-        }
-    }
+    switch4op(true);
     Silence();
 }
 
@@ -164,7 +169,7 @@ void Generator::Touch_Real(unsigned c, unsigned volume)
     bool do_carrier;
 
     unsigned mode = 1; // 2-op AM
-    if(m_four_op_category[c] == 0 || m_four_op_category[c] == 3)
+    if( m_four_op_category[c] == 0 || m_four_op_category[c] == 3 )
     {
         mode = m_patch.OPS[i].feedconn & 1; // 2-op FM or 2-op AM
     }
@@ -242,8 +247,12 @@ void Generator::Pan(unsigned c, unsigned value)
         chip.WriteReg(0xC0 + Channels[cc], m_patch.OPS[m_ins[c]].feedconn | value);
 }
 
-void Generator::PlayNoteF(int noteID, int chan2op1, int chan2op2, int chan4op1, int chan4op2)
+void Generator::PlayNoteF(int noteID)
 {
+    static int chan2op   = 0;
+    static int chanPs4op = 0;
+    static int chan4op = 0;
+
     int tone = noteID;
     if(m_patch.tone)
     {
@@ -258,11 +267,38 @@ void Generator::PlayNoteF(int noteID, int chan2op1, int chan2op2, int chan4op1, 
     bool pseudo_4op  = m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op;
     bool natural_4op = m_patch.flags & OPL_PatchSetup::Flag_True4op;
 
-    int  adlchannel[2] = { chan4op1, chan4op2 };
-    if(/*i[0] == i[1]*/!natural_4op || pseudo_4op )
+    int  adlchannel[2] = { 0, 0 };
+    if( !natural_4op || pseudo_4op )
     {
-        adlchannel[0] = chan2op1;
-        adlchannel[1] = chan2op2;
+        if( pseudo_4op )
+        {
+            adlchannel[0] = channels1[chanPs4op];
+            adlchannel[1] = channels2[chanPs4op];
+            /* Rotating channels to have nicer poliphony on key spam */
+            chanPs4op++;
+            if(chanPs4op > (USED_CHANNELS_2OP_PS4-1))
+                chanPs4op=0;
+        }
+        else
+        {
+            adlchannel[0] = channels[chan2op];
+            adlchannel[1] = channels[chan2op];
+            /* Rotating channels to have nicer poliphony on key spam */
+            chan2op++;
+            if(chan2op > (USED_CHANNELS_2OP-1))
+                chan2op=0;
+        }
+    }
+    else
+    if(natural_4op)
+    {
+        adlchannel[0] = channels1_4op[chan4op];
+        adlchannel[1] = channels2_4op[chan4op];
+
+        /* Rotating channels to have nicer poliphony on key spam */
+        chan4op++;
+        if(chan4op > (USED_CHANNELS_4OP-1))
+            chan4op=0;
     }
 
     m_ins[adlchannel[0]] = i[0];
@@ -272,13 +308,16 @@ void Generator::PlayNoteF(int noteID, int chan2op1, int chan2op2, int chan4op1, 
     double phase = 0.0;
 
     Patch(adlchannel[0], i[0]);
-    Patch(adlchannel[1], i[1]);
+    if( pseudo_4op || natural_4op)
+        Patch(adlchannel[1], i[1]);
 
     Pan(adlchannel[0], 0x30);
-    Pan(adlchannel[1], 0x30);
+    if( pseudo_4op || natural_4op )
+        Pan(adlchannel[1], 0x30);
 
     Touch_Real(adlchannel[0], 63);
-    Touch_Real(adlchannel[1], 63);
+    if( pseudo_4op || natural_4op)
+        Touch_Real(adlchannel[1], 63);
 
     bend  = 0.0 + m_patch.OPS[i[0]].finetune;
     NoteOn(adlchannel[0], 172.00093 * std::exp(0.057762265 * (tone + bend + phase)));
@@ -287,6 +326,38 @@ void Generator::PlayNoteF(int noteID, int chan2op1, int chan2op2, int chan4op1, 
     {
         bend  = 0.0 + m_patch.OPS[i[1]].finetune + m_patch.voice2_fine_tune;
         NoteOn(adlchannel[1], 172.00093 * std::exp(0.057762265 * (tone + bend + phase)));
+    }
+}
+
+void Generator::switch4op(bool enabled)
+{
+    if(enabled)
+    {
+        //Enable 4-operators mode
+        chip.WriteReg(0x104, 0x3F);
+        unsigned fours = 6;
+        unsigned nextfour = 0;
+        for(unsigned a=0; a<fours; ++a)
+        {
+            m_four_op_category[nextfour  ] = 1;
+            m_four_op_category[nextfour+3] = 2;
+            switch(a % 6)
+            {
+                case 0: case 1: nextfour += 1; break;
+                case 2:         nextfour += 9-2; break;
+                case 3: case 4: nextfour += 1; break;
+                case 5:         nextfour += 23-9-2; break;
+            }
+        }
+    }
+    else
+    {
+        //Disable 4-operators mode
+        chip.WriteReg(0x104, 0x0);
+        for(unsigned a=0; a<18; ++a)
+        {
+            m_four_op_category[a] = 0;
+        }
     }
 }
 
@@ -308,41 +379,70 @@ void Generator::NoteOffAllChans()
     }
 }
 
+
+
 void Generator::PlayNote()
 {
-    int channels1[3]     = {7, 15, 17};
-    int channels2[3]     = {6,  8, 16};
-    int channels1_4op[3] = {1,  2, 9};
-    int channels2_4op[3] = {4,  5, 12};
-    static int chan = 0;
-
-    PlayNoteF(note, channels1[chan],  channels2[chan],  channels1_4op[chan],  channels2_4op[chan]);
-
-    /* Rotating channels to have nicer poliphony on key spam */
-    chan++; if(chan>2) chan=0;
+    PlayNoteF(note);
 }
 
 void Generator::PlayMajorChord()
 {
-    PlayNoteF(note,   7,  6,    1,4);
-    PlayNoteF(note+4, 15, 8,    2,5);
-    PlayNoteF(note-5, 17, 16,   9,12);
+    PlayNoteF( note-12 );
+    PlayNoteF( note );
+    PlayNoteF( note+4 );
+    PlayNoteF( note-5 );
 }
 
 void Generator::PlayMinorChord()
 {
-    PlayNoteF(note,   7,  6,    1, 4);
-    PlayNoteF(note+3, 15, 8,    2, 5);
-    PlayNoteF(note-5, 17, 16,   9, 12);
+    PlayNoteF( note-12 );
+    PlayNoteF( note );
+    PlayNoteF( note+3 );
+    PlayNoteF( note-5 );
 }
+
+void Generator::PlayAugmentedChord()
+{
+    PlayNoteF( note-12 );
+    PlayNoteF( note );
+    PlayNoteF( note+4 );
+    PlayNoteF( note-4 );
+}
+
+void Generator::PlayDiminishedChord()
+{
+    PlayNoteF( note-12 );
+    PlayNoteF( note );
+    PlayNoteF( note+3 );
+    PlayNoteF( note-6 );
+}
+
+void Generator::PlayMajor7Chord()
+{
+    PlayNoteF( note-12 );
+    PlayNoteF( note-2 );
+    PlayNoteF( note );
+    PlayNoteF( note+4 );
+    PlayNoteF( note-5 );
+}
+
+void Generator::PlayMinor7Chord()
+{
+    PlayNoteF( note-12 );
+    PlayNoteF( note-2 );
+    PlayNoteF( note );
+    PlayNoteF( note+3 );
+    PlayNoteF( note-5 );
+}
+
+
 
 void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
     //Shutup everything
-    for(unsigned c=0; c < NUM_OF_CHANNELS; ++c)
-    {
-        NoteOff(c);
-    }
+    Silence();
+    switch4op( instrument.en_4op );
 
     m_patch.OPS[0].modulator_E862 =
                  (uint(instrument.OP[MODULATOR1].waveform) << 24)

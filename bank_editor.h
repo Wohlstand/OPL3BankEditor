@@ -39,6 +39,9 @@ public:
     explicit BankEditor(QWidget *parent = 0);
     ~BankEditor();
 
+    void loadSettings();
+    void saveSettings();
+
     void initAudio();
 
     //! Path for currently opened file
@@ -47,16 +50,30 @@ public:
     //! Currently loaded FM bank
     FmBank  m_bank;
 
+    //! Backup of currently loaded FM bank
+    FmBank  m_bankBackup;
+
     //! Backup for melodic note while percusive mode is enabled
     int     m_recentMelodicNote;
 
     //! Currently selected instrument
     FmBank::Instrument* m_curInst;
 
+    //! Currently selected instrument
+    FmBank::Instrument* m_curInstBackup;
+
     //! Clipboard
     FmBank::Instrument  m_clipboard;
 
+    bool openFile(QString filePath);
+    bool saveFile(QString filePath);
+    bool saveFileAs();
+
     /* ************** Help functions ************** */
+    /**
+     * @brief Loads current instrument into GUI controlls and sends it to generator
+     */
+    void flushInstrument();
     /**
      * @brief Sets current instrument to editand test
      * @param num Number of instrument (from 0 to 127)
@@ -207,7 +224,12 @@ private slots:
     void on_op4_eg_toggled(bool checked);
     void on_op4_ksr_toggled(bool checked);
 
+    void on_actionReset_current_instrument_triggered();
 
+protected:
+    void closeEvent(QCloseEvent *event);
+    void dragEnterEvent(QDragEnterEvent *e);
+    void dropEvent(QDropEvent *e);
 
 private:
     Ui::BankEditor *ui;

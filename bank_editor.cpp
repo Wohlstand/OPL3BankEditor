@@ -18,6 +18,9 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSettings>
+
+#include <QMimeData>
 
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
@@ -31,6 +34,7 @@ BankEditor::BankEditor(QWidget *parent) :
 {
     memset(&m_clipboard, 0, sizeof(FmBank::Instrument));
     m_curInst = NULL;
+    m_curInstBackup = NULL;
     m_lock = false;
 
     ui->setupUi(this);
@@ -43,7 +47,13 @@ BankEditor::BankEditor(QWidget *parent) :
 
     m_buffer.resize(8192);
     m_buffer.fill(0, 8192);
+
+    this->setWindowFlags(Qt::WindowTitleHint|Qt::WindowSystemMenuHint|
+                         Qt::WindowCloseButtonHint|Qt::WindowMinimizeButtonHint);
+    this->setFixedSize(this->window()->width(), this->window()->height());
+
     initAudio();
+    loadSettings();
 }
 
 BankEditor::~BankEditor()
@@ -56,14 +66,149 @@ BankEditor::~BankEditor()
     delete ui;
 }
 
+void BankEditor::loadSettings()
+{
+    QApplication::setOrganizationName(_COMPANY);
+    QApplication::setOrganizationDomain(_PGE_URL);
+    QApplication::setApplicationName("OPL FM Banks Editor");
+    QSettings setup;
+    ui->deepTremolo->setChecked(setup.value("deep-tremolo", false).toBool());
+    ui->deepVibrato->setChecked(setup.value("deep-vibrato", false).toBool());
+    m_recentPath = setup.value("recent-path").toString();
+}
+
+void BankEditor::saveSettings()
+{
+    QSettings setup;
+    setup.setValue("deep-tremolo", ui->deepTremolo->isChecked());
+    setup.setValue("deep-vibrato", ui->deepVibrato->isChecked());
+    setup.setValue("recent-path", m_recentPath);
+}
 
 
 
+void BankEditor::closeEvent(QCloseEvent *event)
+{
+    if(m_bank != m_bankBackup)
+    {
+        QMessageBox::StandardButton res = QMessageBox::question(this, tr("File is not saved"), tr("File is modified and not saved. Do you want to save it?"), QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+        if((res==QMessageBox::Cancel) || (res==QMessageBox::NoButton))
+        {
+            event->ignore();
+            return;
+        }
+        else
+        if(res==QMessageBox::Yes)
+        {
+            if(!saveFileAs())
+            {
+                event->ignore();
+                return;
+            }
+        }
+    }
+    saveSettings();
+}
+
+void BankEditor::dragEnterEvent(QDragEnterEvent *e)
+{
+    if (e->mimeData()->hasUrls())
+    {
+        e->acceptProposedAction();
+    }
+}
+
+void BankEditor::dropEvent(QDropEvent *e)
+{
+    this->raise();
+    this->setFocus(Qt::ActiveWindowFocusReason);
+
+    foreach(const QUrl &url, e->mimeData()->urls())
+    {
+        const QString &fileName = url.toLocalFile();
+        if(openFile(fileName))
+            break; //Only first valid file!
+    }
+}
+
+
+bool BankEditor::openFile(QString filePath)
+{
+    if(filePath.endsWith("op3", Qt::CaseInsensitive))
+    {
+        int err = JunleVizion::loadFile(filePath, m_bank);
+        if(err != JunleVizion::ERR_OK)
+        {
+            QString errText;
+            switch(err)
+            {
+                case JunleVizion::ERR_BADFORMAT: errText = "Bad file format"; break;
+                case JunleVizion::ERR_NOFILE:    errText = "Can't open file"; break;
+            }
+            QMessageBox::warning(this, "Can't open bank file!", "Can't open bank file because "+errText, QMessageBox::Ok);
+            return false;
+        } else {
+            m_recentPath = filePath;
+            if(!ui->instruments->selectedItems().isEmpty())
+                on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
+            else
+                on_instruments_currentItemChanged(NULL, NULL);
+            ui->currentFile->setText(filePath);
+            m_bankBackup = m_bank;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool BankEditor::saveFile(QString filePath)
+{
+    if(filePath.endsWith("op3", Qt::CaseInsensitive))
+    {
+        int err = JunleVizion::saveFile(filePath, m_bank);
+        if(err != JunleVizion::ERR_OK)
+        {
+            QString errText;
+            switch(err)
+            {
+                case JunleVizion::ERR_NOFILE:    errText = "Can't open file for write!"; break;
+            }
+            QMessageBox::warning(this, "Can't save bank file!", "Can't save bank file because "+errText, QMessageBox::Ok);
+            return false;
+        } else {
+            ui->currentFile->setText(filePath);
+            m_recentPath = filePath;
+            m_bankBackup = m_bank;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool BankEditor::saveFileAs()
+{
+    QString fileToSave;
+    fileToSave = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, "JunleVision bank (*.op3)");
+    if(fileToSave.isEmpty())
+        return false;
+    return saveFile(fileToSave);
+}
+
+void BankEditor::flushInstrument()
+{
+    loadInstrument();
+    if( m_curInst && ui->percussion->isChecked() )
+    {
+        ui->noteToTest->setValue( m_curInst->percNoteNum );
+    }
+    sendPatch();
+}
 
 void BankEditor::on_actionNew_triggered()
 {
     ui->currentFile->setText(tr("<Untitled>"));
     m_bank.reset();
+    m_bankBackup.reset();
     on_instruments_currentItemChanged(NULL, NULL);
 }
 
@@ -74,45 +219,12 @@ void BankEditor::on_actionOpen_triggered()
     if(fileToOpen.isEmpty())
         return;
 
-    int err = JunleVizion::loadFile(fileToOpen, m_bank);
-    if(err != JunleVizion::ERR_OK)
-    {
-        QString errText;
-        switch(err)
-        {
-            case JunleVizion::ERR_BADFORMAT: errText = "Bad file format"; break;
-            case JunleVizion::ERR_NOFILE:    errText = "Can't open file"; break;
-        }
-        QMessageBox::warning(this, "Can't open bank file!", "Can't open bank file because "+errText, QMessageBox::Ok);
-    } else {
-        m_recentPath = fileToOpen;
-        if(!ui->instruments->selectedItems().isEmpty())
-            on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
-        else
-            on_instruments_currentItemChanged(NULL, NULL);
-        ui->currentFile->setText(fileToOpen);
-    }
+    openFile(fileToOpen);
 }
 
 void BankEditor::on_actionSave_triggered()
 {
-    QString fileToSave;
-    fileToSave = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, "JunleVision bank (*.op3)");
-    if(fileToSave.isEmpty())
-        return;
-
-    int err = JunleVizion::saveFile(fileToSave, m_bank);
-    if(err != JunleVizion::ERR_OK)
-    {
-        QString errText;
-        switch(err)
-        {
-            case JunleVizion::ERR_NOFILE:    errText = "Can't open file for write!"; break;
-        }
-        QMessageBox::warning(this, "Can't save bank file!", "Can't save bank file because "+errText, QMessageBox::Ok);
-    } else {
-        ui->currentFile->setText(fileToSave);
-    }
+    saveFileAs();
 }
 
 void BankEditor::on_actionExit_triggered()
@@ -132,13 +244,27 @@ void BankEditor::on_actionPaste_triggered()
     if(!m_curInst) return;
 
     memcpy(m_curInst, &m_clipboard, sizeof(FmBank::Instrument));
+    flushInstrument();
+}
 
-    loadInstrument();
-    if( m_curInst && ui->percussion->isChecked() )
+void BankEditor::on_actionReset_current_instrument_triggered()
+{
+    if(!m_curInstBackup || !m_curInst)
+        return; //Some pointer is Null!!!
+
+    if( memcmp(m_curInst, m_curInstBackup, sizeof(FmBank::Instrument))==0 )
+        return; //Nothing to do
+
+    if( QMessageBox::Yes == QMessageBox::question(this,
+                                                  tr("Reset instrument to initial state"),
+                                                  tr("This instrument will be reseted to initial state "
+                                                     "(sice this file loaded or saved).\n"
+                                                     "Are you wish to continue?"),
+                                                  QMessageBox::Yes|QMessageBox::No) )
     {
-        ui->noteToTest->setValue( m_curInst->percNoteNum );
+        memcpy(m_curInst, m_curInstBackup, sizeof(FmBank::Instrument));
+        flushInstrument();
     }
-    sendPatch();
 }
 
 
@@ -165,18 +291,14 @@ void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QLi
         ui->curInsInfo->setText(QString("%1 - %2").arg(current->data(Qt::UserRole).toInt()).arg(current->text()));
         setCurrentInstrument(current->data(Qt::UserRole).toInt(), ui->percussion->isChecked() );
     }
-    loadInstrument();
-    if( m_curInst && ui->percussion->isChecked() )
-    {
-        ui->noteToTest->setValue( m_curInst->percNoteNum );
-    }
-    sendPatch();
+    flushInstrument();
 }
 
 
 void BankEditor::setCurrentInstrument(int num, bool isPerc)
 {
     m_curInst = isPerc ? &m_bank.Ins_Percussion[num] : &m_bank.Ins_Melodic[num];
+    m_curInstBackup = isPerc ? &m_bankBackup.Ins_Percussion[num] : &m_bankBackup.Ins_Melodic[num];
 }
 
 void BankEditor::loadInstrument()
@@ -318,4 +440,7 @@ void BankEditor::setDrums()
         ui->instruments->addItem(item);
     }
 }
+
+
+
 
