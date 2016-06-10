@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>920</width>
-    <height>775</height>
+    <height>772</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -27,7 +27,7 @@
       <x>10</x>
       <y>10</y>
       <width>221</width>
-      <height>631</height>
+      <height>621</height>
      </rect>
     </property>
     <property name="title">
@@ -82,12 +82,27 @@
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>0</number>
     </property>
     <layout class="QGridLayout" name="gridLayout_7">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item row="0" column="0">
       <widget class="QLabel" name="label_25">
        <property name="text">
@@ -987,9 +1002,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>640</y>
-      <width>211</width>
-      <height>17</height>
+      <y>630</y>
+      <width>221</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -1181,7 +1196,7 @@
     <property name="geometry">
      <rect>
       <x>790</x>
-      <y>60</y>
+      <y>50</y>
       <width>121</width>
       <height>80</height>
      </rect>
