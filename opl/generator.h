@@ -104,7 +104,7 @@ private:
 
     unsigned char   m_regBD;
 
-    char m_four_op_category[NUM_OF_CHANNELS];
+    char m_four_op_category[NUM_OF_CHANNELS*2];
                                 // 1 = quad-master, 2 = quad-slave, 0 = regular
                                 // 3 = percussion BassDrum
                                 // 4 = percussion Snare

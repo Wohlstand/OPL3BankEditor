@@ -66,7 +66,7 @@ Generator::Generator(int sampleRate,
     m_regBD = 0;
     memset(m_ins, 0, sizeof(unsigned short)*NUM_OF_CHANNELS);
     memset(m_pit, 0, sizeof(unsigned char)*NUM_OF_CHANNELS);
-    memset(m_four_op_category, 0, NUM_OF_CHANNELS);
+    memset(m_four_op_category, 0, NUM_OF_CHANNELS*2);
 
     unsigned p=0;
     for(unsigned b=0; b<18; ++b) m_four_op_category[p++] = 0;
@@ -85,8 +85,9 @@ Generator::Generator(int sampleRate,
 
     chip.Init(sampleRate);
 
-    for(unsigned a=0; a< 18; ++a) chip.WriteReg(0xB0+Channels[a], 0x00);
-    for(unsigned a=0; a< sizeof(data)/sizeof(*data); a+=2)
+    for(unsigned a=0; a< 18; ++a)
+        chip.WriteReg(0xB0+Channels[a], 0x00);
+    for(unsigned a=0; a<sizeof(data)/sizeof(*data); a+=2)
         chip.WriteReg(data[a], data[a+1]);
 
     chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode*0x80
@@ -111,7 +112,6 @@ Generator::Generator(int sampleRate,
             case 5:         nextfour += 23-9-2; break;
         }
     }
-
     Silence();
 }
 
