@@ -26,6 +26,7 @@
 #include "ui_bank_editor.h"
 #include "ins_names.h"
 #include "FileFormats/junlevizion.h"
+#include "FileFormats/dmxopl2.h"
 #include "version.h"
 
 BankEditor::BankEditor(QWidget *parent) :
@@ -89,23 +90,10 @@ void BankEditor::saveSettings()
 
 void BankEditor::closeEvent(QCloseEvent *event)
 {
-    if(m_bank != m_bankBackup)
+    if(!askForSaving())
     {
-        QMessageBox::StandardButton res = QMessageBox::question(this, tr("File is not saved"), tr("File is modified and not saved. Do you want to save it?"), QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
-        if((res==QMessageBox::Cancel) || (res==QMessageBox::NoButton))
-        {
-            event->ignore();
-            return;
-        }
-        else
-        if(res==QMessageBox::Yes)
-        {
-            if(!saveFileAs())
-            {
-                event->ignore();
-                return;
-            }
-        }
+        event->ignore();
+        return;
     }
     saveSettings();
 }
@@ -155,6 +143,33 @@ bool BankEditor::openFile(QString filePath)
                 on_instruments_currentItemChanged(NULL, NULL);
             ui->currentFile->setText(filePath);
             m_bankBackup = m_bank;
+            reloadInstrumentNames();
+            return true;
+        }
+    }
+    else
+    if(filePath.endsWith("op2", Qt::CaseInsensitive))
+    {
+        int err = DmxOPL2::loadFile(filePath, m_bank);
+        if(err != DmxOPL2::ERR_OK)
+        {
+            QString errText;
+            switch(err)
+            {
+                case DmxOPL2::ERR_BADFORMAT: errText = "Bad file format"; break;
+                case DmxOPL2::ERR_NOFILE:    errText = "Can't open file"; break;
+            }
+            QMessageBox::warning(this, "Can't open bank file!", "Can't open bank file because "+errText, QMessageBox::Ok);
+            return false;
+        } else {
+            m_recentPath = filePath;
+            if(!ui->instruments->selectedItems().isEmpty())
+                on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
+            else
+                on_instruments_currentItemChanged(NULL, NULL);
+            ui->currentFile->setText(filePath);
+            m_bankBackup = m_bank;
+            reloadInstrumentNames();
             return true;
         }
     }
@@ -182,40 +197,109 @@ bool BankEditor::saveFile(QString filePath)
             return true;
         }
     }
+    else if(filePath.endsWith("op2", Qt::CaseInsensitive))
+    {
+        int err = DmxOPL2::saveFile(filePath, m_bank);
+        if(err != DmxOPL2::ERR_OK)
+        {
+            QString errText;
+            switch(err)
+            {
+                case DmxOPL2::ERR_NOFILE:    errText = "Can't open file for write!"; break;
+            }
+            QMessageBox::warning(this, "Can't save bank file!", "Can't save bank file because "+errText, QMessageBox::Ok);
+            return false;
+        } else {
+            ui->currentFile->setText(filePath);
+            m_recentPath = filePath;
+            m_bankBackup = m_bank;
+            return true;
+        }
+    }
     return false;
 }
 
 bool BankEditor::saveFileAs()
 {
-    QString fileToSave;
-    fileToSave = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, "JunleVision bank (*.op3)");
+    QString jv  = "JunleVision bank (*.op3)";
+    QString dmx = "DMX Bank (*.op2)";
+    QString filters =  jv+";;"
+                      +dmx;
+
+    QString selectedFilter;
+
+    if(m_recentPath.endsWith(".op3", Qt::CaseInsensitive))
+        selectedFilter = jv;
+    else
+    if(m_recentPath.endsWith(".op2", Qt::CaseInsensitive))
+        selectedFilter = dmx;
+
+    QString fileToSave = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, filters, &selectedFilter);
+
     if(fileToSave.isEmpty())
         return false;
+
     return saveFile(fileToSave);
+}
+
+bool BankEditor::askForSaving()
+{
+    if(m_bank != m_bankBackup)
+    {
+        QMessageBox::StandardButton res = QMessageBox::question(this, tr("File is not saved"), tr("File is modified and not saved. Do you want to save it?"), QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+        if((res==QMessageBox::Cancel) || (res==QMessageBox::NoButton))
+        {
+            return false;
+        }
+        else
+        if(res==QMessageBox::Yes)
+        {
+            if(!saveFileAs())
+            {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 void BankEditor::flushInstrument()
 {
     loadInstrument();
     if( m_curInst && ui->percussion->isChecked() )
-    {
         ui->noteToTest->setValue( m_curInst->percNoteNum );
-    }
     sendPatch();
 }
 
 void BankEditor::on_actionNew_triggered()
 {
+    if( !askForSaving() )
+        return;
+
     ui->currentFile->setText(tr("<Untitled>"));
+    ui->instruments->clearSelection();
     m_bank.reset();
     m_bankBackup.reset();
     on_instruments_currentItemChanged(NULL, NULL);
+    reloadInstrumentNames();
 }
 
 void BankEditor::on_actionOpen_triggered()
 {
+    if( !askForSaving() )
+        return;
+
+    QString supported  = "Supported bank files (*.op2 *.op3)";
+    QString jv  = "JunleVision bank (*.op3)";
+    QString dmx = "DMX Bank (*.op2)";
+    QString allFiles = "All files (*.*)";
+    QString filters = supported+";;"
+                      +jv+";;"
+                      +dmx+";;"
+                      +allFiles;
+
     QString fileToOpen;
-    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, "JunleVision bank (*.op3)");
+    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
     if(fileToOpen.isEmpty())
         return;
 
@@ -285,10 +369,10 @@ void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QLi
 {
     if(!current)
     {
-        ui->curInsInfo->setText("<Not Selected>");
+        //ui->curInsInfo->setText("<Not Selected>");
         m_curInst = NULL;
     } else  {
-        ui->curInsInfo->setText(QString("%1 - %2").arg(current->data(Qt::UserRole).toInt()).arg(current->text()));
+        //ui->curInsInfo->setText(QString("%1 - %2").arg(current->data(Qt::UserRole).toInt()).arg(current->text()));
         setCurrentInstrument(current->data(Qt::UserRole).toInt(), ui->percussion->isChecked() );
     }
     flushInstrument();
@@ -306,26 +390,42 @@ void BankEditor::loadInstrument()
     if(!m_curInst)
     {
         ui->editzone->setEnabled(false);
+        ui->editzone2->setEnabled(false);
         ui->testNoteBox->setEnabled(false);
         ui->piano->setEnabled(false);
+        m_lock = true;
+        ui->insName->setEnabled(false);
+        ui->insName->clear();
+        m_lock = false;
         return;
     }
 
     ui->editzone->setEnabled(true);
+    ui->editzone2->setEnabled(true);
     ui->testNoteBox->setEnabled(true);
     ui->piano->setEnabled(ui->melodic->isChecked());
+    ui->insName->setEnabled(true);
 
     m_lock = true;
+    ui->insName->setText( m_curInst->name );
+
     ui->perc_noteNum->setValue( m_curInst->percNoteNum );
     ui->op4mode->setChecked( m_curInst->en_4op );
-    ui->op3->setEnabled( m_curInst->en_4op );
-    ui->op4->setEnabled( m_curInst->en_4op );
+    ui->doubleVoice->setEnabled( m_curInst->en_4op );
+    ui->doubleVoice->setChecked( m_curInst->en_pseudo4op );
+    ui->carrier2->setEnabled( m_curInst->en_4op );
+    ui->modulator2->setEnabled( m_curInst->en_4op );
     ui->feedback2->setEnabled( m_curInst->en_4op );
     ui->connect2->setEnabled( m_curInst->en_4op );
     ui->feedback2label->setEnabled( m_curInst->en_4op );
 
     ui->feedback1->setValue( m_curInst->feedback1 );
     ui->feedback2->setValue( m_curInst->feedback2 );
+
+    ui->secVoiceFineTune->setValue( m_curInst->fine_tune );
+
+    ui->noteOffset1->setValue( m_curInst->note_offset1 );
+    ui->noteOffset2->setValue( m_curInst->note_offset2 );
 
     ui->am1->setChecked( m_curInst->connection1==FmBank::Instrument::Connections::AM );
     ui->fm1->setChecked( m_curInst->connection1==FmBank::Instrument::Connections::FM );
@@ -334,57 +434,57 @@ void BankEditor::loadInstrument()
     ui->fm2->setChecked( m_curInst->connection2==FmBank::Instrument::Connections::FM );
 
 
-    ui->op1_attack->setValue(m_curInst->OP[CARRIER1].attack);
-    ui->op1_decay->setValue(m_curInst->OP[CARRIER1].decay);
-    ui->op1_sustain->setValue(m_curInst->OP[CARRIER1].sustain);
-    ui->op1_release->setValue(m_curInst->OP[CARRIER1].release);
-    ui->op1_waveform->setCurrentIndex(m_curInst->OP[CARRIER1].waveform);
-    ui->op1_freqmult->setValue(m_curInst->OP[CARRIER1].fmult);
-    ui->op1_level->setValue(m_curInst->OP[CARRIER1].level);
-    ui->op1_ksl->setValue(m_curInst->OP[CARRIER1].ksl);
-    ui->op1_vib->setChecked(m_curInst->OP[CARRIER1].vib);
-    ui->op1_am->setChecked(m_curInst->OP[CARRIER1].am);
-    ui->op1_eg->setChecked(m_curInst->OP[CARRIER1].eg);
-    ui->op1_ksr->setChecked(m_curInst->OP[CARRIER1].ksr);
+    ui->op1_attack->setValue(m_curInst->OP[MODULATOR1].attack);
+    ui->op1_decay->setValue(m_curInst->OP[MODULATOR1].decay);
+    ui->op1_sustain->setValue(m_curInst->OP[MODULATOR1].sustain);
+    ui->op1_release->setValue(m_curInst->OP[MODULATOR1].release);
+    ui->op1_waveform->setCurrentIndex(m_curInst->OP[MODULATOR1].waveform);
+    ui->op1_freqmult->setValue(m_curInst->OP[MODULATOR1].fmult);
+    ui->op1_level->setValue(m_curInst->OP[MODULATOR1].level);
+    ui->op1_ksl->setValue(m_curInst->OP[MODULATOR1].ksl);
+    ui->op1_vib->setChecked(m_curInst->OP[MODULATOR1].vib);
+    ui->op1_am->setChecked(m_curInst->OP[MODULATOR1].am);
+    ui->op1_eg->setChecked(m_curInst->OP[MODULATOR1].eg);
+    ui->op1_ksr->setChecked(m_curInst->OP[MODULATOR1].ksr);
 
-    ui->op2_attack->setValue(m_curInst->OP[MODULATOR1].attack);
-    ui->op2_decay->setValue(m_curInst->OP[MODULATOR1].decay);
-    ui->op2_sustain->setValue(m_curInst->OP[MODULATOR1].sustain);
-    ui->op2_release->setValue(m_curInst->OP[MODULATOR1].release);
-    ui->op2_waveform->setCurrentIndex(m_curInst->OP[MODULATOR1].waveform);
-    ui->op2_freqmult->setValue(m_curInst->OP[MODULATOR1].fmult);
-    ui->op2_level->setValue(m_curInst->OP[MODULATOR1].level);
-    ui->op2_ksl->setValue(m_curInst->OP[MODULATOR1].ksl);
-    ui->op2_vib->setChecked(m_curInst->OP[MODULATOR1].vib);
-    ui->op2_am->setChecked(m_curInst->OP[MODULATOR1].am);
-    ui->op2_eg->setChecked(m_curInst->OP[MODULATOR1].eg);
-    ui->op2_ksr->setChecked(m_curInst->OP[MODULATOR1].ksr);
+    ui->op2_attack->setValue(m_curInst->OP[CARRIER1].attack);
+    ui->op2_decay->setValue(m_curInst->OP[CARRIER1].decay);
+    ui->op2_sustain->setValue(m_curInst->OP[CARRIER1].sustain);
+    ui->op2_release->setValue(m_curInst->OP[CARRIER1].release);
+    ui->op2_waveform->setCurrentIndex(m_curInst->OP[CARRIER1].waveform);
+    ui->op2_freqmult->setValue(m_curInst->OP[CARRIER1].fmult);
+    ui->op2_level->setValue(m_curInst->OP[CARRIER1].level);
+    ui->op2_ksl->setValue(m_curInst->OP[CARRIER1].ksl);
+    ui->op2_vib->setChecked(m_curInst->OP[CARRIER1].vib);
+    ui->op2_am->setChecked(m_curInst->OP[CARRIER1].am);
+    ui->op2_eg->setChecked(m_curInst->OP[CARRIER1].eg);
+    ui->op2_ksr->setChecked(m_curInst->OP[CARRIER1].ksr);
 
-    ui->op3_attack->setValue(m_curInst->OP[CARRIER2].attack);
-    ui->op3_decay->setValue(m_curInst->OP[CARRIER2].decay);
-    ui->op3_sustain->setValue(m_curInst->OP[CARRIER2].sustain);
-    ui->op3_release->setValue(m_curInst->OP[CARRIER2].release);
-    ui->op3_waveform->setCurrentIndex(m_curInst->OP[CARRIER2].waveform);
-    ui->op3_freqmult->setValue(m_curInst->OP[CARRIER2].fmult);
-    ui->op3_level->setValue(m_curInst->OP[CARRIER2].level);
-    ui->op3_ksl->setValue(m_curInst->OP[CARRIER2].ksl);
-    ui->op3_vib->setChecked(m_curInst->OP[CARRIER2].vib);
-    ui->op3_am->setChecked(m_curInst->OP[CARRIER2].am);
-    ui->op3_eg->setChecked(m_curInst->OP[CARRIER2].eg);
-    ui->op3_ksr->setChecked(m_curInst->OP[CARRIER2].ksr);
+    ui->op3_attack->setValue(m_curInst->OP[MODULATOR2].attack);
+    ui->op3_decay->setValue(m_curInst->OP[MODULATOR2].decay);
+    ui->op3_sustain->setValue(m_curInst->OP[MODULATOR2].sustain);
+    ui->op3_release->setValue(m_curInst->OP[MODULATOR2].release);
+    ui->op3_waveform->setCurrentIndex(m_curInst->OP[MODULATOR2].waveform);
+    ui->op3_freqmult->setValue(m_curInst->OP[MODULATOR2].fmult);
+    ui->op3_level->setValue(m_curInst->OP[MODULATOR2].level);
+    ui->op3_ksl->setValue(m_curInst->OP[MODULATOR2].ksl);
+    ui->op3_vib->setChecked(m_curInst->OP[MODULATOR2].vib);
+    ui->op3_am->setChecked(m_curInst->OP[MODULATOR2].am);
+    ui->op3_eg->setChecked(m_curInst->OP[MODULATOR2].eg);
+    ui->op3_ksr->setChecked(m_curInst->OP[MODULATOR2].ksr);
 
-    ui->op4_attack->setValue(m_curInst->OP[MODULATOR2].attack);
-    ui->op4_decay->setValue(m_curInst->OP[MODULATOR2].decay);
-    ui->op4_sustain->setValue(m_curInst->OP[MODULATOR2].sustain);
-    ui->op4_release->setValue(m_curInst->OP[MODULATOR2].release);
-    ui->op4_waveform->setCurrentIndex(m_curInst->OP[MODULATOR2].waveform);
-    ui->op4_freqmult->setValue(m_curInst->OP[MODULATOR2].fmult);
-    ui->op4_level->setValue(m_curInst->OP[MODULATOR2].level);
-    ui->op4_ksl->setValue(m_curInst->OP[MODULATOR2].ksl);
-    ui->op4_vib->setChecked(m_curInst->OP[MODULATOR2].vib);
-    ui->op4_am->setChecked(m_curInst->OP[MODULATOR2].am);
-    ui->op4_eg->setChecked(m_curInst->OP[MODULATOR2].eg);
-    ui->op4_ksr->setChecked(m_curInst->OP[MODULATOR2].ksr);
+    ui->op4_attack->setValue(m_curInst->OP[CARRIER2].attack);
+    ui->op4_decay->setValue(m_curInst->OP[CARRIER2].decay);
+    ui->op4_sustain->setValue(m_curInst->OP[CARRIER2].sustain);
+    ui->op4_release->setValue(m_curInst->OP[CARRIER2].release);
+    ui->op4_waveform->setCurrentIndex(m_curInst->OP[CARRIER2].waveform);
+    ui->op4_freqmult->setValue(m_curInst->OP[CARRIER2].fmult);
+    ui->op4_level->setValue(m_curInst->OP[CARRIER2].level);
+    ui->op4_ksl->setValue(m_curInst->OP[CARRIER2].ksl);
+    ui->op4_vib->setChecked(m_curInst->OP[CARRIER2].vib);
+    ui->op4_am->setChecked(m_curInst->OP[CARRIER2].am);
+    ui->op4_eg->setChecked(m_curInst->OP[CARRIER2].eg);
+    ui->op4_ksr->setChecked(m_curInst->OP[CARRIER2].ksr);
 
     m_lock = false;
 }
@@ -410,6 +510,10 @@ void BankEditor::setDrumMode(bool dmode)
     ui->noteToTest->setDisabled(dmode);
     ui->testMajor->setDisabled(dmode);
     ui->testMinor->setDisabled(dmode);
+    ui->testAugmented->setDisabled(dmode);
+    ui->testDiminished->setDisabled(dmode);
+    ui->testMajor7->setDisabled(dmode);
+    ui->testMinor7->setDisabled(dmode);
     ui->piano->setDisabled(dmode);
 }
 
@@ -420,8 +524,10 @@ void BankEditor::setMelodic()
     for(int i=0; i<128; i++)
     {
         QListWidgetItem* item = new QListWidgetItem();
-        item->setText(MidiInsName[i]);
+        item->setText(m_bank.Ins_Melodic[i].name[0]!='\0' ?
+                            m_bank.Ins_Melodic[i].name : MidiInsName[i]);
         item->setData(Qt::UserRole, i);
+        item->setToolTip(QString("ID: %1").arg(i));
         item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
         ui->instruments->addItem(item);
     }
@@ -434,13 +540,34 @@ void BankEditor::setDrums()
     for(int i=0; i<128; i++)
     {
         QListWidgetItem* item = new QListWidgetItem();
-        item->setText(MidiPercName[i]);
+        item->setText(m_bank.Ins_Percussion[i].name[0]!='\0' ?
+                            m_bank.Ins_Percussion[i].name : MidiPercName[i]);
         item->setData(Qt::UserRole, i);
+        item->setToolTip(QString("ID: %1").arg(i));
         item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
         ui->instruments->addItem(item);
     }
 }
 
-
-
-
+void BankEditor::reloadInstrumentNames()
+{
+    QList<QListWidgetItem*> items = ui->instruments->findItems("*", Qt::MatchWildcard);
+    if(ui->percussion->isChecked())
+    {
+        for(int i=0; i<items.size(); i++)
+        {
+            int index = items[i]->data(Qt::UserRole).toInt();
+            items[i]->setText( m_bank.Ins_Percussion[index].name[0]!='\0' ?
+                                                m_bank.Ins_Percussion[index].name :
+                                                MidiPercName[index] );
+        }
+    } else {
+        for(int i=0; i<items.size(); i++)
+        {
+            int index = items[i]->data(Qt::UserRole).toInt();
+            items[i]->setText( m_bank.Ins_Melodic[index].name[0]!='\0' ?
+                                                m_bank.Ins_Melodic[index].name :
+                                                MidiInsName[index] );
+        }
+    }
+}

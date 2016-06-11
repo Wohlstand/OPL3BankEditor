@@ -16,16 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef JUNLEVIZION_H
-#define JUNLEVIZION_H
+#ifndef DMXOPL2_H
+#define DMXOPL2_H
 
 #include <QString>
 #include "../bank.h"
 
 /**
- * @brief Reader and Writer of the Junglevision Patch file format
+ * @brief Reader and Writer of the DMX OP2 Bank format
  */
-class JunleVizion
+class DmxOPL2
 {
 public:
     enum ErrCode
@@ -34,8 +34,14 @@ public:
         ERR_NOFILE,
         ERR_BADFORMAT
     };
+    enum DmxFlags
+    {
+        Dmx_FixedPitch = 0x0001,
+        Dmx_Unknown = 0x0002,
+        Dmx_DoubleVoice = 0x0004
+    };
     static int loadFile(QString filePath, FmBank &bank);
     static int saveFile(QString filePath, FmBank &bank);
 };
 
-#endif // JUNLEVIZION_H
+#endif // DMXOPL2_H

@@ -47,7 +47,8 @@ SOURCES += main.cpp\
     piano.cpp \
     common.cpp \
     controlls.cpp \
-    audio.cpp
+    audio.cpp \
+    FileFormats/dmxopl2.cpp
 
 HEADERS  += bank_editor.h \
     ins_names.h \
@@ -57,7 +58,8 @@ HEADERS  += bank_editor.h \
     opl/dbopl.h \
     opl/generator.h \
     piano.h \
-    common.h
+    common.h \
+    FileFormats/dmxopl2.h
 
 FORMS    += bank_editor.ui
 

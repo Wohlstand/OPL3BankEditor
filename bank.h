@@ -19,10 +19,10 @@
 #ifndef BANK_H
 #define BANK_H
 
-#define CARRIER1    1
-#define MODULATOR1  0
-#define CARRIER2    3
-#define MODULATOR2  2
+#define CARRIER1    0
+#define MODULATOR1  1
+#define CARRIER2    2
+#define MODULATOR2  3
 
 /**
  * @brief OPL instrument bank container
@@ -76,6 +76,8 @@ public:
      */
     struct Instrument
     {
+        //! Custom instrument name
+        char name[33];
         //! FM operators
         Operator OP[4];
         //! Feedback for a first modulator and carrier
@@ -98,6 +100,14 @@ public:
         unsigned char percNoteNum;
         //! Is enabled four operators mode
         bool en_4op;
+        //! Enable double-voice mode instead of real 4-operator mode
+        bool en_pseudo4op;
+        //! Fine tuning of second voice (pseudo-4-operators only)
+        char fine_tune;
+        //! Note offset (first operator pair)
+        short note_offset1;
+        //! Note offset (second operator pair)
+        short note_offset2;
     };
     //! Array of melodic instruments
     Instrument Ins_Melodic[128];

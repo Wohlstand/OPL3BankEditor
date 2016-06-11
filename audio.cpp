@@ -73,6 +73,8 @@ void BankEditor::initAudio()
     connect(ui->deepVibrato,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepVibrato(bool)));
     connect(ui->deepTremolo,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepTremolo(bool)));
 
+    connect(m_generator, SIGNAL(debugInfo(QString)), ui->debugBox, SLOT(setText(QString)));
+
     connect(ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
     connect(ui->piano, SIGNAL(pressed()),    m_generator, SLOT(PlayNote()));
     connect(ui->piano, SIGNAL(released()),   m_generator, SLOT(NoteOffAllChans()));

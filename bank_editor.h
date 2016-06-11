@@ -31,45 +31,104 @@ namespace Ui {
 class BankEditor;
 }
 
+/**
+ * @brief Main application window
+ */
 class BankEditor : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    explicit BankEditor(QWidget *parent = 0);
-    ~BankEditor();
-
-    void loadSettings();
-    void saveSettings();
-
-    void initAudio();
-
+private:
     //! Path for currently opened file
-    QString m_recentPath;
+    QString             m_recentPath;
 
     //! Currently loaded FM bank
-    FmBank  m_bank;
-
+    FmBank              m_bank;
     //! Backup of currently loaded FM bank
-    FmBank  m_bankBackup;
+    FmBank              m_bankBackup;
 
     //! Backup for melodic note while percusive mode is enabled
-    int     m_recentMelodicNote;
+    int                 m_recentMelodicNote;
 
     //! Currently selected instrument
     FmBank::Instrument* m_curInst;
-
     //! Currently selected instrument
     FmBank::Instrument* m_curInstBackup;
 
     //! Clipboard
     FmBank::Instrument  m_clipboard;
 
+    //! Ignore all controls change events
+    bool m_lock;
+
+    //! OPL chip emulator frontent
+    Generator       *m_generator;
+
+    /* ********** Audio output stuff ********** */
+    //! Buffer for audio data transfering
+    QByteArray       m_buffer;
+    //! Timer to push audio data
+    QTimer           m_pushTimer;
+
+    //! Audio device spec
+    QAudioDeviceInfo m_device;
+    //! Audio output interface
+    QAudioOutput    *m_audioOutput;
+    //! Pointer to audio output interface
+    QIODevice       *m_output;//not owned
+    //! Audio format preferences
+    QAudioFormat     m_format;
+
+    /*!
+     * \brief Initializes audio subsystem and FM generator
+     */
+    void initAudio();
+
+private slots:
+    /**
+     * @brief Waveout playing callback
+     */
+    void pushTimerExpired();
+
+public:
+    explicit BankEditor(QWidget *parent = 0);
+    ~BankEditor();
+
+    /**
+     * @brief Loads recent application settings
+     */
+    void loadSettings();
+
+    /**
+     * @brief Saves recent application settings to the registry
+     */
+    void saveSettings();
+
+    /*!
+     * \brief Open file
+     * \param filePath absolute path to the file to open
+     * \return true if file successfully opened, false if failed
+     */
     bool openFile(QString filePath);
+    /*!
+     * \brief Save file
+     * \param filePath absolute path where save a file
+     * \return true if file successfully saved, false if failed
+     */
     bool saveFile(QString filePath);
+    /*!
+     * \brief Open Save-As dialog box
+     * \return true if file successfuly saved, false on rejecting or on fail
+     */
     bool saveFileAs();
 
-    /* ************** Help functions ************** */
+    /*!
+     * \brief Checks was file modified or not. If file modified, asks saving.
+     * \return true if no modifications detected or file saved or rejected. false if operation has been cancel
+     */
+    bool askForSaving();
+
+    /* ************** Helpful functions ************** */
     /**
      * @brief Loads current instrument into GUI controlls and sends it to generator
      */
@@ -108,6 +167,11 @@ public slots:
      */
     void setDrums();
 
+    /**
+     * @brief Reload names lf instruments in the list
+     */
+    void reloadInstrumentNames();
+
 private slots:
     /* ***************** Common slots ***************** */
     /**
@@ -121,31 +185,32 @@ private slots:
      * @brief Clear all buffers and begin a new bank
      */
     void on_actionNew_triggered();
-
     /**
      * @brief Open existing bank file
      */
     void on_actionOpen_triggered();
-
     /**
      * @brief Save current bank state into the file
      */
     void on_actionSave_triggered();
-
     /**
      * @brief Exit from the program
      */
     void on_actionExit_triggered();
 
+
     /**
      * @brief Copy current instrument into the clipboard
      */
     void on_actionCopy_triggered();
-
     /**
      * @brief Paste contents of clipboard into the current instrument
      */
     void on_actionPaste_triggered();
+    /**
+     * @brief Reset current instrument state to initial
+     */
+    void on_actionReset_current_instrument_triggered();
 
 
     /**
@@ -153,12 +218,11 @@ private slots:
      */
     void on_actionAbout_triggered();
 
-    /**
-     * @brief Waveout playing callback
-     */
-    void pushTimerExpired();
 
     /* ***************** Instrument Parameters editing ***************** */
+
+    void on_insName_textChanged(const QString &arg1);
+    void on_insName_editingFinished();
 
     void on_feedback1_valueChanged(int arg1);
     void on_am1_clicked(bool checked);
@@ -171,6 +235,12 @@ private slots:
     void on_fm2_clicked(bool checked);
 
     void on_op4mode_clicked(bool checked);
+
+    void on_doubleVoice_toggled(bool checked);
+    void on_secVoiceFineTune_valueChanged(int arg1);
+
+    void on_noteOffset1_valueChanged(int arg1);
+    void on_noteOffset2_valueChanged(int arg1);
 
     void on_op1_attack_valueChanged(int arg1);
     void on_op1_sustain_valueChanged(int arg1);
@@ -224,8 +294,6 @@ private slots:
     void on_op4_eg_toggled(bool checked);
     void on_op4_ksr_toggled(bool checked);
 
-    void on_actionReset_current_instrument_triggered();
-
 protected:
     void closeEvent(QCloseEvent *event);
     void dragEnterEvent(QDragEnterEvent *e);
@@ -233,23 +301,6 @@ protected:
 
 private:
     Ui::BankEditor *ui;
-    //! Ignore all controls change events
-    bool m_lock;
-
-    //! Audio device spec
-    QAudioDeviceInfo m_device;
-    //! OPL chip emulator frontent
-    Generator       *m_generator;
-    //! Audio output interface
-    QAudioOutput    *m_audioOutput;
-    //! Pointer to audio output interface
-    QIODevice       *m_output; // not owned
-    //! Audio format preferences
-    QAudioFormat     m_format;
-    //! Timer to push audio data
-    QTimer           m_pushTimer;
-    //! Buffer for audio data transfering
-    QByteArray       m_buffer;
 };
 
 #endif // BANK_EDITOR_H

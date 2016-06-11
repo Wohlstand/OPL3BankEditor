@@ -59,4 +59,32 @@ qint64 readBE(QFile &file, unsigned short &out);
  */
 qint64 writeBE(QFile &file, unsigned short &out);
 
+/*!
+ * \brief Convers array of little endian bytes into short
+ * \param arr Source array of bytes
+ * \return Resulted number
+ */
+short toSint16LE(uchar *arr);
+
+/*!
+ * \brief Convers array of big endian bytes into short
+ * \param arr Source array of bytes
+ * \return Resulted number
+ */
+short toSint16BE(uchar *arr);
+
+/*!
+ * \brief Converts signed short into little endian byte array
+ * \param in Source number
+ * \param arr Target byte array
+ */
+void fromSint16LE(short in, uchar *arr);
+
+/*!
+ * \brief Converts signed short into big endian byte array
+ * \param in Source number
+ * \param arr Target byte array
+ */
+void fromSint16BE(short in, uchar *arr);
+
 #endif // COMMON_H

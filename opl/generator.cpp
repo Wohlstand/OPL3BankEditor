@@ -52,7 +52,7 @@ static const int channels[USED_CHANNELS_2OP] =
 //! Pseudo 4-operators 2-operator channels map 1
 static const int channels1[USED_CHANNELS_2OP_PS4] = {0, 2, 4, 6, 8, 10, 12, 14, 16};
 //! Pseudo 4-operators 2-operator channels map 1
-static const int channels2[USED_CHANNELS_2OP_PS4]  = {1, 3, 5, 7, 9, 11, 13, 15, 17};
+static const int channels2[USED_CHANNELS_2OP_PS4] = {1, 3, 5, 7, 9, 11, 13, 15, 17};
 
 //! 4-operator channels map 1
 int channels1_4op[USED_CHANNELS_4OP] = {0,  1,  2,  9,  10, 11};
@@ -80,8 +80,6 @@ Generator::Generator(int sampleRate,
         },
         0,
         OPL_PatchSetup::Flag_Pseudo4op,
-        40000,
-        0,
         -0.125000 // Fine tuning
     };
     m_regBD = 0;
@@ -253,6 +251,22 @@ void Generator::PlayNoteF(int noteID)
     static int chanPs4op = 0;
     static int chan4op = 0;
 
+    static struct DebugInfo
+    {
+        int chan2op;
+        int chanPs4op;
+        int chan4op;
+        QString toStr()
+        {
+            return QString("Channels:\n"
+                           "2-op: %1, Ps-4op: %2\n"
+                           "4-op: %3")
+                    .arg(this->chan2op)
+                    .arg(this->chanPs4op)
+                    .arg(this->chan4op);
+        }
+    } _debug {-1, -1, -1};
+
     int tone = noteID;
     if(m_patch.tone)
     {
@@ -264,8 +278,8 @@ void Generator::PlayNoteF(int noteID)
             tone -= m_patch.tone-128;
     }
     int i[2] = { 0, 1 };
-    bool pseudo_4op  = m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op;
-    bool natural_4op = m_patch.flags & OPL_PatchSetup::Flag_True4op;
+    bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
+    bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
 
     int  adlchannel[2] = { 0, 0 };
     if( !natural_4op || pseudo_4op )
@@ -275,7 +289,7 @@ void Generator::PlayNoteF(int noteID)
             adlchannel[0] = channels1[chanPs4op];
             adlchannel[1] = channels2[chanPs4op];
             /* Rotating channels to have nicer poliphony on key spam */
-            chanPs4op++;
+            _debug.chanPs4op = chanPs4op++;
             if(chanPs4op > (USED_CHANNELS_2OP_PS4-1))
                 chanPs4op=0;
         }
@@ -284,7 +298,7 @@ void Generator::PlayNoteF(int noteID)
             adlchannel[0] = channels[chan2op];
             adlchannel[1] = channels[chan2op];
             /* Rotating channels to have nicer poliphony on key spam */
-            chan2op++;
+            _debug.chan2op = chan2op++;
             if(chan2op > (USED_CHANNELS_2OP-1))
                 chan2op=0;
         }
@@ -296,10 +310,12 @@ void Generator::PlayNoteF(int noteID)
         adlchannel[1] = channels2_4op[chan4op];
 
         /* Rotating channels to have nicer poliphony on key spam */
-        chan4op++;
+        _debug.chan4op = chan4op++;
         if(chan4op > (USED_CHANNELS_4OP-1))
             chan4op=0;
     }
+
+    emit debugInfo(_debug.toStr());
 
     m_ins[adlchannel[0]] = i[0];
     m_ins[adlchannel[1]] = i[1];
@@ -331,10 +347,22 @@ void Generator::PlayNoteF(int noteID)
 
 void Generator::switch4op(bool enabled)
 {
+    //Shut up currently playing stuff
+    for(unsigned b=0; b < NUM_OF_CHANNELS; ++b)
+    {
+        NoteOff(b);
+        Touch_Real(b, 0);
+    }
+    memset(&m_four_op_category, 0, sizeof(m_four_op_category));
+
+    unsigned p=0;
+    for(unsigned b=0; b<18; ++b) m_four_op_category[p++] = 0;
+    for(unsigned b=0; b< 5; ++b) m_four_op_category[p++] = 8;
+
     if(enabled)
     {
         //Enable 4-operators mode
-        chip.WriteReg(0x104, 0x3F);
+        chip.WriteReg(0x104, 0xFF);
         unsigned fours = 6;
         unsigned nextfour = 0;
         for(unsigned a=0; a<fours; ++a)
@@ -353,11 +381,25 @@ void Generator::switch4op(bool enabled)
     else
     {
         //Disable 4-operators mode
-        chip.WriteReg(0x104, 0x0);
+        chip.WriteReg(0x104, 0x00);
         for(unsigned a=0; a<18; ++a)
         {
             m_four_op_category[a] = 0;
         }
+    }
+
+    //Reset patch settings
+    memset(&m_patch, 0, sizeof(OPL_PatchSetup));
+    m_patch.OPS[0].modulator_40   = 0x3F;
+    m_patch.OPS[0].modulator_E862 = 0x00FFFF00;
+    m_patch.OPS[1].carrier_40     = 0x3F;
+    m_patch.OPS[1].carrier_E862   = 0x00FFFF00;
+    //Clear all operator registers from shit
+    for(unsigned b=0; b < NUM_OF_CHANNELS; ++b)
+    {
+        Patch(b, 0);
+        Pan(b, 0x00);
+        Touch_Real(b, 0);
     }
 }
 
@@ -369,6 +411,7 @@ void Generator::Silence()
         NoteOff(c);
         Touch_Real(c, 0);
     }
+    m_regBD = 0;
 }
 
 void Generator::NoteOffAllChans()
@@ -442,7 +485,7 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
     //Shutup everything
     Silence();
-    switch4op( instrument.en_4op );
+    switch4op( instrument.en_4op && !instrument.en_pseudo4op );
 
     m_patch.OPS[0].modulator_E862 =
                  (uint(instrument.OP[MODULATOR1].waveform) << 24)
@@ -482,7 +525,6 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     m_patch.OPS[0].feedconn |= uchar(instrument.connection1);
     m_patch.OPS[0].feedconn |= 0x0E & uchar(instrument.feedback1 << 1);
 
-
     m_patch.OPS[1].modulator_E862 =
                  (uint(instrument.OP[MODULATOR2].waveform) << 24)
                 |(uint( (0xF0&(uchar(0x0F-instrument.OP[MODULATOR2].sustain)<<4))
@@ -521,7 +563,11 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     m_patch.OPS[1].feedconn |= uchar(instrument.connection2);
     m_patch.OPS[1].feedconn |= 0x0E & uchar(instrument.feedback2 << 1);
 
-    if(isDrum)
+    m_patch.flags = 0;
+    m_patch.tone = 0;
+    m_patch.voice2_fine_tune = 0.0;
+
+    if( isDrum )
     {
         if(instrument.percNoteNum && instrument.percNoteNum < 20 )
         {
@@ -534,20 +580,30 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
             }
         }
     }
+
+    if( instrument.en_4op && instrument.en_pseudo4op )
+    {
+        m_patch.voice2_fine_tune = (double(instrument.fine_tune)*15.625)/1000.0;
+        if(instrument.fine_tune == 1)
+            m_patch.voice2_fine_tune =  0.000025;
+        else if(instrument.fine_tune == -1)
+            m_patch.voice2_fine_tune = -0.000025;
+
+        m_patch.OPS[0].finetune = instrument.note_offset1;
+        m_patch.OPS[1].finetune = instrument.note_offset2;
+    }
     else
     {
-        m_patch.OPS[0].finetune = 0;
+        m_patch.OPS[0].finetune = instrument.note_offset1;
+        m_patch.OPS[1].finetune = instrument.note_offset1;
     }
 
-    m_patch.ms_sound_kon  = 40000;
-    m_patch.ms_sound_koff = 0;
-    m_patch.voice2_fine_tune = 0.0;
-    m_patch.flags = 0;
-    m_patch.tone = 0;
-
-    if(instrument.en_4op)
+    if( instrument.en_4op )
     {
-        m_patch.flags |= OPL_PatchSetup::Flag_True4op;
+        if( instrument.en_pseudo4op )
+            m_patch.flags |= OPL_PatchSetup::Flag_Pseudo4op;
+        else
+            m_patch.flags |= OPL_PatchSetup::Flag_True4op;
     }
 }
 

@@ -2,12 +2,15 @@
 <ui version="4.0">
  <class>BankEditor</class>
  <widget class="QMainWindow" name="BankEditor">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>920</width>
-    <height>772</height>
+    <width>958</width>
+    <height>776</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -33,7 +36,22 @@
     <property name="title">
      <string>Instruments list</string>
     </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
     <layout class="QGridLayout" name="gridLayout_5">
+     <property name="leftMargin">
+      <number>2</number>
+     </property>
+     <property name="topMargin">
+      <number>2</number>
+     </property>
+     <property name="rightMargin">
+      <number>2</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
      <item row="0" column="0">
       <widget class="QRadioButton" name="melodic">
        <property name="text">
@@ -61,12 +79,15 @@
      <rect>
       <x>240</x>
       <y>30</y>
-      <width>541</width>
-      <height>20</height>
+      <width>151</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>&lt;Not selected&gt;</string>
+     <string>Custom instrument name:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QFrame" name="editzone">
@@ -77,7 +98,7 @@
      <rect>
       <x>240</x>
       <y>50</y>
-      <width>541</width>
+      <width>601</width>
       <height>600</height>
      </rect>
     </property>
@@ -90,7 +111,7 @@
     <property name="lineWidth">
      <number>0</number>
     </property>
-    <layout class="QGridLayout" name="gridLayout_7">
+    <layout class="QGridLayout" name="gridLayout_7" columnstretch="25,0,0,0,0">
      <property name="leftMargin">
       <number>0</number>
      </property>
@@ -103,282 +124,37 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_25">
-       <property name="text">
-        <string>Feedback 1</string>
+     <property name="spacing">
+      <number>2</number>
+     </property>
+     <item row="2" column="0" colspan="5">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QSpinBox" name="feedback1">
-       <property name="maximum">
-        <number>7</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QGroupBox" name="connect1">
+     <item row="1" column="4">
+      <widget class="QGroupBox" name="modulator1">
        <property name="title">
-        <string>Connection 1</string>
+        <string>Modulator 1 (Operator 1)</string>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QRadioButton" name="am1">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>AM</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="fm1">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>FM</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QGroupBox" name="groupBox">
-       <property name="title">
-        <string>Percussion</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_6">
+       <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0,80,0,80" columnminimumwidth="0,0,0,50,0,50">
         <item row="0" column="0">
-         <widget class="QLabel" name="label_27">
+         <widget class="QLabel" name="label_13">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
-           <string>Note number:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="perc_noteNum">
-          <property name="maximum">
-           <number>127</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="3">
-      <widget class="QGroupBox" name="op1">
-       <property name="title">
-        <string>Carrier 1</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="1" column="3" colspan="2">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Release</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="5">
-         <widget class="QSpinBox" name="op1_release">
-          <property name="maximum">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="5">
-         <widget class="QSpinBox" name="op1_decay">
-          <property name="maximum">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2" colspan="4">
-         <widget class="QCheckBox" name="op1_eg">
-          <property name="text">
-           <string>Sustaining voice (EG)</string>
+           <string>Attack</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1" colspan="2">
          <widget class="QSpinBox" name="op1_attack">
-          <property name="maximum">
-           <number>15</number>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
-         </widget>
-        </item>
-        <item row="1" column="1" colspan="2">
-         <widget class="QSpinBox" name="op1_sustain">
-          <property name="maximum">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Sustain</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" colspan="2">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>Wave shape:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="4" colspan="2">
-         <widget class="QSpinBox" name="op1_freqmult">
-          <property name="maximum">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0" colspan="4">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Frequency multiplication</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2" colspan="4">
-         <widget class="QCheckBox" name="op1_ksr">
-          <property name="text">
-           <string>Envelope scale (KSR)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="2">
-         <widget class="QCheckBox" name="op1_am">
-          <property name="text">
-           <string>Tremolo (AM)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2" colspan="4">
-         <widget class="QComboBox" name="op1_waveform">
-          <item>
-           <property name="text">
-            <string>0 - Sine</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>1 - Half-Sine</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>2 - Absolute Sine</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>3 - Quarter-Sine</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>4 - 1/Sine, Sielence</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>5 - 1/Ans-Sine, Sielence</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>6 - Square</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>7 - Saw</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="4" column="0" colspan="2">
-         <widget class="QCheckBox" name="op1_vib">
-          <property name="text">
-           <string>Vibrato (VIB)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Attack</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3" colspan="2">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Decay</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="4" colspan="2">
-         <widget class="QSpinBox" name="op1_level">
-          <property name="maximum">
-           <number>63</number>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0" colspan="4">
-         <widget class="QLabel" name="label_28">
-          <property name="text">
-           <string>Level:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="4" colspan="2">
-         <widget class="QSpinBox" name="op1_ksl">
-          <property name="maximum">
-           <number>3</number>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0" colspan="4">
-         <widget class="QLabel" name="label_32">
-          <property name="text">
-           <string>Key Scale Level</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QGroupBox" name="op1_2">
-       <property name="title">
-        <string>Modulator 1</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_13">
-          <property name="text">
-           <string>Attack</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1" colspan="2">
-         <widget class="QSpinBox" name="op2_attack">
           <property name="maximum">
            <number>15</number>
           </property>
@@ -386,13 +162,25 @@
         </item>
         <item row="0" column="3" colspan="2">
          <widget class="QLabel" name="label_14">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Decay</string>
           </property>
          </widget>
         </item>
         <item row="0" column="5">
-         <widget class="QSpinBox" name="op2_decay">
+         <widget class="QSpinBox" name="op1_decay">
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>15</number>
           </property>
@@ -400,13 +188,19 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_15">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and chages to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Sustain</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1" colspan="2">
-         <widget class="QSpinBox" name="op2_sustain">
+         <widget class="QSpinBox" name="op1_sustain">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and chages to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>15</number>
           </property>
@@ -414,13 +208,25 @@
         </item>
         <item row="1" column="3" colspan="2">
          <widget class="QLabel" name="label_16">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Release</string>
           </property>
          </widget>
         </item>
         <item row="1" column="5">
-         <widget class="QSpinBox" name="op2_release">
+         <widget class="QSpinBox" name="op1_release">
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>15</number>
           </property>
@@ -428,377 +234,478 @@
         </item>
         <item row="2" column="0" colspan="2">
          <widget class="QLabel" name="label_17">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Waveform Select&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Wave which will be generated by operator.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(waveforms from 4 to 7 not supported on OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sine wave&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Half-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Abs-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Pulse-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Abs-Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;7 - Derived Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
-           <string>Wave shape:</string>
+           <string>Waveform select:</string>
           </property>
          </widget>
         </item>
         <item row="2" column="2" colspan="4">
-         <widget class="QComboBox" name="op2_waveform">
+         <widget class="QComboBox" name="op1_waveform">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Waveform Select&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Wave which will be generated by operator.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(waveforms from 4 to 7 not supported on OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sine wave&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Half-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Abs-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Pulse-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Abs-Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;7 - Derived Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <item>
            <property name="text">
             <string>0 - Sine</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave0.png</normaloff>:/waves/wave0.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
             <string>1 - Half-Sine</string>
            </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave1.png</normaloff>:/waves/wave1.png</iconset>
+           </property>
           </item>
           <item>
            <property name="text">
             <string>2 - Absolute Sine</string>
            </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>3 - Quarter-Sine</string>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave2.png</normaloff>:/waves/wave2.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>4 - 1/Sine, Sielence</string>
+            <string>3 - Pulse-Sine</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave3.png</normaloff>:/waves/wave3.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>5 - 1/Ans-Sine, Sielence</string>
+            <string>4 - Sine - even periods only</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave4.png</normaloff>:/waves/wave4.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>5 - Abs-Sine - even periods only</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave5.png</normaloff>:/waves/wave5.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
             <string>6 - Square</string>
            </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave6.png</normaloff>:/waves/wave6.png</iconset>
+           </property>
           </item>
           <item>
            <property name="text">
-            <string>7 - Saw</string>
+            <string>7 - Derived Square</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave7.png</normaloff>:/waves/wave7.png</iconset>
            </property>
           </item>
          </widget>
         </item>
         <item row="3" column="0" colspan="2">
-         <widget class="QCheckBox" name="op2_am">
+         <widget class="QCheckBox" name="op1_am">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tremolo&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is an Amplitude Vibrato. The repetition rate is 3.7 Hz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Tremolo (AM)</string>
           </property>
          </widget>
         </item>
         <item row="3" column="2" colspan="4">
-         <widget class="QCheckBox" name="op2_eg">
+         <widget class="QCheckBox" name="op1_eg">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sound Sustaining&lt;/span&gt;&lt;/p&gt;&lt;p&gt;When toggled on, operator's output level will be held at its sustain level until a KEY-OFF is done.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Sustaining voice (EG)</string>
           </property>
          </widget>
         </item>
         <item row="4" column="0" colspan="2">
-         <widget class="QCheckBox" name="op2_vib">
+         <widget class="QCheckBox" name="op1_vib">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Vibrato&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a Frequency Vibrato. The repetition rate is 6.1 Hz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Vibrato (VIB)</string>
           </property>
          </widget>
         </item>
         <item row="4" column="2" colspan="4">
-         <widget class="QCheckBox" name="op2_ksr">
+         <widget class="QCheckBox" name="op1_ksr">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Envelope scaling (KSR)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;When turning on, higher notes are shorter than lower notes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Envelope scale (KSR)</string>
           </property>
          </widget>
         </item>
-        <item row="7" column="0" colspan="4">
-         <widget class="QLabel" name="label_18">
-          <property name="text">
-           <string>Frequency multiplication</string>
+        <item row="5" column="5">
+         <widget class="QSpinBox" name="op1_level">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
-         </widget>
-        </item>
-        <item row="7" column="4" colspan="2">
-         <widget class="QSpinBox" name="op2_freqmult">
-          <property name="maximum">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="4" colspan="2">
-         <widget class="QSpinBox" name="op2_level">
           <property name="maximum">
            <number>63</number>
           </property>
          </widget>
         </item>
-        <item row="5" column="0" colspan="4">
-         <widget class="QLabel" name="label_29">
-          <property name="text">
-           <string>Level:</string>
+        <item row="7" column="5">
+         <widget class="QSpinBox" name="op1_freqmult">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator's frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator's frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
           </property>
          </widget>
         </item>
-        <item row="8" column="4" colspan="2">
-         <widget class="QSpinBox" name="op2_ksl">
+        <item row="8" column="5">
+         <widget class="QSpinBox" name="op1_ksl">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>3</number>
           </property>
          </widget>
         </item>
-        <item row="8" column="0" colspan="4">
+        <item row="8" column="0" colspan="5">
          <widget class="QLabel" name="label_33">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Key Scale Level</string>
           </property>
          </widget>
         </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="feedback2label">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Feedback 2</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="feedback2">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="maximum">
-        <number>7</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QGroupBox" name="connect2">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="title">
-        <string>Connection 2</string>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QRadioButton" name="am2">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
+        <item row="7" column="0" colspan="5">
+         <widget class="QLabel" name="label_18">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator's frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator's frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
-          <property name="text">
-           <string>AM</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="fm2">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>FM</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QCheckBox" name="op4mode">
-       <property name="text">
-        <string>Enable 4-operator / Double-voice mode</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0" colspan="3">
-      <widget class="QGroupBox" name="op3">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="title">
-        <string>Carrier 2</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="7" column="4" colspan="2">
-         <widget class="QSpinBox" name="op3_freqmult">
-          <property name="maximum">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0" colspan="4">
-         <widget class="QLabel" name="label_12">
           <property name="text">
            <string>Frequency multiplication</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="2" colspan="4">
-         <widget class="QCheckBox" name="op3_ksr">
+        <item row="5" column="0" colspan="5">
+         <widget class="QLabel" name="label_29">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
-           <string>Envelope scale (KSR)</string>
+           <string>Level:</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="0" colspan="2">
-         <widget class="QCheckBox" name="op3_am">
-          <property name="text">
-           <string>Tremolo (AM)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0" colspan="2">
-         <widget class="QCheckBox" name="op3_vib">
-          <property name="text">
-           <string>Vibrato (VIB)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2" colspan="4">
-         <widget class="QCheckBox" name="op3_eg">
-          <property name="text">
-           <string>Sustaining voice (EG)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>Attack</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1" colspan="2">
-         <widget class="QSpinBox" name="op3_attack">
-          <property name="maximum">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Sustain</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3" colspan="2">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Decay</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="5">
-         <widget class="QSpinBox" name="op3_decay">
-          <property name="maximum">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1" colspan="2">
-         <widget class="QSpinBox" name="op3_sustain">
-          <property name="maximum">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QGroupBox" name="carrier1">
+       <property name="title">
+        <string>Carrier 1 (Operator 2)</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,80,0,80" columnminimumwidth="0,0,0,50,0,50">
         <item row="1" column="3" colspan="2">
-         <widget class="QLabel" name="label_10">
+         <widget class="QLabel" name="label_4">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Release</string>
           </property>
          </widget>
         </item>
         <item row="1" column="5">
-         <widget class="QSpinBox" name="op3_release">
+         <widget class="QSpinBox" name="op2_release">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>15</number>
           </property>
          </widget>
         </item>
-        <item row="2" column="0" colspan="2">
-         <widget class="QLabel" name="label_11">
+        <item row="0" column="5">
+         <widget class="QSpinBox" name="op2_decay">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2" colspan="4">
+         <widget class="QCheckBox" name="op2_eg">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sound Sustaining&lt;/span&gt;&lt;/p&gt;&lt;p&gt;When toggled on, operator's output level will be held at its sustain level until a KEY-OFF is done.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
-           <string>Wave shape:</string>
+           <string>Sustaining voice (EG)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" colspan="2">
+         <widget class="QSpinBox" name="op2_attack">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="2">
+         <widget class="QSpinBox" name="op2_sustain">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and chages to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and chages to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Sustain</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QLabel" name="label_5">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Waveform Select&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Wave which will be generated by operator.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(waveforms from 4 to 7 not supported on OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sine wave&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Half-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Abs-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Pulse-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Abs-Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;7 - Derived Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Waveform select:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2" colspan="4">
+         <widget class="QCheckBox" name="op2_ksr">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Envelope scaling (KSR)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;When turning on, higher notes are shorter than lower notes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Envelope scale (KSR)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="2">
+         <widget class="QCheckBox" name="op2_am">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tremolo&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is an Amplitude Vibrato. The repetition rate is 3.7 Hz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Tremolo (AM)</string>
           </property>
          </widget>
         </item>
         <item row="2" column="2" colspan="4">
-         <widget class="QComboBox" name="op3_waveform">
+         <widget class="QComboBox" name="op2_waveform">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Waveform Select&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Wave which will be generated by operator.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(waveforms from 4 to 7 not supported on OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sine wave&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Half-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Abs-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Pulse-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Abs-Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;7 - Derived Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <item>
            <property name="text">
             <string>0 - Sine</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave0.png</normaloff>:/waves/wave0.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
             <string>1 - Half-Sine</string>
            </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave1.png</normaloff>:/waves/wave1.png</iconset>
+           </property>
           </item>
           <item>
            <property name="text">
             <string>2 - Absolute Sine</string>
            </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>3 - Quarter-Sine</string>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave2.png</normaloff>:/waves/wave2.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>4 - 1/Sine, Sielence</string>
+            <string>3 - Pulse-Sine</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave3.png</normaloff>:/waves/wave3.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>5 - 1/Ans-Sine, Sielence</string>
+            <string>4 - Sine - even periods only</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave4.png</normaloff>:/waves/wave4.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>5 - Abs-Sine - even periods only</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave5.png</normaloff>:/waves/wave5.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
             <string>6 - Square</string>
            </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave6.png</normaloff>:/waves/wave6.png</iconset>
+           </property>
           </item>
           <item>
            <property name="text">
-            <string>7 - Saw</string>
+            <string>7 - Derived Square</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave7.png</normaloff>:/waves/wave7.png</iconset>
            </property>
           </item>
          </widget>
         </item>
-        <item row="5" column="4" colspan="2">
-         <widget class="QSpinBox" name="op3_level">
+        <item row="4" column="0" colspan="2">
+         <widget class="QCheckBox" name="op2_vib">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Vibrato&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a Frequency Vibrato. The repetition rate is 6.1 Hz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Vibrato (VIB)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Attack</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3" colspan="2">
+         <widget class="QLabel" name="label_2">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Decay</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="5">
+         <widget class="QSpinBox" name="op2_level">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>63</number>
           </property>
          </widget>
         </item>
-        <item row="5" column="0" colspan="4">
-         <widget class="QLabel" name="label_30">
-          <property name="text">
-           <string>Level:</string>
+        <item row="6" column="5">
+         <widget class="QSpinBox" name="op2_freqmult">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator's frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator's frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
           </property>
          </widget>
         </item>
-        <item row="8" column="4" colspan="2">
-         <widget class="QSpinBox" name="op3_ksl">
+        <item row="7" column="5">
+         <widget class="QSpinBox" name="op2_ksl">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>3</number>
           </property>
          </widget>
         </item>
-        <item row="8" column="0" colspan="4">
-         <widget class="QLabel" name="label_35">
+        <item row="5" column="0" colspan="5">
+         <widget class="QLabel" name="label_28">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Level:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="5">
+         <widget class="QLabel" name="label_6">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator's frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator's frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Frequency multiplication</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0" colspan="5">
+         <widget class="QLabel" name="label_32">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Key Scale Level</string>
           </property>
@@ -807,24 +714,30 @@
        </layout>
       </widget>
      </item>
-     <item row="3" column="3">
-      <widget class="QGroupBox" name="op4">
+     <item row="5" column="4">
+      <widget class="QGroupBox" name="modulator2">
        <property name="enabled">
         <bool>false</bool>
        </property>
        <property name="title">
-        <string>Modulator 2</string>
+        <string>Modulator 2 (Operator 2)</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_4">
+       <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0,80,0,80" columnminimumwidth="0,0,0,50,0,50">
         <item row="1" column="5">
-         <widget class="QSpinBox" name="op4_release">
+         <widget class="QSpinBox" name="op3_release">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>15</number>
           </property>
          </widget>
         </item>
         <item row="0" column="5">
-         <widget class="QSpinBox" name="op4_decay">
+         <widget class="QSpinBox" name="op3_decay">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>15</number>
           </property>
@@ -832,13 +745,19 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_21">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and chages to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Sustain</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1" colspan="2">
-         <widget class="QSpinBox" name="op4_sustain">
+         <widget class="QSpinBox" name="op3_sustain">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and chages to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>15</number>
           </property>
@@ -846,6 +765,9 @@
         </item>
         <item row="1" column="3" colspan="2">
          <widget class="QLabel" name="label_22">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Release</string>
           </property>
@@ -853,99 +775,144 @@
         </item>
         <item row="2" column="0" colspan="2">
          <widget class="QLabel" name="label_23">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Waveform Select&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Wave which will be generated by operator.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(waveforms from 4 to 7 not supported on OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sine wave&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Half-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Abs-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Pulse-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Abs-Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;7 - Derived Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
-           <string>Wave shape:</string>
+           <string>Waveform select:</string>
           </property>
          </widget>
         </item>
         <item row="2" column="2" colspan="4">
-         <widget class="QComboBox" name="op4_waveform">
+         <widget class="QComboBox" name="op3_waveform">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Waveform Select&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Wave which will be generated by operator.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(waveforms from 4 to 7 not supported on OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sine wave&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Half-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Abs-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Pulse-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Abs-Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;7 - Derived Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <item>
            <property name="text">
             <string>0 - Sine</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave0.png</normaloff>:/waves/wave0.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
             <string>1 - Half-Sine</string>
            </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave1.png</normaloff>:/waves/wave1.png</iconset>
+           </property>
           </item>
           <item>
            <property name="text">
             <string>2 - Absolute Sine</string>
            </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>3 - Quarter-Sine</string>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave2.png</normaloff>:/waves/wave2.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>4 - 1/Sine, Sielence</string>
+            <string>3 - Pulse-Sine</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave3.png</normaloff>:/waves/wave3.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>5 - 1/Ans-Sine, Sielence</string>
+            <string>4 - Sine - even periods only</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave4.png</normaloff>:/waves/wave4.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>5 - Abs-Sine - even periods only</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave5.png</normaloff>:/waves/wave5.png</iconset>
            </property>
           </item>
           <item>
            <property name="text">
             <string>6 - Square</string>
            </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave6.png</normaloff>:/waves/wave6.png</iconset>
+           </property>
           </item>
           <item>
            <property name="text">
-            <string>7 - Saw</string>
+            <string>7 - Derived Square</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave7.png</normaloff>:/waves/wave7.png</iconset>
            </property>
           </item>
          </widget>
         </item>
         <item row="3" column="0" colspan="2">
-         <widget class="QCheckBox" name="op4_am">
+         <widget class="QCheckBox" name="op3_am">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tremolo&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is an Amplitude Vibrato. The repetition rate is 3.7 Hz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Tremolo (AM)</string>
           </property>
          </widget>
         </item>
         <item row="3" column="2" colspan="4">
-         <widget class="QCheckBox" name="op4_eg">
+         <widget class="QCheckBox" name="op3_eg">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sound Sustaining&lt;/span&gt;&lt;/p&gt;&lt;p&gt;When toggled on, operator's output level will be held at its sustain level until a KEY-OFF is done.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Sustaining voice (EG)</string>
           </property>
          </widget>
         </item>
         <item row="4" column="0" colspan="2">
-         <widget class="QCheckBox" name="op4_vib">
+         <widget class="QCheckBox" name="op3_vib">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Vibrato&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a Frequency Vibrato. The repetition rate is 6.1 Hz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Vibrato (VIB)</string>
           </property>
          </widget>
         </item>
         <item row="4" column="2" colspan="4">
-         <widget class="QCheckBox" name="op4_ksr">
+         <widget class="QCheckBox" name="op3_ksr">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Envelope scaling (KSR)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;When turning on, higher notes are shorter than lower notes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Envelope scale (KSR)</string>
           </property>
          </widget>
         </item>
-        <item row="7" column="0" colspan="4">
-         <widget class="QLabel" name="label_24">
-          <property name="text">
-           <string>Frequency multiplication</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="4" colspan="2">
-         <widget class="QSpinBox" name="op4_freqmult">
-          <property name="maximum">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label_19">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Attack</string>
           </property>
@@ -953,47 +920,722 @@
         </item>
         <item row="0" column="3" colspan="2">
          <widget class="QLabel" name="label_20">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Decay</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1" colspan="2">
-         <widget class="QSpinBox" name="op4_attack">
+         <widget class="QSpinBox" name="op3_attack">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>15</number>
           </property>
          </widget>
         </item>
-        <item row="6" column="4" colspan="2">
-         <widget class="QSpinBox" name="op4_level">
+        <item row="6" column="5">
+         <widget class="QSpinBox" name="op3_level">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>63</number>
           </property>
          </widget>
         </item>
-        <item row="6" column="0" colspan="4">
-         <widget class="QLabel" name="label_31">
-          <property name="text">
-           <string>Level:</string>
+        <item row="7" column="5">
+         <widget class="QSpinBox" name="op3_freqmult">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator's frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator's frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
           </property>
          </widget>
         </item>
-        <item row="8" column="4" colspan="2">
-         <widget class="QSpinBox" name="op4_ksl">
+        <item row="8" column="5">
+         <widget class="QSpinBox" name="op3_ksl">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="maximum">
            <number>3</number>
           </property>
          </widget>
         </item>
-        <item row="8" column="0" colspan="4">
+        <item row="7" column="0" colspan="5">
+         <widget class="QLabel" name="label_24">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator's frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator's frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Frequency multiplication</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="5">
+         <widget class="QLabel" name="label_31">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Level:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0" colspan="5">
          <widget class="QLabel" name="label_34">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Key Scale Level</string>
           </property>
          </widget>
         </item>
        </layout>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="2">
+      <widget class="QGroupBox" name="carrier2">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="title">
+        <string>Carrier 2 (Operator 4)</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,80,0,80" columnminimumwidth="0,0,0,50,0,50">
+        <item row="4" column="2" colspan="4">
+         <widget class="QCheckBox" name="op4_ksr">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Envelope scaling (KSR)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;When turning on, higher notes are shorter than lower notes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Envelope scale (KSR)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="2">
+         <widget class="QCheckBox" name="op4_am">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tremolo&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is an Amplitude Vibrato. The repetition rate is 3.7 Hz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Tremolo (AM)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="2">
+         <widget class="QCheckBox" name="op4_vib">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Vibrato&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a Frequency Vibrato. The repetition rate is 6.1 Hz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Vibrato (VIB)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2" colspan="4">
+         <widget class="QCheckBox" name="op4_eg">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sound Sustaining&lt;/span&gt;&lt;/p&gt;&lt;p&gt;When toggled on, operator's output level will be held at its sustain level until a KEY-OFF is done.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Sustaining voice (EG)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Attack</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" colspan="2">
+         <widget class="QSpinBox" name="op4_attack">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and chages to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Sustain</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3" colspan="2">
+         <widget class="QLabel" name="label_8">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Decay</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QSpinBox" name="op4_decay">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="2">
+         <widget class="QSpinBox" name="op4_sustain">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and chages to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3" colspan="2">
+         <widget class="QLabel" name="label_10">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Release</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="5">
+         <widget class="QSpinBox" name="op4_release">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QLabel" name="label_11">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Waveform Select&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Wave which will be generated by operator.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(waveforms from 4 to 7 not supported on OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sine wave&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Half-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Abs-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Pulse-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Abs-Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;7 - Derived Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Waveform select:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2" colspan="4">
+         <widget class="QComboBox" name="op4_waveform">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Waveform Select&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Wave which will be generated by operator.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(waveforms from 4 to 7 not supported on OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sine wave&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Half-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Abs-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Pulse-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Abs-Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;7 - Derived Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>0 - Sine</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave0.png</normaloff>:/waves/wave0.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>1 - Half-Sine</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave1.png</normaloff>:/waves/wave1.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2 - Absolute Sine</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave2.png</normaloff>:/waves/wave2.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>3 - Pulse-Sine</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave3.png</normaloff>:/waves/wave3.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>4 - Sine - even periods only</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave4.png</normaloff>:/waves/wave4.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>5 - Abs-Sine - even periods only</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave5.png</normaloff>:/waves/wave5.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>6 - Square</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave6.png</normaloff>:/waves/wave6.png</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>7 - Derived Square</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/waves/wave7.png</normaloff>:/waves/wave7.png</iconset>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="5" column="5">
+         <widget class="QSpinBox" name="op4_level">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>63</number>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="5">
+         <widget class="QSpinBox" name="op4_freqmult">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator's frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator's frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>15</number>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="5">
+         <widget class="QSpinBox" name="op4_ksl">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>3</number>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0" colspan="5">
+         <widget class="QLabel" name="label_35">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Key Scale Level</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0" colspan="5">
+         <widget class="QLabel" name="label_12">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator's frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator's frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Frequency multiplication</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="5">
+         <widget class="QLabel" name="label_30">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Level:</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="5">
+      <widget class="QFrame" name="frame_2">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_9">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="2">
+         <widget class="QGroupBox" name="connect1">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Synthesis Type.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;AM (1) = Additive synthesis, FM (0) = Frequency Modulation&lt;br/&gt;In four-operator mode, there are two bits controlling the synthesis type. Both are the bit 0 of register C0, one of Operators 1 and 2 and the second of Operators 3 and 4. &lt;/p&gt;
+&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+&lt;tr&gt;&lt;th&gt;Op 1&amp;amp;2&lt;/th&gt;&lt;th&gt;Op 3&amp;amp;4 &lt;/th&gt;&lt;th&gt;Type&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;NONE&lt;/td&gt;&lt;td&gt;FM&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;NONE&lt;/td&gt;&lt;td&gt;AM&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;FM-FM&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;AM-FM&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;FM-AM&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;AM-AM&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="title">
+           <string>Synthesis type 1</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QRadioButton" name="am1">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>AM</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="fm1">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>FM</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QSpinBox" name="noteOffset1">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don't offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In pair of 2-operator voices mode is an offset of the first voice&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="minimum">
+           <number>-127</number>
+          </property>
+          <property name="maximum">
+           <number>127</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="7">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Percussion</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_27">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Note number:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="perc_noteNum">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="maximum">
+              <number>127</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_25">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack Modulation Factor&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If 0, no feedback is present. If 1-7, operator 1 will send a portion of its output back into itself.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Factor&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;When in four-operator mode, the FeedBack value is used only by Operator 1, value of Operators 2, 3 and 4 is ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Feedback 1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="feedback1">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack Modulation Factor&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If 0, no feedback is present. If 1-7, operator 1 will send a portion of its output back into itself.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Factor&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;When in four-operator mode, the FeedBack value is used only by Operator 1, value of Operators 2, 3 and 4 is ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>7</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QLabel" name="label_37">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don't offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In pair of 2-operator voices mode is an offset of the first voice&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Note offset 1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="6">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="5">
+      <widget class="QFrame" name="frame">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_8">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="8">
+         <widget class="QCheckBox" name="op4mode">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enables 4-operators mode of OPL3 chip&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(not supported on OPL2 chip, but &amp;quot;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices&lt;/span&gt;&amp;quot; can be used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Enable 4-operator</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4" rowspan="2">
+         <widget class="QLabel" name="label_38">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset second voice to one semi-tone (octave is 12 semi-tones) &lt;br/&gt;(0 is don't offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Note offset 2</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="8">
+         <widget class="QCheckBox" name="doubleVoice">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enables pseudo 4-operators mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;It's a pair of 2-operator voices which are works independent from each other.&lt;br/&gt;Is possible to detune second voice and play both voices with different tones.&lt;/p&gt;&lt;p&gt;Mainly used in DMX OP2 files.&lt;br/&gt;This was needed for OPL2 chip which not supports 4 operators mode.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Pair of 2-operator voices mode</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" rowspan="2">
+         <widget class="QLabel" name="feedback2label">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack Modulation Factor&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If 0, no feedback is present. If 1-7, operator 1 will send a portion of its output back into itself.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Factor&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;When in four-operator mode, the FeedBack value is used only by Operator 1, value of Operators 2, 3 and 4 is ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Feedback 2</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" rowspan="2">
+         <widget class="QSpinBox" name="feedback2">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack Modulation Factor&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If 0, no feedback is present. If 1-7, operator 1 will send a portion of its output back into itself.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Factor&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;When in four-operator mode, the FeedBack value is used only by Operator 1, value of Operators 2, 3 and 4 is ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>7</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="6" rowspan="2">
+         <widget class="QSpinBox" name="noteOffset2">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset second voice to one semi-tone (octave is 12 semi-tones) &lt;br/&gt;(0 is don't offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="minimum">
+           <number>-127</number>
+          </property>
+          <property name="maximum">
+           <number>127</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2" rowspan="2">
+         <widget class="QGroupBox" name="connect2">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Synthesis Type.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;AM (1) = Additive synthesis, FM (0) = Frequency Modulation&lt;br/&gt;In four-operator mode, there are two bits controlling the synthesis type. Both are the bit 0 of register C0, one of Operators 1 and 2 and the second of Operators 3 and 4. &lt;/p&gt;
+&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+&lt;tr&gt;&lt;th&gt;Op 1&amp;amp;2&lt;/th&gt;&lt;th&gt;Op 3&amp;amp;4 &lt;/th&gt;&lt;th&gt;Type&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;NONE&lt;/td&gt;&lt;td&gt;FM&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;NONE&lt;/td&gt;&lt;td&gt;AM&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;FM-FM&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;AM-FM&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;FM-AM&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;AM-AM&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="title">
+           <string>Synthesis Type 2</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QRadioButton" name="am2">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>AM</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="fm2">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>FM</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="7">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="Line" name="line_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="Line" name="line_4">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
       </widget>
      </item>
     </layout>
@@ -1014,10 +1656,10 @@
    <widget class="QGroupBox" name="testNoteBox">
     <property name="geometry">
      <rect>
-      <x>790</x>
+      <x>840</x>
       <y>150</y>
       <width>121</width>
-      <height>501</height>
+      <height>431</height>
      </rect>
     </property>
     <property name="title">
@@ -1031,6 +1673,10 @@
        <width>101</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Current note position (60 is a C of a first octave).
+Available from 0 to 127</string>
      </property>
      <property name="maximum">
       <number>127</number>
@@ -1048,6 +1694,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Play a major triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
+     </property>
      <property name="text">
       <string>Major chord</string>
      </property>
@@ -1061,6 +1710,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Play a minor triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
+     </property>
      <property name="text">
       <string>Minor chord</string>
      </property>
@@ -1073,6 +1725,9 @@
        <width>101</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Play a single note. Hold button to play sound, release button to off note.</string>
      </property>
      <property name="text">
       <string>Play Note</string>
@@ -1100,6 +1755,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Play a major seventh chord relative to selected note. Hold button to play sound, release button to off note.</string>
+     </property>
      <property name="text">
       <string>Major 7-chord</string>
      </property>
@@ -1112,6 +1770,9 @@
        <width>101</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Play a minor seventh chord relative to selected note. Hold button to play sound, release button to off note.</string>
      </property>
      <property name="text">
       <string>Minor 7-chord</string>
@@ -1126,6 +1787,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Play a augmented triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
+     </property>
      <property name="text">
       <string>Augmented chord</string>
      </property>
@@ -1139,18 +1803,24 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Play a diminished triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
+     </property>
      <property name="text">
-      <string>Augmented chord</string>
+      <string>Diminished chord</string>
      </property>
     </widget>
     <widget class="QPushButton" name="shutUp">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>470</y>
+       <y>400</y>
        <width>101</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Mute all playing/sustaining notes in all channels</string>
      </property>
      <property name="text">
       <string>Shut up!</string>
@@ -1162,7 +1832,7 @@
      <rect>
       <x>10</x>
       <y>660</y>
-      <width>901</width>
+      <width>941</width>
       <height>81</height>
      </rect>
     </property>
@@ -1183,8 +1853,8 @@
     <property name="geometry">
      <rect>
       <x>240</x>
-      <y>10</y>
-      <width>541</width>
+      <y>0</y>
+      <width>601</width>
       <height>20</height>
      </rect>
     </property>
@@ -1195,7 +1865,7 @@
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>790</x>
+      <x>840</x>
       <y>50</y>
       <width>121</width>
       <height>80</height>
@@ -1213,6 +1883,9 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tremolo (Amplitude Vibrato) Depth.&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Ucheched&lt;/span&gt; = 1.0dB,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Checked&lt;/span&gt; = 4.8dB.&lt;/p&gt;&lt;p&gt;(Effect taking for instruments where tremolo flag is used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>Deep Tremolo</string>
      </property>
@@ -1226,10 +1899,126 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Vibrato Depth.&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Uchecked&lt;/span&gt; = 7 cents,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Checked&lt;/span&gt; = 14 cents.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;A &amp;quot;cent&amp;quot; is 1/100 of a semi-tone.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(Effect taking for instruments where vibrato flag is used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>Deep Vibrato</string>
      </property>
     </widget>
+   </widget>
+   <widget class="QLabel" name="debugBox">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>0</y>
+      <width>111</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Monospace</family>
+      <pointsize>7</pointsize>
+      <stylestrategy>NoAntialias</stylestrategy>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignHCenter|Qt::AlignTop</set>
+    </property>
+   </widget>
+   <widget class="QFrame" name="editzone2">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>590</y>
+      <width>121</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>0</number>
+    </property>
+    <widget class="QLabel" name="label_36">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Detune second voice pitch&lt;br/&gt;(0 is don't detune.&lt;br/&gt;Range from -127 to 127)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>Fine tuning
+of second voice</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="secVoiceFineTune">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>101</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Detune second voice pitch&lt;br/&gt;(0 is don't detune.&lt;br/&gt;Range from -127 to 127)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="minimum">
+      <number>-127</number>
+     </property>
+     <property name="maximum">
+      <number>127</number>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLineEdit" name="insName">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>26</y>
+      <width>441</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Custom instrument name</string>
+    </property>
+    <property name="maxLength">
+     <number>32</number>
+    </property>
+   </widget>
+   <widget class="Line" name="line_5">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>20</y>
+      <width>601</width>
+      <height>2</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -1237,8 +2026,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>920</width>
-     <height>21</height>
+     <width>958</width>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1342,81 +2131,161 @@
  <connections>
   <connection>
    <sender>op4mode</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>connect2</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>453</x>
-     <y>299</y>
+     <x>752</x>
+     <y>406</y>
     </hint>
     <hint type="destinationlabel">
-     <x>389</x>
-     <y>278</y>
+     <x>532</x>
+     <y>437</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>op4mode</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>feedback2</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>505</x>
-     <y>300</y>
+     <x>780</x>
+     <y>406</y>
     </hint>
     <hint type="destinationlabel">
-     <x>264</x>
-     <y>300</y>
+     <x>347</x>
+     <y>423</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>op4mode</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>op3</receiver>
+   <signal>toggled(bool)</signal>
+   <receiver>carrier2</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>525</x>
-     <y>296</y>
+     <x>780</x>
+     <y>406</y>
     </hint>
     <hint type="destinationlabel">
      <x>413</x>
-     <y>328</y>
+     <y>676</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>op4mode</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>op4</receiver>
+   <signal>toggled(bool)</signal>
+   <receiver>modulator2</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>555</x>
-     <y>303</y>
+     <x>780</x>
+     <y>406</y>
     </hint>
     <hint type="destinationlabel">
-     <x>555</x>
-     <y>330</y>
+     <x>780</x>
+     <y>676</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>op4mode</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>feedback2label</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>527</x>
-     <y>291</y>
+     <x>780</x>
+     <y>406</y>
     </hint>
     <hint type="destinationlabel">
-     <x>183</x>
-     <y>302</y>
+     <x>240</x>
+     <y>437</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>op4mode</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>doubleVoice</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>637</x>
+     <y>394</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>612</x>
+     <y>426</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>doubleVoice</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>secVoiceFineTune</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>678</x>
+     <y>431</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>827</x>
+     <y>577</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>doubleVoice</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_36</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>699</x>
+     <y>432</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>842</x>
+     <y>557</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>doubleVoice</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>noteOffset2</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>641</x>
+     <y>429</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>829</x>
+     <y>657</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>doubleVoice</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_38</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>641</x>
+     <y>432</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>806</x>
+     <y>641</y>
     </hint>
    </hints>
   </connection>

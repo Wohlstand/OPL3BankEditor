@@ -53,10 +53,6 @@ struct OPL_PatchSetup
     unsigned char  tone;
     //! Extra patch flags
     unsigned char  flags;
-    //! Number of milliseconds it produces sound;
-    unsigned short ms_sound_kon;
-    //! ???
-    unsigned short ms_sound_koff;
     //! Pseudo-4op second voice only
     double         voice2_fine_tune;
 };
@@ -101,6 +97,8 @@ public slots:
     void changeNote(int newnote);
     void changeDeepTremolo(bool enabled);
     void changeDeepVibrato(bool enabled);
+signals:
+    void debugInfo(QString);
 
 private:
     int note;

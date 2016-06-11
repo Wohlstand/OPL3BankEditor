@@ -49,3 +49,31 @@ qint64 writeBE(QFile &file, unsigned short &out)
     qint64 len = file.write(char_p(bytes), 2);
     return len;
 }
+
+short toSint16LE(uchar *arr)
+{
+    short num = *(signed char *)(&arr[1]);
+    num *= 1 << 8;
+    num |= arr[0];
+    return num;
+}
+
+short toSint16BE(uchar *arr)
+{
+    short num = *(signed char *)(&arr[0]);
+    num *= 1 << 8;
+    num |= arr[1];
+    return num;
+}
+
+void fromSint16LE(short in, uchar *arr)
+{
+    arr[0] =  in & 0x00FF;
+    arr[1] = (in>>8) & 0x00FF;
+}
+
+void fromSint16BE(short in, uchar *arr)
+{
+    arr[1] =  in & 0x00FF;
+    arr[0] = (in>>8) & 0x00FF;
+}
