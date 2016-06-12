@@ -20,7 +20,7 @@
 #include <qendian.h>
 //#include <QtDebug>
 
-static const unsigned short Operators[23*2] =
+static const unsigned short Operators[NUM_OF_CHANNELS*2] =
     {0x000,0x003,0x001,0x004,0x002,0x005, // operators  0, 3,  1, 4,  2, 5
      0x008,0x00B,0x009,0x00C,0x00A,0x00D, // operators  6, 9,  7,10,  8,11
      0x010,0x013,0x011,0x014,0x012,0x015, // operators 12,15, 13,16, 14,17
@@ -33,7 +33,7 @@ static const unsigned short Operators[23*2] =
      0x015,0xFFF,   // operator 17
      0x011,0xFFF }; // operator 13
 
-static const unsigned short Channels[23] =
+static const unsigned short Channels[NUM_OF_CHANNELS] =
     {0x000,0x001,0x002, 0x003,0x004,0x005, 0x006,0x007,0x008, // 0..8
      0x100,0x101,0x102, 0x103,0x104,0x105, 0x106,0x107,0x108, // 9..17 (secondary set)
      0x006,0x007,0x008,0xFFF,0xFFF }; // <- hw percussions, 0xFFF = no support for pitch/pan
@@ -55,9 +55,9 @@ static const int channels1[USED_CHANNELS_2OP_PS4] = {0, 2, 4, 6, 8, 10, 12, 14, 
 static const int channels2[USED_CHANNELS_2OP_PS4] = {1, 3, 5, 7, 9, 11, 13, 15, 17};
 
 //! 4-operator channels map 1
-int channels1_4op[USED_CHANNELS_4OP] = {0,  1,  2,  9,  10, 11};
+static const int channels1_4op[USED_CHANNELS_4OP] = {0,  1,  2,  9,  10, 11};
 //! 4-operator channels map 1
-int channels2_4op[USED_CHANNELS_4OP] = {3,  4,  5,  12, 13, 14};
+static const int channels2_4op[USED_CHANNELS_4OP] = {3,  4,  5,  12, 13, 14};
 
 Generator::Generator(int sampleRate,
                      QObject *parent)
