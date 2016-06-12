@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>958</width>
+    <width>970</width>
     <height>776</height>
    </rect>
   </property>
@@ -2066,8 +2066,8 @@ of second voice</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>958</width>
-     <height>27</height>
+     <width>970</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
