@@ -1,0 +1,30 @@
+Version 1.2 (__ june 2016)
+- Added support of DMX OPL2 and Build Engine Timbre bank formats support
+- Added support of pseudo 4-operators mode (DMX OPL2 format only)
+- Added support for custom instrument names (DMX OPL2 format only)
+- Added velocity offset parameter (TMB format only)
+- Better management of the channes
+- Fixed toggling between 2-op and 4-op modes (sometimes that caused a wired noices because junk left after previous
+tests in channes which are must be empty on mode toggling)
+
+Version 1.1.2 (10 june 2016)
+- Added more chords
+- Added internal clipboard support (to copy / paste instrument)
+- Fixed window size
+- Ability to reset instrument state to previous
+- States of Deep Tremolo and Deep Vibrato, and recently opened/saved file now are remembering
+- Ability to drop file into the window to open it
+- Ability to open file from command line argument
+- Better poliphony: now used all 18 2-operator channels and 6 4-operator channels
+- Question on saving a modified file 
+
+Version 1.1 (9 june 2016)
+- Added piano layout to test notes
+- Added menubar
+- Improved view of main window
+- Fixed names of some instruments and percussions
+- Single-note testing now allows 3 mixing channels to keep releases of previous note hits
+
+Version 1.0 (9 june 2016)
+- First release
+
