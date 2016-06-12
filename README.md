@@ -1,7 +1,7 @@
 # OPL3BankEditor
 A small cross-platform editor of the OPL3 FM banks of different formats
 
-Currently supported Junglevision format, planned to add TMB, DMX-OP2 and other formats
+Currently supported Junglevision format, DMX-OPL2, Build Engine Timbre. Other formats (*.bnk, *.ibk, *.opl, *.ad, *.adlraw) are planned
 
 # How to build
 You need a Qt 5 to build this project.
