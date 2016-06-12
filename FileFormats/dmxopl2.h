@@ -19,30 +19,23 @@
 #ifndef DMXOPL2_H
 #define DMXOPL2_H
 
-#include <QString>
-#include "../bank.h"
+#include "ffmt_base.h"
 
 /**
  * @brief Reader and Writer of the DMX OP2 Bank format
  */
-class DmxOPL2
+class DmxOPL2 : public FmBankFormatBase
 {
 public:
-    enum ErrCode
-    {
-        ERR_OK=0,
-        ERR_NOFILE,
-        ERR_BADFORMAT
-    };
     enum DmxFlags
     {
-        Dmx_FixedPitch = 0x0001,
-        Dmx_Unknown = 0x0002,
+        Dmx_FixedPitch  = 0x0001,
+        Dmx_Unknown     = 0x0002,
         Dmx_DoubleVoice = 0x0004
     };
     static bool detect(char* magic);
-    static int loadFile(QString filePath, FmBank &bank);
-    static int saveFile(QString filePath, FmBank &bank);
+    static int  loadFile(QString filePath, FmBank &bank);
+    static int  saveFile(QString filePath, FmBank &bank);
 };
 
 #endif // DMXOPL2_H

@@ -162,90 +162,80 @@ bool BankEditor::openFile(QString filePath)
     char magic[32];
     getMagic(filePath, magic, 32);
 
-    if(JunleVizion::detect(magic))
-    {
-        int err = JunleVizion::loadFile(filePath, m_bank);
-        if(err != JunleVizion::ERR_OK)
-        {
-            QString errText;
-            switch(err)
-            {
-                case JunleVizion::ERR_BADFORMAT: errText = tr("bad file format"); break;
-                case JunleVizion::ERR_NOFILE:    errText = tr("can't open file"); break;
-            }
-            ErrMessageO(this, errText);
-            return false;
-        } else {
-            initFileData(filePath);
-            return true;
-        }
-    }
-    else
-    if(DmxOPL2::detect(magic))
-    {
-        int err = DmxOPL2::loadFile(filePath, m_bank);
-        if(err != DmxOPL2::ERR_OK)
-        {
-            QString errText;
-            switch(err)
-            {
-                case DmxOPL2::ERR_BADFORMAT: errText = tr("bad file format"); break;
-                case DmxOPL2::ERR_NOFILE:    errText = tr("can't open file"); break;
-            }
-            ErrMessageO(this, errText);
-            return false;
-        } else {
-            initFileData(filePath);
-            return true;
-        }
-    }
+    int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
 
-    QMessageBox::warning(this,
-                         tr("Can't open bank file!"),
-                         tr("Can't open bank file because unknown file format."),
-                         QMessageBox::Ok);
+    //Check out for Junglevision file format
+    if(JunleVizion::detect(magic))
+        err = JunleVizion::loadFile(filePath, m_bank);
+
+    //Check for DMX OPL2 file format
+    else if(DmxOPL2::detect(magic))
+        err = DmxOPL2::loadFile(filePath, m_bank);
+
+
+    if(err != FmBankFormatBase::ERR_OK)
+    {
+        QString errText;
+        switch(err)
+        {
+        case FmBankFormatBase::ERR_BADFORMAT:
+            errText = tr("bad file format"); break;
+        case FmBankFormatBase::ERR_NOFILE:
+            errText = tr("can't open file"); break;
+        case FmBankFormatBase::ERR_NOT_IMLEMENTED:
+            errText = tr("reading of this format is not implemented yet"); break;
+        case FmBankFormatBase::ERR_UNSUPPORTED_FORMAT:
+            errText = tr("unsupported file format"); break;
+        case FmBankFormatBase::ERR_UNKNOWN:
+            errText = tr("unknown error occouped"); break;
+        }
+        ErrMessageO(this, errText);
+        return false;
+    } else {
+        initFileData(filePath);
+        return true;
+    }
 
     return false;
 }
 
 bool BankEditor::saveFile(QString filePath)
 {
+    int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
+
+    //Check out for Junglevision file format
     if(hasExt(filePath, "op3"))
-    {
-        int err = JunleVizion::saveFile(filePath, m_bank);
-        if(err != JunleVizion::ERR_OK)
-        {
-            QString errText;
-            switch(err)
-            {
-                case JunleVizion::ERR_NOFILE: errText = tr("can't open file for write"); break;
-            }
-            ErrMessageS(this, errText);
-            return false;
-        } else {
-            reInitFileDataAfterSave(filePath);
-            return true;
-        }
-    }
+        err = JunleVizion::saveFile(filePath, m_bank);
+
+    //Check for DMX OPL2 file format
     else if(hasExt(filePath, "op2")||
             hasExt(filePath, "htc")||
             hasExt(filePath, "hxn"))
+        err = DmxOPL2::saveFile(filePath, m_bank);
+
+    if(err != FmBankFormatBase::ERR_OK)
     {
-        int err = DmxOPL2::saveFile(filePath, m_bank);
-        if(err != DmxOPL2::ERR_OK)
+        QString errText;
+        switch(err)
         {
-            QString errText;
-            switch(err)
-            {
-                case DmxOPL2::ERR_NOFILE:    errText = tr("can't open file for write"); break;
-            }
-            ErrMessageS(this, errText);
-            return false;
-        } else {
-            reInitFileDataAfterSave(filePath);
-            return true;
+        case FmBankFormatBase::ERR_BADFORMAT:
+            errText = tr("bad file format"); break;
+        case FmBankFormatBase::ERR_NOFILE:
+            errText = tr("can't open file for write"); break;
+        case FmBankFormatBase::ERR_NOT_IMLEMENTED:
+            errText = tr("writing into this format is not implemented yet"); break;
+        case FmBankFormatBase::ERR_UNSUPPORTED_FORMAT:
+            errText = tr("unknown file name extension, please define file name extension to choice target file format"); break;
+        case FmBankFormatBase::ERR_UNKNOWN:
+            errText = tr("unknown error occouped"); break;
         }
+        ErrMessageS(this, errText);
+        return false;
+    } else {
+        reInitFileDataAfterSave(filePath);
+        return true;
     }
+
     return false;
 }
 

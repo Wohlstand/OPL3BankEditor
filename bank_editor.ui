@@ -1923,8 +1923,13 @@ Available from 0 to 127</string>
       <stylestrategy>NoAntialias</stylestrategy>
      </font>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Recently used channel ID&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(from 0 to N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Two-operators mode (2-op):&lt;/span&gt;&lt;br/&gt;Totally 18 two-operator channels available on OPL3 chip.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pseudo four-operators mode (Ps-4-op):&lt;/span&gt;&lt;br/&gt;Using of pairs of two-operator channels, in result we are have 9 double-voice channels&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Four-operators mode (4-op):&lt;/span&gt;&lt;br/&gt;Totally 6 four-operator channels available on OPL3 chip.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
     <property name="text">
-     <string/>
+     <string notr="true">Channels:
+2-op: --, Ps-4op: --
+4-op: --</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignHCenter|Qt::AlignTop</set>

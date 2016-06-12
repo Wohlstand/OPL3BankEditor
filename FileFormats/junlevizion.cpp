@@ -73,92 +73,40 @@ int JunleVizion::loadFile(QString filePath, FmBank &bank)
             bank.reset();
             return ERR_BADFORMAT;
         }
-//        0   0 - Single, 1 - Dobule instrument
+
+        //Operators mode: 0 - 2-op, 1 - 4-op
         ins.en_4op = (idata[0]==1);
-//        1   NoteNum
+        //NoteNum
         ins.percNoteNum = idata[1];
-//        //OP1
-//        2   AM/VIB/EG/KSR/Multiple bits   [1-bit Tremolo, 1-bit Vibrato, 1-bit Systain sound, 1-bit Envelope scale (KSR), 4-bit Frequency Multiplication]
-        ins.OP[MODULATOR1].am  = (idata[2]>>7)&0x01;
-        ins.OP[MODULATOR1].vib = (idata[2]>>6)&0x01;
-        ins.OP[MODULATOR1].eg  = (idata[2]>>5)&0x01;
-        ins.OP[MODULATOR1].ksr = (idata[2]>>4)&0x01;
-        ins.OP[MODULATOR1].fmult = (idata[2])&0x0F;
-//        3   KSL/attenuation settings      [2-bit KSL(KeyScaleRate), 6-bit Level (0 max, 63 minimal)]
-        ins.OP[MODULATOR1].ksl   = (idata[3]>>6)&0x03;
-        ins.OP[MODULATOR1].level = 0x3F-((idata[3]) & 0x3F);
-//        4   Attack/decay rates            [4-bit attak (0-max, F-zero),   4-bit decay(0-max, F-zero)]
-        ins.OP[MODULATOR1].attack   = (idata[4]>>4)&0x0F;
-        ins.OP[MODULATOR1].decay   = (idata[4])&0x0F;
-//        5   Sustain/release rates         [4-bit systain(0-max, F-zero), 4-bit release(0-max, F-zero)]
-        ins.OP[MODULATOR1].sustain   = 0x0F - ((idata[5]>>4)&0x0F);
-        ins.OP[MODULATOR1].release   = (idata[5])&0x0F;
-//        6   Wave select settings          [4-bit unused, 4-bit wave-from-0-to-7]
-        ins.OP[MODULATOR1].waveform  = idata[6]&0x07;
+        //OP1
+        ins.setAVEKM(MODULATOR1,    idata[2]);
+        ins.setKSLL(MODULATOR1,     idata[3]);
+        ins.setAtDec(MODULATOR1,    idata[4]);
+        ins.setSusRel(MODULATOR1,   idata[5]);
+        ins.setWaveForm(MODULATOR1, idata[6]);
+        //Feedback/Connection 1<->2
+        ins.setFBConn1(idata[7]);
+        //OP2
+        ins.setAVEKM(CARRIER1, idata[8]);
+        ins.setKSLL(CARRIER1,  idata[9]);
+        ins.setAtDec(CARRIER1, idata[10]);
+        ins.setSusRel(CARRIER1, idata[11]);
+        ins.setWaveForm(CARRIER1, idata[12]);
 
-//        7   Feedback/connection bits  &~0x30  [0000-WAT???  000-feedback - 0-fm,1-am]
-        ins.connection1 =  idata[7] & 0x01;
-        ins.feedback1   = (idata[7]>>1) & 0x07;
-
-//        //OP2
-//        8   AM/VIB/EG/KSR/Multiple bits
-        ins.OP[CARRIER1].am  = (idata[8]>>7)&0x01;
-        ins.OP[CARRIER1].vib = (idata[8]>>6)&0x01;
-        ins.OP[CARRIER1].eg  = (idata[8]>>5)&0x01;
-        ins.OP[CARRIER1].ksr = (idata[8]>>4)&0x01;
-        ins.OP[CARRIER1].fmult = (idata[8])&0x0F;
-//        9   KSL/attenuation settings
-        ins.OP[CARRIER1].ksl   = (idata[9]>>6)&0x03;
-        ins.OP[CARRIER1].level = 0x3F-((idata[9]) & 0x3F);
-//        10  Attack/decay rates
-        ins.OP[CARRIER1].attack   = (idata[10]>>4)&0x0F;
-        ins.OP[CARRIER1].decay   = (idata[10])&0x0F;
-//        11  Sustain/release rates
-        ins.OP[CARRIER1].sustain   = 0x0F - ((idata[11]>>4)&0x0F);
-        ins.OP[CARRIER1].release   = (idata[11])&0x0F;
-//        12  Wave select settings
-        ins.OP[CARRIER1].waveform  = idata[12]&0x07;
-
-//        //OP3
-//        13  AM/VIB/EG/KSR/Multiple bits
-        ins.OP[MODULATOR2].am  = (idata[13]>>7)&0x01;
-        ins.OP[MODULATOR2].vib = (idata[13]>>6)&0x01;
-        ins.OP[MODULATOR2].eg  = (idata[13]>>5)&0x01;
-        ins.OP[MODULATOR2].ksr = (idata[13]>>4)&0x01;
-        ins.OP[MODULATOR2].fmult = (idata[13])&0x0F;
-//        14  KSL/attenuation settings
-        ins.OP[MODULATOR2].ksl   = (idata[14]>>6)&0x03;
-        ins.OP[MODULATOR2].level = 0x3F-((idata[14]) & 0x3F);
-//        15  Attack/decay rates
-        ins.OP[MODULATOR2].attack   = (idata[15]>>4)&0x0F;
-        ins.OP[MODULATOR2].decay   = (idata[15])&0x0F;
-//        16  Sustain/release rates
-        ins.OP[MODULATOR2].sustain   = 0x0F - ((idata[16]>>4)&0x0F);
-        ins.OP[MODULATOR2].release   = (idata[16])&0x0F;
-//        17  Wave select settings
-        ins.OP[MODULATOR2].waveform  = idata[17]&0x07;
-
-//        18  Feedback/connection bits  &~0x30
-        ins.connection2 =  idata[18] & 0x01;
-        ins.feedback2   = (idata[18]>>1)&0x07;
-
-//        19  AM/VIB/EG/KSR/Multiple bits
-        ins.OP[CARRIER2].am  = (idata[19]>>7)&0x01;
-        ins.OP[CARRIER2].vib = (idata[19]>>6)&0x01;
-        ins.OP[CARRIER2].eg  = (idata[19]>>5)&0x01;
-        ins.OP[CARRIER2].ksr = (idata[19]>>4)&0x01;
-        ins.OP[CARRIER2].fmult = (idata[19])&0x0F;
-//        20  KSL/attenuation settings
-        ins.OP[CARRIER2].ksl   = (idata[20]>>6)&0x03;
-        ins.OP[CARRIER2].level = 0x3F-((idata[20]) & 0x3F);
-//        21  Attack/decay rates
-        ins.OP[CARRIER2].attack   = (idata[21]>>4)&0x0F;
-        ins.OP[CARRIER2].decay   = (idata[21])&0x0F;
-//        22  Sustain/release rates
-        ins.OP[CARRIER2].sustain   = 0x0F - ((idata[22]>>4)&0x0F);
-        ins.OP[CARRIER2].release   = (idata[22])&0x0F;
-//        23  Wave select settings
-        ins.OP[CARRIER2].waveform  = idata[23]&0x07;
+        //OP3
+        ins.setAVEKM(MODULATOR2,    idata[13]);
+        ins.setKSLL(MODULATOR2,     idata[14]);
+        ins.setAtDec(MODULATOR2,    idata[15]);
+        ins.setSusRel(MODULATOR2,   idata[16]);
+        ins.setWaveForm(MODULATOR2, idata[17]);
+        //Feedback/Connection 3<->4
+        ins.setFBConn2(idata[18]);
+        //OP4
+        ins.setAVEKM(CARRIER2, idata[19]);
+        ins.setKSLL(CARRIER2,  idata[20]);
+        ins.setAtDec(CARRIER2, idata[21]);
+        ins.setSusRel(CARRIER2, idata[22]);
+        ins.setWaveForm(CARRIER2, idata[23]);
     }
 
     file.close();
@@ -222,103 +170,40 @@ int JunleVizion::saveFile(QString filePath, FmBank &bank)
         unsigned char odata[24];
         memset(odata, 0, 24);
         had4op |= ins.en_4op;
-//        0   0 - Single, 1 - Dobule instrument
+        //Operators mode: 0 - 2-op, 1 - 4-op
         odata[0] = uchar(ins.en_4op);
-//        1   NoteNum
+        //NoteNum
         odata[1] = ins.percNoteNum;
 
-//        //OP1
-//        2   AM/VIB/EG/KSR/Multiple bits   [1-bit Tremolo, 1-bit Vibrato, 1-bit Systain sound, 1-bit Envelope scale (KSR), 4-bit Frequency Multiplication]
-        odata[2] |= 0x80 & (uchar(ins.OP[MODULATOR1].am)<<7);
-        odata[2] |= 0x40 & (uchar(ins.OP[MODULATOR1].vib)<<6);
-        odata[2] |= 0x20 & (uchar(ins.OP[MODULATOR1].eg)<<5);
-        odata[2] |= 0x10 & (uchar(ins.OP[MODULATOR1].ksr)<<4);
-        odata[2] |= 0x0F &  uchar(ins.OP[MODULATOR1].fmult);
-//        3   KSL/attenuation settings      [2-bit KSL(KeyScaleRate), 6-bit Level (0 max, 63 minimal)]
-        odata[3] |= 0xC0 & (uchar(ins.OP[MODULATOR1].ksl)<<6);
-        odata[3] |= 0x3F & uchar(0x3F-ins.OP[MODULATOR1].level);
-//        4   Attack/decay rates            [4-bit attak (0-max, F-zero),   4-bit decay(0-max, F-zero)]
-        odata[4] |= 0xF0 & uchar(ins.OP[MODULATOR1].attack<<4);
-        odata[4] |= 0x0F & ins.OP[MODULATOR1].decay;
-//        5   Sustain/release rates         [4-bit systain(0-max, F-zero), 4-bit release(0-max, F-zero)]
-        odata[5] |= 0xF0 & (uchar(0x0F-ins.OP[MODULATOR1].sustain)<<4);
-        odata[5] |= 0x0F & ins.OP[MODULATOR1].release;
-//        6   Wave select settings          [4-bit unused, 4-bit wave-from-0-to-7]
-        odata[6] |= 0x07 & ins.OP[MODULATOR1].waveform;
-        odata[6] |= had4op ? 0x80 : 0x00;
+        //OP1
+        odata[2]  = ins.getAVEKM(MODULATOR1);
+        odata[3]  = ins.getKSLL(MODULATOR1);
+        odata[4]  = ins.getAtDec(MODULATOR1);
+        odata[5]  = ins.getSusRel(MODULATOR1);
+        odata[6]  = ins.getWaveForm(MODULATOR1) | (had4op ? 0x80 : 0x00);
+        //Feedback/Connection 1<->2
+        odata[7]  = ins.getFBConn1() | (had4op ? (0x30 & uchar(3)<<4) : 0);
+        //OP2
+        odata[8]  = ins.getAVEKM(CARRIER1);
+        odata[9]  = ins.getKSLL(CARRIER1);
+        odata[10] = ins.getAtDec(CARRIER1);
+        odata[11] = ins.getSusRel(CARRIER1);
+        odata[12] = ins.getWaveForm(CARRIER1) | (had4op ? 0x80 : 0x00);
 
-//        7   Feedback/connection bits  &~0x30  [0000-WAT???  000-feedback - 0-fm,1-am]
-        odata[7] |= uchar(ins.connection1);
-        odata[7]  |= 0x0E & uchar(ins.feedback1<<1);
-        odata[7]  |= had4op ? (0x30 & uchar(3)<<4) : 0;
-
-//        //OP2
-//        8   AM/VIB/EG/KSR/Multiple bits
-        odata[8] |= 0x80 & (uchar(ins.OP[CARRIER1].am)<<7);
-        odata[8] |= 0x40 & (uchar(ins.OP[CARRIER1].vib)<<6);
-        odata[8] |= 0x20 & (uchar(ins.OP[CARRIER1].eg)<<5);
-        odata[8] |= 0x10 & (uchar(ins.OP[CARRIER1].ksr)<<4);
-        odata[8] |= 0x0F &  uchar(ins.OP[CARRIER1].fmult);
-
-//        9   KSL/attenuation settings
-        odata[9] |= 0xC0 & (uchar(ins.OP[CARRIER1].ksl)<<6);
-        odata[9] |= 0x3F & uchar(0x3F-ins.OP[CARRIER1].level);
-
-//        10  Attack/decay rates
-        odata[10] |= 0xF0 & uchar(ins.OP[CARRIER1].attack<<4);
-        odata[10] |= 0x0F & ins.OP[CARRIER1].decay;
-
-//        11  Sustain/release rates
-        odata[11] |= 0xF0 & (uchar(0x0F-ins.OP[CARRIER1].sustain)<<4);
-        odata[11] |= 0x0F & ins.OP[CARRIER1].release;
-
-//        12  Wave select settings
-        odata[12] |= 0x07 & ins.OP[CARRIER1].waveform;
-        odata[12] |= had4op ? 0x80 : 0x00;
-
-//        //OP3
-//        13  AM/VIB/EG/KSR/Multiple bits
-        odata[13] |= 0x80 & (uchar(ins.OP[MODULATOR2].am)<<7);
-        odata[13] |= 0x40 & (uchar(ins.OP[MODULATOR2].vib)<<6);
-        odata[13] |= 0x20 & (uchar(ins.OP[MODULATOR2].eg)<<5);
-        odata[13] |= 0x10 & (uchar(ins.OP[MODULATOR2].ksr)<<4);
-        odata[13] |= 0x0F &  uchar(ins.OP[MODULATOR2].fmult);
-//        14  KSL/attenuation settings
-        odata[14] |= 0xC0 & (uchar(ins.OP[MODULATOR2].ksl)<<6);
-        odata[14] |= 0x3F & uchar(0x3F-ins.OP[MODULATOR2].level);
-//        15  Attack/decay rates
-        odata[15] |= 0xF0 & uchar(ins.OP[MODULATOR2].attack<<4);
-        odata[15] |= 0x0F & ins.OP[MODULATOR2].decay;
-//        16  Sustain/release rates
-        odata[16] |= 0xF0 & (uchar(0x0F-ins.OP[MODULATOR2].sustain)<<4);
-        odata[16] |= 0x0F & ins.OP[MODULATOR2].release;
-//        17  Wave select settings
-        odata[17] |= 0x07 & ins.OP[MODULATOR2].waveform;
-        odata[17] |= ins.en_4op ? 0x80 : 0x00;
-
-//        18  Feedback/connection bits  &~0x30
-        odata[18] |= uchar(ins.connection2);
-        odata[18] |= 0x0E & uchar(ins.feedback2 << 1);
-        odata[18] |= had4op ? (0x30 & uchar(3)<<4) : 0;
-
-//        19  AM/VIB/EG/KSR/Multiple bits
-        odata[19] |= 0x80 & (uchar(ins.OP[CARRIER2].am)<<7);
-        odata[19] |= 0x40 & (uchar(ins.OP[CARRIER2].vib)<<6);
-        odata[19] |= 0x20 & (uchar(ins.OP[CARRIER2].eg)<<5);
-        odata[19] |= 0x10 & (uchar(ins.OP[CARRIER2].ksr)<<4);
-        odata[19] |= 0x0F &  uchar(ins.OP[CARRIER2].fmult);
-//        20  KSL/attenuation settings
-        odata[20] |= 0xC0 & (uchar(ins.OP[CARRIER2].ksl)<<6);
-        odata[20] |= 0x3F & uchar(0x3F-ins.OP[CARRIER2].level);
-//        21  Attack/decay rates
-        odata[21] |= 0xF0 & uchar(ins.OP[CARRIER2].attack<<4);
-        odata[21] |= 0x0F & ins.OP[CARRIER2].decay;
-//        22  Sustain/release rates
-        odata[22] |= 0xF0 & (uchar(0x0F-ins.OP[CARRIER2].sustain)<<4);
-        odata[22] |= 0x0F & ins.OP[CARRIER2].release;
-//        23  Wave select settings
-        odata[23] |= 0x07 & ins.OP[CARRIER2].waveform;
-        odata[23] |= ins.en_4op ? 0x80 : 0x00;
+        //OP3
+        odata[13] = ins.getAVEKM(MODULATOR2);
+        odata[14] = ins.getKSLL(MODULATOR2);
+        odata[15] = ins.getAtDec(MODULATOR2);
+        odata[16] = ins.getSusRel(MODULATOR2);
+        odata[17] = ins.getWaveForm(MODULATOR2) | (ins.en_4op ? 0x80 : 0x00);
+        //Feedback/Connection 3<->4
+        odata[18] = ins.getFBConn2() | (had4op ? (0x30 & uchar(3)<<4) : 0);
+        //OP4
+        odata[19] = ins.getAVEKM(CARRIER2);
+        odata[20] = ins.getKSLL(CARRIER2);
+        odata[21] = ins.getAtDec(CARRIER2);
+        odata[22] = ins.getSusRel(CARRIER2);
+        odata[23] = ins.getWaveForm(CARRIER2) | (ins.en_4op ? 0x80 : 0x00);
 
         if( file.write(char_p(odata), 24) != 24 )
         {

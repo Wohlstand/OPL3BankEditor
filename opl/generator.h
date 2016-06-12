@@ -93,7 +93,7 @@ public slots:
     void PlayMajor7Chord();
     void PlayMinor7Chord();
 
-    void changePatch(const FmBank::Instrument &instrument, bool isDrum=false);
+    void changePatch(FmBank::Instrument &instrument, bool isDrum=false);
     void changeNote(int newnote);
     void changeDeepTremolo(bool enabled);
     void changeDeepVibrato(bool enabled);

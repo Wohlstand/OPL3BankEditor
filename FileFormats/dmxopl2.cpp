@@ -45,7 +45,9 @@ int DmxOPL2::loadFile(QString filePath, FmBank &bank)
 
     for(unsigned short i=0; i<175; i++)
     {
-        FmBank::Instrument &ins = (i<128) ? bank.Ins_Melodic[i] : bank.Ins_Percussion[(i-128)+35];
+        FmBank::Instrument &ins = (i<128) ?
+                                   bank.Ins_Melodic[i] :
+                                   bank.Ins_Percussion[(i-128)+35];
         unsigned short  flags       = 0;
         unsigned char   fine_tuning = 0;
         unsigned char   note_number = 0;
@@ -73,99 +75,51 @@ int DmxOPL2::loadFile(QString filePath, FmBank &bank)
         ins.fine_tune = char( int(fine_tuning) - 128 );
         ins.en_pseudo4op = ((flags & Dmx_DoubleVoice) != 0);
         ins.en_4op = ins.en_pseudo4op;
-        ins.percNoteNum  = note_number;// + ((flags & Dmx_FixedPitch)!=0 ? 12 : 0);
+        ins.percNoteNum = note_number;
 
-        ins.OP[MODULATOR1].am  = (idata[0]>>7)&0x01;
-        ins.OP[MODULATOR1].vib = (idata[0]>>6)&0x01;
-        ins.OP[MODULATOR1].eg  = (idata[0]>>5)&0x01;
-        ins.OP[MODULATOR1].ksr = (idata[0]>>4)&0x01;
-        ins.OP[MODULATOR1].fmult = (idata[0])&0x0F;
+        ins.setAVEKM(MODULATOR1,    idata[0]);
+        ins.setAtDec(MODULATOR1,    idata[1]);
+        ins.setSusRel(MODULATOR1,   idata[2]);
+        ins.setWaveForm(MODULATOR1, idata[3]);
+        ins.setKSL(MODULATOR1,      idata[4]);
+        ins.setLevel(MODULATOR1,    idata[5]);
 
-        ins.OP[MODULATOR1].attack   = (idata[1]>>4)&0x0F;
-        ins.OP[MODULATOR1].decay   = (idata[1])&0x0F;
+        ins.setFBConn1(idata[6]);
 
-        ins.OP[MODULATOR1].sustain   = 0x0F - ((idata[2]>>4)&0x0F);
-        ins.OP[MODULATOR1].release   = (idata[2])&0x0F;
+        ins.setAVEKM(CARRIER1,      idata[7]);
+        ins.setAtDec(CARRIER1,      idata[8]);
+        ins.setSusRel(CARRIER1,     idata[9]);
+        ins.setWaveForm(CARRIER1,   idata[10]);
+        ins.setKSL(CARRIER1,        idata[11]);
+        ins.setLevel(CARRIER1,      idata[12]);
+        //13'th byte is unused, but sadly :P, lucky number, it MUST BE USED!!!
+        ins.note_offset1 = toSint16LE(&idata[14]) + 12;
 
-        ins.OP[MODULATOR1].waveform  = idata[3]&0x07;
+        ins.setAVEKM(MODULATOR2,    idata[16]);
+        ins.setAtDec(MODULATOR2,    idata[17]);
+        ins.setSusRel(MODULATOR2,   idata[18]);
+        ins.setWaveForm(MODULATOR2, idata[19]);
+        ins.setKSL(MODULATOR2,      idata[20]);
+        ins.setLevel(MODULATOR2,    idata[21]);
 
-        ins.OP[MODULATOR1].ksl   = (idata[4]>>6)&0x03;
+        ins.setFBConn2(idata[22]);
 
-        ins.OP[MODULATOR1].level = 0x3F-((idata[5]) & 0x3F);
-
-        ins.connection1 =    idata[6] & 0x01;
-        ins.feedback1 =     (idata[6]>>1) & 0x07;
-
-        ins.OP[CARRIER1].am  = (idata[7]>>7)&0x01;
-        ins.OP[CARRIER1].vib = (idata[7]>>6)&0x01;
-        ins.OP[CARRIER1].eg  = (idata[7]>>5)&0x01;
-        ins.OP[CARRIER1].ksr = (idata[7]>>4)&0x01;
-        ins.OP[CARRIER1].fmult = (idata[7])&0x0F;
-
-        ins.OP[CARRIER1].attack   = (idata[8]>>4)&0x0F;
-        ins.OP[CARRIER1].decay   = (idata[8])&0x0F;
-
-        ins.OP[CARRIER1].sustain   = 0x0F - ((idata[9]>>4)&0x0F);
-        ins.OP[CARRIER1].release   = (idata[9])&0x0F;
-
-        ins.OP[CARRIER1].waveform  = idata[10]&0x07;
-
-        ins.OP[CARRIER1].ksl   = (idata[11]>>6)&0x03;
-
-        ins.OP[CARRIER1].level = 0x3F-((idata[12]) & 0x3F);
-
-        //13'th unused, but sadly :P, lucky number!!!
-
-        ins.note_offset1 = toSint16LE(&idata[14]) + 12;//((short(idata[14])&0x00FF) & ((short(idata[15])<<8) && 0xFF00)) + 12;
-
-        ins.OP[MODULATOR2].am  = (idata[16]>>7)&0x01;
-        ins.OP[MODULATOR2].vib = (idata[16]>>6)&0x01;
-        ins.OP[MODULATOR2].eg  = (idata[16]>>5)&0x01;
-        ins.OP[MODULATOR2].ksr = (idata[16]>>4)&0x01;
-        ins.OP[MODULATOR2].fmult = (idata[16])&0x0F;
-
-        ins.OP[MODULATOR2].attack   = (idata[17]>>4)&0x0F;
-        ins.OP[MODULATOR2].decay   = (idata[17])&0x0F;
-
-        ins.OP[MODULATOR2].sustain   = 0x0F - ((idata[18]>>4)&0x0F);
-        ins.OP[MODULATOR2].release   = (idata[18])&0x0F;
-
-        ins.OP[MODULATOR2].waveform  = idata[19]&0x07;
-
-        ins.OP[MODULATOR2].ksl   = (idata[20]>>6)&0x03;
-
-        ins.OP[MODULATOR2].level = 0x3F-((idata[21]) & 0x3F);
-
-        ins.connection2 =    idata[22] & 0x01;
-        ins.feedback2 =     (idata[22]>>1) & 0x07;
-
-        ins.OP[CARRIER2].am  = (idata[23]>>7)&0x01;
-        ins.OP[CARRIER2].vib = (idata[23]>>6)&0x01;
-        ins.OP[CARRIER2].eg  = (idata[23]>>5)&0x01;
-        ins.OP[CARRIER2].ksr = (idata[23]>>4)&0x01;
-        ins.OP[CARRIER2].fmult = (idata[23])&0x0F;
-
-        ins.OP[CARRIER2].attack   = (idata[24]>>4)&0x0F;
-        ins.OP[CARRIER2].decay   = (idata[24])&0x0F;
-
-        ins.OP[CARRIER2].sustain   = 0x0F - ((idata[25]>>4)&0x0F);
-        ins.OP[CARRIER2].release   = (idata[25])&0x0F;
-
-        ins.OP[CARRIER2].waveform  = idata[26]&0x07;
-
-        ins.OP[CARRIER2].ksl   = (idata[27]>>6)&0x03;
-
-        ins.OP[CARRIER2].level = 0x3F-((idata[28]) & 0x3F);
-
-        //29'th is unused
-
-        ins.note_offset2 = toSint16LE(&idata[30]) + 12;//((short(idata[30])&0x00FF) & ((short(idata[31])<<8) && 0xFF00)) + 12;
+        ins.setAVEKM(CARRIER2,      idata[23]);
+        ins.setAtDec(CARRIER2,      idata[24]);
+        ins.setSusRel(CARRIER2,     idata[25]);
+        ins.setWaveForm(CARRIER2,   idata[26]);
+        ins.setKSL(CARRIER2,        idata[27]);
+        ins.setLevel(CARRIER2,      idata[28]);
+        //29'th byte is unused
+        ins.note_offset2 = toSint16LE(&idata[30]) + 12;
     }
 
     //Instrument names
     for(unsigned short i=0; i<175; i++)
     {
-        FmBank::Instrument &ins = (i<128) ? bank.Ins_Melodic[i] : bank.Ins_Percussion[(i-128)+35];
+        FmBank::Instrument &ins = (i<128) ?
+                                    bank.Ins_Melodic[i] :
+                                    bank.Ins_Percussion[(i-128)+35];
         if(file.read(ins.name, 32)!=32)
         {
             bank.reset();
@@ -174,6 +128,7 @@ int DmxOPL2::loadFile(QString filePath, FmBank &bank)
     }
 
     file.close();
+
     return ERR_OK;
 }
 
@@ -188,7 +143,9 @@ int DmxOPL2::saveFile(QString filePath, FmBank &bank)
 
     for(unsigned short i=0; i<175; i++)
     {
-        FmBank::Instrument &ins = (i<128) ? bank.Ins_Melodic[i] : bank.Ins_Percussion[(i-128)+35];
+        FmBank::Instrument &ins = (i<128) ?
+                                    bank.Ins_Melodic[i] :
+                                    bank.Ins_Percussion[(i-128)+35];
         unsigned short  flags       = 0;
         unsigned char   fine_tuning = 0;
         unsigned char   note_number = 0;
@@ -201,88 +158,40 @@ int DmxOPL2::saveFile(QString filePath, FmBank &bank)
         flags |= (i==65) ? Dmx_Unknown : 0;
         note_number = ins.percNoteNum;
 
-        odata[0] |= 0x80 & (uchar(ins.OP[MODULATOR1].am)<<7);
-        odata[0] |= 0x40 & (uchar(ins.OP[MODULATOR1].vib)<<6);
-        odata[0] |= 0x20 & (uchar(ins.OP[MODULATOR1].eg)<<5);
-        odata[0] |= 0x10 & (uchar(ins.OP[MODULATOR1].ksr)<<4);
-        odata[0] |= 0x0F &  uchar(ins.OP[MODULATOR1].fmult);
+        odata[0]  = ins.getAVEKM(MODULATOR1);
+        odata[1]  = ins.getAtDec(MODULATOR1);
+        odata[2]  = ins.getSusRel(MODULATOR1);
+        odata[3]  = ins.getWaveForm(MODULATOR1);
+        odata[4]  = ins.getKSL(MODULATOR1);
+        odata[5]  = ins.getLevel(MODULATOR1);
 
-        odata[1] |= 0xF0 & uchar(ins.OP[MODULATOR1].attack<<4);
-        odata[1] |= 0x0F & ins.OP[MODULATOR1].decay;
+        odata[6]  = ins.getFBConn1();
 
-        odata[2] |= 0xF0 & (uchar(0x0F-ins.OP[MODULATOR1].sustain)<<4);
-        odata[2] |= 0x0F & ins.OP[MODULATOR1].release;
-
-        odata[3] |= 0x07 & ins.OP[MODULATOR1].waveform;
-
-        odata[4] |= 0xC0 & (uchar(ins.OP[MODULATOR1].ksl)<<6);
-
-        odata[5] |= 0x3F & uchar(0x3F-ins.OP[MODULATOR1].level);
-
-        odata[6] |= uchar(ins.connection1);
-        odata[6]  |= 0x0E & uchar(ins.feedback1<<1);
-
-        odata[7] |= 0x80 & (uchar(ins.OP[CARRIER1].am)<<7);
-        odata[7] |= 0x40 & (uchar(ins.OP[CARRIER1].vib)<<6);
-        odata[7] |= 0x20 & (uchar(ins.OP[CARRIER1].eg)<<5);
-        odata[7] |= 0x10 & (uchar(ins.OP[CARRIER1].ksr)<<4);
-        odata[7] |= 0x0F &  uchar(ins.OP[CARRIER1].fmult);
-
-        odata[8] |= 0xF0 & uchar(ins.OP[CARRIER1].attack<<4);
-        odata[8] |= 0x0F & ins.OP[CARRIER1].decay;
-
-        odata[9] |= 0xF0 & (uchar(0x0F-ins.OP[CARRIER1].sustain)<<4);
-        odata[9] |= 0x0F & ins.OP[CARRIER1].release;
-
-        odata[10] |= 0x07 & ins.OP[CARRIER1].waveform;
-
-        odata[11] |= 0xC0 & (uchar(ins.OP[CARRIER1].ksl)<<6);
-
-        odata[12] |= 0x3F & uchar(0x3F-ins.OP[CARRIER1].level);
-
+        odata[7]  = ins.getAVEKM(CARRIER1);
+        odata[8]  = ins.getAtDec(CARRIER1);
+        odata[9]  = ins.getSusRel(CARRIER1);
+        odata[10] = ins.getWaveForm(CARRIER1);
+        odata[11] = ins.getKSL(CARRIER1);
+        odata[12] = ins.getLevel(CARRIER1);
         odata[13] = 0x00;//...but would to use this for something other?
 
         fromSint16LE(ins.note_offset1 - 12, &odata[14]);
 
-        odata[16] |= 0x80 & (uchar(ins.OP[MODULATOR2].am)<<7);
-        odata[16] |= 0x40 & (uchar(ins.OP[MODULATOR2].vib)<<6);
-        odata[16] |= 0x20 & (uchar(ins.OP[MODULATOR2].eg)<<5);
-        odata[16] |= 0x10 & (uchar(ins.OP[MODULATOR2].ksr)<<4);
-        odata[16] |= 0x0F &  uchar(ins.OP[MODULATOR2].fmult);
+        odata[16] = ins.getAVEKM(MODULATOR2);
+        odata[17] = ins.getAtDec(MODULATOR2);
+        odata[18] = ins.getSusRel(MODULATOR2);
+        odata[19] = ins.getWaveForm(MODULATOR2);
+        odata[20] = ins.getKSL(MODULATOR2);
+        odata[21] = ins.getLevel(MODULATOR2);
 
-        odata[17] |= 0xF0 & uchar(ins.OP[MODULATOR2].attack<<4);
-        odata[17] |= 0x0F & ins.OP[MODULATOR2].decay;
+        odata[22] = ins.getFBConn2();
 
-        odata[18] |= 0xF0 & (uchar(0x0F-ins.OP[MODULATOR2].sustain)<<4);
-        odata[18] |= 0x0F & ins.OP[MODULATOR2].release;
-
-        odata[19] |= 0x07 & ins.OP[MODULATOR2].waveform;
-
-        odata[20] |= 0xC0 & (uchar(ins.OP[MODULATOR2].ksl)<<6);
-
-        odata[21] |= 0x3F & uchar(0x3F-ins.OP[MODULATOR2].level);
-
-        odata[22] |= uchar(ins.connection2);
-        odata[22]  |= 0x0E & uchar(ins.feedback2<<1);
-
-        odata[23] |= 0x80 & (uchar(ins.OP[CARRIER2].am)<<7);
-        odata[23] |= 0x40 & (uchar(ins.OP[CARRIER2].vib)<<6);
-        odata[23] |= 0x20 & (uchar(ins.OP[CARRIER2].eg)<<5);
-        odata[23] |= 0x10 & (uchar(ins.OP[CARRIER2].ksr)<<4);
-        odata[23] |= 0x0F &  uchar(ins.OP[CARRIER2].fmult);
-
-        odata[24] |= 0xF0 & uchar(ins.OP[CARRIER2].attack<<4);
-        odata[24] |= 0x0F & ins.OP[CARRIER2].decay;
-
-        odata[25] |= 0xF0 & (uchar(0x0F-ins.OP[CARRIER2].sustain)<<4);
-        odata[25] |= 0x0F & ins.OP[CARRIER2].release;
-
-        odata[26] |= 0x07 & ins.OP[CARRIER2].waveform;
-
-        odata[27] |= 0xC0 & (uchar(ins.OP[CARRIER2].ksl)<<6);
-
-        odata[28] |= 0x3F & uchar(0x3F-ins.OP[CARRIER2].level);
-
+        odata[23] = ins.getAVEKM(CARRIER2);
+        odata[24] = ins.getAtDec(CARRIER2);
+        odata[25] = ins.getSusRel(CARRIER2);
+        odata[26] = ins.getWaveForm(CARRIER2);
+        odata[27] = ins.getKSL(CARRIER2);
+        odata[28] = ins.getLevel(CARRIER2);
         odata[29] = 0x00;//...but would to use this for something other?
 
         fromSint16LE(ins.note_offset2 - 12, &odata[30]);
@@ -303,7 +212,9 @@ int DmxOPL2::saveFile(QString filePath, FmBank &bank)
     //Instrument names
     for(unsigned short i=0; i<175; i++)
     {
-        FmBank::Instrument &ins = (i<128) ? bank.Ins_Melodic[i] : bank.Ins_Percussion[(i-128)+35];
+        FmBank::Instrument &ins = (i<128) ?
+                                    bank.Ins_Melodic[i] :
+                                    bank.Ins_Percussion[(i-128)+35];
         if(file.write(ins.name, 32)!=32)
         {
             bank.reset();

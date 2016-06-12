@@ -59,7 +59,8 @@ HEADERS  += bank_editor.h \
     opl/generator.h \
     piano.h \
     common.h \
-    FileFormats/dmxopl2.h
+    FileFormats/dmxopl2.h \
+    FileFormats/ffmt_base.h
 
 FORMS    += bank_editor.ui
 

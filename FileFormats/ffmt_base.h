@@ -16,20 +16,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef JUNLEVIZION_H
-#define JUNLEVIZION_H
+#ifndef FMBANKFORMATBASE_H
+#define FMBANKFORMATBASE_H
 
-#include "ffmt_base.h"
+#include <QString>
+#include "../bank.h"
 
-/**
- * @brief Reader and Writer of the Junglevision Patch file format
+/*!
+ * \brief Base class provides errors enum and commonly used headers
  */
-class JunleVizion : public FmBankFormatBase
+class FmBankFormatBase
 {
 public:
-    static bool detect(char* magic);
-    static int  loadFile(QString filePath, FmBank &bank);
-    static int  saveFile(QString filePath, FmBank &bank);
+    /**
+     * @brief Error codes
+     */
+    enum ErrCode
+    {
+        //! Everything is OK
+        ERR_OK=0,
+        //! File wasn't opened because not exists or permission denied
+        ERR_NOFILE,
+        //! File format is corrupted/invalid/damaged
+        ERR_BADFORMAT,
+        //! Reading or Writing operation is not implemented for this file format
+        ERR_NOT_IMLEMENTED,
+        //! Detected file format is not supported
+        ERR_UNSUPPORTED_FORMAT,
+        //! Any other error
+        ERR_UNKNOWN
+    };
 };
 
-#endif // JUNLEVIZION_H
+#endif // FMBANKFORMATBASE_H

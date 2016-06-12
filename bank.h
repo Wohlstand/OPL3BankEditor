@@ -19,10 +19,12 @@
 #ifndef BANK_H
 #define BANK_H
 
+/* *********** FM Operator indexes *********** */
 #define CARRIER1    0
 #define MODULATOR1  1
 #define CARRIER2    2
 #define MODULATOR2  3
+/* *********** FM Operator indexes *end******* */
 
 /**
  * @brief OPL instrument bank container
@@ -45,6 +47,38 @@ public:
      */
     struct Operator
     {
+        /*
+         * --- About operator data bytes ---
+         *
+         * AM/VIB/EG/KSR/Multiple bits
+         *      1-bit Tremolo
+         *      1-bit Vibrato
+         *      1-bit Systain sound
+         *      1-bit Envelope scale (KSR)
+         *      4-bit Frequency Multiplication
+         *
+         * KSL/attenuation settings
+         *      2-bit KSL (Key Scale Rate)
+         *      6-bit Level (0 max, 63 minimal)
+         *
+         * Attack/decay rates
+         *      4-bit attak (0-zero, F-max)
+         *      4-bit decay (0-zero, F-max)
+         *
+         * Sustain/release rates
+         *      4-bit systain (0-max, F-zero)
+         *      4-bit release(0-zero, F-max)
+         *
+         * Wave select settings
+         *      4-bit unused
+         *      4-bit wave-from-0-to-7
+         *
+         * Feedback/connection bits  &~0x30
+         *      4-bits 0000 Unused zone
+         *      3-bits 000-feedback
+         *      1-bit 0-fm, 1-am
+         */
+
         //! Attacking level (from 0 to 15)
         unsigned char attack;
         //! Decaying level (from 0 to 15)
@@ -85,11 +119,13 @@ public:
         //! Feedback for a second modulator and carrier (used in 4-operators or double-voice mode)
         unsigned char feedback2;
         /**
-         * @brief Types of operators (modulator and carrier) connections
+         * @brief Types of synthesis
          */
         enum Connections
         {
+            //! Additive
             AM = true,
+            //! Frequency modulation
             FM = false
         };
         //! Connections for a first operators pair
@@ -108,7 +144,131 @@ public:
         short note_offset1;
         //! Note offset (second operator pair)
         short note_offset2;
+
+        /* ******** OPL3 merged values ******** */
+
+        /*!
+         * \brief Merge into AM/VIB/EG/KSR/Multiple bits byte
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \return merged byte
+         */
+        unsigned char getAVEKM(int OpID);
+        /*!
+         * \brief Split AM/VIB/EG/KSR/Multiple bits byte into internal values
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \param in merged byte
+         */
+        void setAVEKM(int OpID, unsigned char in);
+
+        /*!
+         * \brief Merge into KSL/attenuation settings byte
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \return merged byte
+         */
+        unsigned char getKSLL(int OpID);
+        /*!
+         * \brief Split KSL/attenuation settings byte into internal values
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \param in merged byte
+         */
+        void setKSLL(int OpID, unsigned char in);
+
+        /*!
+         * \brief Merge into KSL/attenuation settings byte without attenuation
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \return merged byte
+         */
+        unsigned char getKSL(int OpID);
+        /*!
+         * \brief Store KSL value into internal values
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \param in merged byte
+         */
+        void setKSL(int OpID, unsigned char in);
+
+        /*!
+         * \brief Merge into KSL/attenuation settings byte without KSL
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \return merged byte
+         */
+        unsigned char getLevel(int OpID);
+        /*!
+         * \brief Store attenuation value into internal values
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \param in merged byte
+         */
+        void setLevel(int OpID, unsigned char in);
+
+        /*!
+         * \brief Merge into Attack/decay rates byte
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \return merged byte
+         */
+        unsigned char getAtDec(int OpID);
+        /*!
+         * \brief Split Attack/decay rates byte into internal values
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \param in merged byte
+         */
+        void setAtDec(int OpID, unsigned char in);
+
+        /*!
+         * \brief Merge into Sustain/release rates byte
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \return merged byte
+         */
+        unsigned char getSusRel(int OpID);
+        /*!
+         * \brief Split Sustain/release rates byte into internal values
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \param in merged byte
+         */
+        void setSusRel(int OpID, unsigned char in);
+
+        /*!
+         * \brief Merge into waveform byte
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \return merged byte
+         */
+        unsigned char getWaveForm(int OpID);
+        /*!
+         * \brief Store and clear-up waveform byte into internal values
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \param in merged byte
+         */
+        void setWaveForm(int OpID, unsigned char in);
+
+        /*!
+         * \brief Merge into Feedback/connection byte
+         * \return merged byte
+         */
+        unsigned char getFBConn1();
+        /*!
+         * \brief Split Feedback/connection byte for first carrier and modulator into internal values
+         * \param in merged byte
+         */
+        void setFBConn1(unsigned char in);
+
+        /*!
+         * \brief Merge into Feedback/connection byte
+         * \return merged byte
+         */
+        unsigned char getFBConn2();
+        /*!
+         * \brief Split Feedback/connection byte for second carrier and modulator into internal values
+         * \param in merged byte
+         */
+        void setFBConn2(unsigned char in);
+
+        /*!
+         * \brief Merge operator data to send into 0xE862 register
+         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
+         * \return merged 4-byte register data
+         */
+        unsigned int getDataE862(int OpID);
+
     };
+
     //! Array of melodic instruments
     Instrument Ins_Melodic[128];
     //! Array of percussion instruments

@@ -394,7 +394,8 @@ void Generator::switch4op(bool enabled)
     m_patch.OPS[0].modulator_E862 = 0x00FFFF00;
     m_patch.OPS[1].carrier_40     = 0x3F;
     m_patch.OPS[1].carrier_E862   = 0x00FFFF00;
-    //Clear all operator registers from shit
+
+    //Clear all operator registers from crap from previous patches
     for(unsigned b=0; b < NUM_OF_CHANNELS; ++b)
     {
         Patch(b, 0);
@@ -480,90 +481,27 @@ void Generator::PlayMinor7Chord()
 
 
 
-void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
+void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
 {
     //Shutup everything
     Silence();
+
     switch4op( instrument.en_4op && !instrument.en_pseudo4op );
 
-    m_patch.OPS[0].modulator_E862 =
-                 (uint(instrument.OP[MODULATOR1].waveform) << 24)
-                |(uint( (0xF0&(uchar(0x0F-instrument.OP[MODULATOR1].sustain)<<4))
-                       | (0x0F & instrument.OP[MODULATOR1].release) ) << 16)
+    m_patch.OPS[0].modulator_E862   = instrument.getDataE862( MODULATOR1 );
+    m_patch.OPS[0].modulator_40     = instrument.getKSLL( MODULATOR1 );
+    m_patch.OPS[0].carrier_E862     = instrument.getDataE862( CARRIER1 );
+    m_patch.OPS[0].carrier_40       = instrument.getKSLL( CARRIER1 );
+    m_patch.OPS[0].feedconn         = instrument.getFBConn1();
 
-                |(uint( (0xF0&uchar(instrument.OP[MODULATOR1].attack<<4))
-                       |(0x0F&instrument.OP[MODULATOR1].decay)) << 8)
-               |uint( ( 0x80 & (uchar(instrument.OP[MODULATOR1].am)<<7) )
-                    | ( 0x40 & (uchar(instrument.OP[MODULATOR1].vib)<<6) )
-                    | ( 0x20 & (uchar(instrument.OP[MODULATOR1].eg)<<5) )
-                    | ( 0x10 & (uchar(instrument.OP[MODULATOR1].ksr)<<4) )
-                    | ( 0x0F &  uchar(instrument.OP[MODULATOR1].fmult) ) );
-    m_patch.OPS[0].modulator_40 = 0;
-    m_patch.OPS[0].modulator_40 |= 0xC0 & (uchar(instrument.OP[MODULATOR1].ksl)<<6);
-    m_patch.OPS[0].modulator_40 |= 0x3F & uchar(0x3F-instrument.OP[MODULATOR1].level);
+    m_patch.OPS[1].modulator_E862   = instrument.getDataE862(MODULATOR2 );
+    m_patch.OPS[1].modulator_40     = instrument.getKSLL( MODULATOR2 );
+    m_patch.OPS[1].carrier_E862     = instrument.getDataE862( CARRIER2 );
+    m_patch.OPS[1].carrier_40       = instrument.getKSLL( CARRIER2 );
+    m_patch.OPS[1].feedconn         = instrument.getFBConn2();
 
-    m_patch.OPS[0].carrier_E862 =
-                 (uint(instrument.OP[CARRIER1].waveform) << 24)
-
-            |(uint( (0xF0&(uchar(0x0F-instrument.OP[CARRIER1].sustain)<<4))
-                   | (0x0F & instrument.OP[CARRIER1].release) ) << 16)
-
-            |(uint( (0xF0&uchar(instrument.OP[CARRIER1].attack<<4))
-                   |(0x0F&instrument.OP[CARRIER1].decay)) << 8)
-
-           |uint( ( 0x80 & (uchar(instrument.OP[CARRIER1].am)<<7) )
-                | ( 0x40 & (uchar(instrument.OP[CARRIER1].vib)<<6) )
-                | ( 0x20 & (uchar(instrument.OP[CARRIER1].eg)<<5) )
-                | ( 0x10 & (uchar(instrument.OP[CARRIER1].ksr)<<4) )
-                | ( 0x0F &  uchar(instrument.OP[CARRIER1].fmult) ) );
-    m_patch.OPS[0].carrier_40 = 0;
-    m_patch.OPS[0].carrier_40 |= 0xC0 & (uchar(instrument.OP[CARRIER1].ksl) << 6);
-    m_patch.OPS[0].carrier_40 |= 0x3F & uchar(0x3F-instrument.OP[CARRIER1].level);
-
-    m_patch.OPS[0].feedconn  = 0;
-    m_patch.OPS[0].feedconn |= uchar(instrument.connection1);
-    m_patch.OPS[0].feedconn |= 0x0E & uchar(instrument.feedback1 << 1);
-
-    m_patch.OPS[1].modulator_E862 =
-                 (uint(instrument.OP[MODULATOR2].waveform) << 24)
-                |(uint( (0xF0&(uchar(0x0F-instrument.OP[MODULATOR2].sustain)<<4))
-                       | (0x0F & instrument.OP[MODULATOR2].release) ) << 16)
-
-                |(uint( (0xF0&uchar(instrument.OP[MODULATOR2].attack<<4))
-                       |(0x0F&instrument.OP[MODULATOR2].decay)) << 8)
-
-           |uint( ( 0x80 & (uchar(instrument.OP[MODULATOR2].am)<<7) )
-                | ( 0x40 & (uchar(instrument.OP[MODULATOR2].vib)<<6) )
-                | ( 0x20 & (uchar(instrument.OP[MODULATOR2].eg)<<5) )
-                | ( 0x10 & (uchar(instrument.OP[MODULATOR2].ksr)<<4) )
-                | ( 0x0F &  uchar(instrument.OP[MODULATOR2].fmult) ) );
-    m_patch.OPS[1].modulator_40 = 0;
-    m_patch.OPS[1].modulator_40 |= 0xC0 & (uchar(instrument.OP[MODULATOR2].ksl)<<6);
-    m_patch.OPS[1].modulator_40 |= 0x3F & uchar(0x3F-instrument.OP[MODULATOR2].level);
-
-    m_patch.OPS[1].carrier_E862 =
-                 (uint(instrument.OP[CARRIER2].waveform) << 24)
-            |(uint( (0xF0&(uchar(0x0F-instrument.OP[CARRIER2].sustain)<<4))
-                   | (0x0F & instrument.OP[CARRIER2].release) ) << 16)
-
-            |(uint( (0xF0&uchar(instrument.OP[CARRIER2].attack<<4))
-                   |(0x0F&instrument.OP[CARRIER2].decay)) << 8)
-
-            | uint( ( 0x80 & (uchar(instrument.OP[CARRIER2].am)<<7) )
-                  | ( 0x40 & (uchar(instrument.OP[CARRIER2].vib)<<6) )
-                  | ( 0x20 & (uchar(instrument.OP[CARRIER2].eg)<<5) )
-                  | ( 0x10 & (uchar(instrument.OP[CARRIER2].ksr)<<4) )
-                  | ( 0x0F &  uchar(instrument.OP[CARRIER2].fmult) ) );
-    m_patch.OPS[1].carrier_40 = 0;
-    m_patch.OPS[1].carrier_40 |= 0xC0 & (uchar(instrument.OP[CARRIER2].ksl) << 6);
-    m_patch.OPS[1].carrier_40 |= 0x3F & uchar(0x3F-instrument.OP[CARRIER2].level);
-
-    m_patch.OPS[1].feedconn  = 0;
-    m_patch.OPS[1].feedconn |= uchar(instrument.connection2);
-    m_patch.OPS[1].feedconn |= 0x0E & uchar(instrument.feedback2 << 1);
-
-    m_patch.flags = 0;
-    m_patch.tone = 0;
+    m_patch.flags   = 0;
+    m_patch.tone    = 0;
     m_patch.voice2_fine_tune = 0.0;
 
     if( isDrum )
@@ -617,8 +555,8 @@ void Generator::changeDeepTremolo(bool enabled)
     unsigned char AdlPercussionMode = 0;
 
     chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode*0x80
-                                + DeepVibratoMode*0x40
-                                + AdlPercussionMode*0x20) );
+                                  + DeepVibratoMode*0x40
+                                  + AdlPercussionMode*0x20) );
 }
 
 void Generator::changeDeepVibrato(bool enabled)
@@ -627,8 +565,8 @@ void Generator::changeDeepVibrato(bool enabled)
     unsigned char AdlPercussionMode = 0;
 
     chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode*0x80
-                                + DeepVibratoMode*0x40
-                                + AdlPercussionMode*0x20) );
+                                  + DeepVibratoMode*0x40
+                                  + AdlPercussionMode*0x20) );
 }
 
 void Generator::start()
@@ -664,7 +602,7 @@ qint64 Generator::readData(char *data, qint64 len)
             }
         }
         total += lenL;
-    }; //saySomething(QString::number(total*4));
+    };
     return total*4;
 }
 
