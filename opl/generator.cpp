@@ -411,7 +411,6 @@ void Generator::Silence()
         NoteOff(c);
         Touch_Real(c, 0);
     }
-    m_regBD = 0;
 }
 
 void Generator::NoteOffAllChans()
