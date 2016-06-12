@@ -21,6 +21,9 @@
 
 bool BuildEngineTMB::detect(QString filePath)
 {
+    if( hasExt(filePath, ".tmb") )
+        return true;
+
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
         return false;
@@ -36,6 +39,8 @@ int BuildEngineTMB::loadFile(QString filePath, FmBank &bank)
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
         return ERR_NOFILE;
+
+    bank.reset();
 
     for(unsigned short i=0; i<256; i++)
     {
