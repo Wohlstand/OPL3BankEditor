@@ -27,6 +27,7 @@
 #include "ins_names.h"
 #include "FileFormats/junlevizion.h"
 #include "FileFormats/dmxopl2.h"
+#include "FileFormats/betmb.h"
 #include "common.h"
 #include "version.h"
 
@@ -172,6 +173,10 @@ bool BankEditor::openFile(QString filePath)
     else if(DmxOPL2::detect(magic))
         err = DmxOPL2::loadFile(filePath, m_bank);
 
+    //Check for Build Engine TMB file format
+    else if(BuildEngineTMB::detect(filePath))
+        err = BuildEngineTMB::loadFile(filePath, m_bank);
+
 
     if(err != FmBankFormatBase::ERR_OK)
     {
@@ -204,14 +209,17 @@ bool BankEditor::saveFile(QString filePath)
     int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
 
     //Check out for Junglevision file format
-    if(hasExt(filePath, "op3"))
+    if(hasExt(filePath, ".op3"))
         err = JunleVizion::saveFile(filePath, m_bank);
 
     //Check for DMX OPL2 file format
-    else if(hasExt(filePath, "op2")||
-            hasExt(filePath, "htc")||
-            hasExt(filePath, "hxn"))
+    else if(hasExt(filePath, ".op2")||
+            hasExt(filePath, ".htc")||
+            hasExt(filePath, ".hxn"))
         err = DmxOPL2::saveFile(filePath, m_bank);
+
+    else if(hasExt(filePath, ".tmb"))
+        err = BuildEngineTMB::saveFile(filePath, m_bank);
 
     if(err != FmBankFormatBase::ERR_OK)
     {
@@ -242,19 +250,26 @@ bool BankEditor::saveFile(QString filePath)
 bool BankEditor::saveFileAs()
 {
     QString jv  = "JunleVision bank (*.op3)";
-    QString dmx = "DMX Bank (*.op2 *.htc *.hxn)";
+    QString dmx = "DMX OPL-2 Bank (*.op2 *.htc *.hxn)";
+    QString tmb = "Build Engine Timbre bank (*.tmb)";
     QString filters =  jv+";;"
-                      +dmx;
+                      +dmx+";;"
+                      +tmb;
 
     QString selectedFilter;
 
     if(hasExt(m_recentPath, ".op3"))
         selectedFilter = jv;
+
     else
     if(hasExt(m_recentPath, ".op2")||
        hasExt(m_recentPath, ".htc")||
        hasExt(m_recentPath, ".hxn"))
         selectedFilter = dmx;
+
+    else
+    if(hasExt(m_recentPath, ".tmb"))
+        selectedFilter = tmb;
 
     QString fileToSave = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, filters, &selectedFilter);
 
@@ -311,14 +326,16 @@ void BankEditor::on_actionOpen_triggered()
     if( !askForSaving() )
         return;
 
-    QString supported   = "Supported bank files (*.op3 *.op2  *.htc *.hxn)";
+    QString supported   = "Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb)";
     QString jv          = "JunleVision bank (*.op3)";
-    QString dmx         = "DMX Bank (*.op2 *.htc *.hxn)";
+    QString dmx         = "DMX OPL-2 Bank (*.op2 *.htc *.hxn)";
+    QString tmb         = "Build Engine Timbre bank (*.tmb)";
     QString allFiles    = "All files (*.*)";
 
     QString filters =   supported+";;"
                        +jv+";;"
                        +dmx+";;"
+                       +tmb+";;"
                        +allFiles;
 
     QString fileToOpen;
@@ -449,6 +466,8 @@ void BankEditor::loadInstrument()
 
     ui->noteOffset1->setValue( m_curInst->note_offset1 );
     ui->noteOffset2->setValue( m_curInst->note_offset2 );
+
+    ui->velocityOffset->setValue( m_curInst->velocity_offset );
 
     ui->am1->setChecked( m_curInst->connection1==FmBank::Instrument::Connections::AM );
     ui->fm1->setChecked( m_curInst->connection1==FmBank::Instrument::Connections::FM );
@@ -594,3 +613,4 @@ void BankEditor::reloadInstrumentNames()
         }
     }
 }
+

@@ -138,12 +138,14 @@ public:
         bool en_4op;
         //! Enable double-voice mode instead of real 4-operator mode
         bool en_pseudo4op;
-        //! Fine tuning of second voice (pseudo-4-operators only)
+        //! Fine tuning of second voice (pseudo-4-operators only, DMX-Specific)
         char fine_tune;
         //! Note offset (first operator pair)
         short note_offset1;
-        //! Note offset (second operator pair)
+        //! Note offset (second operator pair, DMX-Specific)
         short note_offset2;
+        //! Note velocity offset (TMB-Specific)
+        char velocity_offset;
 
         /* ******** OPL3 merged values ******** */
 

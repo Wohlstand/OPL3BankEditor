@@ -1659,7 +1659,7 @@
       <x>840</x>
       <y>150</y>
       <width>121</width>
-      <height>431</height>
+      <height>351</height>
      </rect>
     </property>
     <property name="title">
@@ -1814,7 +1814,7 @@ Available from 0 to 127</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>400</y>
+       <y>320</y>
        <width>101</width>
        <height>23</height>
       </rect>
@@ -1939,9 +1939,9 @@ Available from 0 to 127</string>
     <property name="geometry">
      <rect>
       <x>840</x>
-      <y>590</y>
+      <y>500</y>
       <width>121</width>
-      <height>61</height>
+      <height>151</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -1960,7 +1960,7 @@ Available from 0 to 127</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>0</y>
+       <y>60</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -1980,13 +1980,48 @@ of second voice</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
+       <y>90</y>
        <width>101</width>
        <height>21</height>
       </rect>
      </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Detune second voice pitch&lt;br/&gt;(0 is don't detune.&lt;br/&gt;Range from -127 to 127)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="minimum">
+      <number>-127</number>
+     </property>
+     <property name="maximum">
+      <number>127</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_39">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>101</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Note velocity offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Offcets MIDI velocity (range from -127 to 127)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>Velocity offset</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="velocityOffset">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>101</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Note velocity offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Offcets MIDI velocity (range from -127 to 127)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="minimum">
       <number>-127</number>

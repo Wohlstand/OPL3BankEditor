@@ -48,7 +48,8 @@ SOURCES += main.cpp\
     common.cpp \
     controlls.cpp \
     audio.cpp \
-    FileFormats/dmxopl2.cpp
+    FileFormats/dmxopl2.cpp \
+    FileFormats/betmb.cpp
 
 HEADERS  += bank_editor.h \
     ins_names.h \
@@ -60,7 +61,8 @@ HEADERS  += bank_editor.h \
     piano.h \
     common.h \
     FileFormats/dmxopl2.h \
-    FileFormats/ffmt_base.h
+    FileFormats/ffmt_base.h \
+    FileFormats/betmb.h
 
 FORMS    += bank_editor.ui
 

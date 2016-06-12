@@ -308,6 +308,8 @@ private slots:
     void on_op4_eg_toggled(bool checked);
     void on_op4_ksr_toggled(bool checked);
 
+    void on_velocityOffset_valueChanged(int arg1);
+
 protected:
     void closeEvent(QCloseEvent *event);
     void dragEnterEvent(QDragEnterEvent *e);

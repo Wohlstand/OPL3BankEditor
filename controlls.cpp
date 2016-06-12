@@ -41,7 +41,7 @@ void BankEditor::on_feedback1_valueChanged(int arg1)
 {
     if(m_lock) return;
     if(!m_curInst) return;
-    m_curInst->feedback1 = arg1;
+    m_curInst->feedback1 = uchar(arg1);
     sendPatch();
 }
 
@@ -77,7 +77,7 @@ void BankEditor::on_feedback2_valueChanged(int arg1)
 {
     if(m_lock) return;
     if(!m_curInst) return;
-    m_curInst->feedback2 = arg1;
+    m_curInst->feedback2 = uchar(arg1);
     sendPatch();
 }
 
@@ -122,7 +122,7 @@ void BankEditor::on_secVoiceFineTune_valueChanged(int arg1)
 {
     if(m_lock) return;
     if(!m_curInst) return;
-    m_curInst->fine_tune = arg1;
+    m_curInst->fine_tune = char(arg1);
     sendPatch();
 }
 
@@ -133,7 +133,7 @@ void BankEditor::on_noteOffset1_valueChanged(int arg1)
 {
     if(m_lock) return;
     if(!m_curInst) return;
-    m_curInst->note_offset1 = arg1;
+    m_curInst->note_offset1 = short(arg1);
     sendPatch();
 }
 
@@ -142,7 +142,15 @@ void BankEditor::on_noteOffset2_valueChanged(int arg1)
 {
     if(m_lock) return;
     if(!m_curInst) return;
-    m_curInst->note_offset2 = arg1;
+    m_curInst->note_offset2 = short(arg1);
+    sendPatch();
+}
+
+void BankEditor::on_velocityOffset_valueChanged(int arg1)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->velocity_offset = char(arg1);
     sendPatch();
 }
 
