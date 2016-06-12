@@ -18,6 +18,7 @@
 
 #include <QPainter>
 #include <QLayout>
+#include <cmath>
 #include "piano.h"
 
 //! Octave map of black keys

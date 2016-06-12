@@ -18,6 +18,7 @@
 
 #include "generator.h"
 #include <qendian.h>
+#include <cmath>
 //#include <QtDebug>
 
 static const unsigned short Operators[NUM_OF_CHANNELS*2] =
