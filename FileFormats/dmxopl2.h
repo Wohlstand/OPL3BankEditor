@@ -40,6 +40,7 @@ public:
         Dmx_Unknown = 0x0002,
         Dmx_DoubleVoice = 0x0004
     };
+    static bool detect(char* magic);
     static int loadFile(QString filePath, FmBank &bank);
     static int saveFile(QString filePath, FmBank &bank);
 };

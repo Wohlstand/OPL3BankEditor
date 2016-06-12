@@ -34,6 +34,7 @@ public:
         ERR_NOFILE,
         ERR_BADFORMAT
     };
+    static bool detect(char* magic);
     static int loadFile(QString filePath, FmBank &bank);
     static int saveFile(QString filePath, FmBank &bank);
 };

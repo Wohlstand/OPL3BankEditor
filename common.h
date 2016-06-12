@@ -75,16 +75,32 @@ short toSint16BE(uchar *arr);
 
 /*!
  * \brief Converts signed short into little endian byte array
- * \param in Source number
- * \param arr Target byte array
+ * \param [in] in Source number
+ * \param [out] arr Target byte array
  */
 void fromSint16LE(short in, uchar *arr);
 
 /*!
  * \brief Converts signed short into big endian byte array
- * \param in Source number
- * \param arr Target byte array
+ * \param [in] in Source number
+ * \param [out] arr Target byte array
  */
 void fromSint16BE(short in, uchar *arr);
+
+/*!
+ * \brief Reads some bytes from begin of the file
+ * \param [in] filePath Path to the file
+ * \param [out] bytes target array pointer
+ * \param [in] count How much needed bytes to be readed
+ */
+void getMagic(QString filePath, char* bytes, int count);
+
+/*!
+ * \brief Checks, has filename an extension
+ * \param file File path
+ * \param ext File extension
+ * \return true if extension has been detected
+ */
+bool hasExt(const QString &file, const char*ext);
 
 #endif // COMMON_H

@@ -27,6 +27,7 @@
 #include "ins_names.h"
 #include "FileFormats/junlevizion.h"
 #include "FileFormats/dmxopl2.h"
+#include "common.h"
 #include "version.h"
 
 BankEditor::BankEditor(QWidget *parent) :
@@ -120,9 +121,48 @@ void BankEditor::dropEvent(QDropEvent *e)
 }
 
 
+
+void BankEditor::initFileData(QString &filePath)
+{
+    m_recentPath = filePath;
+    if(!ui->instruments->selectedItems().isEmpty())
+        on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
+    else
+        on_instruments_currentItemChanged(NULL, NULL);
+    ui->currentFile->setText(filePath);
+    m_bankBackup = m_bank;
+    reloadInstrumentNames();
+}
+
+void BankEditor::reInitFileDataAfterSave(QString &filePath)
+{
+    ui->currentFile->setText(filePath);
+    m_recentPath = filePath;
+    m_bankBackup = m_bank;
+}
+
+static void ErrMessageO(QWidget *parent, QString errStr)
+{
+    QMessageBox::warning(parent,
+                        BankEditor::tr("Can't open bank file!"),
+                        BankEditor::tr("Can't open bank file because %1.").arg(errStr),
+                        QMessageBox::Ok);
+}
+
+static void ErrMessageS(QWidget *parent, QString errStr)
+{
+    QMessageBox::warning(parent,
+                        BankEditor::tr("Can't save bank file!"),
+                        BankEditor::tr("Can't save bank file because %1.").arg(errStr),
+                        QMessageBox::Ok);
+}
+
 bool BankEditor::openFile(QString filePath)
 {
-    if(filePath.endsWith("op3", Qt::CaseInsensitive))
+    char magic[32];
+    getMagic(filePath, magic, 32);
+
+    if(JunleVizion::detect(magic))
     {
         int err = JunleVizion::loadFile(filePath, m_bank);
         if(err != JunleVizion::ERR_OK)
@@ -130,25 +170,18 @@ bool BankEditor::openFile(QString filePath)
             QString errText;
             switch(err)
             {
-                case JunleVizion::ERR_BADFORMAT: errText = "Bad file format"; break;
-                case JunleVizion::ERR_NOFILE:    errText = "Can't open file"; break;
+                case JunleVizion::ERR_BADFORMAT: errText = tr("bad file format"); break;
+                case JunleVizion::ERR_NOFILE:    errText = tr("can't open file"); break;
             }
-            QMessageBox::warning(this, "Can't open bank file!", "Can't open bank file because "+errText, QMessageBox::Ok);
+            ErrMessageO(this, errText);
             return false;
         } else {
-            m_recentPath = filePath;
-            if(!ui->instruments->selectedItems().isEmpty())
-                on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
-            else
-                on_instruments_currentItemChanged(NULL, NULL);
-            ui->currentFile->setText(filePath);
-            m_bankBackup = m_bank;
-            reloadInstrumentNames();
+            initFileData(filePath);
             return true;
         }
     }
     else
-    if(filePath.endsWith("op2", Qt::CaseInsensitive))
+    if(DmxOPL2::detect(magic))
     {
         int err = DmxOPL2::loadFile(filePath, m_bank);
         if(err != DmxOPL2::ERR_OK)
@@ -156,29 +189,28 @@ bool BankEditor::openFile(QString filePath)
             QString errText;
             switch(err)
             {
-                case DmxOPL2::ERR_BADFORMAT: errText = "Bad file format"; break;
-                case DmxOPL2::ERR_NOFILE:    errText = "Can't open file"; break;
+                case DmxOPL2::ERR_BADFORMAT: errText = tr("bad file format"); break;
+                case DmxOPL2::ERR_NOFILE:    errText = tr("can't open file"); break;
             }
-            QMessageBox::warning(this, "Can't open bank file!", "Can't open bank file because "+errText, QMessageBox::Ok);
+            ErrMessageO(this, errText);
             return false;
         } else {
-            m_recentPath = filePath;
-            if(!ui->instruments->selectedItems().isEmpty())
-                on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
-            else
-                on_instruments_currentItemChanged(NULL, NULL);
-            ui->currentFile->setText(filePath);
-            m_bankBackup = m_bank;
-            reloadInstrumentNames();
+            initFileData(filePath);
             return true;
         }
     }
+
+    QMessageBox::warning(this,
+                         tr("Can't open bank file!"),
+                         tr("Can't open bank file because unknown file format."),
+                         QMessageBox::Ok);
+
     return false;
 }
 
 bool BankEditor::saveFile(QString filePath)
 {
-    if(filePath.endsWith("op3", Qt::CaseInsensitive))
+    if(hasExt(filePath, "op3"))
     {
         int err = JunleVizion::saveFile(filePath, m_bank);
         if(err != JunleVizion::ERR_OK)
@@ -186,18 +218,18 @@ bool BankEditor::saveFile(QString filePath)
             QString errText;
             switch(err)
             {
-                case JunleVizion::ERR_NOFILE:    errText = "Can't open file for write!"; break;
+                case JunleVizion::ERR_NOFILE: errText = tr("can't open file for write"); break;
             }
-            QMessageBox::warning(this, "Can't save bank file!", "Can't save bank file because "+errText, QMessageBox::Ok);
+            ErrMessageS(this, errText);
             return false;
         } else {
-            ui->currentFile->setText(filePath);
-            m_recentPath = filePath;
-            m_bankBackup = m_bank;
+            reInitFileDataAfterSave(filePath);
             return true;
         }
     }
-    else if(filePath.endsWith("op2", Qt::CaseInsensitive))
+    else if(hasExt(filePath, "op2")||
+            hasExt(filePath, "htc")||
+            hasExt(filePath, "hxn"))
     {
         int err = DmxOPL2::saveFile(filePath, m_bank);
         if(err != DmxOPL2::ERR_OK)
@@ -205,14 +237,12 @@ bool BankEditor::saveFile(QString filePath)
             QString errText;
             switch(err)
             {
-                case DmxOPL2::ERR_NOFILE:    errText = "Can't open file for write!"; break;
+                case DmxOPL2::ERR_NOFILE:    errText = tr("can't open file for write"); break;
             }
-            QMessageBox::warning(this, "Can't save bank file!", "Can't save bank file because "+errText, QMessageBox::Ok);
+            ErrMessageS(this, errText);
             return false;
         } else {
-            ui->currentFile->setText(filePath);
-            m_recentPath = filePath;
-            m_bankBackup = m_bank;
+            reInitFileDataAfterSave(filePath);
             return true;
         }
     }
@@ -222,16 +252,18 @@ bool BankEditor::saveFile(QString filePath)
 bool BankEditor::saveFileAs()
 {
     QString jv  = "JunleVision bank (*.op3)";
-    QString dmx = "DMX Bank (*.op2)";
+    QString dmx = "DMX Bank (*.op2 *.htc *.hxn)";
     QString filters =  jv+";;"
                       +dmx;
 
     QString selectedFilter;
 
-    if(m_recentPath.endsWith(".op3", Qt::CaseInsensitive))
+    if(hasExt(m_recentPath, ".op3"))
         selectedFilter = jv;
     else
-    if(m_recentPath.endsWith(".op2", Qt::CaseInsensitive))
+    if(hasExt(m_recentPath, ".op2")||
+       hasExt(m_recentPath, ".htc")||
+       hasExt(m_recentPath, ".hxn"))
         selectedFilter = dmx;
 
     QString fileToSave = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, filters, &selectedFilter);
@@ -289,14 +321,15 @@ void BankEditor::on_actionOpen_triggered()
     if( !askForSaving() )
         return;
 
-    QString supported  = "Supported bank files (*.op2 *.op3)";
-    QString jv  = "JunleVision bank (*.op3)";
-    QString dmx = "DMX Bank (*.op2)";
-    QString allFiles = "All files (*.*)";
-    QString filters = supported+";;"
-                      +jv+";;"
-                      +dmx+";;"
-                      +allFiles;
+    QString supported   = "Supported bank files (*.op3 *.op2  *.htc *.hxn)";
+    QString jv          = "JunleVision bank (*.op3)";
+    QString dmx         = "DMX Bank (*.op2 *.htc *.hxn)";
+    QString allFiles    = "All files (*.*)";
+
+    QString filters =   supported+";;"
+                       +jv+";;"
+                       +dmx+";;"
+                       +allFiles;
 
     QString fileToOpen;
     fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);

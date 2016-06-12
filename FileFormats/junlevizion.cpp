@@ -21,6 +21,11 @@
 
 static const char* jv_magic = "Junglevision Patch File\x1A\0\0\0\0\0\0\0\0";
 
+bool JunleVizion::detect(char *magic)
+{
+    return (strncmp(magic, jv_magic, 32) == 0);
+}
+
 int JunleVizion::loadFile(QString filePath, FmBank &bank)
 {
     unsigned short count_melodic     = 0;

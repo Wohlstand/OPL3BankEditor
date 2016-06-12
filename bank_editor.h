@@ -104,6 +104,20 @@ public:
      */
     void saveSettings();
 
+private:
+    /*!
+     * \brief Initializes file data after file loading
+     * \param filePath Path to just opened file
+     */
+    void initFileData(QString &filePath);
+
+    /*!
+     * \brief Reinitializes some data after file saving
+     * \param filePath Path to just saved file
+     */
+    void reInitFileDataAfterSave(QString &filePath);
+
+public:
     /*!
      * \brief Open file
      * \param filePath absolute path to the file to open

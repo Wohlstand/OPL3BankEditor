@@ -21,6 +21,11 @@
 
 static const char* dmx_magic = "#OPL_II#";
 
+bool DmxOPL2::detect(char* magic)
+{
+    return (strncmp(magic, dmx_magic, 8) == 0);
+}
+
 int DmxOPL2::loadFile(QString filePath, FmBank &bank)
 {
     char magic[8]; memset(magic, 0, 8);

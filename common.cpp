@@ -77,3 +77,19 @@ void fromSint16BE(short in, uchar *arr)
     arr[1] =  in & 0x00FF;
     arr[0] = (in>>8) & 0x00FF;
 }
+
+void getMagic(QString filePath, char *bytes, int count)
+{
+    QFile file(filePath);
+    memset(bytes, 0, count);
+    if(file.open(QIODevice::ReadOnly))
+    {
+        file.read(bytes, count);
+        file.close();
+    }
+}
+
+bool hasExt(const QString &file, const char*ext)
+{
+    return file.endsWith(ext, Qt::CaseInsensitive);
+}
