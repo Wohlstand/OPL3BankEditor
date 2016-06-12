@@ -1,4 +1,4 @@
-Version 1.2 (__ june 2016)
+Version 1.2 (12 june 2016)
 - Added support of DMX OPL2 and Build Engine Timbre bank formats support
 - Added support of pseudo 4-operators mode (DMX OPL2 format only)
 - Added support for custom instrument names (DMX OPL2 format only)
