@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>opl3_16.png</file>
+        <file>opl3_32.png</file>
+        <file>opl3_48.png</file>
+        <file>opl3icon.ico</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>waves/wave0.png</file>
+        <file>waves/wave1.png</file>
+        <file>waves/wave2.png</file>
+        <file>waves/wave3.png</file>
+        <file>waves/wave4.png</file>
+        <file>waves/wave5.png</file>
+        <file>waves/wave6.png</file>
+        <file>waves/wave7.png</file>
+    </qresource>
+</RCC>

@@ -1,31 +1,50 @@
+#----------------------------------------------------------------------------
+# OPL Bank Editor by Wohlstand, a free tool for music bank editing
+# Copyright (c) 2016 Vitaly Novichkov <admin@wohlnet.ru>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#----------------------------------------------------------------------------
+
 #-------------------------------------------------
 #
 # Project created by QtCreator 2016-06-07T13:26:28
 #
 #-------------------------------------------------
 
-QT       += core gui widgets multimedia
+QT += core gui widgets multimedia
+
+TEMPLATE = app
 
 TARGET = FMBankEdit
-TEMPLATE = app
 
 android:{
     ARCH=android_arm
 } else {
     !contains(QMAKE_TARGET.arch, x86_64) {
-    ARCH=x32
+        ARCH=x32
     } else {
-    ARCH=x64
+        ARCH=x64
     }
 }
 
 debug: {
 BUILDTP=debug
-DEFINES += DEBUG_BUILD=1
-DESTDIR = $$PWD/bin-debug/
+    DEFINES += DEBUG_BUILD=1
+    DESTDIR = $$PWD/bin-debug/
 } else: release: {
-BUILDTP=release
-DESTDIR = $$PWD/bin-release/
+    BUILDTP=release
+    DESTDIR = $$PWD/bin-release/
 }
 
 BUILD_OBJ_DIR = $$PWD/_build_data
@@ -35,36 +54,40 @@ MOC_DIR     = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.moc
 RCC_DIR     = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.rcc
 UI_DIR      = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.ui
 
-win32: RC_FILE = $$PWD/resources/res.rc
+win32: RC_FILE = $$PWD/src/resources/res.rc
 
-SOURCES += main.cpp\
-        bank_editor.cpp \
-    ins_names.cpp \
-    bank.cpp \
-    FileFormats/junlevizion.cpp \
-    opl/dbopl.cpp \
-    opl/generator.cpp \
-    piano.cpp \
-    common.cpp \
-    controlls.cpp \
-    audio.cpp \
-    FileFormats/dmxopl2.cpp \
-    FileFormats/betmb.cpp
+SOURCES += \
+    src/FileFormats/betmb.cpp \
+    src/FileFormats/dmxopl2.cpp \
+    src/FileFormats/junlevizion.cpp \
+    src/audio.cpp \
+    src/bank.cpp \
+    src/bank_editor.cpp \
+    src/common.cpp \
+    src/controlls.cpp \
+    src/main.cpp \
+    src/ins_names.cpp \
+    src/opl/dbopl.cpp \
+    src/opl/generator.cpp \
+    src/piano.cpp
 
-HEADERS  += bank_editor.h \
-    ins_names.h \
-    bank.h \
-    FileFormats/junlevizion.h \
-    version.h \
-    opl/dbopl.h \
-    opl/generator.h \
-    piano.h \
-    common.h \
-    FileFormats/dmxopl2.h \
-    FileFormats/ffmt_base.h \
-    FileFormats/betmb.h
+HEADERS += \
+    src/FileFormats/betmb.h \
+    src/FileFormats/dmxopl2.h \
+    src/FileFormats/ffmt_base.h \
+    src/FileFormats/junlevizion.h \
+    src/bank.h \
+    src/bank_editor.h \
+    src/common.h \
+    src/ins_names.h \
+    src/opl/dbopl.h \
+    src/opl/generator.h \
+    src/piano.h \
+    src/version.h
 
-FORMS    += bank_editor.ui
+FORMS += \
+    src/bank_editor.ui
 
 RESOURCES += \
-    resources/resources.qrc
+    src/resources/resources.qrc
+

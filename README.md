@@ -13,3 +13,9 @@ make
 ```
 
 As alternate way you can open FMBankEdit.pro in the Qt Creator and build it.
+
+# Folders
+* ***Bank_Examples*** - example bank files which you can edit and preview them
+* ***src*** - source code of this tool
+* ***_Misc*** - Various stuff (test scripts, dummy banks, documents, etc.) which was been used in development of this tool
+

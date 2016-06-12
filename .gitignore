@@ -34,3 +34,8 @@ Makefile*
 #QtCtreator Qml
 *.qmlproject.user
 *.qmlproject.user.*
+
+/_Misc/res*.txt
+/_Misc/byte*
+!/_Misc/byte*.c
+
