@@ -22,9 +22,9 @@
 #include "ffmt_base.h"
 
 /**
- * @brief Reader and Writer of the Build Engine's TMB Bank format
+ * @brief Reader and Writer of the Apogee Sound System TMB Bank format
  */
-class BuildEngineTMB : public FmBankFormatBase
+class ApogeeTMB : public FmBankFormatBase
 {
 public:
     static bool detect(QString filePath);

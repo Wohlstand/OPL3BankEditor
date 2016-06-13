@@ -27,7 +27,7 @@
 #include "ins_names.h"
 #include "FileFormats/junlevizion.h"
 #include "FileFormats/dmxopl2.h"
-#include "FileFormats/betmb.h"
+#include "FileFormats/apogeetmb.h"
 #include "common.h"
 #include "version.h"
 
@@ -173,9 +173,9 @@ bool BankEditor::openFile(QString filePath)
     else if(DmxOPL2::detect(magic))
         err = DmxOPL2::loadFile(filePath, m_bank);
 
-    //Check for Build Engine TMB file format
-    else if(BuildEngineTMB::detect(filePath))
-        err = BuildEngineTMB::loadFile(filePath, m_bank);
+    //Check for Apogee Sound System TMB file format
+    else if(ApogeeTMB::detect(filePath))
+        err = ApogeeTMB::loadFile(filePath, m_bank);
 
 
     if(err != FmBankFormatBase::ERR_OK)
@@ -219,7 +219,7 @@ bool BankEditor::saveFile(QString filePath)
         err = DmxOPL2::saveFile(filePath, m_bank);
 
     else if(hasExt(filePath, ".tmb"))
-        err = BuildEngineTMB::saveFile(filePath, m_bank);
+        err = ApogeeTMB::saveFile(filePath, m_bank);
 
     if(err != FmBankFormatBase::ERR_OK)
     {
@@ -250,8 +250,8 @@ bool BankEditor::saveFile(QString filePath)
 bool BankEditor::saveFileAs()
 {
     QString jv  = "JunleVision bank (*.op3)";
-    QString dmx = "DMX OPL-2 Bank (*.op2 *.htc *.hxn)";
-    QString tmb = "Build Engine Timbre bank (*.tmb)";
+    QString dmx = "DMX OPL-2 bank (*.op2 *.htc *.hxn)";
+    QString tmb = "Apogee Sound System timbre bank (*.tmb)";
     QString filters =  jv+";;"
                       +dmx+";;"
                       +tmb;
@@ -328,8 +328,8 @@ void BankEditor::on_actionOpen_triggered()
 
     QString supported   = "Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb)";
     QString jv          = "JunleVision bank (*.op3)";
-    QString dmx         = "DMX OPL-2 Bank (*.op2 *.htc *.hxn)";
-    QString tmb         = "Build Engine Timbre bank (*.tmb)";
+    QString dmx         = "DMX OPL-2 bank (*.op2 *.htc *.hxn)";
+    QString tmb         = "Apogee Sound System timbre bank (*.tmb)";
     QString allFiles    = "All files (*.*)";
 
     QString filters =   supported+";;"

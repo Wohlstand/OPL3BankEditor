@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "betmb.h"
+#include "apogeetmb.h"
 #include "../common.h"
 
-bool BuildEngineTMB::detect(QString filePath)
+bool ApogeeTMB::detect(QString filePath)
 {
     if( hasExt(filePath, ".tmb") )
         return true;
@@ -34,7 +34,7 @@ bool BuildEngineTMB::detect(QString filePath)
     return (fileSize == (256*13));
 }
 
-int BuildEngineTMB::loadFile(QString filePath, FmBank &bank)
+int ApogeeTMB::loadFile(QString filePath, FmBank &bank)
 {
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
@@ -77,7 +77,7 @@ int BuildEngineTMB::loadFile(QString filePath, FmBank &bank)
     return ERR_OK;
 }
 
-int BuildEngineTMB::saveFile(QString filePath, FmBank &bank)
+int ApogeeTMB::saveFile(QString filePath, FmBank &bank)
 {
     QFile file(filePath);
     if(!file.open(QIODevice::WriteOnly))

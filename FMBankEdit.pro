@@ -57,7 +57,6 @@ UI_DIR      = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.ui
 win32: RC_FILE = $$PWD/src/resources/res.rc
 
 SOURCES += \
-    src/FileFormats/betmb.cpp \
     src/FileFormats/dmxopl2.cpp \
     src/FileFormats/junlevizion.cpp \
     src/audio.cpp \
@@ -69,10 +68,10 @@ SOURCES += \
     src/ins_names.cpp \
     src/opl/dbopl.cpp \
     src/opl/generator.cpp \
-    src/piano.cpp
+    src/piano.cpp \
+    src/FileFormats/apogeetmb.cpp
 
 HEADERS += \
-    src/FileFormats/betmb.h \
     src/FileFormats/dmxopl2.h \
     src/FileFormats/ffmt_base.h \
     src/FileFormats/junlevizion.h \
@@ -83,7 +82,8 @@ HEADERS += \
     src/opl/dbopl.h \
     src/opl/generator.h \
     src/piano.h \
-    src/version.h
+    src/version.h \
+    src/FileFormats/apogeetmb.h
 
 FORMS += \
     src/bank_editor.ui
