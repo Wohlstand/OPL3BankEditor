@@ -1,0 +1,74 @@
+==============================================================================
+Most of those FM banks are imported from various PC games without permission
+from their respective authors. The question of copyright, when it comes
+to sets of 11 numeric bytes, is somewhat vague, especially considering that
+most of those sets are simply descendants of the patch sets originally
+published by AdLib Inc. for everyone's free use.
+==============================================================================
+
+==============================================================================
+                               Info about banks
+==============================================================================
+
+------------------------------------------------------------------------------
+  Banks for DMX Audio library used in DOOM, DOOM II, Heretic, Hexen, Raptor
+------------------------------------------------------------------------------
+
+----------dmx_dmx.op2-----------
+Standard unmodified DMX bank
+
+---------dmx_doom1.op2----------
+Bank used in the "DOOM" game by Id Software
+
+---------dmx_doom2.op2----------
+Bank used in the "DOOM II: Hell on the Eath" game by Id Software
+
+--------dmx_raptor.op2----------
+Bank used in the "Raptor: Call of the Shadows" game by Apogee Software
+(later known as 3D Realms)
+
+--------dmx_strife.op2----------
+Bank used in the "Strife: Quest for the Sigil" game by Rogue Entertainment
+
+
+------------------------------------------------------------------------------
+  Banks for Apogee Sound System audio library used in Duke Nukem 3D etc.
+------------------------------------------------------------------------------
+
+----------default.tmb-----------
+Standard unmodified bank, hardcoded into the audio library,
+licensed under GNU GPL
+
+---------d3dtimbr.tmb-----------
+Bank used in Duke Nukem 3D by 3D Realms
+
+---------swtimbr.tmb-----------
+Bank used in Shadow Warrior by 3D Realms
+
+
+
+------------------------------------------------------------------------------
+  Banks gotten from "Junlevision Sound Drive" demo by Junglevision Software
+          company which presents a payd audio library for MS-DOS
+------------------------------------------------------------------------------
+
+-----------JV_2OP.OP3-----------
+General MIDI timbres for Yamaha OPL-2 and OPL-3 based sound cards were  
+developed by Junglevision Software.
+(Has no drumsets. Reason is: Jungevision Sound Drive demo player is uses
+comination of FM synthesis and playing set of PCM files as percussion)
+
+------------FAT2.OP3------------
+------------FAT4.OP3------------
+General MIDI timbres for Yamaha OPL-2 and OPL-3 based sound cards were
+produced by The Fat Man (TM) company and developed by K. Weston Phelan and
+George Alistair Sanger in 1993
+FAT2.OP3 is widely used in Windows drivers for Sound Blaster and other sound
+cards with Yamaha OPL2/OPL3 chip.
+
+-----------WALLACE.OP3----------
+General MIDI timbres for Yamaha OPL-2 and OPL-3 based sound cards were
+developed by Rob Wallace of Wallace Music & Sound, Inc.
+(Has no created drumsets by same reason as JV_2OP.OP3)
+
+
