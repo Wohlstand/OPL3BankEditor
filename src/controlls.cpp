@@ -63,6 +63,23 @@ void BankEditor::on_fm1_clicked(bool checked)
     sendPatch();
 }
 
+
+void BankEditor::on_percMode_currentIndexChanged(int index)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    switch(index)
+    {
+    case 0:
+        m_curInst->adlib_drum_number = 0;
+        break;
+    default:
+        m_curInst->adlib_drum_number = (5 + index);
+        break;
+    }
+    sendPatch();
+}
+
 void BankEditor::on_perc_noteNum_valueChanged(int arg1)
 {
     if(m_lock) return;

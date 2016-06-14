@@ -146,6 +146,8 @@ public:
         short note_offset2;
         //! Note velocity offset (TMB-Specific)
         char velocity_offset;
+        //! AdLib specific parameter: Drum Number
+        unsigned char adlib_drum_number;
 
         /* ******** OPL3 merged values ******** */
 

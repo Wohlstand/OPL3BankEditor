@@ -1379,7 +1379,7 @@
            <string>Percussion</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
-           <item row="0" column="0">
+           <item row="0" column="2">
             <widget class="QLabel" name="label_27">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1389,7 +1389,7 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item row="0" column="3">
             <widget class="QSpinBox" name="perc_noteNum">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1397,6 +1397,53 @@
              <property name="maximum">
               <number>127</number>
              </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_40">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Drum instrument mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a mode where are percussions are playing in the regular melodic channels without any limits. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Is highly recommended to use&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bass-Drum/Snare/TomTom/Cymbal/Hi-hat&lt;/span&gt;&lt;br/&gt;Enables legacy percussion mode where are five restricted channels. This mode is restricts a playing more than one sound of every type. For example, in this mode is impossible playing multiple snares or multiple bass-drums. &lt;span style=&quot; text-decoration: underline;&quot;&gt;This mode is available only on some special bank formats (for example, IBK, SBI). Other bank formats are supports a generic mode only&lt;/span&gt;!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Mode:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="percMode">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Drum instrument mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a mode where are percussions are playing in the regular melodic channels without any limits. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Is highly recommended to use&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bass-Drum/Snare/TomTom/Cymbal/Hi-hat&lt;/span&gt;&lt;br/&gt;Enables legacy percussion mode where are five restricted channels. This mode is restricts a playing more than one sound of every type. For example, in this mode is impossible playing multiple snares or multiple bass-drums. &lt;span style=&quot; text-decoration: underline;&quot;&gt;This mode is available only on some special bank formats (for example, IBK, SBI). Other bank formats are supports a generic mode only&lt;/span&gt;!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>Generic</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Bass</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Snare</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tom-tom</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Cymbal</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Hi-Hat</string>
+              </property>
+             </item>
             </widget>
            </item>
           </layout>
@@ -2067,7 +2114,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>970</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -25,9 +25,11 @@
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
 #include "ins_names.h"
-#include "FileFormats/junlevizion.h"
-#include "FileFormats/dmxopl2.h"
 #include "FileFormats/apogeetmb.h"
+#include "FileFormats/dmxopl2.h"
+#include "FileFormats/junlevizion.h"
+#include "FileFormats/sb_ibk.h"
+
 #include "common.h"
 #include "version.h"
 
@@ -173,9 +175,14 @@ bool BankEditor::openFile(QString filePath)
     else if(DmxOPL2::detect(magic))
         err = DmxOPL2::loadFile(filePath, m_bank);
 
+    //Check for Sound Blaster IBK file format
+    else if(SbIBK::detect(magic))
+        err = SbIBK::loadFile(filePath, m_bank);
+
     //Check for Apogee Sound System TMB file format
     else if(ApogeeTMB::detect(filePath))
         err = ApogeeTMB::loadFile(filePath, m_bank);
+
 
 
     if(err != FmBankFormatBase::ERR_OK)
@@ -221,7 +228,10 @@ bool BankEditor::saveFile(QString filePath)
     else if(hasExt(filePath, ".tmb"))
         err = ApogeeTMB::saveFile(filePath, m_bank);
 
-    if(err != FmBankFormatBase::ERR_OK)
+    else if(hasExt(filePath, ".ibk"))
+        err = SbIBK::saveFile(filePath, m_bank);
+
+    if( err != FmBankFormatBase::ERR_OK )
     {
         QString errText;
         switch(err)
@@ -239,7 +249,9 @@ bool BankEditor::saveFile(QString filePath)
         }
         ErrMessageS(this, errText);
         return false;
-    } else {
+    }
+    else
+    {
         reInitFileDataAfterSave(filePath);
         return true;
     }
@@ -252,9 +264,11 @@ bool BankEditor::saveFileAs()
     QString jv  = "JunleVision bank (*.op3)";
     QString dmx = "DMX OPL-2 bank (*.op2 *.htc *.hxn)";
     QString tmb = "Apogee Sound System timbre bank (*.tmb)";
+    QString ibk = "Sound Blaster IBK file (*.ibk)";
     QString filters =  jv+";;"
                       +dmx+";;"
-                      +tmb;
+                      +tmb+";;"
+                      +ibk;
 
     QString selectedFilter;
 
@@ -270,6 +284,9 @@ bool BankEditor::saveFileAs()
     else
     if(hasExt(m_recentPath, ".tmb"))
         selectedFilter = tmb;
+    else
+    if(hasExt(m_recentPath, ".ibk"))
+        selectedFilter = ibk;
 
     QString fileToSave = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, filters, &selectedFilter);
 
@@ -326,16 +343,18 @@ void BankEditor::on_actionOpen_triggered()
     if( !askForSaving() )
         return;
 
-    QString supported   = "Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb)";
+    QString supported   = "Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk)";
     QString jv          = "JunleVision bank (*.op3)";
     QString dmx         = "DMX OPL-2 bank (*.op2 *.htc *.hxn)";
     QString tmb         = "Apogee Sound System timbre bank (*.tmb)";
+    QString ibk         = "Sound Blaster IBK file (*.ibk)";
     QString allFiles    = "All files (*.*)";
 
     QString filters =   supported+";;"
                        +jv+";;"
                        +dmx+";;"
                        +tmb+";;"
+                       +ibk+";;"
                        +allFiles;
 
     QString fileToOpen;
@@ -450,6 +469,7 @@ void BankEditor::loadInstrument()
     ui->insName->setText( m_curInst->name );
 
     ui->perc_noteNum->setValue( m_curInst->percNoteNum );
+    ui->percMode->setCurrentIndex( m_curInst->adlib_drum_number>0 ? (m_curInst->adlib_drum_number-5) : 0  );
     ui->op4mode->setChecked( m_curInst->en_4op );
     ui->doubleVoice->setEnabled( m_curInst->en_4op );
     ui->doubleVoice->setChecked( m_curInst->en_pseudo4op );
@@ -549,6 +569,7 @@ void BankEditor::setDrumMode(bool dmode)
     } else {
         ui->noteToTest->setValue(m_recentMelodicNote);
     }
+    ui->percMode->setEnabled(dmode);
     ui->noteToTest->setDisabled(dmode);
     ui->testMajor->setDisabled(dmode);
     ui->testMinor->setDisabled(dmode);
@@ -613,4 +634,5 @@ void BankEditor::reloadInstrumentNames()
         }
     }
 }
+
 

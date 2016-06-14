@@ -79,6 +79,7 @@ public:
     void Patch(unsigned c, unsigned i);
     void Pan(unsigned c, unsigned value);
     void PlayNoteF(int noteID);
+    void PlayDrum(char drum, int noteID);
     void switch4op(bool enabled);
 
 public slots:
@@ -97,6 +98,7 @@ public slots:
     void changeNote(int newnote);
     void changeDeepTremolo(bool enabled);
     void changeDeepVibrato(bool enabled);
+    void changeAdLibPercussion(bool enabled);
 signals:
     void debugInfo(QString);
 
@@ -104,6 +106,8 @@ private:
     int note;
     unsigned char DeepTremoloMode;
     unsigned char DeepVibratoMode;
+    unsigned char AdLibPercussionMode;
+    unsigned char testDrum;
     DBOPL::Handler chip;
     OPL_PatchSetup m_patch;
 

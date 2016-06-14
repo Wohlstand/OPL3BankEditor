@@ -242,6 +242,7 @@ private slots:
     void on_am1_clicked(bool checked);
     void on_fm1_clicked(bool checked);
 
+    void on_percMode_currentIndexChanged(int index);
     void on_perc_noteNum_valueChanged(int arg1);
 
     void on_feedback2_valueChanged(int arg1);

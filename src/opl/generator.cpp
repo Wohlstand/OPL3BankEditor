@@ -94,7 +94,8 @@ Generator::Generator(int sampleRate,
 
     DeepTremoloMode   = 0;
     DeepVibratoMode   = 0;
-    unsigned char AdlPercussionMode = 0;
+    AdLibPercussionMode = 0;
+    testDrum = 0;//Note ON/OFF of one of legacy percussion channels
 
     static const short data[] =
     {
@@ -112,7 +113,7 @@ Generator::Generator(int sampleRate,
 
     chip.WriteReg(0x0BD, m_regBD = ( DeepTremoloMode*0x80
                                     +DeepVibratoMode*0x40
-                                    +AdlPercussionMode*0x20 ) );
+                                    +AdLibPercussionMode*0x20 ) );
 
 
     switch4op(true);
@@ -150,6 +151,7 @@ void Generator::NoteOn(unsigned c, double hertz) // Hertz range: 0..131071
         x &= ~0x2000;
         //x |= 0x800; // for test
     }
+    else
     if(chn != 0xFFF)
     {
         chip.WriteReg(0xA0 + chn, x & 0xFF);
@@ -346,6 +348,31 @@ void Generator::PlayNoteF(int noteID)
     }
 }
 
+void Generator::PlayDrum(char drum, int noteID)
+{
+    int tone = noteID;
+    if(m_patch.tone)
+    {
+        if(m_patch.tone < 20)
+            tone += m_patch.tone;
+        else if(m_patch.tone < 128)
+            tone = m_patch.tone;
+        else
+            tone -= m_patch.tone-128;
+    }
+    int  adlchannel = 18+drum;
+
+    Patch(adlchannel, 0);
+    Pan(adlchannel, 0x30);
+    Touch_Real(adlchannel, 63);
+
+    double bend = 0.0;
+    double phase = 0.0;
+    bend  = 0.0 + m_patch.OPS[0].finetune;
+    NoteOn(adlchannel, 172.00093 * std::exp(0.057762265 * (tone + bend + phase)));
+}
+
+
 void Generator::switch4op(bool enabled)
 {
     //Shut up currently playing stuff
@@ -427,7 +454,10 @@ void Generator::NoteOffAllChans()
 
 void Generator::PlayNote()
 {
-    PlayNoteF(note);
+    if(AdLibPercussionMode)
+        PlayDrum(testDrum, note);
+    else
+        PlayNoteF(note);
 }
 
 void Generator::PlayMajorChord()
@@ -487,61 +517,104 @@ void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
     //Shutup everything
     Silence();
 
-    switch4op( instrument.en_4op && !instrument.en_pseudo4op );
+    switch4op( instrument.en_4op && !instrument.en_pseudo4op && (instrument.adlib_drum_number ==0 ) );
 
-    m_patch.OPS[0].modulator_E862   = instrument.getDataE862( MODULATOR1 );
-    m_patch.OPS[0].modulator_40     = instrument.getKSLL( MODULATOR1 );
-    m_patch.OPS[0].carrier_E862     = instrument.getDataE862( CARRIER1 );
-    m_patch.OPS[0].carrier_40       = instrument.getKSLL( CARRIER1 );
-    m_patch.OPS[0].feedconn         = instrument.getFBConn1();
+    bool isADrums = isDrum && ( instrument.adlib_drum_number > 0 );
 
-    m_patch.OPS[1].modulator_E862   = instrument.getDataE862(MODULATOR2 );
-    m_patch.OPS[1].modulator_40     = instrument.getKSLL( MODULATOR2 );
-    m_patch.OPS[1].carrier_E862     = instrument.getDataE862( CARRIER2 );
-    m_patch.OPS[1].carrier_40       = instrument.getKSLL( CARRIER2 );
-    m_patch.OPS[1].feedconn         = instrument.getFBConn2();
-
-    m_patch.flags   = 0;
-    m_patch.tone    = 0;
-    m_patch.voice2_fine_tune = 0.0;
-
-    if( isDrum )
+    changeAdLibPercussion( isADrums );
+    if( isADrums )
     {
-        if(instrument.percNoteNum && instrument.percNoteNum < 20 )
+        testDrum = instrument.adlib_drum_number-6;
+        if( isDrum )
         {
-            uchar nnum = instrument.percNoteNum;
-            while( nnum && nnum<20)
+            if(instrument.percNoteNum && instrument.percNoteNum < 20 )
             {
-                nnum += 12;
-                m_patch.OPS[0].finetune -= 12;
-                m_patch.OPS[1].finetune -= 12;
+                uchar nnum = instrument.percNoteNum;
+                while( nnum && nnum<20)
+                {
+                    nnum += 12;
+                    m_patch.OPS[0].finetune -= 12;
+                    //m_patch.OPS[1].finetune -= 12;
+                }
             }
         }
-    }
 
-    if( instrument.en_4op && instrument.en_pseudo4op )
-    {
-        m_patch.voice2_fine_tune = (double(instrument.fine_tune)*15.625)/1000.0;
-        if(instrument.fine_tune == 1)
-            m_patch.voice2_fine_tune =  0.000025;
-        else if(instrument.fine_tune == -1)
-            m_patch.voice2_fine_tune = -0.000025;
-
-        m_patch.OPS[0].finetune = instrument.note_offset1;
-        m_patch.OPS[1].finetune = instrument.note_offset2;
+        if( testDrum==0 )
+        {
+            m_patch.OPS[0].modulator_E862   = instrument.getDataE862( MODULATOR1 );
+            m_patch.OPS[0].modulator_40     = instrument.getKSLL( MODULATOR1 );
+            m_patch.OPS[0].carrier_E862     = instrument.getDataE862( CARRIER1 );
+            m_patch.OPS[0].carrier_40       = instrument.getKSLL( CARRIER1 );
+            m_patch.OPS[0].feedconn         = instrument.getFBConn1();
+        }
+        if( (testDrum==1) || (testDrum==3) )
+        {
+            m_patch.OPS[0].modulator_E862   = instrument.getDataE862( MODULATOR1 );
+            m_patch.OPS[0].modulator_40     = instrument.getKSLL( MODULATOR1 );
+        }
+        if( (testDrum==2) || (testDrum==4) )
+        {
+            m_patch.OPS[0].carrier_E862     = instrument.getDataE862( CARRIER1 );
+            m_patch.OPS[0].carrier_40       = instrument.getKSLL( CARRIER1 );
+        }
+        //m_patch.OPS[0].feedconn         = instrument.getFBConn1();
     }
     else
     {
-        m_patch.OPS[0].finetune = instrument.note_offset1;
-        m_patch.OPS[1].finetune = instrument.note_offset1;
-    }
+        m_patch.OPS[0].modulator_E862   = instrument.getDataE862( MODULATOR1 );
+        m_patch.OPS[0].modulator_40     = instrument.getKSLL( MODULATOR1 );
+        m_patch.OPS[0].carrier_E862     = instrument.getDataE862( CARRIER1 );
+        m_patch.OPS[0].carrier_40       = instrument.getKSLL( CARRIER1 );
+        m_patch.OPS[0].feedconn         = instrument.getFBConn1();
 
-    if( instrument.en_4op )
-    {
-        if( instrument.en_pseudo4op )
-            m_patch.flags |= OPL_PatchSetup::Flag_Pseudo4op;
+        m_patch.OPS[1].modulator_E862   = instrument.getDataE862(MODULATOR2 );
+        m_patch.OPS[1].modulator_40     = instrument.getKSLL( MODULATOR2 );
+        m_patch.OPS[1].carrier_E862     = instrument.getDataE862( CARRIER2 );
+        m_patch.OPS[1].carrier_40       = instrument.getKSLL( CARRIER2 );
+        m_patch.OPS[1].feedconn         = instrument.getFBConn2();
+
+        m_patch.flags   = 0;
+        m_patch.tone    = 0;
+        m_patch.voice2_fine_tune = 0.0;
+
+        if( isDrum )
+        {
+            if(instrument.percNoteNum && instrument.percNoteNum < 20 )
+            {
+                uchar nnum = instrument.percNoteNum;
+                while( nnum && nnum<20)
+                {
+                    nnum += 12;
+                    m_patch.OPS[0].finetune -= 12;
+                    m_patch.OPS[1].finetune -= 12;
+                }
+            }
+        }
+
+        if( instrument.en_4op && instrument.en_pseudo4op )
+        {
+            m_patch.voice2_fine_tune = (double(instrument.fine_tune)*15.625)/1000.0;
+            if(instrument.fine_tune == 1)
+                m_patch.voice2_fine_tune =  0.000025;
+            else if(instrument.fine_tune == -1)
+                m_patch.voice2_fine_tune = -0.000025;
+
+            m_patch.OPS[0].finetune = instrument.note_offset1;
+            m_patch.OPS[1].finetune = instrument.note_offset2;
+        }
         else
-            m_patch.flags |= OPL_PatchSetup::Flag_True4op;
+        {
+            m_patch.OPS[0].finetune = instrument.note_offset1;
+            m_patch.OPS[1].finetune = instrument.note_offset1;
+        }
+
+        if( instrument.en_4op )
+        {
+            if( instrument.en_pseudo4op )
+                m_patch.flags |= OPL_PatchSetup::Flag_Pseudo4op;
+            else
+                m_patch.flags |= OPL_PatchSetup::Flag_True4op;
+        }
     }
 }
 
@@ -553,21 +626,28 @@ void Generator::changeNote(int newnote)
 void Generator::changeDeepTremolo(bool enabled)
 {
     DeepTremoloMode   = uchar(enabled);
-    unsigned char AdlPercussionMode = 0;
 
     chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode*0x80
                                   + DeepVibratoMode*0x40
-                                  + AdlPercussionMode*0x20) );
+                                  + AdLibPercussionMode*0x20) );
 }
 
 void Generator::changeDeepVibrato(bool enabled)
 {
     DeepVibratoMode   = uchar(enabled);
-    unsigned char AdlPercussionMode = 0;
 
     chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode*0x80
                                   + DeepVibratoMode*0x40
-                                  + AdlPercussionMode*0x20) );
+                                    + AdLibPercussionMode*0x20) );
+}
+
+void Generator::changeAdLibPercussion(bool enabled)
+{
+    AdLibPercussionMode = uchar(enabled);
+
+    chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode*0x80
+                                  + DeepVibratoMode*0x40
+                                  + AdLibPercussionMode*0x20) );
 }
 
 void Generator::start()
