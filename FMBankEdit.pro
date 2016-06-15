@@ -70,7 +70,8 @@ SOURCES += \
     src/opl/generator.cpp \
     src/piano.cpp \
     src/FileFormats/apogeetmb.cpp \
-    src/FileFormats/sb_ibk.cpp
+    src/FileFormats/sb_ibk.cpp \
+    src/FileFormats/adlibbnk.cpp
 
 HEADERS += \
     src/FileFormats/dmxopl2.h \
@@ -85,7 +86,8 @@ HEADERS += \
     src/piano.h \
     src/version.h \
     src/FileFormats/apogeetmb.h \
-    src/FileFormats/sb_ibk.h
+    src/FileFormats/sb_ibk.h \
+    src/FileFormats/adlibbnk.h
 
 FORMS += \
     src/bank_editor.ui

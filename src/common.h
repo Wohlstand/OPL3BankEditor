@@ -36,12 +36,28 @@ typedef char*         char_p;
 qint64 readLE(QFile &file, unsigned short &out);
 
 /*!
+ * \brief Read little-endian unsigned int from a file
+ * \param file File descriptor
+ * \param out Target reference
+ * \return number of readed bytes
+ */
+qint64 readLE(QFile &file, unsigned int &out);
+
+/*!
  * \brief Write little-endian unsigned short into the file
  * \param file File descriptor
  * \param out Source reference
  * \return number of written bytes
  */
 qint64 writeLE(QFile &file, unsigned short &out);
+
+/*!
+ * \brief Write little-endian unsigned int into the file
+ * \param file File descriptor
+ * \param out Source reference
+ * \return number of written bytes
+ */
+qint64 writeLE(QFile &file, unsigned int &out);
 
 /*!
  * \brief Read big-endian unsigned short from a file

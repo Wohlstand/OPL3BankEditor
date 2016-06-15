@@ -1,7 +1,7 @@
 # OPL3BankEditor
 A small cross-platform editor of the OPL3 FM banks of different formats
 
-Currently supported Junglevision patch, DMX OPL-2, Apogee Sound System timbre formats. Other formats (*.bnk, *.ibk, *.opl, *.ad, *.adlraw) are planned
+Currently supported Junglevision patch, DMX OPL-2, Apogee Sound System timbre formats, SoundBlaster IBK files. Other formats (*.bnk, *.opl, *.ad, *.adlraw) are planned
 
 # How to build
 You need a Qt 5 to build this project.

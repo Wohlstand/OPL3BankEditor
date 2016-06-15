@@ -27,12 +27,36 @@ qint64 readLE(QFile &file, unsigned short &out)
     return len;
 }
 
+
+qint64 readLE(QFile &file, unsigned int &out)
+{
+    uchar bytes[4] = {0, 0, 0, 0};
+    qint64 len = file.read(char_p(bytes), 4);
+    out =  (quint32(bytes[0])&0x00FF)
+          |((quint32(bytes[1])<<8)&0xFF00)
+          |((quint32(bytes[2])<<16)&0xFF0000)
+          |((quint32(bytes[2])<<24)&0xFF000000);
+    return len;
+}
+
 qint64 writeLE(QFile &file, unsigned short &out)
 {
     uchar bytes[2] = {uchar(out&0x00FF), uchar((out>>8)&0x00FF) };
     qint64 len = file.write(char_p(bytes), 2);
     return len;
 }
+
+
+qint64 writeLE(QFile &file, unsigned int &out)
+{
+    uchar bytes[4] = { uchar(out&0x000000FF),
+                       uchar((out>>8)&0x000000FF),
+                       uchar((out>>16)&0x000000FF),
+                       uchar((out>>24)&0x000000FF) };
+    qint64 len = file.write(char_p(bytes), 4);
+    return len;
+}
+
 
 qint64 readBE(QFile &file, unsigned short &out)
 {
@@ -93,3 +117,4 @@ bool hasExt(const QString &file, const char*ext)
 {
     return file.endsWith(ext, Qt::CaseInsensitive);
 }
+
