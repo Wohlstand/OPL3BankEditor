@@ -489,11 +489,11 @@ void BankEditor::loadInstrument()
 
     ui->velocityOffset->setValue( m_curInst->velocity_offset );
 
-    ui->am1->setChecked( m_curInst->connection1==FmBank::Instrument::Connections::AM );
-    ui->fm1->setChecked( m_curInst->connection1==FmBank::Instrument::Connections::FM );
+    ui->am1->setChecked( m_curInst->connection1==FmBank::Instrument::AM );
+    ui->fm1->setChecked( m_curInst->connection1==FmBank::Instrument::FM );
 
-    ui->am2->setChecked( m_curInst->connection2==FmBank::Instrument::Connections::AM );
-    ui->fm2->setChecked( m_curInst->connection2==FmBank::Instrument::Connections::FM );
+    ui->am2->setChecked( m_curInst->connection2==FmBank::Instrument::AM );
+    ui->fm2->setChecked( m_curInst->connection2==FmBank::Instrument::FM );
 
 
     ui->op1_attack->setValue(m_curInst->OP[MODULATOR1].attack);
@@ -555,7 +555,7 @@ void BankEditor::sendPatch()
 {
     if(!m_curInst) return;
     if(!m_generator) return;
-    m_generator->changePatch(*m_curInst);
+    m_generator->changePatch(*m_curInst, ui->percussion->isChecked());
 }
 
 void BankEditor::setDrumMode(bool dmode)
