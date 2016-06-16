@@ -35,17 +35,38 @@ FmBank::FmBank()
 
 FmBank::FmBank(const FmBank &fb)
 {
-    int size = sizeof(Instrument)*128;
-    memcpy(Ins_Melodic,    fb.Ins_Melodic,    size);
-    memcpy(Ins_Percussion, fb.Ins_Percussion, size);
+    reset();
+    Ins_Melodic_box     = fb.Ins_Melodic_box;
+    Ins_Percussion_box  = fb.Ins_Percussion_box;
+    //int size = sizeof(Instrument)*128;
+    //memcpy(Ins_Melodic,    fb.Ins_Melodic,    size);
+    //memcpy(Ins_Percussion, fb.Ins_Percussion, size);
+}
+
+FmBank &FmBank::operator=(const FmBank &fb)
+{
+    if (this == &fb)
+    {
+        return *this;
+    }
+    reset();
+    Ins_Melodic_box     = fb.Ins_Melodic_box;
+    Ins_Percussion_box  = fb.Ins_Percussion_box;
+    return *this;
 }
 
 bool FmBank::operator==(const FmBank &fb)
 {
-    int size = sizeof(Instrument)*128;
     bool res = true;
-    res &= (memcmp(Ins_Melodic,    fb.Ins_Melodic,    size)==0);
-    res &= (memcmp(Ins_Percussion, fb.Ins_Percussion, size)==0);
+    res &= (Ins_Melodic_box.size()==fb.Ins_Melodic_box.size());
+    res &= (Ins_Percussion_box.size()==fb.Ins_Percussion_box.size());
+    if(res)
+    {
+        int size = Ins_Melodic_box.size()*sizeof(Instrument);
+        res &= (memcmp(Ins_Melodic,      fb.Ins_Melodic,    size)==0);
+            size = Ins_Percussion_box.size()*sizeof(Instrument);
+        res &= (memcmp(Ins_Percussion,   fb.Ins_Percussion, size)==0);
+    }
     return res;
 }
 
@@ -56,13 +77,15 @@ bool FmBank::operator!=(const FmBank &fb)
 
 void FmBank::reset()
 {
-    int size=sizeof(Instrument)*128;
+    int insnum = 128;
+    int size=sizeof(Instrument)*insnum;
+    Ins_Melodic_box.resize(insnum);
+    Ins_Percussion_box.resize(insnum);
+    Ins_Melodic     = Ins_Melodic_box.data();
+    Ins_Percussion  = Ins_Percussion_box.data();
     memset(Ins_Melodic,    0, size);
     memset(Ins_Percussion, 0, size);
 }
-
-
-
 
 unsigned char FmBank::Instrument::getAVEKM(int OpID)
 {

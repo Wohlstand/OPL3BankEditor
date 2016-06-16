@@ -584,7 +584,7 @@ void BankEditor::setMelodic()
 {
     setDrumMode(false);
     ui->instruments->clear();
-    for(int i=0; i<128; i++)
+    for(int i=0; i < m_bank.countMelodic(); i++)
     {
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(m_bank.Ins_Melodic[i].name[0]!='\0' ?
@@ -600,7 +600,7 @@ void BankEditor::setDrums()
 {
     setDrumMode(true);
     ui->instruments->clear();
-    for(int i=0; i<128; i++)
+    for(int i=0; i<m_bank.countDrums(); i++)
     {
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(m_bank.Ins_Percussion[i].name[0]!='\0' ?

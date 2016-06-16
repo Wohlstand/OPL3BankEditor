@@ -19,6 +19,8 @@
 #ifndef BANK_H
 #define BANK_H
 
+#include <QVector>
+
 /* *********** FM Operator indexes *********** */
 #define CARRIER1    0
 #define MODULATOR1  1
@@ -34,6 +36,7 @@ class FmBank
 public:
     FmBank();
     FmBank(const FmBank &fb);
+    FmBank &operator=(const FmBank &fb);
     bool operator==(const FmBank &fb);
     bool operator!=(const FmBank &fb);
 
@@ -157,6 +160,7 @@ public:
          * \return merged byte
          */
         unsigned char getAVEKM(int OpID);
+
         /*!
          * \brief Split AM/VIB/EG/KSR/Multiple bits byte into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
@@ -170,6 +174,7 @@ public:
          * \return merged byte
          */
         unsigned char getKSLL(int OpID);
+
         /*!
          * \brief Split KSL/attenuation settings byte into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
@@ -196,6 +201,7 @@ public:
          * \return merged byte
          */
         unsigned char getLevel(int OpID);
+
         /*!
          * \brief Store attenuation value into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
@@ -222,6 +228,7 @@ public:
          * \return merged byte
          */
         unsigned char getSusRel(int OpID);
+
         /*!
          * \brief Split Sustain/release rates byte into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
@@ -235,6 +242,7 @@ public:
          * \return merged byte
          */
         unsigned char getWaveForm(int OpID);
+
         /*!
          * \brief Store and clear-up waveform byte into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
@@ -247,6 +255,7 @@ public:
          * \return merged byte
          */
         unsigned char getFBConn1();
+
         /*!
          * \brief Split Feedback/connection byte for first carrier and modulator into internal values
          * \param in merged byte
@@ -258,6 +267,7 @@ public:
          * \return merged byte
          */
         unsigned char getFBConn2();
+
         /*!
          * \brief Split Feedback/connection byte for second carrier and modulator into internal values
          * \param in merged byte
@@ -273,10 +283,18 @@ public:
 
     };
 
+    inline int countMelodic()   { return Ins_Melodic_box.size(); }
+
+    inline int countDrums()     { return Ins_Percussion_box.size(); }
+
+    //! Pointer to array of melodic instruments
+    Instrument* Ins_Melodic;
+    //! Pointer to array of percussion instruments
+    Instrument* Ins_Percussion;
     //! Array of melodic instruments
-    Instrument Ins_Melodic[128];
+    QVector<Instrument> Ins_Melodic_box;
     //! Array of percussion instruments
-    Instrument Ins_Percussion[128];
+    QVector<Instrument> Ins_Percussion_box;
 };
 
 #endif // BANK_H
