@@ -82,6 +82,13 @@ short toSint16LE(uchar *arr)
     return num;
 }
 
+unsigned short toUint16LE(uchar *arr)
+{
+    unsigned short num = arr[0];
+    num |= ( (arr[1]<<8) && 0xFF00 );
+    return num;
+}
+
 short toSint16BE(uchar *arr)
 {
     short num = *(signed char *)(&arr[0]);
@@ -90,7 +97,23 @@ short toSint16BE(uchar *arr)
     return num;
 }
 
+unsigned int toUint32LE(uchar *arr)
+{
+    unsigned int num = arr[0];
+    num |= ( (arr[1]<<8) && 0xFF00 );
+    num |= ( (arr[2]<<16) && 0xFF0000 );
+    num |= ( (arr[3]<<24) && 0xFF000000 );
+    return num;
+}
+
+
 void fromSint16LE(short in, uchar *arr)
+{
+    arr[0] =  in & 0x00FF;
+    arr[1] = (in>>8) & 0x00FF;
+}
+
+void fromUint16LE(unsigned short in, uchar *arr)
 {
     arr[0] =  in & 0x00FF;
     arr[1] = (in>>8) & 0x00FF;
@@ -101,6 +124,15 @@ void fromSint16BE(short in, uchar *arr)
     arr[1] =  in & 0x00FF;
     arr[0] = (in>>8) & 0x00FF;
 }
+
+void fromUint32LE(unsigned int in, uchar *arr)
+{
+    arr[0] = (in)     & 0x00FF;
+    arr[1] = (in>>8)  & 0x00FF;
+    arr[2] = (in>>16) & 0x00FF;
+    arr[3] = (in>>24) & 0x00FF;
+}
+
 
 void getMagic(QString filePath, char *bytes, int count)
 {
@@ -117,4 +149,3 @@ bool hasExt(const QString &file, const char*ext)
 {
     return file.endsWith(ext, Qt::CaseInsensitive);
 }
-

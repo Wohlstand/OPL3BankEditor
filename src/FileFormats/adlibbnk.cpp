@@ -19,6 +19,68 @@
 #include "adlibbnk.h"
 #include "../common.h"
 
+//! Enables strict validation of every parameter.
+//! Or all parameters are will be filtered even data is an invalid crap
+#define STRICT_BNK
+
+#ifdef STRICT_BNK
+//#define VERIFY_BYTE(param, byte) if( ((param)|(byte)) != (byte) ) { bank.reset(); return ERR_BADFORMAT; }
+inline void VERIFY_BYTE(unsigned char &param, unsigned char mask)
+{
+    if( ((param)|(mask)) != (mask) )
+        throw("YOUR BYTE SUCK!");
+}
+#else
+#define VERIFY_BYTE(param, byte)
+#endif
+
+struct BNK_Head
+{
+    uchar verMajor;
+    uchar verMinor;
+    char  magic[6];
+    uchar numUsed[2];
+    uchar numInstruments[2];
+    uchar offsetName[2];
+    uchar offsetData[2];
+    uchar pad[8];
+} __attribute__((__packed__));
+
+struct BNK_InsName
+{
+    uchar index[2];
+    uchar flags;
+    char  name[9];
+} __attribute__((__packed__));
+
+struct BNK_OPLRegs
+{
+    uchar ksl;
+    uchar fmult;
+    uchar feedback;
+    uchar attack;
+    uchar sustain;
+    uchar eg;
+    uchar decay;
+    uchar release;
+    uchar level;
+    uchar am;
+    uchar vib;
+    uchar ksr;
+    uchar con;
+} __attribute__((__packed__));
+
+struct BNK_Instrument
+{
+    uchar   is_percusive;
+    uchar   voicenum;
+BNK_OPLRegs oplModulator;
+BNK_OPLRegs oplCarrier;
+    uchar   modWaveSel;
+    uchar   carWaveSel;
+} __attribute__((__packed__));
+
+
 static const char* bnk_magic = "ADLIB-";
 
 bool AdLibBnk::detect(char *magic)
@@ -34,52 +96,75 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
     if(!file.open(QIODevice::ReadOnly))
         return ERR_NOFILE;
 
+    QByteArray fileData  = file.readAll();
+    file.close();
+
+    unsigned int    size  = fileData.size();
+    unsigned char*  dataU = (unsigned char*)fileData.data();
+    char*           dataS = (char*)fileData.data();
+
     bank.reset();
 
-    if(file.read(magic, 8) != 8)
+    if( size < 28 ) //File too small!
         return ERR_BADFORMAT;
 
-    if( strncmp(magic+2, bnk_magic, 6) != 0 )
+    memcpy(magic, dataS, 8);
+
+    if( strncmp(magic + 2, bnk_magic, 6) != 0 )
         return ERR_BADFORMAT;
 
-    char    ver_maj = magic[0],
-            ver_min = magic[1];
-    unsigned short totalInsUsed = 0;
-    unsigned short totalIns = 0;
-    unsigned int offsetName;
-    unsigned int offsetData;
-    if( readLE(file, totalInsUsed) != 2 )
-        return ERR_BADFORMAT;
-    if( readLE(file, totalIns) != 2 )
-        return ERR_BADFORMAT;
-    if( readLE(file, offsetName) != 4 )
-        return ERR_BADFORMAT;
-    if( readLE(file, offsetData) != 4 )
-        return ERR_BADFORMAT;
-    if( file.read(magic, 8) !=8 )//Just read a 8 bytes padding
-        return ERR_BADFORMAT;
+#define BNK_HEAD_OFFSET 8
 
-    //Fetch data first (then fill instrument names to their places!)
-    if(!file.seek( offsetData ))
-    {
-        bank.reset();
-        return ERR_BADFORMAT;
-    }
+#define SIZEOF_NAME     12
+#define SIZEOF_INST     30
+
+    char    ver_maj = dataS[0];//,
+          //ver_min = dataS[1];
+
+    unsigned short  totalInsUsed = 0;
+    unsigned short  totalIns = 0;
+    unsigned int    offsetName = 0;
+    unsigned int    offsetData = 0;
+
+    totalInsUsed = toUint16LE( dataU + BNK_HEAD_OFFSET + 0 );
+    totalIns     = toUint16LE( dataU + BNK_HEAD_OFFSET + 2 );
+    offsetName   = toUint32LE( dataU + BNK_HEAD_OFFSET + 4 );
+    offsetData   = toUint32LE( dataU + BNK_HEAD_OFFSET + 8 );
 
     //offsetInstr = offsetData + (index * sizeof(PackedTimbre))
     for(unsigned int i=0; i<totalIns; i++ )
     {
-        unsigned char idata[31];
-        if( file.read(char_p(idata), 31) != 31 )
+        unsigned int name_address = offsetName + SIZEOF_NAME*i;
+        if( name_address+SIZEOF_NAME > size )
+        {
+            bank.reset();
+            return ERR_BADFORMAT;
+        }
+
+        //    UINT16LE 	index 	Index into data section Calculation: offsetInstr = offsetData + (index * sizeof(PackedTimbre))
+        //    UINT8 	flags 	0 if this record is not used, else 1
+        //    char[9] 	name 	Instrument name - must be NULL-terminated
+
+        unsigned short ins_index   = toUint16LE( dataU + name_address );
+        unsigned int   ins_address = offsetData + ins_index*SIZEOF_INST;
+
+        if( ins_address+SIZEOF_INST > size )
         {
             bank.reset();
             return ERR_BADFORMAT;
         }
 
         FmBank::Instrument *ins_p = 0;
-        if( idata[0] == 0 )
+        //At this point, the current position should be the same as offsetData. The actual instrument
+        //data follows, again repeated once for each instrument. The instrument data is in the following
+        //format, which is almost identical to the AdLib Instrument Format except with only one byte to
+        //store each field instead of two.
+
+        //0    UINT8 	iPercussive 	0: Melodic instrument
+        //                              1: Percussive instrument
+        if( dataU[ins_address + 0] == 0 )
         {
-            if( i >= bank.Ins_Melodic_box.size() )
+            if( i >= (unsigned)bank.Ins_Melodic_box.size() )
             {
                 FmBank::Instrument ins;
                 memset(&ins, 0, sizeof(FmBank::Instrument));
@@ -89,7 +174,7 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
         }
         else
         {
-            if( i >= bank.Ins_Percussion_box.size() )
+            if( i >= (unsigned)bank.Ins_Percussion_box.size() )
             {
                 FmBank::Instrument ins;
                 memset(&ins, 0, sizeof(FmBank::Instrument));
@@ -99,104 +184,181 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
         }
 
         FmBank::Instrument ins = *ins_p;
-        //At this point, the current position should be the same as offsetData. The actual instrument
-        //data follows, again repeated once for each instrument. The instrument data is in the following
-        //format, which is almost identical to the AdLib Instrument Format except with only one byte to
-        //store each field instead of two.
 
-        //0    UINT8 	iPercussive 	0: Melodic instrument
-        //                              1: Percussive instrument
-        //1    UINT8 	iVoiceNum       Voice number (percussive only)
-        ins.percNoteNum = idata[1];
-        //    OPLREGS 	oplModulator 	Register values for the Modulator operator (op 0)
-            //2    UINT8 	ksl         Key scaling level                       0x40 (bits 6-7)
-            //3    UINT8 	multiple 	Frequency multiplier                    0x20 (bits 0-3) 	iMultiple & 0x0F is sent to OPL register [verify this]
-            //4    UINT8 	feedback 	Feedback [op 0 only, op 1 ignored]      0xC0 (bits 1-3)
-            //5    UINT8 	attack      Attack rate                             0x60 (upper four bits) 	[verify this]
-            //6    UINT8 	sustain 	Sustain level                           0x80 (upper four bits) 	[verify this]
-            //7    UINT8 	eg          Envelope gain (nonzero value is on) 	0x20 (bit 5) 	[verify this]
-            //8    UINT8 	decay       Decay rate                              0x60 (lower four bits) 	[verify this]
-            //9    UINT8 	releaseRate Release rate                            0x80 (lower four bits) 	[verify this]
-            //10    UINT8 	totalLevel 	Total output level                      0x40 (bit 0-5) 	[verify this]
-            //11    UINT8 	am          Amplitude modulation (Tremolo)          0x20 (bit 7) 	[verify this]
-            //12    UINT8 	vib         Frequency Vibrato                       0x20 (bit 6) 	[verify this]
-            //13    UINT8 	ksr         Key scaling/envelope rate               0x20 (bit 4) 	[verify this]
-            //14    UINT8 	con         Connector [op 0 only, op 1 ignored] 	0xC0 (bit 0, inverted) 	0: OPL bit set to 1
-            //                                                                                  other: OPL bit set to 0
-        //    OPLREGS 	oplCarrier      Register values for the Carrier operator (op 1)
-            //15    UINT8 	ksl         Key scaling level                       0x40 (bits 6-7)
-            //16    UINT8 	multiple 	Frequency multiplier                    0x20 (bits 0-3) 	iMultiple & 0x0F is sent to OPL register [verify this]
-            //17    UINT8 	feedback 	Feedback [op 0 only, op 1 ignored]      0xC0 (bits 1-3)
-            //18    UINT8 	attack      Attack rate                             0x60 (upper four bits) 	[verify this]
-            //19    UINT8 	sustain 	Sustain level                           0x80 (upper four bits) 	[verify this]
-            //20    UINT8 	eg          Envelope gain (nonzero value is on) 	0x20 (bit 5) 	[verify this]
-            //21    UINT8 	decay       Decay rate                              0x60 (lower four bits) 	[verify this]
-            //22    UINT8 	releaseRate Release rate                            0x80 (lower four bits) 	[verify this]
-            //23    UINT8 	totalLevel 	Total output level                      0x40 (bit 0-5) 	[verify this]
-            //24    UINT8 	am          Amplitude modulation (Tremolo)          0x20 (bit 7) 	[verify this]
-            //25    UINT8 	vib         Frequency Vibrato                       0x20 (bit 6) 	[verify this]
-            //26    UINT8 	ksr         Key scaling/envelope rate               0x20 (bit 4) 	[verify this]
-            //27    UINT8 	con         Connector [op 0 only, op 1 ignored] 	0xC0 (bit 0, inverted) 	0: OPL bit set to 1
-            //28                                                                                  other: OPL bit set to 0
-        //29    UINT8 	iModWaveSel 	Modulator wave select (OPL base register 0xE0)
-        //30    UINT8 	iCarWaveSel 	Carrier wave select (OPL base register 0xE0)
+        strncpy(ins.name, dataS+name_address+3, 8);
 
+        try
+        {
+            //This is followed by a list of instrument names, repeated numInstruments times:
 
-        //The OPLREGS structure is defined as:
-        //    UINT8 	ksl         Key scaling level                       0x40 (bits 6-7)
-        //    UINT8 	multiple 	Frequency multiplier                    0x20 (bits 0-3) 	iMultiple & 0x0F is sent to OPL register [verify this]
-        //    UINT8 	feedback 	Feedback [op 0 only, op 1 ignored]      0xC0 (bits 1-3)
-        //    UINT8 	attack      Attack rate                             0x60 (upper four bits) 	[verify this]
-        //    UINT8 	sustain 	Sustain level                           0x80 (upper four bits) 	[verify this]
-        //    UINT8 	eg          Envelope gain (nonzero value is on) 	0x20 (bit 5) 	[verify this]
-        //    UINT8 	decay       Decay rate                              0x60 (lower four bits) 	[verify this]
-        //    UINT8 	releaseRate Release rate                            0x80 (lower four bits) 	[verify this]
-        //    UINT8 	totalLevel 	Total output level                      0x40 (bit 0-5) 	[verify this]
-        //    UINT8 	am          Amplitude modulation (Tremolo)          0x20 (bit 7) 	[verify this]
-        //    UINT8 	vib         Frequency Vibrato                       0x20 (bit 6) 	[verify this]
-        //    UINT8 	ksr         Key scaling/envelope rate               0x20 (bit 4) 	[verify this]
-        //    UINT8 	con         Connector [op 0 only, op 1 ignored] 	0xC0 (bit 0, inverted) 	0: OPL bit set to 1
-        //                                                                                  other: OPL bit set to 0
-        //This structure is almost identical to an individual instrument in AdLib Instrument Format,
-        //but with UINT8 fields instead of UINT16LE.
-    }
+            if(ver_maj == 1)//Standard bank format
+            {
+                ins.percNoteNum = dataU[ins_address + 1];
+                ins.OP[MODULATOR1].ksl      = (dataU[ins_address + 2]>>6)&0x03;
 
-    //This is followed by a list of instrument names, repeated numInstruments times:
+                VERIFY_BYTE( dataU[ins_address+3], 0x0F );
+                ins.OP[MODULATOR1].fmult    = dataU[ins_address + 3]&0x0F;
 
-    //    UINT16LE 	index 	Index into data section Calculation: offsetInstr = offsetData + (index * sizeof(PackedTimbre))
-    //    UINT8 	flags 	0 if this record is not used, else 1
-    //    char[9] 	name 	Instrument name - must be NULL-terminated
+                ins.feedback1 |= dataU[ins_address + 4]&0x07;
 
+                VERIFY_BYTE(dataU[ins_address + 5], 0x0F);
+                ins.OP[MODULATOR1].attack   = dataU[ins_address + 5] & 0x0F;
 
+                VERIFY_BYTE(dataU[ins_address + 6], 0x0F);
+                ins.OP[MODULATOR1].sustain  = 0x0F - (dataU[ins_address + 6] & 0x0F);
 
-    if(ver_maj == 1)//Standard bank format
-    {
+                //VERIFY_BYTE(dataU[ins_address + 7], 0x01);
+                ins.OP[MODULATOR1].eg = (dataU[ins_address + 7] != 0);
 
-    }
-    else
-    if(ver_maj == 0)//HMI bank format
-    {
-        /*
-        Human Machine Interfaces version ("Version 0.0")
+                VERIFY_BYTE(dataU[ins_address + 8], 0x0F);
+                ins.OP[MODULATOR1].decay    = dataU[ins_address + 8] & 0x0F;
 
-        ! Find out more about what is altered and how this version could be worked with.
+                VERIFY_BYTE(dataU[ins_address + 9], 0x0F);
+                ins.OP[MODULATOR1].release  = dataU[ins_address + 9] & 0x0F;
 
-        The version of this format associated with HMP/HMI files is altered and incompatible with
-        most tools that work with BNK files. Known differences include:
+                VERIFY_BYTE(dataU[ins_address + 10], 0x3F);
+                ins.OP[MODULATOR1].level    = 0x3F - (dataU[ins_address + 10] & 0x3F);
 
-            The major and minor version numbers in the header are both zero.
-            The flags byte in the instrument names list may have values other than 0 or 1,
-        and a null flags byte might not be indicative of an unused sample.
+                //VERIFY_BYTE(dataU[ins_address + 11], 0x01);
+                ins.OP[MODULATOR1].am       = ((dataU[ins_address + 11]&0x01) != 0);
 
-        The header and names list otherwise appear to follow the format spec. The instrument data
-        itself has not yet been inspected for differences.
+                //VERIFY_BYTE(dataU[ins_address + 12], 0x01);
+                ins.OP[MODULATOR1].vib      = ((dataU[ins_address + 13]&0x01) != 0);
 
-        Known examples of games that include files of this version include two possibly standardized
-        file names: DRUMS.BNK and MELODIC.BNK. Dark Legions also includes a BNKDRUM.BNK.
-        All of the known "version 0.0" files are 5,404 bytes in length, with 128 instrument records
-        reported in the header, but have differing contents.
-        */
+                //VERIFY_BYTE(dataU[ins_address + 13], 0x01);
+                ins.OP[MODULATOR1].ksr      = ((dataU[ins_address + 13]&0x01) != 0);
 
+                //VERIFY_BYTE(dataU[ins_address + 14], 0x01);
+                ins.connection1             = dataU[ins_address + 14]&0x01 != 0;
+
+                ins.OP[CARRIER1].ksl        = dataU[ins_address + 15]&0x03;
+
+                VERIFY_BYTE(dataU[ins_address + 16], 0x0F);
+                ins.OP[CARRIER1].fmult      = dataU[ins_address + 16]&0x0F;
+
+                //[IGNORE THIS] ins.feedback1 |= (dataU[ins_address + 17]>>1) & 0x07;
+                VERIFY_BYTE(dataU[ins_address + 18], 0x0F);
+                ins.OP[CARRIER1].attack     = dataU[ins_address + 18] & 0x0F;
+
+                VERIFY_BYTE(dataU[ins_address + 19], 0x0F);
+                ins.OP[CARRIER1].sustain    = 0x0F - ( dataU[ins_address + 19] & 0x0F );
+
+                ins.OP[CARRIER1].eg         = (dataU[ins_address + 20]&0x20) != 0;
+
+                VERIFY_BYTE(dataU[ins_address + 21], 0x0F);
+                ins.OP[CARRIER1].decay      = dataU[ins_address + 21] & 0x0F;
+
+                VERIFY_BYTE(dataU[ins_address + 22], 0x0F);
+                ins.OP[CARRIER1].release    = dataU[ins_address + 22] & 0x0F;
+
+                VERIFY_BYTE(dataU[ins_address + 23], 0x3F);
+                ins.OP[CARRIER1].level      = 0x3F - (dataU[ins_address + 23] & 0x3F);
+
+                ins.OP[CARRIER1].am         = ((dataU[ins_address + 24]&0x01) != 0);
+                ins.OP[CARRIER1].vib        = ((dataU[ins_address + 25]&0x01) != 0);
+                ins.OP[CARRIER1].ksr        = ((dataU[ins_address + 26]&0x01) != 0);
+
+                ins.OP[MODULATOR1].waveform = dataU[ins_address + 28]&0x07;
+                ins.OP[CARRIER1].waveform   = dataU[ins_address + 28]&0x07;
+            }
+            else
+            if(ver_maj == 0)//HMI bank format
+            {
+                /*
+                Human Machine Interfaces version ("Version 0.0")
+
+                ! Find out more about what is altered and how this version could be worked with.
+
+                The version of this format associated with HMP/HMI files is altered and incompatible with
+                most tools that work with BNK files. Known differences include:
+
+                    The major and minor version numbers in the header are both zero.
+                    The flags byte in the instrument names list may have values other than 0 or 1,
+                and a null flags byte might not be indicative of an unused sample.
+
+                The header and names list otherwise appear to follow the format spec. The instrument data
+                itself has not yet been inspected for differences.
+
+                Known examples of games that include files of this version include two possibly standardized
+                file names: DRUMS.BNK and MELODIC.BNK. Dark Legions also includes a BNKDRUM.BNK.
+                All of the known "version 0.0" files are 5,404 bytes in length, with 128 instrument records
+                reported in the header, but have differing contents.
+                */
+
+                unsigned char* op1 = &dataU[ins_address + 1];
+                unsigned char* op2 = &dataU[ins_address + 15];
+
+                ins.percNoteNum = dataU[ins_address + 1];
+                ins.OP[MODULATOR1].ksl      = (dataU[ins_address + 2]>>6)&0x03;
+
+                VERIFY_BYTE( op1[1], 0x0F );
+                ins.OP[MODULATOR1].fmult    = op1[1] & 0x0F;
+
+                ins.feedback1 |= op1[2] & 0x07;
+
+                VERIFY_BYTE(dataU[ins_address + 5], 0xF0);
+                ins.OP[MODULATOR1].attack   = (dataU[ins_address + 5]>>4) & 0x0F;
+
+                VERIFY_BYTE(dataU[ins_address + 6], 0xF0);
+                ins.OP[MODULATOR1].sustain  = 0x0F - ( (dataU[ins_address + 6]>>4) & 0x0F );
+                VERIFY_BYTE(dataU[ins_address + 7], 0x01);
+                ins.OP[MODULATOR1].eg = (dataU[ins_address + 7] != 0);
+
+                VERIFY_BYTE(dataU[ins_address + 8], 0x0F);
+                ins.OP[MODULATOR1].decay    = dataU[ins_address + 8] & 0x0F;
+
+                VERIFY_BYTE(dataU[ins_address + 9], 0x0F);
+                ins.OP[MODULATOR1].release  = dataU[ins_address + 9] & 0x0F;
+
+                VERIFY_BYTE(dataU[ins_address + 10], 0x3F);
+                ins.OP[MODULATOR1].level    = 0x3F - (dataU[ins_address + 10] & 0x3F);
+
+                //VERIFY_BYTE(dataU[ins_address + 11], 0x80);
+                ins.OP[MODULATOR1].am       = ((dataU[ins_address + 11]&0x80) != 0);
+                //VERIFY_BYTE(dataU[ins_address + 12], 0x40);
+                ins.OP[MODULATOR1].vib      = ((dataU[ins_address + 13]&0x40) != 0);
+                //VERIFY_BYTE(dataU[ins_address + 13], 0x10);
+                ins.OP[MODULATOR1].ksr      = ((dataU[ins_address + 13]&0x10) != 0);
+
+                //VERIFY_BYTE(dataU[ins_address + 14], 0x10);
+                ins.connection1             = ((dataU[ins_address + 14]&0x10) != 0);
+
+                ins.OP[CARRIER1].ksl        = (dataU[ins_address + 15]>>6)&0x03;
+
+                VERIFY_BYTE(dataU[ins_address + 16], 0x0F);
+                ins.OP[CARRIER1].fmult      = dataU[ins_address + 16]&0x0F;
+
+                //[IGNORE THIS] ins.feedback1 |= (dataU[ins_address + 17]>>1) & 0x07;
+                VERIFY_BYTE(dataU[ins_address + 18], 0xF0);
+                ins.OP[CARRIER1].attack     = (dataU[ins_address + 18]>>4) & 0x0F;
+
+                VERIFY_BYTE(dataU[ins_address + 19], 0xF0);
+                ins.OP[CARRIER1].sustain    = 0x0F - ( (dataU[ins_address + 19]>>4) & 0x0F );
+
+                ins.OP[CARRIER1].eg = ((dataU[ins_address + 20]&0x20) != 0);
+
+                VERIFY_BYTE(dataU[ins_address + 21], 0x0F);
+                ins.OP[CARRIER1].decay      = dataU[ins_address + 21] & 0x0F;
+
+                VERIFY_BYTE(dataU[ins_address + 22], 0x0F);
+                ins.OP[CARRIER1].release    = dataU[ins_address + 22] & 0x0F;
+
+                VERIFY_BYTE(dataU[ins_address + 23], 0x3F);
+                ins.OP[CARRIER1].level      = 0x3F - (dataU[ins_address + 23] & 0x3F);
+
+                ins.OP[CARRIER1].am         = ((dataU[ins_address + 24]&0x80) != 0);
+                ins.OP[CARRIER1].vib        = ((dataU[ins_address + 25]&0x40) != 0);
+                ins.OP[CARRIER1].ksr        = ((dataU[ins_address + 26]&0x10) != 0);
+
+                ins.OP[MODULATOR1].waveform = dataU[ins_address + 28]&0x07;
+                ins.OP[CARRIER1].waveform   = dataU[ins_address + 28]&0x07;
+            }
+        }
+        catch(...)
+        {
+            bank.reset();
+            return ERR_BADFORMAT;
+        }
     }
 
     return ERR_OK;

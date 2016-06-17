@@ -25,6 +25,8 @@
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
 #include "ins_names.h"
+
+#include "FileFormats/adlibbnk.h"
 #include "FileFormats/apogeetmb.h"
 #include "FileFormats/dmxopl2.h"
 #include "FileFormats/junlevizion.h"
@@ -178,6 +180,10 @@ bool BankEditor::openFile(QString filePath)
     //Check for Sound Blaster IBK file format
     else if(SbIBK::detect(magic))
         err = SbIBK::loadFile(filePath, m_bank);
+
+    //Check for AdLib BNK file format
+    else if(AdLibBnk::detect(magic))
+        err = AdLibBnk::loadFile(filePath, m_bank);
 
     //Check for Apogee Sound System TMB file format
     else if(ApogeeTMB::detect(filePath))
@@ -343,11 +349,12 @@ void BankEditor::on_actionOpen_triggered()
     if( !askForSaving() )
         return;
 
-    QString supported   = "Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk)";
+    QString supported   = "Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk)";
     QString jv          = "JunleVision bank (*.op3)";
     QString dmx         = "DMX OPL-2 bank (*.op2 *.htc *.hxn)";
     QString tmb         = "Apogee Sound System timbre bank (*.tmb)";
     QString ibk         = "Sound Blaster IBK file (*.ibk)";
+    QString bnk         = "AdLib Instrument Bank (*.bnk)";
     QString allFiles    = "All files (*.*)";
 
     QString filters =   supported+";;"
@@ -355,6 +362,7 @@ void BankEditor::on_actionOpen_triggered()
                        +dmx+";;"
                        +tmb+";;"
                        +ibk+";;"
+                       +bnk+";;"
                        +allFiles;
 
     QString fileToOpen;
