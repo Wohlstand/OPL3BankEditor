@@ -281,3 +281,13 @@ const char *MidiPercName[128] =
     "<Reserved 126>",
     "<Reserved 127>"
 };
+
+QString getMidiInsNameM(int index)
+{
+    return index < 128 ? MidiInsName[index] : QString("INS_%1").arg(index, 3);
+}
+
+QString getMidiInsNameP(int index)
+{
+    return index < 128 ? MidiPercName[index] : QString("INS_%1").arg(index, 3);
+}

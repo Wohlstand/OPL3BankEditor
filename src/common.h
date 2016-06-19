@@ -148,4 +148,8 @@ void getMagic(QString filePath, char* bytes, int count);
  */
 bool hasExt(const QString &file, const char*ext);
 
+void ErrMessageO(QWidget *parent, QString errStr);
+
+void ErrMessageS(QWidget *parent, QString errStr);
+
 #endif // COMMON_H

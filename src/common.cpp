@@ -18,6 +18,8 @@
 
 #include "common.h"
 
+#include <QMessageBox>
+
 qint64 readLE(QFile &file, unsigned short &out)
 {
     uchar bytes[2] = {0, 0};
@@ -148,4 +150,21 @@ void getMagic(QString filePath, char *bytes, int count)
 bool hasExt(const QString &file, const char*ext)
 {
     return file.endsWith(ext, Qt::CaseInsensitive);
+}
+
+
+void ErrMessageO(QWidget *parent, QString errStr)
+{
+    QMessageBox::warning(parent,
+                        QObject::tr("Can't open bank file!"),
+                        QObject::tr("Can't open bank file because %1.").arg(errStr),
+                        QMessageBox::Ok);
+}
+
+void ErrMessageS(QWidget *parent, QString errStr)
+{
+    QMessageBox::warning(parent,
+                        QObject::tr("Can't save bank file!"),
+                        QObject::tr("Can't save bank file because %1.").arg(errStr),
+                        QMessageBox::Ok);
 }

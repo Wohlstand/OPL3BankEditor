@@ -19,10 +19,16 @@
 #ifndef INSTRUMENTNAMES_H
 #define INSTRUMENTNAMES_H
 
+#include <QString>
+
 //! List of melodic instrument names
 extern const char *MidiInsName[128];
 
 //! List of percussion instrument names
 extern const char *MidiPercName[128];
+
+QString getMidiInsNameM(int index);
+
+QString getMidiInsNameP(int index);
 
 #endif // INSTRUMENTNAMES_H

@@ -22,6 +22,7 @@
 
 #include <QMimeData>
 
+#include "importer.h"
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
 #include "ins_names.h"
@@ -50,6 +51,7 @@ BankEditor::BankEditor(QWidget *parent) :
     setMelodic();
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
+
     loadInstrument();
 
     m_buffer.resize(8192);
@@ -61,6 +63,9 @@ BankEditor::BankEditor(QWidget *parent) :
 
     initAudio();
     loadSettings();
+
+    m_importer = new Importer(this);
+    connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
 }
 
 BankEditor::~BankEditor()
@@ -70,6 +75,7 @@ BankEditor::~BankEditor()
     m_generator->stop();
     delete m_audioOutput;
     delete m_generator;
+    delete m_importer;
     delete ui;
 }
 
@@ -144,22 +150,6 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
     ui->currentFile->setText(filePath);
     m_recentPath = filePath;
     m_bankBackup = m_bank;
-}
-
-static void ErrMessageO(QWidget *parent, QString errStr)
-{
-    QMessageBox::warning(parent,
-                        BankEditor::tr("Can't open bank file!"),
-                        BankEditor::tr("Can't open bank file because %1.").arg(errStr),
-                        QMessageBox::Ok);
-}
-
-static void ErrMessageS(QWidget *parent, QString errStr)
-{
-    QMessageBox::warning(parent,
-                        BankEditor::tr("Can't save bank file!"),
-                        BankEditor::tr("Can't save bank file because %1.").arg(errStr),
-                        QMessageBox::Ok);
 }
 
 bool BankEditor::openFile(QString filePath)
@@ -596,7 +586,7 @@ void BankEditor::setMelodic()
     {
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(m_bank.Ins_Melodic[i].name[0]!='\0' ?
-                            m_bank.Ins_Melodic[i].name : MidiInsName[i]);
+                            m_bank.Ins_Melodic[i].name : getMidiInsNameM(i));
         item->setData(Qt::UserRole, i);
         item->setToolTip(QString("ID: %1").arg(i));
         item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
@@ -612,7 +602,7 @@ void BankEditor::setDrums()
     {
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(m_bank.Ins_Percussion[i].name[0]!='\0' ?
-                            m_bank.Ins_Percussion[i].name : MidiPercName[i]);
+                            m_bank.Ins_Percussion[i].name : getMidiInsNameP(i));
         item->setData(Qt::UserRole, i);
         item->setToolTip(QString("ID: %1").arg(i));
         item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
@@ -630,7 +620,7 @@ void BankEditor::reloadInstrumentNames()
             int index = items[i]->data(Qt::UserRole).toInt();
             items[i]->setText( m_bank.Ins_Percussion[index].name[0]!='\0' ?
                                                 m_bank.Ins_Percussion[index].name :
-                                                MidiPercName[index] );
+                                                getMidiInsNameP(index) );
         }
     } else {
         for(int i=0; i<items.size(); i++)
@@ -638,7 +628,7 @@ void BankEditor::reloadInstrumentNames()
             int index = items[i]->data(Qt::UserRole).toInt();
             items[i]->setText( m_bank.Ins_Melodic[index].name[0]!='\0' ?
                                                 m_bank.Ins_Melodic[index].name :
-                                                MidiInsName[index] );
+                                                getMidiInsNameM(index) );
         }
     }
 }

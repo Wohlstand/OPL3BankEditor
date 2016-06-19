@@ -31,6 +31,8 @@ namespace Ui {
 class BankEditor;
 }
 
+class Importer;
+
 /**
  * @brief Main application window
  */
@@ -38,7 +40,10 @@ class BankEditor : public QMainWindow
 {
     Q_OBJECT
 
+    friend class Importer;
 private:
+
+    Importer           *m_importer;
     //! Path for currently opened file
     QString             m_recentPath;
 

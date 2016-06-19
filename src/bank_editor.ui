@@ -2114,7 +2114,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>970</width>
-     <height>21</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2123,6 +2123,7 @@ of second voice</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="separator"/>
+    <addaction name="actionImport"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="separator"/>
@@ -2200,6 +2201,11 @@ of second voice</string>
   <action name="actionReset_current_instrument">
    <property name="text">
     <string>Reset current instrument</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="text">
+    <string>Import instruments...</string>
    </property>
   </action>
  </widget>

@@ -71,7 +71,8 @@ SOURCES += \
     src/piano.cpp \
     src/FileFormats/apogeetmb.cpp \
     src/FileFormats/sb_ibk.cpp \
-    src/FileFormats/adlibbnk.cpp
+    src/FileFormats/adlibbnk.cpp \
+    src/importer.cpp
 
 HEADERS += \
     src/FileFormats/dmxopl2.h \
@@ -87,10 +88,12 @@ HEADERS += \
     src/version.h \
     src/FileFormats/apogeetmb.h \
     src/FileFormats/sb_ibk.h \
-    src/FileFormats/adlibbnk.h
+    src/FileFormats/adlibbnk.h \
+    src/importer.h
 
 FORMS += \
-    src/bank_editor.ui
+    src/bank_editor.ui \
+    src/importer.ui
 
 RESOURCES += \
     src/resources/resources.qrc
