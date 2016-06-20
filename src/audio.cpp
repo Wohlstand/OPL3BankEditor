@@ -19,6 +19,8 @@
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
 
+#include "importer.h"
+#include "ui_importer.h"
 
 void BankEditor::initAudio()
 {
@@ -78,6 +80,13 @@ void BankEditor::initAudio()
     connect(ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
     connect(ui->piano, SIGNAL(pressed()),    m_generator, SLOT(PlayNote()));
     connect(ui->piano, SIGNAL(released()),   m_generator, SLOT(NoteOffAllChans()));
+
+    m_importer->connect(m_importer->ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
+    m_importer->connect(m_importer->ui->piano, SIGNAL(pressed()),    m_generator, SLOT(PlayNote()));
+    m_importer->connect(m_importer->ui->piano, SIGNAL(released()),   m_generator, SLOT(NoteOffAllChans()));
+
+    m_importer->connect(m_importer->ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(PlayNote()));
+    m_importer->connect(m_importer->ui->testNote,  SIGNAL(released()), m_generator,  SLOT(NoteOffAllChans()));
 
     m_generator->start();
     m_output = m_audioOutput->start();

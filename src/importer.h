@@ -34,6 +34,7 @@ class Importer : public QDialog
 {
     Q_OBJECT
 
+    friend class BankEditor;
 public:
     explicit Importer(QWidget *parent = 0);
     ~Importer();
@@ -50,6 +51,12 @@ public slots:
 private slots:
     void on_openBank_clicked();
     void on_instruments_currentItemChanged(QListWidgetItem *current, QListWidgetItem *);
+
+    void on_importAssoc_clicked();
+
+    void on_importReplace_clicked();
+
+    void on_doImport_clicked();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *e);

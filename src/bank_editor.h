@@ -60,6 +60,11 @@ private:
     //! Currently selected instrument
     FmBank::Instrument* m_curInstBackup;
 
+    //! Recent index of instrument
+    int m_recentNum;
+    //! Recent flag of percussion
+    bool m_recentPerc;
+
     //! Clipboard
     FmBank::Instrument  m_clipboard;
 

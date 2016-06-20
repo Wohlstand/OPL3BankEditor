@@ -237,3 +237,18 @@ void Importer::reloadInstrumentNames()
         }
     }
 }
+
+void Importer::on_importAssoc_clicked()
+{
+
+}
+
+void Importer::on_importReplace_clicked()
+{
+
+}
+
+void Importer::on_doImport_clicked()
+{
+
+}

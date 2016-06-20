@@ -45,9 +45,13 @@ BankEditor::BankEditor(QWidget *parent) :
     m_curInstBackup = NULL;
     m_lock = false;
 
+    m_recentNum     = -1;
+    m_recentPerc    = false;
+
     ui->setupUi(this);
     ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     m_recentMelodicNote = ui->noteToTest->value();
+
     setMelodic();
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
@@ -61,11 +65,11 @@ BankEditor::BankEditor(QWidget *parent) :
                          Qt::WindowCloseButtonHint|Qt::WindowMinimizeButtonHint);
     this->setFixedSize(this->window()->width(), this->window()->height());
 
-    initAudio();
-    loadSettings();
-
     m_importer = new Importer(this);
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
+
+    initAudio();
+    loadSettings();
 }
 
 BankEditor::~BankEditor()
@@ -143,6 +147,7 @@ void BankEditor::initFileData(QString &filePath)
     ui->currentFile->setText(filePath);
     m_bankBackup = m_bank;
     reloadInstrumentNames();
+    setCurrentInstrument(m_recentNum, m_recentPerc);
 }
 
 void BankEditor::reInitFileDataAfterSave(QString &filePath)
@@ -428,6 +433,7 @@ void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QLi
     {
         //ui->curInsInfo->setText("<Not Selected>");
         m_curInst = NULL;
+        m_curInstBackup = NULL;
     } else  {
         //ui->curInsInfo->setText(QString("%1 - %2").arg(current->data(Qt::UserRole).toInt()).arg(current->text()));
         setCurrentInstrument(current->data(Qt::UserRole).toInt(), ui->percussion->isChecked() );
@@ -438,8 +444,16 @@ void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QLi
 
 void BankEditor::setCurrentInstrument(int num, bool isPerc)
 {
-    m_curInst = isPerc ? &m_bank.Ins_Percussion[num] : &m_bank.Ins_Melodic[num];
-    m_curInstBackup = isPerc ? &m_bankBackup.Ins_Percussion[num] : &m_bankBackup.Ins_Melodic[num];
+    m_recentNum = num;
+    m_recentPerc = isPerc;
+    if( num>=0 )
+    {
+        m_curInst = isPerc ? &m_bank.Ins_Percussion[num] : &m_bank.Ins_Melodic[num];
+        m_curInstBackup = isPerc ? &m_bankBackup.Ins_Percussion[num] : &m_bankBackup.Ins_Melodic[num];
+    } else {
+        m_curInst = NULL;
+        m_curInstBackup = NULL;
+    }
 }
 
 void BankEditor::loadInstrument()

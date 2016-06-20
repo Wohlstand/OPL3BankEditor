@@ -52,6 +52,8 @@ FmBank &FmBank::operator=(const FmBank &fb)
     reset();
     Ins_Melodic_box     = fb.Ins_Melodic_box;
     Ins_Percussion_box  = fb.Ins_Percussion_box;
+    Ins_Melodic     = Ins_Melodic_box.data();
+    Ins_Percussion  = Ins_Percussion_box.data();
     return *this;
 }
 
