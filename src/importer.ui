@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Instrument importer</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="5" column="0" colspan="3">
@@ -40,11 +40,21 @@
     </widget>
    </item>
    <item row="1" column="0" rowspan="4" colspan="2">
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="insBox">
      <property name="title">
       <string>Imported instruments</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="0" colspan="2">
+       <widget class="QListWidget" name="instruments"/>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="percussion">
+        <property name="text">
+         <string>Percussion</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QRadioButton" name="melodic">
         <property name="text">
@@ -55,15 +65,19 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QRadioButton" name="percussion">
+      <item row="2" column="0">
+       <widget class="QPushButton" name="clear">
         <property name="text">
-         <string>Percussion</string>
+         <string>Clear selection</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QListWidget" name="instruments"/>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="selectAll">
+        <property name="text">
+         <string>Select all</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -76,6 +90,9 @@
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
        <widget class="QRadioButton" name="importAssoc">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Replace instruments of same ID as presented in the list.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;(Allows import of multiple instruments at one click)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Associated with instrument ID</string>
         </property>
@@ -86,6 +103,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QRadioButton" name="importReplace">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Replace one selected instrument&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;(single instrument only)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Replace selected</string>
         </property>

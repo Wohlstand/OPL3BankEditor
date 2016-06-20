@@ -25,6 +25,7 @@
 #include <QMimeData>
 #include <QMimeType>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include "ins_names.h"
 
@@ -46,6 +47,15 @@ Importer::Importer(QWidget *parent) :
     setMelodic();
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
+
+    connect(ui->clear, SIGNAL(clicked()), ui->instruments, SLOT(clearSelection()));
+    connect(ui->selectAll, SIGNAL(clicked()), ui->instruments, SLOT(selectAll()));
+
+    ui->doImport->setEnabled(false);
+    ui->instruments->setSelectionMode(QAbstractItemView::MultiSelection);
+
+    this->setWindowFlags( windowFlags() & ~Qt::WindowContextHelpButtonHint );
+    //this->setFixedSize(this->window()->width(), this->window()->height());
 }
 
 Importer::~Importer()
@@ -80,7 +90,7 @@ bool Importer::openFile(QString filePath)
     else if(ApogeeTMB::detect(filePath))
         err = ApogeeTMB::loadFile(filePath, m_bank);
 
-    if(err != FmBankFormatBase::ERR_OK)
+    if( err != FmBankFormatBase::ERR_OK )
     {
         QString errText;
         switch(err)
@@ -98,7 +108,9 @@ bool Importer::openFile(QString filePath)
         }
         ErrMessageO(this, errText);
         return false;
-    } else {
+    }
+    else
+    {
         initFileData(filePath);
         return true;
     }
@@ -141,6 +153,8 @@ void Importer::setDrums()
 void Importer::initFileData(QString &filePath)
 {
     m_recentPath = filePath;
+    ui->doImport->setEnabled(true);
+
     if(!ui->instruments->selectedItems().isEmpty())
         on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
     else
@@ -240,15 +254,65 @@ void Importer::reloadInstrumentNames()
 
 void Importer::on_importAssoc_clicked()
 {
-
+    ui->instruments->setSelectionMode(QAbstractItemView::MultiSelection);
 }
 
 void Importer::on_importReplace_clicked()
 {
-
+    ui->instruments->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->instruments->clearSelection();
 }
 
 void Importer::on_doImport_clicked()
 {
+    QList<QListWidgetItem *> selected = ui->instruments->selectedItems();
+    if(selected.isEmpty())
+    {
+        QMessageBox::warning(this, tr("Nothing to import"), tr("You have no selected instruments to import!\nPlease select something filrst!"));
+        return;
+    }
 
+    if(ui->importAssoc->isChecked())
+    {
+        for(int i=0; i<selected.size(); i++)
+        {
+            int id = selected[i]->data(Qt::UserRole).toInt();
+            if(ui->melodic->isChecked())
+            {
+                if(m_main->m_bank.Ins_Melodic_box.size()<=id)
+                {
+                    FmBank::Instrument nins = FmBank::emptyInst();
+                    m_main->m_bank.Ins_Melodic_box.fill(nins, id-m_main->m_bank.Ins_Melodic_box.size());
+                }
+                m_main->m_bank.Ins_Melodic_box[id] = m_bank.Ins_Melodic_box[id];
+            }
+            else
+            {
+                if(m_main->m_bank.Ins_Percussion_box.size()<=id)
+                {
+                    FmBank::Instrument nins = FmBank::emptyInst();
+                    m_main->m_bank.Ins_Percussion_box.fill(nins, id-m_main->m_bank.Ins_Percussion_box.size());
+                }
+                m_main->m_bank.Ins_Percussion_box[id] = m_bank.Ins_Percussion_box[id];
+            }
+        }
+    }
+    else
+    {
+        if( m_main->m_recentNum >= 0 )
+        {
+            int id = selected[0]->data(Qt::UserRole).toInt();
+            if(ui->melodic->isChecked())
+            {
+                m_main->m_bank.Ins_Melodic_box[m_main->m_recentNum] = m_bank.Ins_Melodic_box[id];
+            } else {
+                m_main->m_bank.Ins_Percussion_box[m_main->m_recentNum] = m_bank.Ins_Percussion_box[id];
+            }
+        } else {
+            QMessageBox::warning(this, tr("No target"), tr("No target instrument selected.\nPlease select target instrument in the main window and retry again!"));
+            return;
+        }
+    }
+    m_main->reloadInstrumentNames();
+    m_main->loadInstrument();
 }

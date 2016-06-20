@@ -131,6 +131,9 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
     offsetName   = toUint32LE( dataU + BNK_HEAD_OFFSET + 4 );
     offsetData   = toUint32LE( dataU + BNK_HEAD_OFFSET + 8 );
 
+    bank.Ins_Melodic_box.clear();
+    bank.Ins_Percussion_box.clear();
+
     //offsetInstr = offsetData + (index * sizeof(PackedTimbre))
     for(unsigned int i=0; i<totalIns; i++ )
     {
@@ -164,26 +167,20 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
         //                              1: Percussive instrument
         if( dataU[ins_address + 0] == 0 )
         {
-            if( i >= (unsigned)bank.Ins_Melodic_box.size() )
-            {
-                FmBank::Instrument ins;
-                memset(&ins, 0, sizeof(FmBank::Instrument));
-                bank.Ins_Melodic_box.push_back(ins);
-            }
-            ins_p = &bank.Ins_Melodic[i];
+            FmBank::Instrument ins = FmBank::emptyInst();
+            bank.Ins_Melodic_box.push_back(ins);
+            ins_p = &bank.Ins_Melodic_box.last();
+            bank.Ins_Melodic = bank.Ins_Melodic_box.data();
         }
         else
         {
-            if( i >= (unsigned)bank.Ins_Percussion_box.size() )
-            {
-                FmBank::Instrument ins;
-                memset(&ins, 0, sizeof(FmBank::Instrument));
-                bank.Ins_Percussion_box.push_back(ins);
-            }
-            ins_p = &bank.Ins_Percussion[i];
+            FmBank::Instrument ins = FmBank::emptyInst();
+            bank.Ins_Percussion_box.push_back(ins);
+            ins_p = &bank.Ins_Percussion_box.last();
+            bank.Ins_Percussion = bank.Ins_Percussion_box.data();
         }
 
-        FmBank::Instrument ins = *ins_p;
+        FmBank::Instrument &ins = *ins_p;
 
         strncpy(ins.name, dataS+name_address+3, 8);
 
@@ -191,15 +188,16 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
         {
             //This is followed by a list of instrument names, repeated numInstruments times:
 
-            if(ver_maj == 1)//Standard bank format
-            {
+//            if(ver_maj == 1)//Standard bank format
+//            {
                 ins.percNoteNum = dataU[ins_address + 1];
-                ins.OP[MODULATOR1].ksl      = (dataU[ins_address + 2]>>6)&0x03;
+
+                ins.OP[MODULATOR1].ksl      = dataU[ins_address + 2]&0x03;
 
                 VERIFY_BYTE( dataU[ins_address+3], 0x0F );
                 ins.OP[MODULATOR1].fmult    = dataU[ins_address + 3]&0x0F;
 
-                ins.feedback1 |= dataU[ins_address + 4]&0x07;
+                ins.feedback1 = dataU[ins_address + 4] & 0x07;
 
                 VERIFY_BYTE(dataU[ins_address + 5], 0x0F);
                 ins.OP[MODULATOR1].attack   = dataU[ins_address + 5] & 0x0F;
@@ -207,7 +205,7 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
                 VERIFY_BYTE(dataU[ins_address + 6], 0x0F);
                 ins.OP[MODULATOR1].sustain  = 0x0F - (dataU[ins_address + 6] & 0x0F);
 
-                //VERIFY_BYTE(dataU[ins_address + 7], 0x01);
+                VERIFY_BYTE(dataU[ins_address + 7], 0x01);
                 ins.OP[MODULATOR1].eg = (dataU[ins_address + 7] != 0);
 
                 VERIFY_BYTE(dataU[ins_address + 8], 0x0F);
@@ -219,39 +217,44 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
                 VERIFY_BYTE(dataU[ins_address + 10], 0x3F);
                 ins.OP[MODULATOR1].level    = 0x3F - (dataU[ins_address + 10] & 0x3F);
 
-                //VERIFY_BYTE(dataU[ins_address + 11], 0x01);
+                VERIFY_BYTE(dataU[ins_address + 11], 0x01);
                 ins.OP[MODULATOR1].am       = ((dataU[ins_address + 11]&0x01) != 0);
 
-                //VERIFY_BYTE(dataU[ins_address + 12], 0x01);
-                ins.OP[MODULATOR1].vib      = ((dataU[ins_address + 13]&0x01) != 0);
+                VERIFY_BYTE(dataU[ins_address + 12], 0x01);
+                ins.OP[MODULATOR1].vib      = ((dataU[ins_address + 12]&0x01) != 0);
 
-                //VERIFY_BYTE(dataU[ins_address + 13], 0x01);
-                ins.OP[MODULATOR1].ksr      = ((dataU[ins_address + 13]&0x01) != 0);
+                VERIFY_BYTE(dataU[ins_address + 13], 0x01);
+                ins.OP[MODULATOR1].ksr      = ( dataU[ins_address + 13] != 0 );
 
                 //VERIFY_BYTE(dataU[ins_address + 14], 0x01);
-                ins.connection1             = dataU[ins_address + 14]&0x01 != 0;
+                if(ver_maj == 0)//HMI bank format
+                {
+                    ins.connection1             = (dataU[ins_address + 14] != 0);
+                } else {
+                    ins.connection1             = (dataU[ins_address + 14] == 0);
+                }
 
-                ins.OP[CARRIER1].ksl        = dataU[ins_address + 15]&0x03;
+                ins.OP[CARRIER1].ksl        = (dataU[ins_address + 15]&0x03);
 
-                VERIFY_BYTE(dataU[ins_address + 16], 0x0F);
+                //VERIFY_BYTE(dataU[ins_address + 16], 0x0F);
                 ins.OP[CARRIER1].fmult      = dataU[ins_address + 16]&0x0F;
 
                 //[IGNORE THIS] ins.feedback1 |= (dataU[ins_address + 17]>>1) & 0x07;
-                VERIFY_BYTE(dataU[ins_address + 18], 0x0F);
+                //VERIFY_BYTE(dataU[ins_address + 18], 0x0F);
                 ins.OP[CARRIER1].attack     = dataU[ins_address + 18] & 0x0F;
 
-                VERIFY_BYTE(dataU[ins_address + 19], 0x0F);
+                //VERIFY_BYTE(dataU[ins_address + 19], 0x0F);
                 ins.OP[CARRIER1].sustain    = 0x0F - ( dataU[ins_address + 19] & 0x0F );
 
-                ins.OP[CARRIER1].eg         = (dataU[ins_address + 20]&0x20) != 0;
+                ins.OP[CARRIER1].eg         = (dataU[ins_address + 20]&0x01) != 0;
 
-                VERIFY_BYTE(dataU[ins_address + 21], 0x0F);
+                //VERIFY_BYTE(dataU[ins_address + 21], 0x0F);
                 ins.OP[CARRIER1].decay      = dataU[ins_address + 21] & 0x0F;
 
-                VERIFY_BYTE(dataU[ins_address + 22], 0x0F);
+                //VERIFY_BYTE(dataU[ins_address + 22], 0x0F);
                 ins.OP[CARRIER1].release    = dataU[ins_address + 22] & 0x0F;
 
-                VERIFY_BYTE(dataU[ins_address + 23], 0x3F);
+                //VERIFY_BYTE(dataU[ins_address + 23], 0x3F);
                 ins.OP[CARRIER1].level      = 0x3F - (dataU[ins_address + 23] & 0x3F);
 
                 ins.OP[CARRIER1].am         = ((dataU[ins_address + 24]&0x01) != 0);
@@ -259,11 +262,12 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
                 ins.OP[CARRIER1].ksr        = ((dataU[ins_address + 26]&0x01) != 0);
 
                 ins.OP[MODULATOR1].waveform = dataU[ins_address + 28]&0x07;
-                ins.OP[CARRIER1].waveform   = dataU[ins_address + 28]&0x07;
-            }
-            else
-            if(ver_maj == 0)//HMI bank format
-            {
+
+                ins.OP[CARRIER1].waveform   = dataU[ins_address + 29]&0x07;
+//            }
+//            else
+//            if(ver_maj == 0)//HMI bank format
+//            {
                 /*
                 Human Machine Interfaces version ("Version 0.0")
 
@@ -285,74 +289,74 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
                 reported in the header, but have differing contents.
                 */
 
-                unsigned char* op1 = &dataU[ins_address + 1];
-                unsigned char* op2 = &dataU[ins_address + 15];
+//                unsigned char* op1 = &dataU[ins_address + 1];
+//                unsigned char* op2 = &dataU[ins_address + 15];
 
-                ins.percNoteNum = dataU[ins_address + 1];
-                ins.OP[MODULATOR1].ksl      = (dataU[ins_address + 2]>>6)&0x03;
+//                ins.percNoteNum = dataU[ins_address + 1];
+//                ins.OP[MODULATOR1].ksl      = (dataU[ins_address + 2]>>6)&0x03;
 
-                VERIFY_BYTE( op1[1], 0x0F );
-                ins.OP[MODULATOR1].fmult    = op1[1] & 0x0F;
+//                VERIFY_BYTE( op1[1], 0x0F );
+//                ins.OP[MODULATOR1].fmult    = op1[1] & 0x0F;
 
-                ins.feedback1 |= op1[2] & 0x07;
+//                ins.feedback1 |= op1[2] & 0x07;
 
-                VERIFY_BYTE(dataU[ins_address + 5], 0xF0);
-                ins.OP[MODULATOR1].attack   = (dataU[ins_address + 5]>>4) & 0x0F;
+//                VERIFY_BYTE(dataU[ins_address + 5], 0xF0);
+//                ins.OP[MODULATOR1].attack   = (dataU[ins_address + 5]>>4) & 0x0F;
 
-                VERIFY_BYTE(dataU[ins_address + 6], 0xF0);
-                ins.OP[MODULATOR1].sustain  = 0x0F - ( (dataU[ins_address + 6]>>4) & 0x0F );
-                VERIFY_BYTE(dataU[ins_address + 7], 0x01);
-                ins.OP[MODULATOR1].eg = (dataU[ins_address + 7] != 0);
+//                VERIFY_BYTE(dataU[ins_address + 6], 0xF0);
+//                ins.OP[MODULATOR1].sustain  = 0x0F - ( (dataU[ins_address + 6]>>4) & 0x0F );
+//                VERIFY_BYTE(dataU[ins_address + 7], 0x01);
+//                ins.OP[MODULATOR1].eg = (dataU[ins_address + 7] != 0);
 
-                VERIFY_BYTE(dataU[ins_address + 8], 0x0F);
-                ins.OP[MODULATOR1].decay    = dataU[ins_address + 8] & 0x0F;
+//                VERIFY_BYTE(dataU[ins_address + 8], 0x0F);
+//                ins.OP[MODULATOR1].decay    = dataU[ins_address + 8] & 0x0F;
 
-                VERIFY_BYTE(dataU[ins_address + 9], 0x0F);
-                ins.OP[MODULATOR1].release  = dataU[ins_address + 9] & 0x0F;
+//                VERIFY_BYTE(dataU[ins_address + 9], 0x0F);
+//                ins.OP[MODULATOR1].release  = dataU[ins_address + 9] & 0x0F;
 
-                VERIFY_BYTE(dataU[ins_address + 10], 0x3F);
-                ins.OP[MODULATOR1].level    = 0x3F - (dataU[ins_address + 10] & 0x3F);
+//                VERIFY_BYTE(dataU[ins_address + 10], 0x3F);
+//                ins.OP[MODULATOR1].level    = 0x3F - (dataU[ins_address + 10] & 0x3F);
 
-                //VERIFY_BYTE(dataU[ins_address + 11], 0x80);
-                ins.OP[MODULATOR1].am       = ((dataU[ins_address + 11]&0x80) != 0);
-                //VERIFY_BYTE(dataU[ins_address + 12], 0x40);
-                ins.OP[MODULATOR1].vib      = ((dataU[ins_address + 13]&0x40) != 0);
-                //VERIFY_BYTE(dataU[ins_address + 13], 0x10);
-                ins.OP[MODULATOR1].ksr      = ((dataU[ins_address + 13]&0x10) != 0);
+//                //VERIFY_BYTE(dataU[ins_address + 11], 0x80);
+//                ins.OP[MODULATOR1].am       = ((dataU[ins_address + 11]&0x80) != 0);
+//                //VERIFY_BYTE(dataU[ins_address + 12], 0x40);
+//                ins.OP[MODULATOR1].vib      = ((dataU[ins_address + 13]&0x40) != 0);
+//                //VERIFY_BYTE(dataU[ins_address + 13], 0x10);
+//                ins.OP[MODULATOR1].ksr      = ((dataU[ins_address + 13]&0x10) != 0);
 
-                //VERIFY_BYTE(dataU[ins_address + 14], 0x10);
-                ins.connection1             = ((dataU[ins_address + 14]&0x10) != 0);
+//                //VERIFY_BYTE(dataU[ins_address + 14], 0x10);
+//                ins.connection1             = ((dataU[ins_address + 14]&0x10) != 0);
 
-                ins.OP[CARRIER1].ksl        = (dataU[ins_address + 15]>>6)&0x03;
+//                ins.OP[CARRIER1].ksl        = (dataU[ins_address + 15]>>6)&0x03;
 
-                VERIFY_BYTE(dataU[ins_address + 16], 0x0F);
-                ins.OP[CARRIER1].fmult      = dataU[ins_address + 16]&0x0F;
+//                VERIFY_BYTE(dataU[ins_address + 16], 0x0F);
+//                ins.OP[CARRIER1].fmult      = dataU[ins_address + 16]&0x0F;
 
-                //[IGNORE THIS] ins.feedback1 |= (dataU[ins_address + 17]>>1) & 0x07;
-                VERIFY_BYTE(dataU[ins_address + 18], 0xF0);
-                ins.OP[CARRIER1].attack     = (dataU[ins_address + 18]>>4) & 0x0F;
+//                //[IGNORE THIS] ins.feedback1 |= (dataU[ins_address + 17]>>1) & 0x07;
+//                VERIFY_BYTE(dataU[ins_address + 18], 0xF0);
+//                ins.OP[CARRIER1].attack     = (dataU[ins_address + 18]>>4) & 0x0F;
 
-                VERIFY_BYTE(dataU[ins_address + 19], 0xF0);
-                ins.OP[CARRIER1].sustain    = 0x0F - ( (dataU[ins_address + 19]>>4) & 0x0F );
+//                VERIFY_BYTE(dataU[ins_address + 19], 0xF0);
+//                ins.OP[CARRIER1].sustain    = 0x0F - ( (dataU[ins_address + 19]>>4) & 0x0F );
 
-                ins.OP[CARRIER1].eg = ((dataU[ins_address + 20]&0x20) != 0);
+//                ins.OP[CARRIER1].eg = ((dataU[ins_address + 20]&0x20) != 0);
 
-                VERIFY_BYTE(dataU[ins_address + 21], 0x0F);
-                ins.OP[CARRIER1].decay      = dataU[ins_address + 21] & 0x0F;
+//                VERIFY_BYTE(dataU[ins_address + 21], 0x0F);
+//                ins.OP[CARRIER1].decay      = dataU[ins_address + 21] & 0x0F;
 
-                VERIFY_BYTE(dataU[ins_address + 22], 0x0F);
-                ins.OP[CARRIER1].release    = dataU[ins_address + 22] & 0x0F;
+//                VERIFY_BYTE(dataU[ins_address + 22], 0x0F);
+//                ins.OP[CARRIER1].release    = dataU[ins_address + 22] & 0x0F;
 
-                VERIFY_BYTE(dataU[ins_address + 23], 0x3F);
-                ins.OP[CARRIER1].level      = 0x3F - (dataU[ins_address + 23] & 0x3F);
+//                VERIFY_BYTE(dataU[ins_address + 23], 0x3F);
+//                ins.OP[CARRIER1].level      = 0x3F - (dataU[ins_address + 23] & 0x3F);
 
-                ins.OP[CARRIER1].am         = ((dataU[ins_address + 24]&0x80) != 0);
-                ins.OP[CARRIER1].vib        = ((dataU[ins_address + 25]&0x40) != 0);
-                ins.OP[CARRIER1].ksr        = ((dataU[ins_address + 26]&0x10) != 0);
+//                ins.OP[CARRIER1].am         = ((dataU[ins_address + 24]&0x80) != 0);
+//                ins.OP[CARRIER1].vib        = ((dataU[ins_address + 25]&0x40) != 0);
+//                ins.OP[CARRIER1].ksr        = ((dataU[ins_address + 26]&0x10) != 0);
 
-                ins.OP[MODULATOR1].waveform = dataU[ins_address + 28]&0x07;
-                ins.OP[CARRIER1].waveform   = dataU[ins_address + 28]&0x07;
-            }
+//                ins.OP[MODULATOR1].waveform = dataU[ins_address + 28]&0x07;
+//                ins.OP[CARRIER1].waveform   = dataU[ins_address + 28]&0x07;
+//            }
         }
         catch(...)
         {

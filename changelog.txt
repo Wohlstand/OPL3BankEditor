@@ -1,3 +1,6 @@
+Version 1.2.1
+- Added instrument importing from another banks (that allows merging and mass copy-pasting of instruments between banks)
+
 Version 1.2 (12 june 2016)
 - Added support of DMX OPL2 and Build Engine Timbre bank formats support
 - Added support of pseudo 4-operators mode (DMX OPL2 format only)
@@ -27,4 +30,3 @@ Version 1.1 (9 june 2016)
 
 Version 1.0 (9 june 2016)
 - First release
-

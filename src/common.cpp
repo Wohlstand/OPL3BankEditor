@@ -87,7 +87,7 @@ short toSint16LE(uchar *arr)
 unsigned short toUint16LE(uchar *arr)
 {
     unsigned short num = arr[0];
-    num |= ( (arr[1]<<8) && 0xFF00 );
+    num |= ( (arr[1]<<8) & 0xFF00 );
     return num;
 }
 
@@ -102,9 +102,9 @@ short toSint16BE(uchar *arr)
 unsigned int toUint32LE(uchar *arr)
 {
     unsigned int num = arr[0];
-    num |= ( (arr[1]<<8) && 0xFF00 );
-    num |= ( (arr[2]<<16) && 0xFF0000 );
-    num |= ( (arr[3]<<24) && 0xFF000000 );
+    num |= ( (arr[1]<<8) & 0xFF00 );
+    num |= ( (arr[2]<<16) & 0xFF0000 );
+    num |= ( (arr[3]<<24) & 0xFF000000 );
     return num;
 }
 

@@ -283,6 +283,12 @@ public:
 
     };
 
+    /**
+     * @brief Get empty instrument entry
+     * @return null-filled instrument entry
+     */
+    static Instrument emptyInst();
+
     inline int countMelodic()   { return Ins_Melodic_box.size(); }
 
     inline int countDrums()     { return Ins_Percussion_box.size(); }

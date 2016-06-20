@@ -89,6 +89,13 @@ void FmBank::reset()
     memset(Ins_Percussion, 0, size);
 }
 
+FmBank::Instrument FmBank::emptyInst()
+{
+    FmBank::Instrument inst;
+    memset(&inst, 0, sizeof(FmBank::Instrument));
+    return inst;
+}
+
 unsigned char FmBank::Instrument::getAVEKM(int OpID)
 {
     uchar out = 0;
