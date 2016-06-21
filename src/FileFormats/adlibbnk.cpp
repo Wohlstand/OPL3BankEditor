@@ -21,7 +21,10 @@
 
 //! Enables strict validation of every parameter.
 //! Or all parameters are will be filtered even data is an invalid crap
-#define STRICT_BNK
+//#define STRICT_BNK
+
+//! Enable skipping unused instruments also included in the file
+//#define SKIP_UNUSED
 
 #ifdef STRICT_BNK
 //#define VERIFY_BYTE(param, byte) if( ((param)|(byte)) != (byte) ) { bank.reset(); return ERR_BADFORMAT; }
@@ -150,6 +153,11 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
 
         unsigned short ins_index   = toUint16LE( dataU + name_address );
         unsigned int   ins_address = offsetData + ins_index*SIZEOF_INST;
+
+        #ifdef SKIP_UNUSED
+        if( dataU[name_address + 2] == 0 )
+            continue;
+        #endif
 
         if( ins_address+SIZEOF_INST > size )
         {
