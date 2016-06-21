@@ -141,7 +141,25 @@ void BankEditor::initFileData(QString &filePath)
 {
     m_recentPath = filePath;
     if(!ui->instruments->selectedItems().isEmpty())
-        on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
+    {
+        int idOfSelected = ui->instruments->selectedItems().first()->data(Qt::UserRole).toInt();
+        if(ui->melodic->isChecked())
+            setMelodic();
+        else
+            setDrums();
+        ui->instruments->clearSelection();
+        QList<QListWidgetItem*> items = ui->instruments->findItems("*", Qt::MatchWildcard);
+        for(int i=0; i<items.size(); i++)
+        {
+            if(items[i]->data(Qt::UserRole).toInt() == idOfSelected)
+            {
+                items[i]->setSelected(true);
+                break;
+            }
+        }
+        if(!ui->instruments->selectedItems().isEmpty())
+            on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
+    }
     else
         on_instruments_currentItemChanged(NULL, NULL);
     ui->currentFile->setText(filePath);
