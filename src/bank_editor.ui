@@ -2114,7 +2114,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>970</width>
-     <height>27</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2143,6 +2143,9 @@ of second voice</string>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
     <addaction name="actionReset_current_instrument"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddInst"/>
+    <addaction name="actionDelInst"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdito"/>
@@ -2153,7 +2156,7 @@ of second voice</string>
     <string>Open</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+O</string>
+    <string notr="true">Ctrl+O</string>
    </property>
   </action>
   <action name="actionSave">
@@ -2161,7 +2164,7 @@ of second voice</string>
     <string>Save</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+S</string>
+    <string notr="true">Ctrl+S</string>
    </property>
   </action>
   <action name="actionExit">
@@ -2169,7 +2172,7 @@ of second voice</string>
     <string>Exit</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Q</string>
+    <string notr="true">Ctrl+Q</string>
    </property>
   </action>
   <action name="actionAbout">
@@ -2187,7 +2190,7 @@ of second voice</string>
     <string>Copy</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+C</string>
+    <string notr="true">Ctrl+C</string>
    </property>
   </action>
   <action name="actionPaste">
@@ -2195,17 +2198,30 @@ of second voice</string>
     <string>Paste</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+V</string>
+    <string notr="true">Ctrl+V</string>
    </property>
   </action>
   <action name="actionReset_current_instrument">
    <property name="text">
     <string>Reset current instrument</string>
    </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+R</string>
+   </property>
   </action>
   <action name="actionImport">
    <property name="text">
     <string>Import instruments...</string>
+   </property>
+  </action>
+  <action name="actionAddInst">
+   <property name="text">
+    <string>Add instrument</string>
+   </property>
+  </action>
+  <action name="actionDelInst">
+   <property name="text">
+    <string>Delete current instrument</string>
    </property>
   </action>
  </widget>

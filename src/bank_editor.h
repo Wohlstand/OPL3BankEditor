@@ -27,6 +27,8 @@
 #include "bank.h"
 #include "opl/generator.h"
 
+#include "FileFormats/ffmt_base.h"
+
 namespace Ui {
 class BankEditor;
 }
@@ -73,6 +75,9 @@ private:
 
     //! OPL chip emulator frontent
     Generator       *m_generator;
+
+    //! Recent file format which was been used
+    FmBankFormatBase::Formats m_recentFormat;
 
     /* ********** Audio output stuff ********** */
     //! Buffer for audio data transfering
@@ -134,12 +139,14 @@ public:
      * \return true if file successfully opened, false if failed
      */
     bool openFile(QString filePath);
+
     /*!
      * \brief Save file
      * \param filePath absolute path where save a file
+     * \param format Target format to save a file
      * \return true if file successfully saved, false if failed
      */
-    bool saveFile(QString filePath);
+    bool saveFile(QString filePath, FmBankFormatBase::Formats format);
     /*!
      * \brief Open Save-As dialog box
      * \return true if file successfuly saved, false on rejecting or on fail
@@ -320,6 +327,10 @@ private slots:
     void on_op4_ksr_toggled(bool checked);
 
     void on_velocityOffset_valueChanged(int arg1);
+
+    void on_actionAddInst_triggered();
+
+    void on_actionDelInst_triggered();
 
 protected:
     void closeEvent(QCloseEvent *event);

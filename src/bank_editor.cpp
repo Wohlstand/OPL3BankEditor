@@ -45,6 +45,8 @@ BankEditor::BankEditor(QWidget *parent) :
     m_curInstBackup = NULL;
     m_lock = false;
 
+    m_recentFormat = FmBankFormatBase::FORMAT_JUNGLEVIZION;
+
     m_recentNum     = -1;
     m_recentPerc    = false;
 
@@ -177,32 +179,7 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
 
 bool BankEditor::openFile(QString filePath)
 {
-    char magic[32];
-    getMagic(filePath, magic, 32);
-
-    int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
-
-    //Check out for Junglevision file format
-    if(JunleVizion::detect(magic))
-        err = JunleVizion::loadFile(filePath, m_bank);
-
-    //Check for DMX OPL2 file format
-    else if(DmxOPL2::detect(magic))
-        err = DmxOPL2::loadFile(filePath, m_bank);
-
-    //Check for Sound Blaster IBK file format
-    else if(SbIBK::detect(magic))
-        err = SbIBK::loadFile(filePath, m_bank);
-
-    //Check for AdLib BNK file format
-    else if(AdLibBnk::detect(magic))
-        err = AdLibBnk::loadFile(filePath, m_bank);
-
-    //Check for Apogee Sound System TMB file format
-    else if(ApogeeTMB::detect(filePath))
-        err = ApogeeTMB::loadFile(filePath, m_bank);
-
-
+    int err = FmBankFormatBase::OpenFile(filePath, m_bank, &m_recentFormat);
 
     if(err != FmBankFormatBase::ERR_OK)
     {
@@ -230,25 +207,33 @@ bool BankEditor::openFile(QString filePath)
     return false;
 }
 
-bool BankEditor::saveFile(QString filePath)
+bool BankEditor::saveFile(QString filePath, FmBankFormatBase::Formats format)
 {
     int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
 
-    //Check out for Junglevision file format
-    if(hasExt(filePath, ".op3"))
+    switch(format)
+    {
+    case FmBankFormatBase::FORMAT_JUNGLEVIZION:
         err = JunleVizion::saveFile(filePath, m_bank);
-
-    //Check for DMX OPL2 file format
-    else if(hasExt(filePath, ".op2")||
-            hasExt(filePath, ".htc")||
-            hasExt(filePath, ".hxn"))
+        break;
+    case FmBankFormatBase::FORMAT_DMX_OP2:
         err = DmxOPL2::saveFile(filePath, m_bank);
-
-    else if(hasExt(filePath, ".tmb"))
+        break;
+    case FmBankFormatBase::FORMAT_APOGEE:
         err = ApogeeTMB::saveFile(filePath, m_bank);
-
-    else if(hasExt(filePath, ".ibk"))
+        break;
+    case FmBankFormatBase::FORMAT_IBK:
         err = SbIBK::saveFile(filePath, m_bank);
+        break;
+    case FmBankFormatBase::FORMAT_ADLIB_BKN1:
+        err = AdLibBnk::saveFile(filePath, m_bank, AdLibBnk::BNK_ADLIB);
+        break;
+    case FmBankFormatBase::FORMAT_ADLIB_BKNHMI:
+        err = AdLibBnk::saveFile(filePath, m_bank, AdLibBnk::BNK_HMI);
+        break;
+    default:
+        break;
+    }
 
     if( err != FmBankFormatBase::ERR_OK )
     {
@@ -262,7 +247,7 @@ bool BankEditor::saveFile(QString filePath)
         case FmBankFormatBase::ERR_NOT_IMLEMENTED:
             errText = tr("writing into this format is not implemented yet"); break;
         case FmBankFormatBase::ERR_UNSUPPORTED_FORMAT:
-            errText = tr("unknown file name extension, please define file name extension to choice target file format"); break;
+            errText = tr("unsupported file format, please define file name extension to choice target file format"); break;
         case FmBankFormatBase::ERR_UNKNOWN:
             errText = tr("unknown error occouped"); break;
         }
@@ -280,39 +265,16 @@ bool BankEditor::saveFile(QString filePath)
 
 bool BankEditor::saveFileAs()
 {
-    QString jv  = "JunleVision bank (*.op3)";
-    QString dmx = "DMX OPL-2 bank (*.op2 *.htc *.hxn)";
-    QString tmb = "Apogee Sound System timbre bank (*.tmb)";
-    QString ibk = "Sound Blaster IBK file (*.ibk)";
-    QString filters =  jv+";;"
-                      +dmx+";;"
-                      +tmb+";;"
-                      +ibk;
+    QString filters = FmBankFormatBase::getSaveFiltersList();
 
-    QString selectedFilter;
-
-    if(hasExt(m_recentPath, ".op3"))
-        selectedFilter = jv;
-
-    else
-    if(hasExt(m_recentPath, ".op2")||
-       hasExt(m_recentPath, ".htc")||
-       hasExt(m_recentPath, ".hxn"))
-        selectedFilter = dmx;
-
-    else
-    if(hasExt(m_recentPath, ".tmb"))
-        selectedFilter = tmb;
-    else
-    if(hasExt(m_recentPath, ".ibk"))
-        selectedFilter = ibk;
+    QString selectedFilter = FmBankFormatBase::getFilterFromFormat(m_recentFormat);
 
     QString fileToSave = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, filters, &selectedFilter);
 
     if(fileToSave.isEmpty())
         return false;
 
-    return saveFile(fileToSave);
+    return saveFile(fileToSave, FmBankFormatBase::getFormatFromFilter(selectedFilter));
 }
 
 bool BankEditor::askForSaving()
@@ -349,6 +311,8 @@ void BankEditor::on_actionNew_triggered()
     if( !askForSaving() )
         return;
 
+    m_recentFormat = FmBankFormatBase::FORMAT_JUNGLEVIZION;
+
     ui->currentFile->setText(tr("<Untitled>"));
     ui->instruments->clearSelection();
     m_bank.reset();
@@ -362,22 +326,7 @@ void BankEditor::on_actionOpen_triggered()
     if( !askForSaving() )
         return;
 
-    QString supported   = "Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk)";
-    QString jv          = "JunleVision bank (*.op3)";
-    QString dmx         = "DMX OPL-2 bank (*.op2 *.htc *.hxn)";
-    QString tmb         = "Apogee Sound System timbre bank (*.tmb)";
-    QString ibk         = "Sound Blaster IBK file (*.ibk)";
-    QString bnk         = "AdLib Instrument Bank (*.bnk)";
-    QString allFiles    = "All files (*.*)";
-
-    QString filters =   supported+";;"
-                       +jv+";;"
-                       +dmx+";;"
-                       +tmb+";;"
-                       +ibk+";;"
-                       +bnk+";;"
-                       +allFiles;
-
+    QString filters = FmBankFormatBase::getOpenFiltersList();
     QString fileToOpen;
     fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
     if(fileToOpen.isEmpty())
@@ -665,4 +614,40 @@ void BankEditor::reloadInstrumentNames()
     }
 }
 
+void BankEditor::on_actionAddInst_triggered()
+{
+    FmBank::Instrument ins = FmBank::emptyInst();
+    int id = 0;
+    QListWidgetItem* item = new QListWidgetItem();
 
+    if(ui->melodic->isChecked())
+    {
+        m_bank.Ins_Melodic_box.push_back( ins );
+        m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
+
+        ins = m_bank.Ins_Melodic_box.last();
+        id = m_bank.countMelodic()-1;
+        item->setText(ins.name[0]!='\0' ? ins.name : getMidiInsNameM(id));
+    }
+    else
+    {
+        FmBank::Instrument ins = FmBank::emptyInst();
+        m_bank.Ins_Percussion_box.push_back( ins );
+        m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
+
+        ins = m_bank.Ins_Percussion_box.last();
+        id = m_bank.countDrums()-1;
+        item->setText(ins.name[0]!='\0' ? ins.name : getMidiInsNameP(id));
+    }
+
+    item->setData(Qt::UserRole, id);
+    item->setToolTip(QString("ID: %1").arg(id));
+    item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+    ui->instruments->addItem(item);
+}
+
+void BankEditor::on_actionDelInst_triggered()
+{
+    QMessageBox::information(this, "Ouch", "Sorry, not implemented yet :-P");
+
+}

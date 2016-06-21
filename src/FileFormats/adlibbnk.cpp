@@ -91,9 +91,10 @@ bool AdLibBnk::detect(char *magic)
     return (strncmp(magic+2, bnk_magic, 6) == 0);
 }
 
-int AdLibBnk::loadFile(QString filePath, FmBank &bank)
+int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
 {
     char magic[8]; memset(magic, 0, 8);
+    format = FORMAT_ADLIB_BKN1;
 
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
@@ -121,15 +122,15 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
 #define SIZEOF_NAME     12
 #define SIZEOF_INST     30
 
-    char    ver_maj = dataS[0];//,
-          //ver_min = dataS[1];
+    char    ver_maj = dataS[0],
+            ver_min = dataS[1];
 
-    unsigned short  totalInsUsed = 0;
+    //unsigned short  totalInsUsed = 0;
     unsigned short  totalIns = 0;
     unsigned int    offsetName = 0;
     unsigned int    offsetData = 0;
 
-    totalInsUsed = toUint16LE( dataU + BNK_HEAD_OFFSET + 0 );
+    //totalInsUsed = toUint16LE( dataU + BNK_HEAD_OFFSET + 0 );
     totalIns     = toUint16LE( dataU + BNK_HEAD_OFFSET + 2 );
     offsetName   = toUint32LE( dataU + BNK_HEAD_OFFSET + 4 );
     offsetData   = toUint32LE( dataU + BNK_HEAD_OFFSET + 8 );
@@ -165,6 +166,13 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
             return ERR_BADFORMAT;
         }
 
+        if( (ver_maj==0) && (ver_min==0))
+        {
+            format = FORMAT_ADLIB_BKNHMI;
+        } else {
+            format = FORMAT_ADLIB_BKN1;
+        }
+
         FmBank::Instrument *ins_p = 0;
         //At this point, the current position should be the same as offsetData. The actual instrument
         //data follows, again repeated once for each instrument. The instrument data is in the following
@@ -198,7 +206,7 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
 
 //            if(ver_maj == 1)//Standard bank format
 //            {
-                ins.percNoteNum = dataU[ins_address + 1];
+                ins.adlib_drum_number       = dataU[ins_address + 1];
 
                 ins.OP[MODULATOR1].ksl      = dataU[ins_address + 2]&0x03;
 
@@ -372,11 +380,10 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank)
             return ERR_BADFORMAT;
         }
     }
-
     return ERR_OK;
 }
 
-int AdLibBnk::saveFile(QString filePath, FmBank &bank)
+int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
 {
     return ERR_NOT_IMLEMENTED;
 }

@@ -27,9 +27,14 @@
 class AdLibBnk : public FmBankFormatBase
 {
 public:
+    enum BnkType
+    {
+        BNK_ADLIB,
+        BNK_HMI
+    };
     static bool detect(char* magic);
-    static int  loadFile(QString filePath, FmBank &bank);
-    static int  saveFile(QString filePath, FmBank &bank);
+    static int  loadFile(QString filePath, FmBank &bank, Formats &format);
+    static int  saveFile(QString filePath, FmBank &bank, BnkType type);
 };
 
 #endif // ADLIBBNK_H

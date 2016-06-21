@@ -72,7 +72,8 @@ SOURCES += \
     src/FileFormats/apogeetmb.cpp \
     src/FileFormats/sb_ibk.cpp \
     src/FileFormats/adlibbnk.cpp \
-    src/importer.cpp
+    src/importer.cpp \
+    src/FileFormats/ffmt_base.cpp
 
 HEADERS += \
     src/FileFormats/dmxopl2.h \

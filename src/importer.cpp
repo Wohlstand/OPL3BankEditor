@@ -29,11 +29,7 @@
 
 #include "ins_names.h"
 
-#include "FileFormats/adlibbnk.h"
-#include "FileFormats/apogeetmb.h"
-#include "FileFormats/dmxopl2.h"
-#include "FileFormats/junlevizion.h"
-#include "FileFormats/sb_ibk.h"
+#include "FileFormats/ffmt_base.h"
 
 #include "common.h"
 
@@ -65,30 +61,7 @@ Importer::~Importer()
 
 bool Importer::openFile(QString filePath)
 {
-    char magic[32];
-    getMagic(filePath, magic, 32);
-
-    int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
-
-    //Check out for Junglevision file format
-    if(JunleVizion::detect(magic))
-        err = JunleVizion::loadFile(filePath, m_bank);
-
-    //Check for DMX OPL2 file format
-    else if(DmxOPL2::detect(magic))
-        err = DmxOPL2::loadFile(filePath, m_bank);
-
-    //Check for Sound Blaster IBK file format
-    else if(SbIBK::detect(magic))
-        err = SbIBK::loadFile(filePath, m_bank);
-
-    //Check for AdLib BNK file format
-    else if(AdLibBnk::detect(magic))
-        err = AdLibBnk::loadFile(filePath, m_bank);
-
-    //Check for Apogee Sound System TMB file format
-    else if(ApogeeTMB::detect(filePath))
-        err = ApogeeTMB::loadFile(filePath, m_bank);
+    int err = FmBankFormatBase::OpenFile(filePath, m_bank);
 
     if( err != FmBankFormatBase::ERR_OK )
     {
@@ -165,22 +138,7 @@ void Importer::initFileData(QString &filePath)
 
 void Importer::on_openBank_clicked()
 {
-    QString supported   = "Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk)";
-    QString jv          = "JunleVision bank (*.op3)";
-    QString dmx         = "DMX OPL-2 bank (*.op2 *.htc *.hxn)";
-    QString tmb         = "Apogee Sound System timbre bank (*.tmb)";
-    QString ibk         = "Sound Blaster IBK file (*.ibk)";
-    QString bnk         = "AdLib Instrument Bank (*.bnk)";
-    QString allFiles    = "All files (*.*)";
-
-    QString filters =   supported+";;"
-                       +jv+";;"
-                       +dmx+";;"
-                       +tmb+";;"
-                       +ibk+";;"
-                       +bnk+";;"
-                       +allFiles;
-
+    QString filters = FmBankFormatBase::getOpenFiltersList();
     QString fileToOpen;
     fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
     if(fileToOpen.isEmpty())
