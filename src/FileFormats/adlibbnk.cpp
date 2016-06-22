@@ -24,7 +24,7 @@
 //#define STRICT_BNK
 
 //! Enable skipping unused instruments also included in the file
-//#define SKIP_UNUSED
+#define SKIP_UNUSED
 
 #ifdef STRICT_BNK
 //#define VERIFY_BYTE(param, byte) if( ((param)|(byte)) != (byte) ) { bank.reset(); return ERR_BADFORMAT; }
@@ -61,6 +61,8 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
     QByteArray fileData  = file.readAll();
     file.close();
 
+    bool isHMI = false;
+
     unsigned int    size  = fileData.size();
     unsigned char*  dataU = (unsigned char*)fileData.data();
     char*           dataS = (char*)fileData.data();
@@ -77,6 +79,11 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
 
     char    ver_maj = dataS[0],
             ver_min = dataS[1];
+
+    if( (ver_maj==0) && (ver_min==0))
+    {
+        isHMI = true;
+    }
 
     //unsigned short  totalInsUsed = 0;
     unsigned short  totalIns = 0;
@@ -109,7 +116,7 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
         unsigned int   ins_address = offsetData + ins_index*SIZEOF_INST;
 
         #ifdef SKIP_UNUSED
-        if( dataU[name_address + 2] == 0 )
+        if( !isHMI && (dataU[name_address + 2] == 0) )
             continue;
         #endif
 
@@ -248,6 +255,8 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
 
     uchar ver[2] = { 1, 0 };
 
+    bool isHMI = false;
+
     switch(type)
     {
     case BNK_ADLIB:
@@ -255,6 +264,7 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
         break;
     case BNK_HMI:
         ver[0] = 0; ver[1] = 0;
+        isHMI=true;
         break;
     }
 
@@ -267,12 +277,18 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
     file.write(char_p(bnk_magic), 6);
 
     unsigned int insts = bank.Ins_Melodic_box.size() + bank.Ins_Percussion_box.size();
-    unsigned short instsS = insts > 65535 ? 65535 : insts;
+    unsigned short instsU = insts > 65515 ? 65515 : insts;
+    unsigned short instsS = (insts+20) > 65535 ? 65535 : insts+20;
     unsigned int nameAddress = 28;
     unsigned int dataAddress = 28 + SIZEOF_NAME * insts;
+    if(isHMI)
+    {
+        instsU = instsU > 128 ? 128 : instsU;
+        instsS = instsU;
+    }
 
     //    uchar numUsed[2];
-    writeLE( file, instsS );
+    writeLE( file, instsU );
     //    uchar numInstruments[2];
     writeLE( file, instsS );
     //    uchar offsetName[2];
@@ -286,7 +302,7 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
     //} __attribute__((__packed__));
 
 
-    for(unsigned short ins = 0; ins < instsS; ins++)
+    for(unsigned short ins = 0; ins < instsU; ins++)
     {
         bool isDrum = (bank.Ins_Melodic_box.size() <= ins);
         FmBank::Instrument &Ins = isDrum ?
@@ -308,7 +324,26 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
     //} __attribute__((__packed__));
     }
 
-    for(unsigned short ins = 0; ins < instsS; ins++)
+    if(!isHMI)
+    {
+        for(unsigned short ins = instsU; ins < instsS; ins++)
+        {
+            char name[9];
+            memset(name, 0, 9);
+        //struct BNK_InsName
+        //{
+        //    uchar index[2];
+            writeLE( file, ins );
+        //    uchar flags;
+            uchar flags = 0x00/*NO, IT'S NOTHING - just an unused crap!*/;
+            file.write( char_p(&flags), 1 );
+            //    char  name[9];
+            file.write( name, 9 );
+        //} __attribute__((__packed__));
+        }
+    }
+
+    for(unsigned short ins = 0; ins < instsU; ins++)
     {
         bool isDrum = (bank.Ins_Melodic_box.size() <= ins);
         FmBank::Instrument &Ins = isDrum ?
@@ -434,6 +469,16 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
     //    uchar   carWaveSel;
     file.write( char_p(&Ins.OP[CARRIER1].waveform), 1 );
     //} __attribute__((__packed__));
+    }
+
+    if(!isHMI)
+    {
+        for(unsigned short ins = instsU; ins < instsS; ins++)
+        {
+            uchar nullIns[SIZEOF_INST];
+            memset(nullIns, 0, SIZEOF_INST);
+            file.write( char_p(nullIns), SIZEOF_INST );
+        }
     }
 
     file.close();
