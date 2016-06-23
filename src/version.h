@@ -25,6 +25,6 @@
 
 #define PROGRAM_NAME "FM Bank Editor by Wohlstand"
 
-#define VERSION "1.2.1"
+#define VERSION "1.2.1-beta"
 
 #endif // VERSION_H

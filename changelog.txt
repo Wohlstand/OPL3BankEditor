@@ -1,5 +1,8 @@
-Version 1.2.1
+Version 1.2.1-beta
 - Added instrument importing from another banks (that allows merging and mass copy-pasting of instruments between banks)
+- Added support of Sound-Blaster IBK files
+- Added support of AdLib/HMI BNK bank formats (Support is experimental!)
+- Experimental support of 5-channel OPL2 percussion mode testing
 
 Version 1.2 (12 june 2016)
 - Added support of DMX OPL2 and Build Engine Timbre bank formats support
