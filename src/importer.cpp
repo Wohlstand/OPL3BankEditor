@@ -61,7 +61,7 @@ Importer::~Importer()
 
 bool Importer::openFile(QString filePath)
 {
-    int err = FmBankFormatBase::OpenFile(filePath, m_bank);
+    int err = FmBankFormatBase::OpenBankFile(filePath, m_bank);
 
     if( err != FmBankFormatBase::ERR_OK )
     {

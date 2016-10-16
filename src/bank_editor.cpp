@@ -32,6 +32,7 @@
 #include "FileFormats/dmxopl2.h"
 #include "FileFormats/junlevizion.h"
 #include "FileFormats/sb_ibk.h"
+#include "FileFormats/milesopl.h"
 
 #include "common.h"
 #include "version.h"
@@ -179,7 +180,7 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
 
 bool BankEditor::openFile(QString filePath)
 {
-    int err = FmBankFormatBase::OpenFile(filePath, m_bank, &m_recentFormat);
+    int err = FmBankFormatBase::OpenBankFile(filePath, m_bank, &m_recentFormat);
 
     if(err != FmBankFormatBase::ERR_OK)
     {
@@ -207,7 +208,7 @@ bool BankEditor::openFile(QString filePath)
     return false;
 }
 
-bool BankEditor::saveFile(QString filePath, FmBankFormatBase::Formats format)
+bool BankEditor::saveBankFile(QString filePath, FmBankFormatBase::Formats format)
 {
     int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
 
@@ -230,6 +231,9 @@ bool BankEditor::saveFile(QString filePath, FmBankFormatBase::Formats format)
         break;
     case FmBankFormatBase::FORMAT_ADLIB_BKNHMI:
         err = AdLibBnk::saveFile(filePath, m_bank, AdLibBnk::BNK_HMI);
+        break;
+    case FmBankFormatBase::FORMAT_MILES:
+        err = MilesOPL::saveFile(filePath, m_bank);
         break;
     default:
         break;
@@ -274,7 +278,7 @@ bool BankEditor::saveFileAs()
     if(fileToSave.isEmpty())
         return false;
 
-    return saveFile(fileToSave, FmBankFormatBase::getFormatFromFilter(selectedFilter));
+    return saveBankFile(fileToSave, FmBankFormatBase::getFormatFromFilter(selectedFilter));
 }
 
 bool BankEditor::askForSaving()
@@ -383,15 +387,14 @@ void BankEditor::on_actionReset_current_instrument_triggered()
 
 void BankEditor::on_actionAbout_triggered()
 {
-    QMessageBox::information(this,
+    QMessageBox::about(this,
                              tr("About bank editor"),
                              tr("FM Bank Editor for Yamaha OPL3/OPL2 chip, Version %1\n\n"
                                 "(c) 2016, Vitaly Novichkov \"Wohlstand\"\n"
                                 "\n"
                                 "Licensed under GNU GPLv3\n\n"
                                 "Source code available on GitHub:\n"
-                                "%2").arg(VERSION).arg("https://github.com/Wohlstand/OPL3BankEditor"),
-                             QMessageBox::Ok);
+                                "%2").arg(VERSION).arg("https://github.com/Wohlstand/OPL3BankEditor"));
 }
 
 void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QListWidgetItem *)

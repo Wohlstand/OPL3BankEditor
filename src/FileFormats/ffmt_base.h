@@ -40,6 +40,7 @@ public:
         FORMAT_IBK          =   3,
         FORMAT_ADLIB_BKN1   =   4,
         FORMAT_ADLIB_BKNHMI =   5,
+        FORMAT_MILES        =   6,
 
         FORMATS_END,
         FORMATS_BEGIN = FORMAT_JUNGLEVIZION,
@@ -72,7 +73,7 @@ public:
         ERR_UNKNOWN
     };
 
-    static int  OpenFile(QString filePath, FmBank &bank, Formats *recent=0);
+    static int  OpenBankFile(QString filePath, FmBank &bank, Formats *recent=0);
 
 };
 

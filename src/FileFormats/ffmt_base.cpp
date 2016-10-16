@@ -22,6 +22,7 @@
 #include "apogeetmb.h"
 #include "dmxopl2.h"
 #include "junlevizion.h"
+#include "milesopl.h"
 #include "sb_ibk.h"
 
 const char *openFilters[]
@@ -31,7 +32,8 @@ const char *openFilters[]
     "Apogee Sound System timbre bank (*.tmb)",
     "Sound Blaster IBK file (*.ibk)",
     "AdLib/HMI instrument Bank (*.bnk)",
-    ""
+    "",
+    "Miles Sound System bank (*.opl *.ad)"
 };
 
 const char *saveFilters[]
@@ -41,7 +43,8 @@ const char *saveFilters[]
     openFilters[2],
     openFilters[3],
     "AdLib instrument bank (*.bnk)",
-    "HMI instrument bank (*.bnk)"
+    "HMI instrument bank (*.bnk)",
+    "Miles Sound System bank (*.opl *.ad)",
 };
 
 #include "ffmt_base.h"
@@ -51,21 +54,23 @@ QString FmBankFormatBase::getSaveFiltersList()
 {
     return  QString()
          +  saveFilters[FORMAT_JUNGLEVIZION]+";;"+
-         +  saveFilters[FORMAT_DMX_OP2]+";;"+
-         +  saveFilters[FORMAT_APOGEE]+";;"+
-         +  saveFilters[FORMAT_IBK] +";;"+
-         +  saveFilters[FORMAT_ADLIB_BKN1] + ";;"+
-         +  saveFilters[FORMAT_ADLIB_BKNHMI];
+         +  saveFilters[FORMAT_DMX_OP2]     +";;"+
+         +  saveFilters[FORMAT_APOGEE]      +";;"+
+         +  saveFilters[FORMAT_IBK]         +";;"+
+         +  saveFilters[FORMAT_ADLIB_BKN1]  +";;"+
+         +  saveFilters[FORMAT_ADLIB_BKNHMI]+";;"+
+         +  saveFilters[FORMAT_MILES];
 }
 
 QString FmBankFormatBase::getOpenFiltersList()
 {
-    return  QString("Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk);;")+
+    return  QString("Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk *.opl *.ad);;")+
          +  openFilters[FORMAT_JUNGLEVIZION] + ";;" +
          +  openFilters[FORMAT_DMX_OP2]      + ";;" +
          +  openFilters[FORMAT_APOGEE]       + ";;" +
          +  openFilters[FORMAT_IBK]          + ";;" +
-         +  openFilters[FORMAT_ADLIB_BKN1]   + ";;"
+         +  openFilters[FORMAT_ADLIB_BKN1]   + ";;" +
+         +  openFilters[FORMAT_MILES] + ";;" +
          +  "All files (*.*)";
 }
 
@@ -89,7 +94,7 @@ QString FmBankFormatBase::getFilterFromFormat(FmBankFormatBase::Formats format)
     return saveFilters[format];
 }
 
-int FmBankFormatBase::OpenFile(QString filePath, FmBank &bank, Formats *recent)
+int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *recent)
 {
     char magic[32];
     getMagic(filePath, magic, 32);
@@ -129,6 +134,13 @@ int FmBankFormatBase::OpenFile(QString filePath, FmBank &bank, Formats *recent)
     {
         err = ApogeeTMB::loadFile(filePath, bank);
         fmt = FORMAT_APOGEE;
+    }
+
+    //Check for Miles Sound System TMB file format
+    else if(MilesOPL::detect(filePath))
+    {
+        err = MilesOPL::loadFile(filePath, bank);
+        fmt = FORMAT_MILES;
     }
 
     if(recent)

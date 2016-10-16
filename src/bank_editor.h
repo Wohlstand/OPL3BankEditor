@@ -146,7 +146,7 @@ public:
      * \param format Target format to save a file
      * \return true if file successfully saved, false if failed
      */
-    bool saveFile(QString filePath, FmBankFormatBase::Formats format);
+    bool saveBankFile(QString filePath, FmBankFormatBase::Formats format);
     /*!
      * \brief Open Save-As dialog box
      * \return true if file successfuly saved, false on rejecting or on fail

@@ -73,7 +73,8 @@ SOURCES += \
     src/FileFormats/sb_ibk.cpp \
     src/FileFormats/adlibbnk.cpp \
     src/importer.cpp \
-    src/FileFormats/ffmt_base.cpp
+    src/FileFormats/ffmt_base.cpp \
+    src/FileFormats/milesopl.cpp
 
 HEADERS += \
     src/FileFormats/dmxopl2.h \
@@ -90,7 +91,8 @@ HEADERS += \
     src/FileFormats/apogeetmb.h \
     src/FileFormats/sb_ibk.h \
     src/FileFormats/adlibbnk.h \
-    src/importer.h
+    src/importer.h \
+    src/FileFormats/milesopl.h
 
 FORMS += \
     src/bank_editor.ui \
