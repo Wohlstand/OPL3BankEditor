@@ -21,19 +21,31 @@
 
 bool MilesOPL::detect(QString filePath)
 {
+    if( hasExt(filePath, ".opl") )
+        return true;
+    if( hasExt(filePath, ".ad") )
+        return true;
+
     return false;
 }
 
 int MilesOPL::loadFile(QString filePath, FmBank &bank)
 {
-    /*
-    FILE* fp = std::fopen(fn, "rb");
-    std::fseek(fp, 0, SEEK_END);
-    std::vector<unsigned char> data(std::ftell(fp));
-    std::rewind(fp);
-    std::fread(&data[0], 1, data.size(), fp),
-    std::fclose(fp);
+    QFile file(filePath);
+    if(!file.open(QIODevice::ReadOnly))
+        return ERR_NOFILE;
 
+    QByteArray data = file.readAll();
+    file.close();
+
+    bank.reset();
+    //FILE* fp = std::fopen(fn, "rb");
+    //std::fseek(fp, 0, SEEK_END);
+    //std::vector<unsigned char> data(std::ftell(fp));
+    //std::rewind(fp);
+    //std::fread(&data[0], 1, data.size(), fp),
+    //std::fclose(fp);
+    /*
     for(unsigned a=0; a<2000; ++a)
     {
         unsigned gmnumber  = data[a*6+0];
@@ -69,7 +81,7 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
         {
             unsigned o = offset + 3 + i*11;
             tmp[i].finetune = (gmno < 128 && i == 0) ? notenum : 0;
-            tmp[i].diff=false;
+            tmp[i].diff = false;
             tmp[i].data[0] = data[o+0];  // 20
             tmp[i].data[8] = data[o+1];  // 40 (vol)
             tmp[i].data[2] = data[o+2];  // 60
@@ -101,8 +113,8 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
             size_t resno = InsertIns(tmp[0], tmp[1], tmp2, name, name2);
             SetBank(bank, gmno, resno);
         }
-    }
-    */
+    }*/
+
     return ERR_NOT_IMLEMENTED;
 }
 
