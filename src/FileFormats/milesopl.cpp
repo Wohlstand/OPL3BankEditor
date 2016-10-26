@@ -31,11 +31,15 @@ bool MilesOPL::detect(QString filePath)
 
 int MilesOPL::loadFile(QString filePath, FmBank &bank)
 {
+#warning AIL OPL bank format is under construction
+#if 0 //WIP
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
         return ERR_NOFILE;
 
-    QByteArray data = file.readAll();
+    QByteArray fileData = file.readAll();
+    unsigned char*  data = (unsigned char*)fileData.data();
+
     file.close();
 
     bank.reset();
@@ -45,19 +49,20 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
     //std::rewind(fp);
     //std::fread(&data[0], 1, data.size(), fp),
     //std::fclose(fp);
-    /*
     for(unsigned a=0; a<2000; ++a)
     {
         unsigned gmnumber  = data[a*6+0];
         unsigned gmnumber2 = data[a*6+1];
         unsigned offset    = *(unsigned*)&data[a*6+2];
 
-        if(gmnumber == 0xFF) break;
+        if(gmnumber == 0xFF)
+            break;
         int gmno = gmnumber2==0x7F ? gmnumber+0x80 : gmnumber;
         int midi_index = gmno < 128 ? gmno
                        : gmno < 128+35 ? -1
                        : gmno < 128+88 ? gmno-35
                        : -1;
+
         unsigned length = data[offset] + data[offset+1]*256;
         signed char notenum = data[offset+2];
 
@@ -71,36 +76,83 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
 
         if(gmnumber2 != 0 && gmnumber2 != 0x7F) continue;
 
+        /*
         char name2[512]; sprintf(name2, "%s%c%u", prefix,
             (gmno<128?'M':'P'), gmno&127);
+        */
 
-        insdata tmp[200];
+        //insdata tmp[200];
 
         const unsigned inscount = (length-3)/11;
         for(unsigned i=0; i<inscount; ++i)
         {
+            FmBank::Instrument &ins = (i<128) ?
+                                       bank.Ins_Melodic[i] :
+                                       bank.Ins_Percussion[(i-128)+35];
             unsigned o = offset + 3 + i*11;
-            tmp[i].finetune = (gmno < 128 && i == 0) ? notenum : 0;
-            tmp[i].diff = false;
-            tmp[i].data[0] = data[o+0];  // 20
-            tmp[i].data[8] = data[o+1];  // 40 (vol)
-            tmp[i].data[2] = data[o+2];  // 60
-            tmp[i].data[4] = data[o+3];  // 80
-            tmp[i].data[6] = data[o+4];  // E0
-            tmp[i].data[1] = data[o+6];  // 23
-            tmp[i].data[9] = data[o+7]; // 43 (vol)
-            tmp[i].data[3] = data[o+8]; // 63
-            tmp[i].data[5] = data[o+9]; // 83
-            tmp[i].data[7] = data[o+10]; // E3
+            //ins.finetune = (gmno < 128 && i == 0) ? notenum : 0;
+            ins.setAVEKM(MODULATOR1, data[o+0]);
+            //tmp[i].data[0] = data[o+0]; // 20 //Mod1
+            ins.setKSLL(MODULATOR1, data[o+1]);
+            //tmp[i].data[8] = data[o+1]; // 40 (vol)//Mod1
+            ins.setAtDec(MODULATOR1, data[o+2]);
+            //tmp[i].data[2] = data[o+2]; // 60//Mod1
+            ins.setSusRel(MODULATOR1, data[o+3]);
+            //tmp[i].data[4] = data[o+3]; // 80//Mod1
+            ins.setWaveForm(MODULATOR1, data[o+4]);
+            //tmp[i].data[6] = data[o+4]; // E0//Mod1
+
+            ins.setAVEKM(CARRIER1, data[o+6]);
+            //tmp[i].data[1] = data[o+6]; // 23//Car1
+            ins.setKSLL(CARRIER1, data[o+7]);
+            //tmp[i].data[9] = data[o+7]; // 43 (vol)//Car1
+            ins.setAtDec(CARRIER1, data[o+8]);
+            //tmp[i].data[3] = data[o+8]; // 63//Car1
+            ins.setSusRel(CARRIER1, data[o+9]);
+            //tmp[i].data[5] = data[o+9]; // 83
+            ins.setWaveForm(CARRIER1, data[o+10]);
+            //tmp[i].data[7] = data[o+10];// E3
+
+            /*
+            tmp.data[0] = data[offset + 0];//setAVEKM(MODULATOR1
+            tmp.data[1] = data[offset + 1];//setAVEKM(CARRIER1
+            tmp.data[2] = data[offset + 4];//setAtDec(MODULATOR1
+            tmp.data[3] = data[offset + 5];//setAtDec(CARRIER1
+            tmp.data[4] = data[offset + 6];//setSusRel(MODULATOR1
+            tmp.data[5] = data[offset + 7];//setSusRel(CARRIER1
+            tmp.data[6] = data[offset + 8];//setWaveForm(MODULATOR1
+            tmp.data[7] = data[offset + 9];//setWaveForm(CARRIER1
+            tmp.data[8] = data[offset + 2];//setKSLL(MODULATOR1
+            tmp.data[9] = data[offset + 3];//setKSLL(CARRIER1
+            tmp.data[10] = data[offset + 10];//setFBConn1(idata[10]);
+            */
+
+//    (i->first.data[6] << 24) Wave select settings
+//  + (i->first.data[4] << 16) Sustain/release rates
+//  + (i->first.data[2] << 8)  Attack/decay rates
+//  + (i->first.data[0] << 0); AM/VIB/EG/KSR/Multiple bits
+
+//    (i->first.data[7] << 24) Wave select settings
+//  + (i->first.data[5] << 16) Sustain/release rates
+//  + (i->first.data[3] << 8)  Attack/decay rates
+//  + (i->first.data[1] << 0); AM/VIB/EG/KSR/Multiple bits
+//    i->first.data[8],    KSL/attenuation settings\n"
+//    i->first.data[9],    KSL/attenuation settings\n"
+//    i->first.data[10],   Feedback/connection bits
+//    i->first.finetune,
+//    i->first.diff?"true":"false");
 
             unsigned fb_c = data[offset+3+5];
-            tmp[i].data[10] = fb_c;
+            ins.setFBConn1(fb_c);
+            //tmp[i].data[10] = fb_c;
+            /*
             if(i == 1)
             {
                 tmp[0].data[10] = fb_c & 0x0F;
                 tmp[1].data[10] = (fb_c & 0x0E) | (fb_c >> 7);
-            }
+            }*/
         }
+
         if(inscount == 1) tmp[1] = tmp[0];
         if(inscount <= 2)
         {
@@ -109,12 +161,12 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
             tmp2.pseudo4op = false;
             tmp2.fine_tune = 0.0;
             std::string name;
-            if(midi_index >= 0) name = std::string(1,'\377')+MidiInsName[midi_index];
+            if(midi_index >= 0) name = std::string(1,'\377') + MidiInsName[midi_index];
             size_t resno = InsertIns(tmp[0], tmp[1], tmp2, name, name2);
             SetBank(bank, gmno, resno);
         }
-    }*/
-
+    }
+#endif
     return ERR_NOT_IMLEMENTED;
 }
 

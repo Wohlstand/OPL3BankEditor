@@ -33,7 +33,7 @@ const char *openFilters[]
     "Sound Blaster IBK file (*.ibk)",
     "AdLib/HMI instrument Bank (*.bnk)",
     "",
-    "Miles Sound System bank (*.opl *.ad)"
+    "Audio Interface Library (Miles) bank (*.opl *.ad)"
 };
 
 const char *saveFilters[]
@@ -44,7 +44,7 @@ const char *saveFilters[]
     openFilters[3],
     "AdLib instrument bank (*.bnk)",
     "HMI instrument bank (*.bnk)",
-    "Miles Sound System bank (*.opl *.ad)",
+    "Audio Interface Library (Miles) bank (*.opl *.ad)",
 };
 
 #include "ffmt_base.h"
@@ -141,6 +141,26 @@ int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *rece
     {
         err = MilesOPL::loadFile(filePath, bank);
         fmt = FORMAT_MILES;
+    }
+
+    if(recent)
+        *recent = fmt;
+
+    return err;
+}
+
+int FmBankFormatBase::OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, FmBankFormatBase::InsFormats *recent, bool *isDrum)
+{
+    char magic[32];
+    getMagic(filePath, magic, 32);
+
+    int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
+    InsFormats fmt = FORMAT_INST_UNKNOWN;
+
+    if(SbIBK::detectInst(magic))
+    {
+        err = SbIBK::loadFileInst(filePath, ins, isDrum);
+        fmt = FORMAT_INST_SBI;
     }
 
     if(recent)

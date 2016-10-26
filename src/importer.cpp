@@ -59,9 +59,52 @@ Importer::~Importer()
     delete ui;
 }
 
-bool Importer::openFile(QString filePath)
+bool Importer::openFile(QString filePath, bool isBank)
 {
-    int err = FmBankFormatBase::OpenBankFile(filePath, m_bank);
+    int err = FmBankFormatBase::ERR_UNKNOWN;
+
+    ui->importAssoc->setEnabled(true);
+    ui->importReplace->setEnabled(true);
+    ui->melodic->setEnabled(true);
+    ui->percussion->setEnabled(true);
+
+    if(isBank)
+        err = FmBankFormatBase::OpenBankFile(filePath, m_bank);
+    else
+    {
+        m_bank.reset();
+        m_bank.Ins_Melodic_box.clear();
+        m_bank.Ins_Percussion_box.clear();
+        FmBank::Instrument ins = FmBank::emptyInst();
+        bool isDrum = false;
+        err = FmBankFormatBase::OpenInstrumentFile(filePath, ins, 0, &isDrum);
+        if(err == FmBankFormatBase::ERR_OK)
+        {
+            ui->importReplace->click();
+            ui->importAssoc->setEnabled(false);
+            if(isDrum)
+            {
+                m_bank.Ins_Percussion_box.push_back(ins);
+                m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
+                ui->percussion->setDisabled(false);
+                setDrums();
+                ui->melodic->setDisabled(true);
+
+            }
+            else
+            {
+                m_bank.Ins_Melodic_box.push_back(ins);
+                m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
+                ui->melodic->setDisabled(false);
+                setMelodic();
+                ui->percussion->setDisabled(true);
+            }
+        }
+        else
+        {
+            m_bank.reset();
+        }
+    }
 
     if( err != FmBankFormatBase::ERR_OK )
     {
@@ -128,6 +171,17 @@ void Importer::initFileData(QString &filePath)
     m_recentPath = filePath;
     ui->doImport->setEnabled(true);
 
+    if(ui->melodic->isChecked())
+    {
+        if( ui->instruments->count() != m_bank.countMelodic() )
+            setMelodic();
+    }
+    else
+    {
+        if( ui->instruments->count() != m_bank.countDrums() )
+            setDrums();
+    }
+
     if(!ui->instruments->selectedItems().isEmpty())
         on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
     else
@@ -144,8 +198,21 @@ void Importer::on_openBank_clicked()
     if(fileToOpen.isEmpty())
         return;
 
-    openFile(fileToOpen);
+    openFile(fileToOpen, true);
 }
+
+
+void Importer::on_openInst_clicked()
+{
+    QString filters = "Sound Blaster Instrument (*.sbi);;All files (*.*)";
+    QString fileToOpen;
+    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
+    if(fileToOpen.isEmpty())
+        return;
+
+    openFile(fileToOpen, false);
+}
+
 
 void Importer::dragEnterEvent(QDragEnterEvent *e)
 {

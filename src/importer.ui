@@ -17,7 +17,7 @@
    <string>Instrument importer</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <item row="5" column="0" colspan="3">
+   <item row="5" column="0" colspan="4">
     <widget class="Piano" name="piano">
      <property name="minimumSize">
       <size>
@@ -39,7 +39,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" rowspan="4" colspan="2">
+   <item row="1" column="0" rowspan="4" colspan="3">
     <widget class="QGroupBox" name="insBox">
      <property name="title">
       <string>Imported instruments</string>
@@ -82,7 +82,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="2">
+   <item row="1" column="3">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string>Import as</string>
@@ -114,7 +114,7 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="2">
+   <item row="3" column="3">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -127,7 +127,7 @@
      </property>
     </spacer>
    </item>
-   <item row="4" column="2">
+   <item row="4" column="3">
     <widget class="QPushButton" name="testNote">
      <property name="text">
       <string>Test Note</string>
@@ -137,18 +137,18 @@
    <item row="0" column="0">
     <widget class="QPushButton" name="openBank">
      <property name="text">
-      <string>Open bank / Instrument</string>
+      <string>Open bank</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="2">
+   <item row="0" column="2" colspan="2">
     <widget class="QLabel" name="openedBank">
      <property name="text">
       <string>&lt;No opened files&gt;</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
+   <item row="2" column="3">
     <widget class="QPushButton" name="doImport">
      <property name="font">
       <font>
@@ -158,6 +158,13 @@
      </property>
      <property name="text">
       <string>Import instrument(s)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="openInst">
+     <property name="text">
+      <string>Open single instrument</string>
      </property>
     </widget>
    </item>

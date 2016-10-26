@@ -19,11 +19,17 @@
 #include "sb_ibk.h"
 #include "../common.h"
 
+static const char* sbi_magic = "SBI\x1A";
 static const char* ibk_magic = "IBK\x1A";
 
 bool SbIBK::detect(char *magic)
 {
     return (strncmp(magic, ibk_magic, 4) == 0);
+}
+
+bool SbIBK::detectInst(char *magic)
+{
+    return (strncmp(magic, sbi_magic, 4) == 0);
 }
 
 int SbIBK::loadFile(QString filePath, FmBank &bank)
@@ -79,8 +85,8 @@ int SbIBK::loadFile(QString filePath, FmBank &bank)
         ins.setSusRel(CARRIER1,     idata[7]);
 //            BYTE modwave;   /* Wave Select */
 //            BYTE carwave;
-        ins.setWaveForm( MODULATOR1, idata[8] );
-        ins.setWaveForm( CARRIER1,   idata[9] );
+        ins.setWaveForm(MODULATOR1, idata[8] );
+        ins.setWaveForm(CARRIER1,   idata[9] );
 //            BYTE feedback;  /* FB, Connection *(inverse of Adlib)* <- not true? */
 //                            /* The following was originally reserved...CL uses  */
 //                            /* the next byte the same way we do: BD=6,SD=7,TT=8 */
@@ -115,6 +121,63 @@ int SbIBK::loadFile(QString filePath, FmBank &bank)
 //            SBTIMBRE snd[128];           /* Instrument block */
 //            char     name[128][9];       /* name block: NUL terminated strings */
 //            } IBKFMT;
+    return ERR_OK;
+}
+
+int SbIBK::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+{
+    char magic[4]; memset(magic, 0, 4);
+
+    memset(&inst, 0, sizeof(FmBank::Instrument));
+
+    QFile file(filePath);
+    if(!file.open(QIODevice::ReadOnly))
+        return ERR_NOFILE;
+
+    bool isExtended = file.bytesAvailable() > 52;
+    Q_UNUSED(isExtended);
+
+    if( file.read(magic, 4) != 4 )
+        return ERR_BADFORMAT;
+
+    if( strncmp(magic, sbi_magic, 4) != 0 )
+        return ERR_BADFORMAT;
+
+    //char tempName[32];
+    //sprintf(tempName, "NONAME%03d", 0);
+    //strncpy(inst.name, tempName, 32 );
+    if(file.read(inst.name, 32) != 32)
+    {
+        return ERR_BADFORMAT;
+    }
+
+    bool drumFlag = false;
+    unsigned char   idata[16];
+    if( file.read(char_p(idata), 16) != 16 )
+    {
+        memset(&inst, 0, sizeof(FmBank::Instrument));
+        return ERR_BADFORMAT;
+    }
+    FmBank::Instrument &ins = inst;
+    drumFlag = ( idata[11] != 0x00);
+    ins.setAVEKM(MODULATOR1,    idata[0]);
+    ins.setAVEKM(CARRIER1,      idata[1]);
+    ins.setKSLL(MODULATOR1,     idata[2]);
+    ins.setKSLL(CARRIER1,       idata[3]);
+    ins.setAtDec(MODULATOR1,    idata[4]);
+    ins.setAtDec(CARRIER1,      idata[5]);
+    ins.setSusRel(MODULATOR1,   idata[6]);
+    ins.setSusRel(CARRIER1,     idata[7]);
+    ins.setWaveForm( MODULATOR1, idata[8] );
+    ins.setWaveForm( CARRIER1,   idata[9] );
+    ins.setFBConn1(idata[10]);
+    ins.adlib_drum_number  = idata[11];
+    ins.note_offset1 = char_p(idata)[12];
+    ins.percNoteNum  = idata[13];
+    if(isDrum)
+        *isDrum = drumFlag;
+
+    file.close();
     return ERR_OK;
 }
 

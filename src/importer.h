@@ -39,7 +39,7 @@ public:
     explicit Importer(QWidget *parent = 0);
     ~Importer();
 
-    bool openFile(QString filePath);
+    bool openFile(QString filePath, bool isBank=true);
     void initFileData(QString &filePath);
     void reloadInstrumentNames();
     void setCurrentInstrument(int num, bool isPerc);
@@ -50,12 +50,11 @@ public slots:
 
 private slots:
     void on_openBank_clicked();
+    void on_openInst_clicked();
     void on_instruments_currentItemChanged(QListWidgetItem *current, QListWidgetItem *);
 
     void on_importAssoc_clicked();
-
     void on_importReplace_clicked();
-
     void on_doImport_clicked();
 
 protected:

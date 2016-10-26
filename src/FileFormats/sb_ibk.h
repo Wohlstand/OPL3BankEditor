@@ -28,7 +28,9 @@ class SbIBK : public FmBankFormatBase
 {
 public:
     static bool detect(char* magic);
+    static bool detectInst(char* magic);
     static int  loadFile(QString filePath, FmBank &bank);
+    static int  loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
     static int  saveFile(QString filePath, FmBank &bank);
 };
 

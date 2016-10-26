@@ -189,7 +189,6 @@ void FmBank::Instrument::setSusRel(int OpID, unsigned char in)
 }
 
 
-
 unsigned char FmBank::Instrument::getWaveForm(int OpID)
 {
     uchar out = 0;

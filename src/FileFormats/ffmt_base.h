@@ -29,7 +29,7 @@ class FmBankFormatBase
 {
 public:
     /**
-     * @brief The Formats enum
+     * @brief The bank formats enum
      */
     enum Formats
     {
@@ -44,6 +44,13 @@ public:
 
         FORMATS_END,
         FORMATS_BEGIN = FORMAT_JUNGLEVIZION,
+    };
+
+    enum InsFormats
+    {
+        FORMAT_INST_UNKNOWN = -1,
+        FORMAT_INST_SBI     = 0,
+        FORMAT_INST_SBIex   = 1,
     };
 
     static QString getSaveFiltersList();
@@ -74,7 +81,7 @@ public:
     };
 
     static int  OpenBankFile(QString filePath, FmBank &bank, Formats *recent=0);
-
+    static int  OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, InsFormats *recent=0, bool *isDrum = 0);
 };
 
 #endif // FMBANKFORMATBASE_H
