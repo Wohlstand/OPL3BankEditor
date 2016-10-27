@@ -1,0 +1,48 @@
+Here is the layout of a SoundBlaster patch (as
+I suppose it to be):
+
+offset:
+ 0-3: "SBI", 0x1a
+ 4-19: voice name
+ 20-28: unused
+ 29: echo delay
+ 30: echo attenuation
+ 31: chorus spread
+ 32: transpose
+ 33: fixed duration
+ 34: extra voice
+ 35: fixed key
+ 36,37: 0x24 (modulator) & 0x25 (carrier)
+  b7: am vibrato
+  b6: frequency vibrato
+  b5: sustain
+  b4: duration varies with frequency
+  b3-b0: frequency multiplier
+ 38,39: 0x26 (modulator) & 0x27 (carrier)
+  b7-b6: amplitude = frequency factor
+  b5-b0: loudness
+ 40,41: 0x28 (modulator) & 0x29 (carrier)
+  b7-b4: attack rate
+  b3-b0: decay rate
+ 42,43: 0x2a (modulator) & 0x2b (carrier)
+  b7-b4: sustain level
+  b3-b0: release rate
+ 44,45: 0x2c (modulator) & 0x2d (carrier)
+  b7-b2: unused
+  b1-b0: modulator/carrier distortion
+ 46: 0x2e:
+  b7-b4: unused
+  b3-b1: phase shift by modulator
+  b0: 1 = parallel (additive)
+      0 = frequency modulation
+ 47-: 0x2f-... unused
+
+The layout of an opl3 patch is similar, except that
+bytes at offset 0-2 are "4OP", 47-48 are like the
+bytes at 36-37 except they are for operators 3 and 4,
+49-50 are like 38-39, 51-52 are like 40-41, 53-54 are
+like 42-43, and 55-56 are like 44-45.  57 is like
+46, except there is no phase shift for operator 3.
+58-59 are unused.
+53-54
+			--gl
