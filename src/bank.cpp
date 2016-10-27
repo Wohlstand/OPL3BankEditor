@@ -23,7 +23,7 @@
 typedef unsigned char uchar;
 
 //! Typedef to signed character pointer
-typedef char*         char_p;
+typedef char         *char_p;
 
 //! Typedef to unsigned integer
 typedef unsigned int uint;
@@ -45,10 +45,9 @@ FmBank::FmBank(const FmBank &fb)
 
 FmBank &FmBank::operator=(const FmBank &fb)
 {
-    if (this == &fb)
-    {
+    if(this == &fb)
         return *this;
-    }
+
     reset();
     Ins_Melodic_box     = fb.Ins_Melodic_box;
     Ins_Percussion_box  = fb.Ins_Percussion_box;
@@ -60,15 +59,17 @@ FmBank &FmBank::operator=(const FmBank &fb)
 bool FmBank::operator==(const FmBank &fb)
 {
     bool res = true;
-    res &= (Ins_Melodic_box.size()==fb.Ins_Melodic_box.size());
-    res &= (Ins_Percussion_box.size()==fb.Ins_Percussion_box.size());
+    res &= (Ins_Melodic_box.size() == fb.Ins_Melodic_box.size());
+    res &= (Ins_Percussion_box.size() == fb.Ins_Percussion_box.size());
+
     if(res)
     {
-        int size = Ins_Melodic_box.size()*sizeof(Instrument);
-        res &= (memcmp(Ins_Melodic,      fb.Ins_Melodic,    size)==0);
-            size = Ins_Percussion_box.size()*sizeof(Instrument);
-        res &= (memcmp(Ins_Percussion,   fb.Ins_Percussion, size)==0);
+        int size = Ins_Melodic_box.size() * sizeof(Instrument);
+        res &= (memcmp(Ins_Melodic,      fb.Ins_Melodic,    size) == 0);
+        size = Ins_Percussion_box.size() * sizeof(Instrument);
+        res &= (memcmp(Ins_Percussion,   fb.Ins_Percussion, size) == 0);
     }
+
     return res;
 }
 
@@ -80,7 +81,7 @@ bool FmBank::operator!=(const FmBank &fb)
 void FmBank::reset()
 {
     int insnum = 128;
-    int size=sizeof(Instrument)*insnum;
+    int size = sizeof(Instrument) * insnum;
     Ins_Melodic_box.resize(insnum);
     Ins_Percussion_box.resize(insnum);
     Ins_Melodic     = Ins_Melodic_box.data();
@@ -99,21 +100,21 @@ FmBank::Instrument FmBank::emptyInst()
 unsigned char FmBank::Instrument::getAVEKM(int OpID)
 {
     uchar out = 0;
-    out |= 0x80 & (uchar(OP[OpID].am)<<7);
-    out |= 0x40 & (uchar(OP[OpID].vib)<<6);
-    out |= 0x20 & (uchar(OP[OpID].eg)<<5);
-    out |= 0x10 & (uchar(OP[OpID].ksr)<<4);
+    out |= 0x80 & (uchar(OP[OpID].am) << 7);
+    out |= 0x40 & (uchar(OP[OpID].vib) << 6);
+    out |= 0x20 & (uchar(OP[OpID].eg) << 5);
+    out |= 0x10 & (uchar(OP[OpID].ksr) << 4);
     out |= 0x0F &  uchar(OP[OpID].fmult);
     return out;
 }
 
 void FmBank::Instrument::setAVEKM(int OpID, unsigned char in)
 {
-    OP[OpID].am     = (in>>7)&0x01;
-    OP[OpID].vib    = (in>>6)&0x01;
-    OP[OpID].eg     = (in>>5)&0x01;
-    OP[OpID].ksr    = (in>>4)&0x01;
-    OP[OpID].fmult  = (in)&0x0F;
+    OP[OpID].am     = (in >> 7) & 0x01;
+    OP[OpID].vib    = (in >> 6) & 0x01;
+    OP[OpID].eg     = (in >> 5) & 0x01;
+    OP[OpID].ksr    = (in >> 4) & 0x01;
+    OP[OpID].fmult  = (in) & 0x0F;
 }
 
 
@@ -121,33 +122,33 @@ void FmBank::Instrument::setAVEKM(int OpID, unsigned char in)
 unsigned char FmBank::Instrument::getKSLL(int OpID)
 {
     uchar out = 0;
-    out |= 0xC0 & (uchar(OP[OpID].ksl)<<6);
-    out |= 0x3F & uchar(0x3F-OP[OpID].level);
+    out |= 0xC0 & (uchar(OP[OpID].ksl) << 6);
+    out |= 0x3F & uchar(0x3F - OP[OpID].level);
     return out;
 }
 
 void FmBank::Instrument::setKSLL(int OpID, unsigned char in)
 {
-    OP[OpID].ksl   = (in>>6) & 0x03;
+    OP[OpID].ksl   = (in >> 6) & 0x03;
     OP[OpID].level = 0x3F - (in & 0x3F);
 }
 
 unsigned char FmBank::Instrument::getKSL(int OpID)
 {
     uchar out = 0;
-    out |= 0xC0 & (uchar(OP[OpID].ksl)<<6);
+    out |= 0xC0 & (uchar(OP[OpID].ksl) << 6);
     return out;
 }
 
 void FmBank::Instrument::setKSL(int OpID, unsigned char in)
 {
-    OP[OpID].ksl   = (in>>6) & 0x03;
+    OP[OpID].ksl   = (in >> 6) & 0x03;
 }
 
 unsigned char FmBank::Instrument::getLevel(int OpID)
 {
     uchar out = 0;
-    out |= 0x3F & uchar(0x3F-OP[OpID].level);
+    out |= 0x3F & uchar(0x3F - OP[OpID].level);
     return out;
 }
 
@@ -161,14 +162,14 @@ void FmBank::Instrument::setLevel(int OpID, unsigned char in)
 unsigned char FmBank::Instrument::getAtDec(int OpID)
 {
     uchar out = 0;
-    out |= 0xF0 & uchar(OP[OpID].attack<<4);
+    out |= 0xF0 & uchar(OP[OpID].attack << 4);
     out |= 0x0F & OP[OpID].decay;
     return out;
 }
 
 void FmBank::Instrument::setAtDec(int OpID, unsigned char in)
 {
-    OP[OpID].attack = (in>>4) & 0x0F;
+    OP[OpID].attack = (in >> 4) & 0x0F;
     OP[OpID].decay  = (in)    & 0x0F;
 }
 
@@ -177,14 +178,14 @@ void FmBank::Instrument::setAtDec(int OpID, unsigned char in)
 unsigned char FmBank::Instrument::getSusRel(int OpID)
 {
     uchar out = 0;
-    out |= 0xF0 & (uchar(0x0F-OP[OpID].sustain)<<4);
+    out |= 0xF0 & (uchar(0x0F - OP[OpID].sustain) << 4);
     out |= 0x0F & OP[OpID].release;
     return out;
 }
 
 void FmBank::Instrument::setSusRel(int OpID, unsigned char in)
 {
-    OP[OpID].sustain = 0x0F - ( (in>>4) & 0x0F );
+    OP[OpID].sustain = 0x0F - ((in >> 4) & 0x0F);
     OP[OpID].release = (in) & 0x0F;
 }
 
@@ -206,46 +207,43 @@ void FmBank::Instrument::setWaveForm(int OpID, unsigned char in)
 unsigned char FmBank::Instrument::getFBConn1()
 {
     uchar out = 0;
-    out |= uchar( connection1 );
-    out |= 0x0E & uchar( feedback1<<1 );
+    out |= uchar(connection1);
+    out |= 0x0E & uchar(feedback1 << 1);
     return out;
 }
 
 void FmBank::Instrument::setFBConn1(unsigned char in)
 {
     connection1 =  in & 0x01;
-    feedback1   = (in>>1) & 0x07;
+    feedback1   = (in >> 1) & 0x07;
 }
 
 unsigned char FmBank::Instrument::getFBConn2()
 {
     uchar out = 0;
-    out |= uchar( connection2 );
-    out |= 0x0E & uchar( feedback2<<1 );
+    out |= uchar(connection2);
+    out |= 0x0E & uchar(feedback2 << 1);
     return out;
 }
 
 void FmBank::Instrument::setFBConn2(unsigned char in)
 {
     connection2 =  in & 0x01;
-    feedback2   = (in>>1) & 0x07;
+    feedback2   = (in >> 1) & 0x07;
 }
 
 
 unsigned int FmBank::Instrument::getDataE862(int OpID)
 {
-    return  (uint(OP[OpID].waveform) << 24)
-
-            |(uint( (0xF0&(uchar(0x0F-OP[OpID].sustain)<<4))
-                   | (0x0F & OP[OpID].release) ) << 16)
-
-            |(uint( (0xF0 & uchar(OP[OpID].attack<<4))
-                   |(0x0F & OP[OpID].decay)) << 8)
-
-            |uint( ( 0x80 & (uchar(OP[OpID].am)<<7) )
-                 | ( 0x40 & (uchar(OP[OpID].vib)<<6) )
-                 | ( 0x20 & (uchar(OP[OpID].eg)<<5) )
-                 | ( 0x10 & (uchar(OP[OpID].ksr)<<4) )
-                 | ( 0x0F &  uchar(OP[OpID].fmult) ) );
+    return (uint(OP[OpID].waveform) << 24)
+           | (uint((0xF0 & (uchar(0x0F - OP[OpID].sustain) << 4))
+                   | (0x0F & OP[OpID].release)) << 16)
+           | (uint((0xF0 & uchar(OP[OpID].attack << 4))
+                   | (0x0F & OP[OpID].decay)) << 8)
+           | uint((0x80 & (uchar(OP[OpID].am) << 7))
+                  | (0x40 & (uchar(OP[OpID].vib) << 6))
+                  | (0x20 & (uchar(OP[OpID].eg) << 5))
+                  | (0x10 & (uchar(OP[OpID].ksr) << 4))
+                  | (0x0F &  uchar(OP[OpID].fmult)));
 }
 
