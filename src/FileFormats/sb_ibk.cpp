@@ -247,20 +247,6 @@ int SbIBK::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum
     drumFlag = (idata[11] != 0x00);
     raw2sbi(ins, idata, false);
 
-    //ins.setAVEKM(MODULATOR1,    idata[0]);
-    //ins.setAVEKM(CARRIER1,      idata[1]);
-    //ins.setKSLL(MODULATOR1,     idata[2]);
-    //ins.setKSLL(CARRIER1,       idata[3]);
-    //ins.setAtDec(MODULATOR1,    idata[4]);
-    //ins.setAtDec(CARRIER1,      idata[5]);
-    //ins.setSusRel(MODULATOR1,   idata[6]);
-    //ins.setSusRel(CARRIER1,     idata[7]);
-    //ins.setWaveForm( MODULATOR1, idata[8] );
-    //ins.setWaveForm( CARRIER1,   idata[9] );
-    //ins.setFBConn1(idata[10]);
-    //ins.adlib_drum_number  = idata[11];
-    //ins.note_offset1 = char_p(idata)[12];
-    //ins.percNoteNum  = idata[13];
     if(isDrum)
         *isDrum = drumFlag;
 
@@ -289,27 +275,7 @@ int SbIBK::saveFile(QString filePath, FmBank &bank)
         unsigned char   odata[16];
         memset(odata, 0, 16);
         sbi2raw(odata, ins, false);
-        //odata[0] = ins.getAVEKM(MODULATOR1);
-        //odata[1] = ins.getAVEKM(CARRIER1);
-        //odata[2] = ins.getKSLL(MODULATOR1);
-        //odata[3] = ins.getKSLL(CARRIER1);
-        //odata[4] = ins.getAtDec(MODULATOR1);
-        //odata[5] = ins.getAtDec(CARRIER1);
-        //odata[6] = ins.getSusRel(MODULATOR1);
-        //odata[7] = ins.getSusRel(CARRIER1);
-        //odata[8] = ins.getWaveForm(MODULATOR1);
-        //odata[9] = ins.getWaveForm(CARRIER1);
 
-        //odata[10] = ins.getFBConn1();
-
-        //odata[11] = ins.adlib_drum_number;
-
-        //char* sodata = char_p(odata);
-        //sodata[12]  = char(ins.note_offset1);
-        //odata[13]   = ins.percNoteNum;
-        ////Two reserved bytes!
-        //odata[14] = 0;
-        //odata[15] = 0;
         if(file.write(char_p(&odata), 16) != 16)
             return ERR_BADFORMAT;
     }
