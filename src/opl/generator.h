@@ -21,6 +21,7 @@
 
 #include "dbopl.h"
 #include "../bank.h"
+#include <stdint.h>
 
 #include <QIODevice>
 #include <QObject>
@@ -31,101 +32,102 @@
 struct OPL_Operator
 {
     //! Operator properties
-    unsigned int  modulator_E862, carrier_E862;
+    uint32_t    modulator_E862, carrier_E862;
     //! KSL/attenuation settings
-    unsigned char modulator_40, carrier_40;
+    uint8_t     modulator_40, carrier_40;
     //! Feedback/connection bits for the channel
-    unsigned char feedconn;
+    uint8_t     feedconn;
     //! Fine tuning
-    signed char   finetune;
+    int8_t      finetune;
 };
 
 struct OPL_PatchSetup
 {
-    enum {
-        Flag_True4op = 0x04,
-        Flag_Pseudo4op = 0x01,
-        Flag_NoSound = 0x02
+    enum
+    {
+        Flag_True4op    = 0x04,
+        Flag_Pseudo4op  = 0x01,
+        Flag_NoSound    = 0x02
     };
     //! Operators prepared for sending to OPL chip emulator
     OPL_Operator OPS[2];
     //! Single note (for percussion instruments)
-    unsigned char  tone;
+    uint8_t     tone;
     //! Extra patch flags
-    unsigned char  flags;
+    uint8_t     flags;
     //! Pseudo-4op second voice only
     double         voice2_fine_tune;
 };
 
 class Generator : public QIODevice
 {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    Generator(int sampleRate, QObject *parent);
-    ~Generator();
+    public:
+        Generator(uint32_t sampleRate, QObject *parent);
+        ~Generator();
 
-    void start();
-    void stop();
+        void start();
+        void stop();
 
-    qint64 readData(char *data, qint64 maxlen);
-    qint64 writeData(const char *data, qint64 len);
-    qint64 bytesAvailable() const;
+        qint64 readData(char *data, qint64 maxlen);
+        qint64 writeData(const char *data, qint64 len);
+        qint64 bytesAvailable() const;
 
-    void NoteOn(unsigned c, double hertz);
-    void NoteOff(unsigned c);
-    void Touch_Real(unsigned c, unsigned volume);
-    void Touch(unsigned c, unsigned volume);
-    void Patch(unsigned c, unsigned i);
-    void Pan(unsigned c, unsigned value);
-    void PlayNoteF(int noteID);
-    void PlayDrum(char drum, int noteID);
-    void switch4op(bool enabled);
+        void NoteOn(uint32_t c, double hertz);
+        void NoteOff(uint32_t c);
+        void Touch_Real(uint32_t c, uint32_t volume);
+        void Touch(unsigned c, unsigned volume);
+        void Patch(unsigned c, unsigned i);
+        void Pan(unsigned c, unsigned value);
+        void PlayNoteF(int noteID);
+        void PlayDrum(uint8_t drum, int noteID);
+        void switch4op(bool enabled);
 
-public slots:
-    void Silence();
-    void NoteOffAllChans();
+    public slots:
+        void Silence();
+        void NoteOffAllChans();
 
-    void PlayNote();
-    void PlayMajorChord();
-    void PlayMinorChord();
-    void PlayAugmentedChord();
-    void PlayDiminishedChord();
-    void PlayMajor7Chord();
-    void PlayMinor7Chord();
+        void PlayNote();
+        void PlayMajorChord();
+        void PlayMinorChord();
+        void PlayAugmentedChord();
+        void PlayDiminishedChord();
+        void PlayMajor7Chord();
+        void PlayMinor7Chord();
 
-    void changePatch(FmBank::Instrument &instrument, bool isDrum=false);
-    void changeNote(int newnote);
-    void changeDeepTremolo(bool enabled);
-    void changeDeepVibrato(bool enabled);
-    void changeAdLibPercussion(bool enabled);
-signals:
-    void debugInfo(QString);
+        void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
+        void changeNote(int32_t newnote);
+        void changeDeepTremolo(bool enabled);
+        void changeDeepVibrato(bool enabled);
+        void changeAdLibPercussion(bool enabled);
+    signals:
+        void debugInfo(QString);
 
-private:
-    int note;
-    unsigned char DeepTremoloMode;
-    unsigned char DeepVibratoMode;
-    unsigned char AdLibPercussionMode;
-    unsigned char testDrum;
-    DBOPL::Handler chip;
-    OPL_PatchSetup m_patch;
+    private:
+        int32_t     note;
+        uint8_t     DeepTremoloMode;
+        uint8_t     DeepVibratoMode;
+        uint8_t     AdLibPercussionMode;
+        uint8_t     testDrum;
+        DBOPL::Handler chip;
+        OPL_PatchSetup m_patch;
 
-    unsigned char   m_regBD;
+        uint8_t     m_regBD;
 
-    char m_four_op_category[NUM_OF_CHANNELS*2];
-                                // 1 = quad-master, 2 = quad-slave, 0 = regular
-                                // 3 = percussion BassDrum
-                                // 4 = percussion Snare
-                                // 5 = percussion Tom
-                                // 6 = percussion Crash cymbal
-                                // 7 = percussion Hihat
-                                // 8 = percussion slave
+        int8_t      m_four_op_category[NUM_OF_CHANNELS * 2];
+        // 1 = quad-master, 2 = quad-slave, 0 = regular
+        // 3 = percussion BassDrum
+        // 4 = percussion Snare
+        // 5 = percussion Tom
+        // 6 = percussion Crash cymbal
+        // 7 = percussion Hihat
+        // 8 = percussion slave
 
-    //! index of operators pair, cached, needed by Touch()
-    unsigned short m_ins[NUM_OF_CHANNELS];
-    //! value poked to B0, cached, needed by NoteOff)(
-    unsigned char  m_pit[NUM_OF_CHANNELS];
+        //! index of operators pair, cached, needed by Touch()
+        uint16_t    m_ins[NUM_OF_CHANNELS];
+        //! value poked to B0, cached, needed by NoteOff)(
+        uint8_t     m_pit[NUM_OF_CHANNELS];
 };
 
 #endif // GENERATOR_H

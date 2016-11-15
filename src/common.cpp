@@ -34,9 +34,9 @@ qint64 readLE(QFile &file, unsigned int &out)
 {
     uchar bytes[4] = {0, 0, 0, 0};
     qint64 len = file.read(char_p(bytes), 4);
-    out = (quint32(bytes[0]) & 0x00FF)
-          | ((quint32(bytes[1]) << 8) & 0xFF00)
-          | ((quint32(bytes[2]) << 16) & 0xFF0000)
+    out = (quint32(bytes[0] << 0) & 0x000000FF)
+          | ((quint32(bytes[1]) << 8)  & 0x0000FF00)
+          | ((quint32(bytes[2]) << 16) & 0x00FF0000)
           | ((quint32(bytes[2]) << 24) & 0xFF000000);
     return len;
 }
@@ -79,7 +79,7 @@ qint64 writeBE(QFile &file, unsigned short &out)
 
 short toSint16LE(uchar *arr)
 {
-    short num = *(signed char *)(&arr[1]);
+    short num = *reinterpret_cast<signed char *>(&arr[1]);
     num *= 1 << 8;
     num |= arr[0];
     return num;
@@ -94,7 +94,7 @@ unsigned short toUint16LE(uchar *arr)
 
 short toSint16BE(uchar *arr)
 {
-    short num = *(signed char *)(&arr[0]);
+    short num = *reinterpret_cast<signed char *>(&arr[0]);
     num *= 1 << 8;
     num |= arr[1];
     return num;
@@ -103,9 +103,9 @@ short toSint16BE(uchar *arr)
 unsigned int toUint32LE(uchar *arr)
 {
     unsigned int num = arr[0];
-    num |= ((arr[1] << 8) & 0xFF00);
-    num |= ((arr[2] << 16) & 0xFF0000);
-    num |= ((arr[3] << 24) & 0xFF000000);
+    num |= (static_cast<unsigned int>(arr[1] << 8)  & 0x0000FF00);
+    num |= (static_cast<unsigned int>(arr[2] << 16) & 0x00FF0000);
+    num |= (static_cast<unsigned int>(arr[3] << 24) & 0xFF000000);
     return num;
 }
 
@@ -140,7 +140,7 @@ void fromUint32LE(unsigned int in, uchar *arr)
 void getMagic(QString filePath, char *bytes, int count)
 {
     QFile file(filePath);
-    memset(bytes, 0, count);
+    memset(bytes, 0, static_cast<size_t>(count));
 
     if(file.open(QIODevice::ReadOnly))
     {

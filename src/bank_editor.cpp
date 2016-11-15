@@ -130,7 +130,6 @@ void BankEditor::dropEvent(QDropEvent *e)
 }
 
 
-
 void BankEditor::initFileData(QString &filePath)
 {
     m_recentPath = filePath;
@@ -214,8 +213,6 @@ bool BankEditor::openFile(QString filePath)
         initFileData(filePath);
         return true;
     }
-
-    return false;
 }
 
 bool BankEditor::saveBankFile(QString filePath, FmBankFormatBase::Formats format)
@@ -252,7 +249,10 @@ bool BankEditor::saveBankFile(QString filePath, FmBankFormatBase::Formats format
         err = MilesOPL::saveFile(filePath, m_bank);
         break;
 
-    default:
+    case FmBankFormatBase::FORMAT_UNKNOWN:
+        break;
+
+    case FmBankFormatBase::FORMATS_END:
         break;
     }
 
@@ -291,8 +291,6 @@ bool BankEditor::saveBankFile(QString filePath, FmBankFormatBase::Formats format
         reInitFileDataAfterSave(filePath);
         return true;
     }
-
-    return false;
 }
 
 bool BankEditor::saveFileAs()
