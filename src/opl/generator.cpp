@@ -20,6 +20,8 @@
 #include <qendian.h>
 #include <cmath>
 
+#define BEND_COEFFICIENT 172.4387
+
 static const uint16_t Operators[NUM_OF_CHANNELS * 2] =
 {
     // Channels 0-2
@@ -111,29 +113,35 @@ Generator::Generator(uint32_t sampleRate,
     DeepVibratoMode   = 0;
     AdLibPercussionMode = 0;
     testDrum = 0;//Note ON/OFF of one of legacy percussion channels
-    static const uint32_t data[] =
+    static const uint16_t data[] =
     {
         0x004, 96, 0x004, 128,          // Pulse timer
         0x105,  0, 0x105, 1,  0x105, 0, // Pulse OPL3 enable
         0x001, 32, 0x105, 1             // Enable wave, OPL3 extensions
     };
-    chip.Init(sampleRate);
+    memset(&chip, 0, sizeof(_opl3_chip));
+    OPL3_Reset(&chip, sampleRate);
 
     for(uint32_t a = 0; a < 18; ++a)
-        chip.WriteReg(0xB0 + Channels[a], 0x00);
+        WriteReg(0xB0 + Channels[a], 0x00);
 
     for(size_t a = 0; a < sizeof(data) / sizeof(*data); a += 2)
-        chip.WriteReg(data[a], static_cast<uint8_t>(data[a + 1]));
+        WriteReg(data[a], static_cast<uint8_t>(data[a + 1]));
 
-    chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
-                                    + DeepVibratoMode * 0x40
-                                    + AdLibPercussionMode * 0x20));
+    WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
+                               + DeepVibratoMode * 0x40
+                               + AdLibPercussionMode * 0x20));
     switch4op(true);
     Silence();
 }
 
 Generator::~Generator()
 {}
+
+void Generator::WriteReg(uint16_t address, uint8_t byte)
+{
+    OPL3_WriteReg(&chip, address, byte);
+}
 
 void Generator::NoteOff(uint32_t c)
 {
@@ -142,17 +150,17 @@ void Generator::NoteOff(uint32_t c)
     if(cc >= 18)
     {
         m_regBD &= ~(0x10 >> (cc - 18));
-        chip.WriteReg(0xBD, m_regBD);
+        WriteReg(0xBD, m_regBD);
         return;
     }
 
-    chip.WriteReg(0xB0 + Channels[cc], m_pit[c] & 0xDF);
+    WriteReg(0xB0 + Channels[cc], m_pit[c] & 0xDF);
 }
 
 void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
 {
-    uint32_t cc = c % 23;
-    uint32_t x = 0x2000;
+    uint16_t cc = c % 23;
+    uint16_t x = 0x2000;
 
     if(hertz < 0 || hertz > 131071) // Avoid infinite loop
         return;
@@ -164,19 +172,19 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
     }
 
     x += static_cast<uint32_t>(hertz + 0.5);
-    uint32_t chn = Channels[cc];
+    uint16_t chn = Channels[cc];
 
     if(cc >= 18)
     {
         m_regBD |= (0x10 >> (cc - 18));
-        chip.WriteReg(0x0BD, m_regBD);
+        WriteReg(0x0BD, m_regBD);
         x &= ~0x2000u;
         //x |= 0x800; // for test
     }
     else if(chn != 0xFFF)
     {
-        chip.WriteReg(0xA0 + chn, x & 0xFF);
-        chip.WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(x >> 8));
+        WriteReg(0xA0 + chn, x & 0xFF);
+        WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(x >> 8));
     }
 }
 
@@ -185,9 +193,9 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     if(volume > 63)
         volume = 63;
 
-    uint32_t /*card = c/23,*/ cc = c % 23;
-    uint32_t i = m_ins[c], o1 = Operators[cc * 2], o2 = Operators[cc * 2 + 1];
-    uint32_t x = m_patch.OPS[i].modulator_40,
+    uint16_t /*card = c/23,*/ cc = c % 23;
+    uint16_t i = m_ins[c], o1 = Operators[cc * 2], o2 = Operators[cc * 2 + 1];
+    uint16_t x = m_patch.OPS[i].modulator_40,
              y = m_patch.OPS[i].carrier_40;
     bool do_modulator;
     bool do_carrier;
@@ -232,10 +240,10 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     };
     do_modulator = do_ops[ mode ][ 0 ];
     do_carrier   = do_ops[ mode ][ 1 ];
-    chip.WriteReg(0x40 + o1, static_cast<Bit8u>(do_modulator ? (x | 63) - volume + volume * (x & 63) / 63 : x));
+    WriteReg(0x40 + o1, static_cast<Bit8u>(do_modulator ? (x | 63) - volume + volume * (x & 63) / 63 : x));
 
     if(o2 != 0xFFF)
-        chip.WriteReg(0x40 + o2, static_cast<Bit8u>(do_carrier   ? (y | 63) - volume + volume * (y & 63) / 63 : y));
+        WriteReg(0x40 + o2, static_cast<Bit8u>(do_carrier   ? (y | 63) - volume + volume * (y & 63) / 63 : y));
 
     // Correct formula (ST3, AdPlug):
     //   63-((63-(instrvol))/63)*chanvol
@@ -256,18 +264,18 @@ void Generator::Touch(unsigned c, unsigned volume) // Volume maxes at 127*127*12
 void Generator::Patch(unsigned c, unsigned i)
 {
     unsigned cc = c % 23;
-    static const unsigned char data[4] = {0x20, 0x60, 0x80, 0xE0};
+    static const uint16_t data[4] = {0x20, 0x60, 0x80, 0xE0};
     m_ins[c] = static_cast<uint16_t>(i);
-    unsigned o1 = Operators[cc * 2 + 0], o2 = Operators[cc * 2 + 1];
-    unsigned x = m_patch.OPS[i].modulator_E862, y = m_patch.OPS[i].carrier_E862;
+    uint16_t o1 = Operators[cc * 2 + 0], o2 = Operators[cc * 2 + 1];
+    uint32_t x = m_patch.OPS[i].modulator_E862, y = m_patch.OPS[i].carrier_E862;
 
     for(unsigned a = 0; a < 4; ++a)
     {
-        chip.WriteReg(data[a] + o1, x & 0xFF);
+        WriteReg(data[a] + o1, x & 0xFF);
         x >>= 8;
 
         if(o2 != 0xFFF)
-            chip.WriteReg(data[a] + o2, y & 0xFF);
+            WriteReg(data[a] + o2, y & 0xFF);
 
         y >>= 8;
     }
@@ -275,10 +283,10 @@ void Generator::Patch(unsigned c, unsigned i)
 
 void Generator::Pan(unsigned c, unsigned value)
 {
-    uint32_t cc = c % 23;
+    uint8_t cc = c % 23;
 
     if(Channels[cc] != 0xFFF)
-        chip.WriteReg(0xC0 + Channels[cc], static_cast<uint8_t>(m_patch.OPS[m_ins[c]].feedconn | value));
+        WriteReg(0xC0 + Channels[cc], static_cast<uint8_t>(m_patch.OPS[m_ins[c]].feedconn | value));
 }
 
 void Generator::PlayNoteF(int noteID)
@@ -373,12 +381,12 @@ void Generator::PlayNoteF(int noteID)
         Touch_Real(adlchannel[1], 63);
 
     bend  = 0.0 + m_patch.OPS[i[0]].finetune;
-    NoteOn(adlchannel[0], 172.00093 * std::exp(0.057762265 * (tone + bend + phase)));
+    NoteOn(adlchannel[0], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
 
     if(pseudo_4op)
     {
         bend  = 0.0 + m_patch.OPS[i[1]].finetune + m_patch.voice2_fine_tune;
-        NoteOn(adlchannel[1], 172.00093 * std::exp(0.057762265 * (tone + bend + phase)));
+        NoteOn(adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
     }
 }
 
@@ -403,7 +411,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     double bend = 0.0;
     double phase = 0.0;
     bend  = 0.0 + m_patch.OPS[0].finetune;
-    NoteOn(adlchannel, 172.00093 * std::exp(0.057762265 * (tone + bend + phase)));
+    NoteOn(adlchannel, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
 }
 
 void Generator::switch4op(bool enabled)
@@ -425,7 +433,7 @@ void Generator::switch4op(bool enabled)
     if(enabled)
     {
         //Enable 4-operators mode
-        chip.WriteReg(0x104, 0xFF);
+        WriteReg(0x104, 0xFF);
         unsigned fours = 6;
         unsigned nextfour = 0;
 
@@ -459,7 +467,7 @@ void Generator::switch4op(bool enabled)
     else
     {
         //Disable 4-operators mode
-        chip.WriteReg(0x104, 0x00);
+        WriteReg(0x104, 0x00);
 
         for(unsigned a = 0; a < 18; ++a)
             m_four_op_category[a] = 0;
@@ -676,26 +684,28 @@ void Generator::changeNote(int32_t newnote)
 void Generator::changeDeepTremolo(bool enabled)
 {
     DeepTremoloMode   = uchar(enabled);
-    chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
-                                    + DeepVibratoMode * 0x40
-                                    + AdLibPercussionMode * 0x20));
+    WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
+                               + DeepVibratoMode * 0x40
+                               + AdLibPercussionMode * 0x20));
 }
 
 void Generator::changeDeepVibrato(bool enabled)
 {
     DeepVibratoMode   = uchar(enabled);
-    chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
-                                    + DeepVibratoMode * 0x40
-                                    + AdLibPercussionMode * 0x20));
+    WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
+                               + DeepVibratoMode * 0x40
+                               + AdLibPercussionMode * 0x20));
 }
 
 void Generator::changeAdLibPercussion(bool enabled)
 {
     AdLibPercussionMode = uchar(enabled);
-    chip.WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
-                                    + DeepVibratoMode * 0x40
-                                    + AdLibPercussionMode * 0x20));
+    WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
+                               + DeepVibratoMode * 0x40
+                               + AdLibPercussionMode * 0x20));
 }
+
+
 
 void Generator::start()
 {
@@ -710,35 +720,10 @@ void Generator::stop()
 qint64 Generator::readData(char *data, qint64 len)
 {
     int16_t *_out = reinterpret_cast<short *>(data);
-    uint64_t total = 0;
-    uint64_t lenS = (static_cast<uint64_t>(len) / 4);
-    int samples[4096];
-
-    if(lenS > MAX_OPLGEN_BUFFER_SIZE / 4)
-        lenS = MAX_OPLGEN_BUFFER_SIZE / 4;
-
-    Bitu lenL = 512;
-
-    while((total + 512) < lenS)
-    {
-        chip.GenerateArr(samples, &lenL);
-        int16_t out;
-        uint64_t offset;
-
-        for(uint64_t p = 0; p < lenL; ++p)
-        {
-            for(uint64_t w = 0; w < 2; ++w)
-            {
-                out    = static_cast<int16_t>(samples[p * 2 + w]);
-                offset = total + p * 2 + w;
-                _out[offset] = out;
-            }
-        }
-
-        total += lenL;
-    };
-
-    return static_cast<qint64>(total * 4);
+    len -= len % 4; //must be multiple 4!
+    uint32_t lenS = (static_cast<uint32_t>(len) / 4);
+    OPL3_GenerateStream(&chip, _out, lenS);
+    return len;
 }
 
 qint64 Generator::writeData(const char *data, qint64 len)

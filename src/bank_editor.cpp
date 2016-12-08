@@ -79,8 +79,8 @@ BankEditor::~BankEditor()
 
 void BankEditor::loadSettings()
 {
-    QApplication::setOrganizationName(_COMPANY);
-    QApplication::setOrganizationDomain(_PGE_URL);
+    QApplication::setOrganizationName(COMPANY);
+    QApplication::setOrganizationDomain(PGE_URL);
     QApplication::setApplicationName("OPL FM Banks Editor");
     QSettings setup;
     ui->deepTremolo->setChecked(setup.value("deep-tremolo", false).toBool());

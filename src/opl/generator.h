@@ -19,7 +19,7 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include "dbopl.h"
+#include "nukedopl3.h"
 #include "../bank.h"
 #include <stdint.h>
 
@@ -105,12 +105,13 @@ class Generator : public QIODevice
         void debugInfo(QString);
 
     private:
+        void WriteReg(uint16_t address, uint8_t byte);
         int32_t     note;
         uint8_t     DeepTremoloMode;
         uint8_t     DeepVibratoMode;
         uint8_t     AdLibPercussionMode;
         uint8_t     testDrum;
-        DBOPL::Handler chip;
+        _opl3_chip  chip;
         OPL_PatchSetup m_patch;
 
         uint8_t     m_regBD;

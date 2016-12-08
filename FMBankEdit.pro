@@ -66,7 +66,7 @@ SOURCES += \
     src/controlls.cpp \
     src/main.cpp \
     src/ins_names.cpp \
-    src/opl/dbopl.cpp \
+    src/opl/nukedopl3.c \
     src/opl/generator.cpp \
     src/piano.cpp \
     src/FileFormats/apogeetmb.cpp \
@@ -76,6 +76,7 @@ SOURCES += \
     src/FileFormats/ffmt_base.cpp \
     src/FileFormats/milesopl.cpp
 
+
 HEADERS += \
     src/FileFormats/dmxopl2.h \
     src/FileFormats/ffmt_base.h \
@@ -84,7 +85,7 @@ HEADERS += \
     src/bank_editor.h \
     src/common.h \
     src/ins_names.h \
-    src/opl/dbopl.h \
+    src/opl/nukedopl3.h \
     src/opl/generator.h \
     src/piano.h \
     src/version.h \
@@ -93,6 +94,7 @@ HEADERS += \
     src/FileFormats/adlibbnk.h \
     src/importer.h \
     src/FileFormats/milesopl.h
+
 
 FORMS += \
     src/bank_editor.ui \
