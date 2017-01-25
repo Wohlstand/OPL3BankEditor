@@ -188,6 +188,8 @@ class BankEditor : public QMainWindow
          */
         void setDrumMode(bool dmode);
 
+        bool isDrumsMode();
+
     public slots:
         /**
          * @brief Toggle melodic mode and fill instruments list with melodic instruments names

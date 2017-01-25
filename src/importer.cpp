@@ -303,6 +303,16 @@ void Importer::on_importReplace_clicked()
     ui->instruments->clearSelection();
 }
 
+static inline void importInstrument(QVector<FmBank::Instrument> &store, FmBank::Instrument& inst, int idDst)
+{
+    if(store.size() <= idDst)
+    {
+        FmBank::Instrument nins = FmBank::emptyInst();
+        store.fill(nins, idDst - store.size());
+    }
+    store[idDst] = inst;
+}
+
 void Importer::on_doImport_clicked()
 {
     QList<QListWidgetItem *> selected = ui->instruments->selectedItems();
@@ -315,30 +325,15 @@ void Importer::on_doImport_clicked()
 
     if(ui->importAssoc->isChecked())
     {
-        for(int i = 0; i < selected.size(); i++)
+        for(QListWidgetItem *item : selected)
         {
-            int id = selected[i]->data(Qt::UserRole).toInt();
-
-            if(ui->melodic->isChecked())
-            {
-                if(m_main->m_bank.Ins_Melodic_box.size() <= id)
-                {
-                    FmBank::Instrument nins = FmBank::emptyInst();
-                    m_main->m_bank.Ins_Melodic_box.fill(nins, id - m_main->m_bank.Ins_Melodic_box.size());
-                }
-
-                m_main->m_bank.Ins_Melodic_box[id] = m_bank.Ins_Melodic_box[id];
-            }
-            else
-            {
-                if(m_main->m_bank.Ins_Percussion_box.size() <= id)
-                {
-                    FmBank::Instrument nins = FmBank::emptyInst();
-                    m_main->m_bank.Ins_Percussion_box.fill(nins, id - m_main->m_bank.Ins_Percussion_box.size());
-                }
-
-                m_main->m_bank.Ins_Percussion_box[id] = m_bank.Ins_Percussion_box[id];
-            }
+            int id = item->data(Qt::UserRole).toInt();
+            importInstrument(m_main->isDrumsMode() ?
+                                 m_main->m_bank.Ins_Percussion_box :
+                                 m_main->m_bank.Ins_Melodic_box,
+                             ui->melodic->isChecked() ?
+                                 m_bank.Ins_Melodic_box[id] :
+                                 m_bank.Ins_Percussion_box[id], id);
         }
     }
     else
@@ -346,11 +341,16 @@ void Importer::on_doImport_clicked()
         if(m_main->m_recentNum >= 0)
         {
             int id = selected[0]->data(Qt::UserRole).toInt();
-
-            if(ui->melodic->isChecked())
-                m_main->m_bank.Ins_Melodic_box[m_main->m_recentNum] = m_bank.Ins_Melodic_box[id];
-            else
-                m_main->m_bank.Ins_Percussion_box[m_main->m_recentNum] = m_bank.Ins_Percussion_box[id];
+            importInstrument(m_main->isDrumsMode() ?
+                                 m_main->m_bank.Ins_Percussion_box :
+                                 m_main->m_bank.Ins_Melodic_box,
+                             ui->melodic->isChecked() ?
+                                 m_bank.Ins_Melodic_box[id] :
+                                 m_bank.Ins_Percussion_box[id], m_main->m_recentNum);
+                //if(ui->melodic->isChecked())
+                //    m_main->m_bank.Ins_Melodic_box[m_main->m_recentNum] = m_bank.Ins_Melodic_box[id];
+                //else
+                //    m_main->m_bank.Ins_Percussion_box[m_main->m_recentNum] = m_bank.Ins_Percussion_box[id];
         }
         else
         {

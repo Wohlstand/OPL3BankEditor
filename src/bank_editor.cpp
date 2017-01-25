@@ -579,6 +579,11 @@ void BankEditor::setDrumMode(bool dmode)
     ui->piano->setDisabled(dmode);
 }
 
+bool BankEditor::isDrumsMode()
+{
+    return !ui->melodic->isChecked() || ui->percussion->isChecked();
+}
+
 void BankEditor::setMelodic()
 {
     setDrumMode(false);
