@@ -39,7 +39,8 @@ struct GTL Head                  // GTL file header entry structure
     uint8_t  patch;
     uint8_t  bank;
     uint32_t offset;
-} - Length is 6 bytes
+}
+//- Length is 6 bytes
 
 //Look for timbre until .patch will be equal == 0xFF) break;
 
@@ -49,7 +50,7 @@ Note:
 
 BNK             STRUC           ;.BNK-style timbre definition
 B_length        dw ?            ; lenght of timbre entry
-B_transpose     db ?
+B_transpose     db ? ; relative signed offset per each melodic note, and absolute note number on the drums patches
 B_mod_AVEKM     db ?            ;op_0 = FM modulator
 B_mod_KSLTL     db ?
 B_mod_AD        db ?
@@ -79,36 +80,6 @@ O_car_WS        db ?
                 ENDS
 
 === HOW IT WORKS ====
-
-Transposition:
-
-__key_on:       mov bl,S_channel[si]    ;get signed pitch bend value
-                mov bh,0
-                mov al,MIDI_pitch_h[bx]
-                mov ah,0
-                mov cx,7
-                shl ax,cl
-                or al,MIDI_pitch_l[bx]
-                sub ax,2000h
-
-                mov cx,5                ;divide by 0x20, preserving sign
-                sar ax,cl               ;(range now +0x100 to -0x100)
-
-                mov cl,DEF_PITCH_RANGE  ;normally 12 (+0xc00 to -0xc00)
-                mov ch,0
-                imul cx
-
-                mov bl,S_note[si]       ;get key # 12-108
-                mov bh,0
-
-                mov cx,ax               ;transpose it
-                mov al,S_transpose[si]
-                cbw
-                add bx,ax
-                mov ax,cx
-
-                sub bx,24               ;normalize to 0-95
-
 
 AIL Volime model:
 
