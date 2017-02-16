@@ -29,6 +29,97 @@ bool MilesOPL::detect(QString filePath)
     return false;
 }
 
+/*
+==================================================================================
+ File specification, extracted from AIL source codes (most of them are ASM-coded)
+==================================================================================
+
+struct GTL Head                  // GTL file header entry structure
+{
+    uint8_t  patch;
+    uint8_t  bank;
+    uint32_t offset;
+} - Length is 6 bytes
+
+//Look for timbre until .patch will be equal == 0xFF) break;
+
+Note:
+    DW - Define Word - uint16_t
+    DB - Define Byte - uint8_t
+
+BNK             STRUC           ;.BNK-style timbre definition
+B_length        dw ?            ; lenght of timbre entry
+B_transpose     db ?
+B_mod_AVEKM     db ?            ;op_0 = FM modulator
+B_mod_KSLTL     db ?
+B_mod_AD        db ?
+B_mod_SR        db ?
+B_mod_WS        db ?
+B_fb_c          db ?
+B_car_AVEKM     db ?            ;op_1 = FM carrier
+B_car_KSLTL     db ?
+B_car_AD        db ?
+B_car_SR        db ?
+B_car_WS        db ?
+                ENDS
+
+OPL3BNK         STRUC           ;.BNK-style OPL3 timbre definition
+                BNK <>
+O_mod_AVEKM     db ?            ;op_2
+O_mod_KSLTL     db ?
+O_mod_AD        db ?
+O_mod_SR        db ?
+O_mod_WS        db ?
+O_fb_c          db ?
+O_car_AVEKM     db ?            ;op_3
+O_car_KSLTL     db ?
+O_car_AD        db ?
+O_car_SR        db ?
+O_car_WS        db ?
+                ENDS
+
+=== HOW IT WORKS ====
+
+Transposition:
+
+__key_on:       mov bl,S_channel[si]    ;get signed pitch bend value
+                mov bh,0
+                mov al,MIDI_pitch_h[bx]
+                mov ah,0
+                mov cx,7
+                shl ax,cl
+                or al,MIDI_pitch_l[bx]
+                sub ax,2000h
+
+                mov cx,5                ;divide by 0x20, preserving sign
+                sar ax,cl               ;(range now +0x100 to -0x100)
+
+                mov cl,DEF_PITCH_RANGE  ;normally 12 (+0xc00 to -0xc00)
+                mov ch,0
+                imul cx
+
+                mov bl,S_note[si]       ;get key # 12-108
+                mov bh,0
+
+                mov cx,ax               ;transpose it
+                mov al,S_transpose[si]
+                cbw
+                add bx,ax
+                mov ax,cx
+
+                sub bx,24               ;normalize to 0-95
+
+
+AIL Volime model:
+
+sbb al,-1               ;(error = 1/127 units; round up if !0)
+mov vol,al              ;AX=composite (vol+expression) volume
+
+mul cl                  ;calculate right-channel volume
+shl ax,1                ;(AX*2)/256 = AX/128 ÷ AX/127
+
+*/
+
 int MilesOPL::loadFile(QString filePath, FmBank &bank)
 {
 #warning AIL OPL bank format is under construction
