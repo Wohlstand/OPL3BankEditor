@@ -56,7 +56,7 @@ B_mod_KSLTL     db ?
 B_mod_AD        db ?
 B_mod_SR        db ?
 B_mod_WS        db ?
-B_fb_c          db ?
+B_fb_c          db ?    ;//Stores FeedBack-Connection field for BOTH 2op and 4op pairs! (0000 1111) (2000 1110)
 B_car_AVEKM     db ?            ;op_1 = FM carrier
 B_car_KSLTL     db ?
 B_car_AD        db ?
@@ -71,7 +71,7 @@ O_mod_KSLTL     db ?
 O_mod_AD        db ?
 O_mod_SR        db ?
 O_mod_WS        db ?
-O_fb_c          db ?
+O_fb_c          db ?    ;//Is always zero
 O_car_AVEKM     db ?            ;op_3
 O_car_KSLTL     db ?
 O_car_AD        db ?
@@ -91,145 +91,117 @@ shl ax,1                ;(AX*2)/256 = AX/128 ÷ AX/127
 
 */
 
+struct GTL_Head // GTL file header entry structure
+{
+    uint8_t  patch;
+    uint8_t  bank;
+    uint32_t offset;
+};
+
 int MilesOPL::loadFile(QString filePath, FmBank &bank)
 {
-#warning AIL OPL bank format is under construction
-#if 0 //WIP
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
         return ERR_NOFILE;
 
-    QByteArray fileData = file.readAll();
-    unsigned char*  data = (unsigned char*)fileData.data();
+    GTL_Head head;
+    QVector<GTL_Head> heads;
+    unsigned char   hdata[6];
+    unsigned char   idata[24];
+    heads.reserve(256);
+    do
+    {
+        if(file.read(char_p(hdata), 6) != 6)
+            return ERR_BADFORMAT;
+        head.patch = hdata[0];
+        head.bank  = hdata[1];
+        head.offset= toUint32LE(hdata + 2);
 
-    file.close();
+        if((head.patch == 0xFF) || (head.bank == 0xFF))
+            break;
+
+        heads.push_back(head);
+    }
+    while( !file.atEnd() );
 
     bank.reset();
-    //FILE* fp = std::fopen(fn, "rb");
-    //std::fseek(fp, 0, SEEK_END);
-    //std::vector<unsigned char> data(std::ftell(fp));
-    //std::rewind(fp);
-    //std::fread(&data[0], 1, data.size(), fp),
-    //std::fclose(fp);
-    for(unsigned a=0; a<2000; ++a)
+
+    unsigned int totalInsts = static_cast<unsigned int>(heads.size());
+    for(unsigned int i = 0; i < totalInsts; i++)
     {
-        unsigned gmnumber  = data[a*6+0];
-        unsigned gmnumber2 = data[a*6+1];
-        unsigned offset    = *(unsigned*)&data[a*6+2];
+        GTL_Head &h = heads[i];
+        int gmno = h.bank == 0x7F ? h.patch + 0x80 : h.patch;
+        FmBank::Instrument &ins = (gmno < 128) ? bank.Ins_Melodic[gmno] : bank.Ins_Percussion[gmno - 128];
 
-        if(gmnumber == 0xFF)
-            break;
-        int gmno = gmnumber2==0x7F ? gmnumber+0x80 : gmnumber;
-        int midi_index = gmno < 128 ? gmno
-                       : gmno < 128+35 ? -1
-                       : gmno < 128+88 ? gmno-35
-                       : -1;
-
-        unsigned length = data[offset] + data[offset+1]*256;
-        signed char notenum = data[offset+2];
-
-        //printf("%02X %02X %08X ", gmnumber,gmnumber2, offset);
-        //for(unsigned b=0; b<length; ++b)
-        //{
-        //if(b > 3 && (b-3)%11 == 0) printf("\n                        ");
-        //printf("%02X ", data[offset+b]);
-        //}
-        //printf("\n");
-
-        if(gmnumber2 != 0 && gmnumber2 != 0x7F) continue;
-
-        /*
-        char name2[512]; sprintf(name2, "%s%c%u", prefix,
-            (gmno<128?'M':'P'), gmno&127);
-        */
-
-        //insdata tmp[200];
-
-        const unsigned inscount = (length-3)/11;
-        for(unsigned i=0; i<inscount; ++i)
+        if(!file.seek(h.offset))
         {
-            FmBank::Instrument &ins = (i<128) ?
-                                       bank.Ins_Melodic[i] :
-                                       bank.Ins_Percussion[(i-128)+35];
-            unsigned o = offset + 3 + i*11;
-            //ins.finetune = (gmno < 128 && i == 0) ? notenum : 0;
-            ins.setAVEKM(MODULATOR1, data[o+0]);
-            //tmp[i].data[0] = data[o+0]; // 20 //Mod1
-            ins.setKSLL(MODULATOR1, data[o+1]);
-            //tmp[i].data[8] = data[o+1]; // 40 (vol)//Mod1
-            ins.setAtDec(MODULATOR1, data[o+2]);
-            //tmp[i].data[2] = data[o+2]; // 60//Mod1
-            ins.setSusRel(MODULATOR1, data[o+3]);
-            //tmp[i].data[4] = data[o+3]; // 80//Mod1
-            ins.setWaveForm(MODULATOR1, data[o+4]);
-            //tmp[i].data[6] = data[o+4]; // E0//Mod1
-
-            ins.setAVEKM(CARRIER1, data[o+6]);
-            //tmp[i].data[1] = data[o+6]; // 23//Car1
-            ins.setKSLL(CARRIER1, data[o+7]);
-            //tmp[i].data[9] = data[o+7]; // 43 (vol)//Car1
-            ins.setAtDec(CARRIER1, data[o+8]);
-            //tmp[i].data[3] = data[o+8]; // 63//Car1
-            ins.setSusRel(CARRIER1, data[o+9]);
-            //tmp[i].data[5] = data[o+9]; // 83
-            ins.setWaveForm(CARRIER1, data[o+10]);
-            //tmp[i].data[7] = data[o+10];// E3
-
-            /*
-            tmp.data[0] = data[offset + 0];//setAVEKM(MODULATOR1
-            tmp.data[1] = data[offset + 1];//setAVEKM(CARRIER1
-            tmp.data[2] = data[offset + 4];//setAtDec(MODULATOR1
-            tmp.data[3] = data[offset + 5];//setAtDec(CARRIER1
-            tmp.data[4] = data[offset + 6];//setSusRel(MODULATOR1
-            tmp.data[5] = data[offset + 7];//setSusRel(CARRIER1
-            tmp.data[6] = data[offset + 8];//setWaveForm(MODULATOR1
-            tmp.data[7] = data[offset + 9];//setWaveForm(CARRIER1
-            tmp.data[8] = data[offset + 2];//setKSLL(MODULATOR1
-            tmp.data[9] = data[offset + 3];//setKSLL(CARRIER1
-            tmp.data[10] = data[offset + 10];//setFBConn1(idata[10]);
-            */
-
-//    (i->first.data[6] << 24) Wave select settings
-//  + (i->first.data[4] << 16) Sustain/release rates
-//  + (i->first.data[2] << 8)  Attack/decay rates
-//  + (i->first.data[0] << 0); AM/VIB/EG/KSR/Multiple bits
-
-//    (i->first.data[7] << 24) Wave select settings
-//  + (i->first.data[5] << 16) Sustain/release rates
-//  + (i->first.data[3] << 8)  Attack/decay rates
-//  + (i->first.data[1] << 0); AM/VIB/EG/KSR/Multiple bits
-//    i->first.data[8],    KSL/attenuation settings\n"
-//    i->first.data[9],    KSL/attenuation settings\n"
-//    i->first.data[10],   Feedback/connection bits
-//    i->first.finetune,
-//    i->first.diff?"true":"false");
-
-            unsigned fb_c = data[offset+3+5];
-            ins.setFBConn1(fb_c);
-            //tmp[i].data[10] = fb_c;
-            /*
-            if(i == 1)
-            {
-                tmp[0].data[10] = fb_c & 0x0F;
-                tmp[1].data[10] = (fb_c & 0x0E) | (fb_c >> 7);
-            }*/
+            bank.reset();
+            return ERR_BADFORMAT;
+        }
+        uint16_t insLen = 0;
+        if(readLE(file, insLen) != 2)
+        {
+            bank.reset();
+            return ERR_BADFORMAT;
         }
 
-        if(inscount == 1) tmp[1] = tmp[0];
-        if(inscount <= 2)
+        if((insLen < 14) || (insLen > 25))
         {
-            struct ins tmp2;
-            tmp2.notenum  = gmno < 128 ? 0 : data[offset+3];
-            tmp2.pseudo4op = false;
-            tmp2.fine_tune = 0.0;
-            std::string name;
-            if(midi_index >= 0) name = std::string(1,'\377') + MidiInsName[midi_index];
-            size_t resno = InsertIns(tmp[0], tmp[1], tmp2, name, name2);
-            SetBank(bank, gmno, resno);
+            bank.reset();
+            return ERR_BADFORMAT;
+        }
+
+        insLen -= 2;
+
+        memset(idata, 0, 24);
+        if(file.read(char_p(idata), insLen) != insLen)
+        {
+            bank.reset();
+            return ERR_BADFORMAT;
+        }
+        //Operators mode: length 12 - 2-op, 23 - 4-op
+        ins.en_4op = ( insLen / 11) > 1;
+        //NoteNum
+        ins.percNoteNum  = (gmno < 128) ? 0 : idata[0];
+        ins.note_offset1 = (gmno < 128) ? static_cast<char>(idata[0]) : 0;
+        //OP1
+        ins.setAVEKM(MODULATOR1,    idata[1]);
+        ins.setKSLL(MODULATOR1,     idata[2]);
+        ins.setAtDec(MODULATOR1,    idata[3]);
+        ins.setSusRel(MODULATOR1,   idata[4]);
+        ins.setWaveForm(MODULATOR1, idata[5]);
+        //Feedback/Connection 1<->2
+        ins.setFBConn1(idata[6]);
+        //OP2
+        ins.setAVEKM(CARRIER1,    idata[7]);
+        ins.setKSLL(CARRIER1,     idata[8]);
+        ins.setAtDec(CARRIER1,    idata[9]);
+        ins.setSusRel(CARRIER1,   idata[10]);
+        ins.setWaveForm(CARRIER1, idata[11]);
+
+        if(ins.en_4op)
+        {
+            //OP3
+            ins.setAVEKM(MODULATOR2,    idata[12]);
+            ins.setKSLL(MODULATOR2,     idata[13]);
+            ins.setAtDec(MODULATOR2,    idata[14]);
+            ins.setSusRel(MODULATOR2,   idata[15]);
+            ins.setWaveForm(MODULATOR2, idata[16]);
+            //Feedback/Connection 3<->4
+            uint8_t fb_c = idata[6]; //idata[17] is always zero, true FB field is bitwisely concoctated with idata[6]
+            ins.setFBConn1( fb_c & 0x0F );
+            ins.setFBConn2( (fb_c & 0x0E) | (fb_c >> 7) );
+            //OP4
+            ins.setAVEKM(CARRIER2,    idata[18]);
+            ins.setKSLL(CARRIER2,     idata[19]);
+            ins.setAtDec(CARRIER2,    idata[20]);
+            ins.setSusRel(CARRIER2,   idata[21]);
+            ins.setWaveForm(CARRIER2, idata[22]);
         }
     }
-#endif
-    return ERR_NOT_IMLEMENTED;
+    file.close();
+
+    return ERR_OK;
 }
 
 int MilesOPL::saveFile(QString filePath, FmBank &bank)

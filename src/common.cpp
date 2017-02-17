@@ -20,7 +20,7 @@
 
 #include <QMessageBox>
 
-qint64 readLE(QFile &file, unsigned short &out)
+qint64 readLE(QFile &file, uint16_t &out)
 {
     uchar bytes[2] = {0, 0};
     qint64 len = file.read(char_p(bytes), 2);
@@ -30,7 +30,7 @@ qint64 readLE(QFile &file, unsigned short &out)
 }
 
 
-qint64 readLE(QFile &file, unsigned int &out)
+qint64 readLE(QFile &file, uint32_t &out)
 {
     uchar bytes[4] = {0, 0, 0, 0};
     qint64 len = file.read(char_p(bytes), 4);
@@ -41,7 +41,7 @@ qint64 readLE(QFile &file, unsigned int &out)
     return len;
 }
 
-qint64 writeLE(QFile &file, unsigned short &out)
+qint64 writeLE(QFile &file, uint16_t &out)
 {
     uchar bytes[2] = {uchar(out & 0x00FF), uchar((out >> 8) & 0x00FF) };
     qint64 len = file.write(char_p(bytes), 2);
@@ -49,7 +49,7 @@ qint64 writeLE(QFile &file, unsigned short &out)
 }
 
 
-qint64 writeLE(QFile &file, unsigned int &out)
+qint64 writeLE(QFile &file, uint32_t &out)
 {
     uchar bytes[4] = { uchar(out & 0x000000FF),
                        uchar((out >> 8) & 0x000000FF),
@@ -61,7 +61,7 @@ qint64 writeLE(QFile &file, unsigned int &out)
 }
 
 
-qint64 readBE(QFile &file, unsigned short &out)
+qint64 readBE(QFile &file, uint16_t &out)
 {
     uchar bytes[2] = {0, 0};
     qint64 len = file.read(char_p(bytes), 2);
@@ -70,14 +70,14 @@ qint64 readBE(QFile &file, unsigned short &out)
     return len;
 }
 
-qint64 writeBE(QFile &file, unsigned short &out)
+qint64 writeBE(QFile &file, uint16_t &out)
 {
     uchar bytes[2] = {uchar((out >> 8) & 0x00FF), uchar(out & 0x00FF)};
     qint64 len = file.write(char_p(bytes), 2);
     return len;
 }
 
-short toSint16LE(uchar *arr)
+int16_t toSint16LE(uchar *arr)
 {
     short num = *reinterpret_cast<signed char *>(&arr[1]);
     num *= 1 << 8;
@@ -85,14 +85,14 @@ short toSint16LE(uchar *arr)
     return num;
 }
 
-unsigned short toUint16LE(uchar *arr)
+uint16_t toUint16LE(uchar *arr)
 {
     unsigned short num = arr[0];
     num |= ((arr[1] << 8) & 0xFF00);
     return num;
 }
 
-short toSint16BE(uchar *arr)
+int16_t toSint16BE(uchar *arr)
 {
     short num = *reinterpret_cast<signed char *>(&arr[0]);
     num *= 1 << 8;
@@ -100,7 +100,7 @@ short toSint16BE(uchar *arr)
     return num;
 }
 
-unsigned int toUint32LE(uchar *arr)
+uint32_t toUint32LE(uchar *arr)
 {
     unsigned int num = arr[0];
     num |= (static_cast<unsigned int>(arr[1] << 8)  & 0x0000FF00);
@@ -110,25 +110,25 @@ unsigned int toUint32LE(uchar *arr)
 }
 
 
-void fromSint16LE(short in, uchar *arr)
+void fromSint16LE(int16_t in, uchar *arr)
 {
     arr[0] =  in & 0x00FF;
     arr[1] = (in >> 8) & 0x00FF;
 }
 
-void fromUint16LE(unsigned short in, uchar *arr)
+void fromUint16LE(uint16_t in, uchar *arr)
 {
     arr[0] =  in & 0x00FF;
     arr[1] = (in >> 8) & 0x00FF;
 }
 
-void fromSint16BE(short in, uchar *arr)
+void fromSint16BE(int16_t in, uchar *arr)
 {
     arr[1] =  in & 0x00FF;
     arr[0] = (in >> 8) & 0x00FF;
 }
 
-void fromUint32LE(unsigned int in, uchar *arr)
+void fromUint32LE(int32_t in, uchar *arr)
 {
     arr[0] = (in)     & 0x00FF;
     arr[1] = (in >> 8)  & 0x00FF;

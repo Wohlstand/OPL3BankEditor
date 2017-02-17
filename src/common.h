@@ -33,7 +33,7 @@ typedef char*         char_p;
  * \param out Target reference
  * \return number of readed bytes
  */
-qint64 readLE(QFile &file, unsigned short &out);
+qint64 readLE(QFile &file, uint16_t &out);
 
 /*!
  * \brief Read little-endian unsigned int from a file
@@ -41,7 +41,7 @@ qint64 readLE(QFile &file, unsigned short &out);
  * \param out Target reference
  * \return number of readed bytes
  */
-qint64 readLE(QFile &file, unsigned int &out);
+qint64 readLE(QFile &file, uint32_t &out);
 
 /*!
  * \brief Write little-endian unsigned short into the file
@@ -49,7 +49,7 @@ qint64 readLE(QFile &file, unsigned int &out);
  * \param out Source reference
  * \return number of written bytes
  */
-qint64 writeLE(QFile &file, unsigned short &out);
+qint64 writeLE(QFile &file, uint16_t &out);
 
 /*!
  * \brief Write little-endian unsigned int into the file
@@ -57,7 +57,7 @@ qint64 writeLE(QFile &file, unsigned short &out);
  * \param out Source reference
  * \return number of written bytes
  */
-qint64 writeLE(QFile &file, unsigned int &out);
+qint64 writeLE(QFile &file, uint32_t &out);
 
 /*!
  * \brief Read big-endian unsigned short from a file
@@ -65,7 +65,7 @@ qint64 writeLE(QFile &file, unsigned int &out);
  * \param out Target reference
  * \return number of readed bytes
  */
-qint64 readBE(QFile &file, unsigned short &out);
+qint64 readBE(QFile &file, uint16_t &out);
 
 /*!
  * \brief Write big-endian unsigned short into the file
@@ -73,35 +73,35 @@ qint64 readBE(QFile &file, unsigned short &out);
  * \param out Source reference
  * \return number of written bytes
  */
-qint64 writeBE(QFile &file, unsigned short &out);
+qint64 writeBE(QFile &file, uint16_t &out);
 
 /*!
  * \brief Convers array of little endian bytes into short
  * \param arr Source array of bytes
  * \return Resulted number
  */
-short toSint16LE(uchar *arr);
+int16_t toSint16LE(uchar *arr);
 
 /*!
  * \brief Convers array of little endian bytes into short
  * \param arr Source array of bytes
  * \return Resulted number
  */
-unsigned short toUint16LE(uchar *arr);
+uint16_t toUint16LE(uchar *arr);
 
 /*!
  * \brief Convers array of big endian bytes into short
  * \param arr Source array of bytes
  * \return Resulted number
  */
-short toSint16BE(uchar *arr);
+int16_t toSint16BE(uchar *arr);
 
 /*!
  * \brief Convers array of big endian bytes into int
  * \param arr Source array of bytes
  * \return Resulted number
  */
-unsigned int toUint32LE(uchar *arr);
+uint32_t toUint32LE(uchar *arr);
 
 
 /*!
@@ -109,28 +109,28 @@ unsigned int toUint32LE(uchar *arr);
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromSint16LE(short in, uchar *arr);
+void fromSint16LE(int16_t in, uchar *arr);
 
 /*!
  * \brief Converts unsigned short into little endian byte array
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromUint16LE(unsigned short in, uchar *arr);
+void fromUint16LE(uint16_t in, uchar *arr);
 
 /*!
  * \brief Converts signed short into big endian byte array
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromSint16BE(short in, uchar *arr);
+void fromSint16BE(int16_t in, uchar *arr);
 
 /*!
  * \brief Converts unsigned int into little endian byte array
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromUint32LE(unsigned int in, uchar *arr);
+void fromUint32LE(int32_t in, uchar *arr);
 
 /*!
  * \brief Reads some bytes from begin of the file

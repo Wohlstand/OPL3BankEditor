@@ -1,7 +1,18 @@
 # OPL3BankEditor
 A small cross-platform editor of the OPL3 FM banks of different formats
 
-Currently supported Junglevision patch, DMX OPL-2, Apogee Sound System timbre formats, SoundBlaster IBK files, AdLib/HMI BNK files. Other formats (*.opl, *.ad, *.adlraw) are planned
+## Currently supported bank formats
+* Junglevision patch (*.OP3)
+* DMX OPL-2 (OP2)
+* Apogee Sound System timbre formats (*.TMB)
+* SoundBlaster IBK files (*.IBK)
+* AdLib/HMI BNK files (*.BNK)
+* Global Timbre Library files for Audio Interface Library (*.AD, *.OPL) **(Read-only yet)**
+
+## Comming soon
+* *.adlraw - bank format created by Bisquit - author of ADLMIDI utiltiy
+* SB and O3 bank formats (a set of the concoctated SBI files) used with Linux drivers
+* Own bank format which supports all parameters provided by editor, and also implement support for GS and XG standard into ADLMIDI
 
 # How to build
 You need a Qt 5 to build this project.
