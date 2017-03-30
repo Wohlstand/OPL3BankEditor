@@ -21,9 +21,9 @@
 
 bool MilesOPL::detect(QString filePath)
 {
-    if( hasExt(filePath, ".opl") )
+    if(hasExt(filePath, ".opl"))
         return true;
-    if( hasExt(filePath, ".ad") )
+    if(hasExt(filePath, ".ad"))
         return true;
 
     return false;
@@ -93,9 +93,9 @@ shl ax,1                ;(AX*2)/256 = AX/128 ÷ AX/127
 
 struct GTL_Head // GTL file header entry structure
 {
-    uint8_t  patch;
-    uint8_t  bank;
-    uint32_t offset;
+    uint8_t  patch  = 0;
+    uint8_t  bank   = 0;
+    uint32_t offset = 0;
 };
 
 int MilesOPL::loadFile(QString filePath, FmBank &bank)
@@ -115,14 +115,14 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
             return ERR_BADFORMAT;
         head.patch = hdata[0];
         head.bank  = hdata[1];
-        head.offset= toUint32LE(hdata + 2);
+        head.offset = toUint32LE(hdata + 2);
 
         if((head.patch == 0xFF) || (head.bank == 0xFF))
             break;
 
         heads.push_back(head);
     }
-    while( !file.atEnd() );
+    while(!file.atEnd());
 
     bank.reset();
 
@@ -130,8 +130,8 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
     for(unsigned int i = 0; i < totalInsts; i++)
     {
         GTL_Head &h = heads[i];
-        int gmno = h.bank == 0x7F ? h.patch + 0x80 : h.patch;
-        FmBank::Instrument &ins = (gmno < 128) ? bank.Ins_Melodic[gmno] : bank.Ins_Percussion[gmno - 128];
+        int gmPatchId = h.bank == 0x7F ? h.patch + 0x80 : h.patch;
+        FmBank::Instrument &ins = (gmPatchId < 128) ? bank.Ins_Melodic[gmPatchId] : bank.Ins_Percussion[gmPatchId - 128];
 
         if(!file.seek(h.offset))
         {
@@ -160,10 +160,10 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
             return ERR_BADFORMAT;
         }
         //Operators mode: length 12 - 2-op, 23 - 4-op
-        ins.en_4op = ( insLen / 11) > 1;
+        ins.en_4op = (insLen / 11) > 1;
         //NoteNum
-        ins.percNoteNum  = (gmno < 128) ? 0 : idata[0];
-        ins.note_offset1 = (gmno < 128) ? static_cast<char>(idata[0]) : 0;
+        ins.percNoteNum  = (gmPatchId < 128) ? 0 : idata[0];
+        ins.note_offset1 = (gmPatchId < 128) ? static_cast<char>(idata[0]) : 0;
         //OP1
         ins.setAVEKM(MODULATOR1,    idata[1]);
         ins.setKSLL(MODULATOR1,     idata[2]);
@@ -189,8 +189,8 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
             ins.setWaveForm(MODULATOR2, idata[16]);
             //Feedback/Connection 3<->4
             uint8_t fb_c = idata[6]; //idata[17] is always zero, true FB field is bitwisely concoctated with idata[6]
-            ins.setFBConn1( fb_c & 0x0F );
-            ins.setFBConn2( (fb_c & 0x0E) | (fb_c >> 7) );
+            ins.setFBConn1(fb_c & 0x0F);
+            ins.setFBConn2((fb_c & 0x0E) | (fb_c >> 7));
             //OP4
             ins.setAVEKM(CARRIER2,    idata[18]);
             ins.setKSLL(CARRIER2,     idata[19]);
@@ -206,5 +206,123 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
 
 int MilesOPL::saveFile(QString filePath, FmBank &bank)
 {
-    return ERR_NOT_IMLEMENTED;
+    FmBank::Instrument null;
+    memset(&null, 0, sizeof(FmBank::Instrument));
+
+    GTL_Head head;
+    head.bank  = 0;
+    head.patch = 0;
+    head.offset = 0;
+    QVector<GTL_Head> heads;
+
+    //1) Count non-empty instruments
+    for(int i = 0; i < bank.countMelodic(); i++)
+    {
+        if(memcmp(&bank.Ins_Melodic[i], &null, sizeof(FmBank::Instrument)) != 0)
+        {
+            FmBank::Instrument &ins = bank.Ins_Melodic[i];
+            head.patch = i % 128;
+            head.bank  = i / 128;
+            heads.push_back(head);
+            head.offset += (ins.en_4op && !ins.en_pseudo4op) ? 25 : 14;
+        }
+    }
+
+    for(int i = 0; i < bank.countDrums(); i++)
+    {
+        if(memcmp(&bank.Ins_Percussion[i], &null, sizeof(FmBank::Instrument)) != 0)
+        {
+            FmBank::Instrument &ins = bank.Ins_Percussion[i];
+            head.patch = i % 128;
+            head.bank  = 0x7F;
+            heads.push_back(head);
+            head.offset += (ins.en_4op && !ins.en_pseudo4op) ? 25 : 14;
+        }
+    }
+
+    // Close the header
+    head.patch = 0xFF;
+    head.bank  = 0xFF;
+    head.offset = 0;
+    heads.push_back(head);
+
+    // Calculate the global offset
+    uint32_t ins_offset = (heads.size() * 6) - 4;
+
+    // Open the file
+    QFile file(filePath);
+    if(!file.open(QIODevice::WriteOnly))
+        return ERR_NOFILE;
+
+    //2) Build the header
+    for(GTL_Head &h : heads)
+    {
+        file.write(char_p(&h.patch), 1);
+        file.write(char_p(&h.bank),  1);
+        uint32_t offset = ins_offset + h.offset;
+        writeLE(file, offset);
+    }
+
+    file.seek(ins_offset);
+
+    //3) Sequentially write all instruments into the file
+    unsigned char  odata[24];
+    for(int i = 0; i < heads.size() - 1; i++)
+    {
+        GTL_Head &h = heads[i];
+        FmBank::Instrument &ins = (h.bank != 0x7F) ?
+                                bank.Ins_Melodic[h.patch * (h.bank + 1)] :
+                                bank.Ins_Percussion[h.patch];
+        uint16_t ins_len = (ins.en_4op && !ins.en_pseudo4op) ? 25 : 14;
+
+//        //Operators mode: length 12 - 2-op, 23 - 4-op
+        writeLE(file, ins_len);
+        ins_len -= 2;
+//        //NoteNum
+//        ins.percNoteNum  = (gmPatchId < 128) ? 0 : idata[0];
+//        ins.note_offset1 = (gmPatchId < 128) ? static_cast<char>(idata[0]) : 0;
+        odata[0] = h.bank == 0x7F ? ins.percNoteNum : ins.note_offset1;
+//        //OP1
+        odata[1] = ins.getAVEKM(MODULATOR1);
+        odata[2] = ins.getKSLL(MODULATOR1);
+        odata[3] = ins.getAtDec(MODULATOR1);
+        odata[4] = ins.getSusRel(MODULATOR1);
+        odata[5] = ins.getWaveForm(MODULATOR1);
+//        //Feedback/Connection 1<->2
+        odata[6] = ins.getFBConn1();
+//        //OP2
+        odata[7] = ins.getAVEKM(CARRIER1);
+        odata[8] = ins.getKSLL(CARRIER1);
+        odata[9] = ins.getAtDec(CARRIER1);
+        odata[10] = ins.getSusRel(CARRIER1);
+        odata[11] = ins.getWaveForm(CARRIER1);
+
+        if(ins.en_4op)
+        {
+//            //OP3
+            odata[12] = ins.getAVEKM(MODULATOR2);
+            odata[13] = ins.getKSLL(MODULATOR2);
+            odata[14] = ins.getAtDec(MODULATOR2);
+            odata[15] = ins.getSusRel(MODULATOR2);
+            odata[16] = ins.getWaveForm(MODULATOR2);
+//            //Feedback/Connection 3<->4
+//            uint8_t fb_c = idata[6]; //idata[17] is always zero, true FB field is bitwisely concoctated with idata[6]
+            odata[17] = 0;
+            odata[6] = ins.getFBConn1() | (ins.getFBConn2() << 7);
+//            ins.setFBConn1(fb_c & 0x0F);
+//            ins.setFBConn2((fb_c & 0x0E) | (fb_c >> 7));
+//            //OP4
+            odata[18] = ins.getAVEKM(CARRIER2);
+            odata[19] = ins.getKSLL(CARRIER2);
+            odata[20] = ins.getAtDec(CARRIER2);
+            odata[21] = ins.getSusRel(CARRIER2);
+            odata[22] = ins.getWaveForm(CARRIER2);
+        }
+
+        if(file.write(char_p(odata), ins_len) != ins_len)
+            return ERR_BADFORMAT;
+    }
+    file.close();
+
+    return ERR_OK;
 }
