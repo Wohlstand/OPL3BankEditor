@@ -30,7 +30,7 @@
 //#define VERIFY_BYTE(param, byte) if( ((param)|(byte)) != (byte) ) { bank.reset(); return ERR_BADFORMAT; }
 inline void VERIFY_BYTE(unsigned char &param, unsigned char mask)
 {
-    if( ((param)|(mask)) != (mask) )
+    if(((param) | (mask)) != (mask))
         throw("YOUR BYTE SUCK!");
 }
 #else
@@ -42,16 +42,17 @@ inline void VERIFY_BYTE(unsigned char &param, unsigned char mask)
 #define SIZEOF_NAME     12
 #define SIZEOF_INST     30
 
-static const char* bnk_magic = "ADLIB-";
+static const char *bnk_magic = "ADLIB-";
 
 bool AdLibBnk::detect(char *magic)
 {
-    return (strncmp(magic+2, bnk_magic, 6) == 0);
+    return (strncmp(magic + 2, bnk_magic, 6) == 0);
 }
 
 int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
 {
-    char magic[8]; memset(magic, 0, 8);
+    char magic[8];
+    memset(magic, 0, 8);
     format = FORMAT_ADLIB_BKN1;
 
     QFile file(filePath);
@@ -64,26 +65,24 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
     bool isHMI = false;
 
     unsigned int    size  = fileData.size();
-    unsigned char*  dataU = (unsigned char*)fileData.data();
-    char*           dataS = (char*)fileData.data();
+    unsigned char  *dataU = (unsigned char *)fileData.data();
+    char           *dataS = (char *)fileData.data();
 
     bank.reset();
 
-    if( size < 28 ) //File too small!
+    if(size < 28)   //File too small!
         return ERR_BADFORMAT;
 
     memcpy(magic, dataS, 8);
 
-    if( strncmp(magic + 2, bnk_magic, 6) != 0 )
+    if(strncmp(magic + 2, bnk_magic, 6) != 0)
         return ERR_BADFORMAT;
 
     char    ver_maj = dataS[0],
             ver_min = dataS[1];
 
-    if( (ver_maj==0) && (ver_min==0))
-    {
+    if((ver_maj == 0) && (ver_min == 0))
         isHMI = true;
-    }
 
     //unsigned short  totalInsUsed = 0;
     unsigned short  totalIns = 0;
@@ -91,47 +90,45 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
     unsigned int    offsetData = 0;
 
     //totalInsUsed = toUint16LE( dataU + BNK_HEAD_OFFSET + 0 );
-    totalIns     = toUint16LE( dataU + BNK_HEAD_OFFSET + 2 );
-    offsetName   = toUint32LE( dataU + BNK_HEAD_OFFSET + 4 );
-    offsetData   = toUint32LE( dataU + BNK_HEAD_OFFSET + 8 );
+    totalIns     = toUint16LE(dataU + BNK_HEAD_OFFSET + 2);
+    offsetName   = toUint32LE(dataU + BNK_HEAD_OFFSET + 4);
+    offsetData   = toUint32LE(dataU + BNK_HEAD_OFFSET + 8);
 
     bank.Ins_Melodic_box.clear();
     bank.Ins_Percussion_box.clear();
 
     //offsetInstr = offsetData + (index * sizeof(PackedTimbre))
-    for(unsigned int i=0; i<totalIns; i++ )
+    for(unsigned int i = 0; i < totalIns; i++)
     {
-        unsigned int name_address = offsetName + SIZEOF_NAME*i;
-        if( name_address+SIZEOF_NAME > size )
+        unsigned int name_address = offsetName + SIZEOF_NAME * i;
+        if(name_address + SIZEOF_NAME > size)
         {
             bank.reset();
             return ERR_BADFORMAT;
         }
 
-        //    UINT16LE 	index 	Index into data section Calculation: offsetInstr = offsetData + (index * sizeof(PackedTimbre))
-        //    UINT8 	flags 	0 if this record is not used, else 1
-        //    char[9] 	name 	Instrument name - must be NULL-terminated
+        //    UINT16LE  index   Index into data section Calculation: offsetInstr = offsetData + (index * sizeof(PackedTimbre))
+        //    UINT8     flags   0 if this record is not used, else 1
+        //    char[9]   name    Instrument name - must be NULL-terminated
 
-        unsigned short ins_index   = toUint16LE( dataU + name_address );
-        unsigned int   ins_address = offsetData + ins_index*SIZEOF_INST;
+        unsigned short ins_index   = toUint16LE(dataU + name_address);
+        unsigned int   ins_address = offsetData + ins_index * SIZEOF_INST;
 
         #ifdef SKIP_UNUSED
-        if( !isHMI && (dataU[name_address + 2] == 0) )
+        if(!isHMI && (dataU[name_address + 2] == 0))
             continue;
         #endif
 
-        if( ins_address+SIZEOF_INST > size )
+        if(ins_address + SIZEOF_INST > size)
         {
             bank.reset();
             return ERR_BADFORMAT;
         }
 
-        if( (ver_maj==0) && (ver_min==0))
-        {
+        if((ver_maj == 0) && (ver_min == 0))
             format = FORMAT_ADLIB_BKNHMI;
-        } else {
+        else
             format = FORMAT_ADLIB_BKN1;
-        }
 
         FmBank::Instrument *ins_p = 0;
         //At this point, the current position should be the same as offsetData. The actual instrument
@@ -139,9 +136,9 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
         //format, which is almost identical to the AdLib Instrument Format except with only one byte to
         //store each field instead of two.
 
-        //0    UINT8 	iPercussive 	0: Melodic instrument
+        //0    UINT8    iPercussive     0: Melodic instrument
         //                              1: Percussive instrument
-        if( dataU[ins_address + 0] == 0 )
+        if(dataU[ins_address + 0] == 0)
         {
             FmBank::Instrument ins = FmBank::emptyInst();
             bank.Ins_Melodic_box.push_back(ins);
@@ -158,15 +155,15 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
 
         FmBank::Instrument &ins = *ins_p;
 
-        strncpy(ins.name, dataS+name_address+3, 8);
+        strncpy(ins.name, dataS + name_address + 3, 8);
         try
         {
             ins.adlib_drum_number       = dataU[ins_address + 1];
 
-            ins.OP[MODULATOR1].ksl      = dataU[ins_address + 2]&0x03;
+            ins.OP[MODULATOR1].ksl      = dataU[ins_address + 2] & 0x03;
 
-            VERIFY_BYTE( dataU[ins_address+3], 0x0F );
-            ins.OP[MODULATOR1].fmult    = dataU[ins_address + 3]&0x0F;
+            VERIFY_BYTE(dataU[ins_address + 3], 0x0F);
+            ins.OP[MODULATOR1].fmult    = dataU[ins_address + 3] & 0x0F;
 
             ins.feedback1 = dataU[ins_address + 4] & 0x07;
 
@@ -189,37 +186,33 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
             ins.OP[MODULATOR1].level    = 0x3F - (dataU[ins_address + 10] & 0x3F);
 
             VERIFY_BYTE(dataU[ins_address + 11], 0x01);
-            ins.OP[MODULATOR1].am       = ((dataU[ins_address + 11]&0x01) != 0);
+            ins.OP[MODULATOR1].am       = ((dataU[ins_address + 11] & 0x01) != 0);
 
             VERIFY_BYTE(dataU[ins_address + 12], 0x01);
-            ins.OP[MODULATOR1].vib      = ((dataU[ins_address + 12]&0x01) != 0);
+            ins.OP[MODULATOR1].vib      = ((dataU[ins_address + 12] & 0x01) != 0);
 
             VERIFY_BYTE(dataU[ins_address + 13], 0x01);
-            ins.OP[MODULATOR1].ksr      = ( dataU[ins_address + 13] != 0 );
+            ins.OP[MODULATOR1].ksr      = (dataU[ins_address + 13] != 0);
 
             //VERIFY_BYTE(dataU[ins_address + 14], 0x01);
             if(ver_maj == 0)//HMI bank format
-            {
                 ins.connection1             = (dataU[ins_address + 14] != 0);
-            }
             else
-            {
                 ins.connection1             = (dataU[ins_address + 14] == 0);
-            }
 
-            ins.OP[CARRIER1].ksl        = (dataU[ins_address + 15]&0x03);
+            ins.OP[CARRIER1].ksl        = (dataU[ins_address + 15] & 0x03);
 
             //VERIFY_BYTE(dataU[ins_address + 16], 0x0F);
-            ins.OP[CARRIER1].fmult      = dataU[ins_address + 16]&0x0F;
+            ins.OP[CARRIER1].fmult      = dataU[ins_address + 16] & 0x0F;
 
             //[IGNORE THIS] ins.feedback1 |= (dataU[ins_address + 17]>>1) & 0x07;
             //VERIFY_BYTE(dataU[ins_address + 18], 0x0F);
             ins.OP[CARRIER1].attack     = dataU[ins_address + 18] & 0x0F;
 
             //VERIFY_BYTE(dataU[ins_address + 19], 0x0F);
-            ins.OP[CARRIER1].sustain    = 0x0F - ( dataU[ins_address + 19] & 0x0F );
+            ins.OP[CARRIER1].sustain    = 0x0F - (dataU[ins_address + 19] & 0x0F);
 
-            ins.OP[CARRIER1].eg         = (dataU[ins_address + 20]&0x01) != 0;
+            ins.OP[CARRIER1].eg         = (dataU[ins_address + 20] & 0x01) != 0;
 
             //VERIFY_BYTE(dataU[ins_address + 21], 0x0F);
             ins.OP[CARRIER1].decay      = dataU[ins_address + 21] & 0x0F;
@@ -230,13 +223,13 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
             //VERIFY_BYTE(dataU[ins_address + 23], 0x3F);
             ins.OP[CARRIER1].level      = 0x3F - (dataU[ins_address + 23] & 0x3F);
 
-            ins.OP[CARRIER1].am         = ((dataU[ins_address + 24]&0x01) != 0);
-            ins.OP[CARRIER1].vib        = ((dataU[ins_address + 25]&0x01) != 0);
-            ins.OP[CARRIER1].ksr        = ((dataU[ins_address + 26]&0x01) != 0);
+            ins.OP[CARRIER1].am         = ((dataU[ins_address + 24] & 0x01) != 0);
+            ins.OP[CARRIER1].vib        = ((dataU[ins_address + 25] & 0x01) != 0);
+            ins.OP[CARRIER1].ksr        = ((dataU[ins_address + 26] & 0x01) != 0);
 
-            ins.OP[MODULATOR1].waveform = dataU[ins_address + 28]&0x07;
+            ins.OP[MODULATOR1].waveform = dataU[ins_address + 28] & 0x07;
 
-            ins.OP[CARRIER1].waveform   = dataU[ins_address + 29]&0x07;
+            ins.OP[CARRIER1].waveform   = dataU[ins_address + 29] & 0x07;
         }
         catch(...)
         {
@@ -260,11 +253,13 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
     switch(type)
     {
     case BNK_ADLIB:
-        ver[0] = 1; ver[1] = 0;
+        ver[0] = 1;
+        ver[1] = 0;
         break;
     case BNK_HMI:
-        ver[0] = 0; ver[1] = 0;
-        isHMI=true;
+        ver[0] = 0;
+        ver[1] = 0;
+        isHMI = true;
         break;
     }
 
@@ -278,7 +273,7 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
 
     unsigned int insts = bank.Ins_Melodic_box.size() + bank.Ins_Percussion_box.size();
     unsigned short instsU = insts > 65515 ? 65515 : insts;
-    unsigned short instsS = (insts+20) > 65535 ? 65535 : insts+20;
+    unsigned short instsS = (insts + 20) > 65535 ? 65535 : insts + 20;
     unsigned int nameAddress = 28;
     unsigned int dataAddress = 28 + SIZEOF_NAME * insts;
     if(isHMI)
@@ -288,13 +283,13 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
     }
 
     //    uchar numUsed[2];
-    writeLE( file, instsU );
+    writeLE(file, instsU);
     //    uchar numInstruments[2];
-    writeLE( file, instsS );
+    writeLE(file, instsS);
     //    uchar offsetName[2];
-    writeLE( file, nameAddress );
+    writeLE(file, nameAddress);
     //    uchar offsetData[2];
-    writeLE( file, dataAddress );
+    writeLE(file, dataAddress);
     //    uchar pad[8];
     char pad[8];
     memset(pad, 0, 8);
@@ -312,16 +307,16 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
         strncpy(name, Ins.name, 8);
         name[8] = '\n';
         //isDrum
-    //struct BNK_InsName
-    //{
-    //    uchar index[2];
-        writeLE( file, ins );
-    //    uchar flags;
+        //struct BNK_InsName
+        //{
+        //    uchar index[2];
+        writeLE(file, ins);
+        //    uchar flags;
         uchar flags = 0x01/*YES, IT'S "USED"! (I see no reasons to keep junk data in the file)*/ /*(char)isDrum*/;
-        file.write( char_p(&flags), 1 );
+        file.write(char_p(&flags), 1);
         //    char  name[9];
-        file.write( name, 9 );
-    //} __attribute__((__packed__));
+        file.write(name, 9);
+        //} __attribute__((__packed__));
     }
 
     if(!isHMI)
@@ -330,16 +325,16 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
         {
             char name[9];
             memset(name, 0, 9);
-        //struct BNK_InsName
-        //{
-        //    uchar index[2];
-            writeLE( file, ins );
-        //    uchar flags;
+            //struct BNK_InsName
+            //{
+            //    uchar index[2];
+            writeLE(file, ins);
+            //    uchar flags;
             uchar flags = 0x00/*NO, IT'S NOTHING - just an unused crap!*/;
-            file.write( char_p(&flags), 1 );
+            file.write(char_p(&flags), 1);
             //    char  name[9];
-            file.write( name, 9 );
-        //} __attribute__((__packed__));
+            file.write(name, 9);
+            //} __attribute__((__packed__));
         }
     }
 
@@ -350,63 +345,63 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
                                   bank.Ins_Percussion_box[ ins - bank.Ins_Melodic_box.size() ] :
                                   bank.Ins_Melodic_box[ ins ];
 
-    //struct BNK_OPLRegs
-    //{
-    //    uchar ksl;
-    //    uchar fmult;
-    //    uchar feedback;
-    //    uchar attack;
-    //    uchar sustain;
-    //    uchar eg;
-    //    uchar decay;
-    //    uchar release;
-    //    uchar level;
-    //    uchar am;
-    //    uchar vib;
-    //    uchar ksr;
-    //    uchar con;
-    //} __attribute__((__packed__));
-
-    //struct BNK_Instrument
-    //{
-    //    uchar   is_percusive;
-        uchar buff = uchar(isDrum);
-        file.write( char_p(&buff), 1 );
-    //    uchar   voicenum;
-        file.write( char_p(&Ins.adlib_drum_number), 1 );
-    //BNK_OPLRegs oplModulator;
         //struct BNK_OPLRegs
         //{
         //    uchar ksl;
-        file.write( char_p(&Ins.OP[MODULATOR1].ksl), 1 );
         //    uchar fmult;
-        file.write( char_p(&Ins.OP[MODULATOR1].fmult), 1 );
         //    uchar feedback;
-        file.write( char_p(&Ins.feedback1), 1 );
         //    uchar attack;
-        file.write( char_p(&Ins.OP[MODULATOR1].attack), 1 );
+        //    uchar sustain;
+        //    uchar eg;
+        //    uchar decay;
+        //    uchar release;
+        //    uchar level;
+        //    uchar am;
+        //    uchar vib;
+        //    uchar ksr;
+        //    uchar con;
+        //} __attribute__((__packed__));
+
+        //struct BNK_Instrument
+        //{
+        //    uchar   is_percusive;
+        uchar buff = uchar(isDrum);
+        file.write(char_p(&buff), 1);
+        //    uchar   voicenum;
+        file.write(char_p(&Ins.adlib_drum_number), 1);
+        //BNK_OPLRegs oplModulator;
+        //struct BNK_OPLRegs
+        //{
+        //    uchar ksl;
+        file.write(char_p(&Ins.OP[MODULATOR1].ksl), 1);
+        //    uchar fmult;
+        file.write(char_p(&Ins.OP[MODULATOR1].fmult), 1);
+        //    uchar feedback;
+        file.write(char_p(&Ins.feedback1), 1);
+        //    uchar attack;
+        file.write(char_p(&Ins.OP[MODULATOR1].attack), 1);
         //    uchar sustain;
         buff = 0x0F - Ins.OP[MODULATOR1].sustain;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar eg;
         buff = Ins.OP[MODULATOR1].eg;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar decay;
-        file.write( char_p(&Ins.OP[MODULATOR1].decay), 1 );
+        file.write(char_p(&Ins.OP[MODULATOR1].decay), 1);
         //    uchar release;
-        file.write( char_p(&Ins.OP[MODULATOR1].release), 1 );
+        file.write(char_p(&Ins.OP[MODULATOR1].release), 1);
         //    uchar level;
         buff = 0x3F - Ins.OP[MODULATOR1].level;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar am;
         buff = Ins.OP[MODULATOR1].am;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar vib;
         buff = Ins.OP[MODULATOR1].vib;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar ksr;
         buff = Ins.OP[MODULATOR1].ksr;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar con;
         switch(type)
         {
@@ -417,41 +412,41 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
             buff = Ins.connection1;
             break;
         }
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //} __attribute__((__packed__));
-    //BNK_OPLRegs oplCarrier;
+        //BNK_OPLRegs oplCarrier;
         //struct BNK_OPLRegs
         //{
         //    uchar ksl;
-        file.write( char_p(&Ins.OP[CARRIER1].ksl), 1 );
+        file.write(char_p(&Ins.OP[CARRIER1].ksl), 1);
         //    uchar fmult;
-        file.write( char_p(&Ins.OP[CARRIER1].fmult), 1 );
+        file.write(char_p(&Ins.OP[CARRIER1].fmult), 1);
         //    uchar feedback;
-        file.write( char_p(&Ins.feedback1), 1 );
+        file.write(char_p(&Ins.feedback1), 1);
         //    uchar attack;
-        file.write( char_p(&Ins.OP[CARRIER1].attack), 1 );
+        file.write(char_p(&Ins.OP[CARRIER1].attack), 1);
         //    uchar sustain;
         buff = 0x0F - Ins.OP[CARRIER1].sustain;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar eg;
         buff = Ins.OP[CARRIER1].eg;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar decay;
-        file.write( char_p(&Ins.OP[CARRIER1].decay), 1 );
+        file.write(char_p(&Ins.OP[CARRIER1].decay), 1);
         //    uchar release;
-        file.write( char_p(&Ins.OP[CARRIER1].release), 1 );
+        file.write(char_p(&Ins.OP[CARRIER1].release), 1);
         //    uchar level;
         buff = 0x3F - Ins.OP[CARRIER1].level;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar am;
         buff = Ins.OP[CARRIER1].am;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar vib;
         buff = Ins.OP[CARRIER1].vib;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar ksr;
         buff = Ins.OP[CARRIER1].ksr;
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //    uchar con;
         switch(type)
         {
@@ -462,13 +457,13 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
             buff = Ins.connection1;
             break;
         }
-        file.write( char_p(&buff), 1 );
+        file.write(char_p(&buff), 1);
         //} __attribute__((__packed__));
-    //    uchar   modWaveSel;
-    file.write( char_p(&Ins.OP[MODULATOR1].waveform), 1 );
-    //    uchar   carWaveSel;
-    file.write( char_p(&Ins.OP[CARRIER1].waveform), 1 );
-    //} __attribute__((__packed__));
+        //    uchar   modWaveSel;
+        file.write(char_p(&Ins.OP[MODULATOR1].waveform), 1);
+        //    uchar   carWaveSel;
+        file.write(char_p(&Ins.OP[CARRIER1].waveform), 1);
+        //} __attribute__((__packed__));
     }
 
     if(!isHMI)
@@ -477,7 +472,7 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
         {
             uchar nullIns[SIZEOF_INST];
             memset(nullIns, 0, SIZEOF_INST);
-            file.write( char_p(nullIns), SIZEOF_INST );
+            file.write(char_p(nullIns), SIZEOF_INST);
         }
     }
 

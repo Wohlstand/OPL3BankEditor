@@ -19,16 +19,17 @@
 #include "dmxopl2.h"
 #include "../common.h"
 
-static const char* dmx_magic = "#OPL_II#";
+static const char *dmx_magic = "#OPL_II#";
 
-bool DmxOPL2::detect(char* magic)
+bool DmxOPL2::detect(char *magic)
 {
     return (strncmp(magic, dmx_magic, 8) == 0);
 }
 
 int DmxOPL2::loadFile(QString filePath, FmBank &bank)
 {
-    char magic[8]; memset(magic, 0, 8);
+    char magic[8];
+    memset(magic, 0, 8);
 
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
@@ -39,40 +40,40 @@ int DmxOPL2::loadFile(QString filePath, FmBank &bank)
     if(file.read(magic, 8) != 8)
         return ERR_BADFORMAT;
 
-    if( strncmp(magic, dmx_magic, 8) != 0 )
+    if(strncmp(magic, dmx_magic, 8) != 0)
         return ERR_BADFORMAT;
 
 
-    for(unsigned short i=0; i<175; i++)
+    for(unsigned short i = 0; i < 175; i++)
     {
-        FmBank::Instrument &ins = (i<128) ?
-                                   bank.Ins_Melodic[i] :
-                                   bank.Ins_Percussion[(i-128)+35];
+        FmBank::Instrument &ins = (i < 128) ?
+                                  bank.Ins_Melodic[i] :
+                                  bank.Ins_Percussion[(i - 128) + 35];
         unsigned short  flags       = 0;
         unsigned char   fine_tuning = 0;
         unsigned char   note_number = 0;
         unsigned char   idata[32];
 
-        if( readLE(file, flags) != 2)
+        if(readLE(file, flags) != 2)
             return ERR_BADFORMAT;
 
-        if( file.read(char_p(&fine_tuning), 1) != 1 )
+        if(file.read(char_p(&fine_tuning), 1) != 1)
         {
             bank.reset();
             return ERR_BADFORMAT;
         }
-        if( file.read(char_p(&note_number), 1) != 1 )
+        if(file.read(char_p(&note_number), 1) != 1)
         {
             bank.reset();
             return ERR_BADFORMAT;
         }
-        if( file.read(char_p(idata), 32) != 32 )
+        if(file.read(char_p(idata), 32) != 32)
         {
             bank.reset();
             return ERR_BADFORMAT;
         }
 
-        ins.fine_tune = char( int(fine_tuning) - 128 );
+        ins.fine_tune = char(int(fine_tuning) - 128);
         ins.en_pseudo4op = ((flags & Dmx_DoubleVoice) != 0);
         ins.en_4op = ins.en_pseudo4op;
         ins.percNoteNum = note_number;
@@ -115,12 +116,12 @@ int DmxOPL2::loadFile(QString filePath, FmBank &bank)
     }
 
     //Instrument names
-    for(unsigned short i=0; i<175; i++)
+    for(unsigned short i = 0; i < 175; i++)
     {
-        FmBank::Instrument &ins = (i<128) ?
-                                    bank.Ins_Melodic[i] :
-                                    bank.Ins_Percussion[(i-128)+35];
-        if(file.read(ins.name, 32)!=32)
+        FmBank::Instrument &ins = (i < 128) ?
+                                  bank.Ins_Melodic[i] :
+                                  bank.Ins_Percussion[(i - 128) + 35];
+        if(file.read(ins.name, 32) != 32)
         {
             bank.reset();
             return ERR_BADFORMAT;
@@ -141,21 +142,21 @@ int DmxOPL2::saveFile(QString filePath, FmBank &bank)
     //Write header
     file.write(char_p(dmx_magic), 8);
 
-    for(unsigned short i=0; i<175; i++)
+    for(unsigned short i = 0; i < 175; i++)
     {
-        FmBank::Instrument &ins = (i<128) ?
-                                    bank.Ins_Melodic[i] :
-                                    bank.Ins_Percussion[(i-128)+35];
+        FmBank::Instrument &ins = (i < 128) ?
+                                  bank.Ins_Melodic[i] :
+                                  bank.Ins_Percussion[(i - 128) + 35];
         unsigned short  flags       = 0;
         unsigned char   fine_tuning = 0;
         unsigned char   note_number = 0;
         unsigned char   odata[32];
         memset(odata, 0, 32);
 
-        fine_tuning = uchar(int(ins.fine_tune)+128);
+        fine_tuning = uchar(int(ins.fine_tune) + 128);
         flags |= (ins.en_4op && ins.en_pseudo4op) ? Dmx_DoubleVoice : 0;
         flags |= (ins.percNoteNum != 0) ? Dmx_FixedPitch : 0;
-        flags |= (i==65) ? Dmx_Unknown : 0;
+        flags |= (i == 65) ? Dmx_Unknown : 0;
         note_number = ins.percNoteNum;
 
         odata[0]  = ins.getAVEKM(MODULATOR1);
@@ -210,15 +211,13 @@ int DmxOPL2::saveFile(QString filePath, FmBank &bank)
     }
 
     //Instrument names
-    for(unsigned short i=0; i<175; i++)
+    for(unsigned short i = 0; i < 175; i++)
     {
-        FmBank::Instrument &ins = (i<128) ?
-                                    bank.Ins_Melodic[i] :
-                                    bank.Ins_Percussion[(i-128)+35];
-        if(file.write(ins.name, 32)!=32)
-        {
+        FmBank::Instrument &ins = (i < 128) ?
+                                  bank.Ins_Melodic[i] :
+                                  bank.Ins_Percussion[(i - 128) + 35];
+        if(file.write(ins.name, 32) != 32)
             bank.reset();
-        }
     }
 
     file.close();

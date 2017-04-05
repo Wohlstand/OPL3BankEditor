@@ -53,30 +53,30 @@ const char *saveFilters[]
 QString FmBankFormatBase::getSaveFiltersList()
 {
     return  QString()
-         +  saveFilters[FORMAT_JUNGLEVIZION]+";;"+
-         +  saveFilters[FORMAT_DMX_OP2]     +";;"+
-         +  saveFilters[FORMAT_APOGEE]      +";;"+
-         +  saveFilters[FORMAT_IBK]         +";;"+
-         +  saveFilters[FORMAT_ADLIB_BKN1]  +";;"+
-         +  saveFilters[FORMAT_ADLIB_BKNHMI]+";;"+
-         +  saveFilters[FORMAT_MILES];
+            +  saveFilters[FORMAT_JUNGLEVIZION] + ";;" +
+            +  saveFilters[FORMAT_DMX_OP2]     + ";;" +
+            +  saveFilters[FORMAT_APOGEE]      + ";;" +
+            +  saveFilters[FORMAT_IBK]         + ";;" +
+            +  saveFilters[FORMAT_ADLIB_BKN1]  + ";;" +
+            +  saveFilters[FORMAT_ADLIB_BKNHMI] + ";;" +
+            +  saveFilters[FORMAT_MILES];
 }
 
 QString FmBankFormatBase::getOpenFiltersList()
 {
-    return  QString("Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk *.opl *.ad);;")+
-         +  openFilters[FORMAT_JUNGLEVIZION] + ";;" +
-         +  openFilters[FORMAT_DMX_OP2]      + ";;" +
-         +  openFilters[FORMAT_APOGEE]       + ";;" +
-         +  openFilters[FORMAT_IBK]          + ";;" +
-         +  openFilters[FORMAT_ADLIB_BKN1]   + ";;" +
-         +  openFilters[FORMAT_MILES] + ";;" +
-         +  "All files (*.*)";
+    return  QString("Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk *.opl *.ad);;") +
+            +  openFilters[FORMAT_JUNGLEVIZION] + ";;" +
+            +  openFilters[FORMAT_DMX_OP2]      + ";;" +
+            +  openFilters[FORMAT_APOGEE]       + ";;" +
+            +  openFilters[FORMAT_IBK]          + ";;" +
+            +  openFilters[FORMAT_ADLIB_BKN1]   + ";;" +
+            +  openFilters[FORMAT_MILES] + ";;" +
+            +  "All files (*.*)";
 }
 
 FmBankFormatBase::Formats FmBankFormatBase::getFormatFromFilter(QString filter)
 {
-    for(int i=(int)FORMATS_BEGIN; i<(int)FORMATS_END; i++)
+    for(int i = (int)FORMATS_BEGIN; i < (int)FORMATS_END; i++)
     {
         if(filter == saveFilters[i])
             return (Formats)i;
@@ -86,9 +86,9 @@ FmBankFormatBase::Formats FmBankFormatBase::getFormatFromFilter(QString filter)
 
 QString FmBankFormatBase::getFilterFromFormat(FmBankFormatBase::Formats format)
 {
-    if( format >= FORMATS_END)
+    if(format >= FORMATS_END)
         return "UNKNOWN";
-    if( format < FORMATS_BEGIN)
+    if(format < FORMATS_BEGIN)
         return "UNKNOWN";
 
     return saveFilters[format];
@@ -125,9 +125,7 @@ int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *rece
 
     //Check for AdLib BNK file format
     else if(AdLibBnk::detect(magic))
-    {
         err = AdLibBnk::loadFile(filePath, bank, fmt);
-    }
 
     //Check for Apogee Sound System TMB file format
     else if(ApogeeTMB::detect(filePath))
