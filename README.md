@@ -7,11 +7,11 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 * Apogee Sound System timbre formats (*.TMB)
 * SoundBlaster IBK files (*.IBK)
 * AdLib/HMI BNK files (*.BNK)
-* Global Timbre Library files for Audio Interface Library (*.AD, *.OPL) **(Read-only yet)**
+* Global Timbre Library files for Audio Interface Library (*.AD, *.OPL)
+* SB and O3 bank formats (a set of the concoctated SBI files) used with Linux drivers **(Read-only yet)**
 
 ## Comming soon
 * *.adlraw - bank format created by Bisquit - author of ADLMIDI utiltiy
-* SB and O3 bank formats (a set of the concoctated SBI files) used with Linux drivers
 * Own bank format which supports all parameters provided by editor, and also implement support for GS and XG standard into ADLMIDI
 
 # How to build

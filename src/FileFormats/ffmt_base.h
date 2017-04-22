@@ -41,6 +41,8 @@ public:
         FORMAT_ADLIB_BKN1   =   4,
         FORMAT_ADLIB_BKNHMI =   5,
         FORMAT_MILES        =   6,
+        FORMAT_SB2OP         =   7,
+        FORMAT_SB4OP        =   8,
 
         FORMATS_END,
         FORMATS_BEGIN = FORMAT_JUNGLEVIZION,

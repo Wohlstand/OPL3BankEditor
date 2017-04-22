@@ -1,3 +1,10 @@
+Version 1.2.3-beta
+- Added experimental read-only support for UNIX SB/O3 bank formats
+
+Version 1.2.2-beta
+- Added support for AIL bank format
+- Fixed bugs related to instrument importing
+
 Version 1.2.1-beta
 - Added instrument importing from another banks (that allows merging and mass copy-pasting of instruments between banks)
 - Added support of Sound-Blaster IBK files
@@ -22,7 +29,7 @@ Version 1.1.2 (10 june 2016)
 - Ability to drop file into the window to open it
 - Ability to open file from command line argument
 - Better poliphony: now used all 18 2-operator channels and 6 4-operator channels
-- Question on saving a modified file 
+- Question on saving a modified file
 
 Version 1.1 (9 june 2016)
 - Added piano layout to test notes

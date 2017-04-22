@@ -19,20 +19,26 @@
 #include "sb_ibk.h"
 #include "../common.h"
 
+// DOS SBK and SBI
 static const char *sbi_magic = "SBI\x1A";
 static const char *ibk_magic = "IBK\x1A";
 
-bool SbIBK::detect(char *magic)
+// UNIX SB and O3
+static const char *top_magic = "2OP\x1A";
+static const char *fop_magic = "4OP\x1A";
+static const char *zero_magic = "\0\0\0\0";
+
+bool SbIBK::detectIBK(char *magic)
 {
     return (strncmp(magic, ibk_magic, 4) == 0);
 }
 
-bool SbIBK::detectInst(char *magic)
+bool SbIBK::detectSBI(char *magic)
 {
     return (strncmp(magic, sbi_magic, 4) == 0);
 }
 
-bool SbIBK::detectSB2OP(QString filePath)
+bool SbIBK::detectUNIXO2(QString filePath)
 {
     if(hasExt(filePath, ".sb"))
         return true;
@@ -47,7 +53,7 @@ bool SbIBK::detectSB2OP(QString filePath)
     return (fileSize == 6656);
 }
 
-bool SbIBK::detectSB4OP(QString filePath)
+bool SbIBK::detectUNIXO3(QString filePath)
 {
     if(hasExt(filePath, ".o3"))
         return true;
@@ -66,48 +72,45 @@ static void raw2sbi(FmBank::Instrument &ins, unsigned char *idata, bool fourOp =
 {
     int MODULATOR   = fourOp ? MODULATOR2 : MODULATOR1;
     int CARRIER     = fourOp ? CARRIER2 : CARRIER1;
-    ins.setAVEKM(MODULATOR,    idata[0]);
-    ins.setAVEKM(CARRIER,      idata[1]);
+    ins.setAVEKM(MODULATOR,    idata[0]);//36   //47
+    ins.setAVEKM(CARRIER,      idata[1]);//37   //48
     //            BYTE modscal;   /* KSL, TL */
     //            BYTE carscal;
-    ins.setKSLL(MODULATOR,     idata[2]);
-    ins.setKSLL(CARRIER,       idata[3]);
+    ins.setKSLL(MODULATOR,     idata[2]);//38   //49
+    ins.setKSLL(CARRIER,       idata[3]);//39   //50
     //            BYTE modad;     /* Attack/Decay */
     //            BYTE carad;
-    ins.setAtDec(MODULATOR,    idata[4]);
-    ins.setAtDec(CARRIER,      idata[5]);
+    ins.setAtDec(MODULATOR,    idata[4]);//40   //51
+    ins.setAtDec(CARRIER,      idata[5]);//41   //52
     //            BYTE modsr;     /* Sustain/Release */
     //            BYTE carsr;
-    ins.setSusRel(MODULATOR,   idata[6]);
-    ins.setSusRel(CARRIER,     idata[7]);
+    ins.setSusRel(MODULATOR,   idata[6]);//42   //53
+    ins.setSusRel(CARRIER,     idata[7]);//43   //54
     //            BYTE modwave;   /* Wave Select */
     //            BYTE carwave;
-    ins.setWaveForm(MODULATOR, idata[8]);
-    ins.setWaveForm(CARRIER,   idata[9]);
+    ins.setWaveForm(MODULATOR, idata[8]);//44   //55
+    ins.setWaveForm(CARRIER,   idata[9]);//45   //56
 
     //            BYTE feedback;  /* FB, Connection *(inverse of Adlib)* <- not true? */
     //                            /* The following was originally reserved...CL uses  */
     //                            /* the next byte the same way we do: BD=6,SD=7,TT=8 */
     //                            /* CY=9,HH=10                                       */
     if(fourOp)
-        ins.setFBConn2(idata[10]);
+        ins.setFBConn2(idata[10]);//46  //57
     else
-        ins.setFBConn1(idata[10]);
+        ins.setFBConn1(idata[10]);//46  //57
 
     //            BYTE percvoc;   /* Percussion voice number                    : JWO */
     if(!fourOp)
-        ins.adlib_drum_number  = idata[11];
+    {
+        ins.adlib_drum_number  = idata[11];//47 //58
 
     //            char transpos;  /* Number of notes to transpose timbre, signed: JWO */
-    if(fourOp)
-        ins.note_offset2 = char_p(idata)[12];
-    else
-        ins.note_offset1 = char_p(idata)[12];
+        ins.note_offset1 = char_p(idata)[12];//48   //59
 
     //            BYTE dpitch;    /* percussion pitch: MIDI Note 0 - 127        : JWO */
-    if(!fourOp)
-        ins.percNoteNum  = idata[13];
-
+        ins.percNoteNum  = idata[13];//49
+    }
     //            BYTE rsv[2];    /* unsused - so far */
     //            } SBTIMBRE;
 }
@@ -293,4 +296,105 @@ int SbIBK::saveFile(QString filePath, FmBank &bank)
 
     file.close();
     return ERR_OK;
+}
+
+
+int SbIBK::loadFileSBOP(QString filePath, FmBank &bank)
+{
+    char magic[4];
+    bool valid = false;
+    bool is4op = false;
+    memset(magic, 0, 4);
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::ReadOnly))
+        return ERR_NOFILE;
+
+    bank.reset();
+
+    qint64  fileSize = file.bytesAvailable();
+    bool    fileIs4op = (fileSize == 7680);
+    bool    fileIsPercussion = false;
+
+    for(unsigned short i = 0; i < 128; i++)
+    {
+        unsigned char   idata1[16];
+        unsigned char   idata2[16];
+        char tempName[32];
+
+        if(file.read(magic, 4) != 4)
+        {
+            bank.reset();
+            return ERR_BADFORMAT;
+        }
+
+        if(strncmp(magic, zero_magic, 4) == 0)
+        {
+            //Skip empty instrument
+            file.seek(file.pos() + (fileIs4op ? 56 : 48));
+            fileIsPercussion = true; //Percussion banks are always begins from zero instruments
+            continue;
+        }
+
+        is4op =  (strncmp(magic, fop_magic, 4) == 0);
+        valid |= is4op;
+        valid |= (strncmp(magic, top_magic, 4) == 0);
+        valid |= (strncmp(magic, sbi_magic, 4) == 0);
+
+        if(!valid)
+        {
+            bank.reset();
+            return ERR_BADFORMAT;
+        }
+
+        if(file.read(tempName, 32) != 32)
+        {
+            bank.reset();
+            return ERR_BADFORMAT;
+        }
+
+        memset(idata1, 0, 16);
+        memset(idata2, 0, 16);
+
+        if(!fileIs4op && file.read(char_p(idata1), 16) != 16)
+        {
+            bank.reset();
+            return ERR_BADFORMAT;
+        }
+
+        if(fileIs4op && ((file.read(char_p(idata1), 11) != 11) || (file.read(char_p(idata2), 13) != 13)))
+        {
+            bank.reset();
+            return ERR_BADFORMAT;
+        }
+
+        FmBank::Instrument &ins = fileIsPercussion ? bank.Ins_Percussion[i] : bank.Ins_Melodic[i];
+        strncpy(ins.name, tempName, 15);
+        /*
+         0-15: voice name
+         16-24: unused
+         25: echo delay
+         26: echo attenuation
+         27: chorus spread
+         28: transpose
+         29: fixed duration
+         30: extra voice
+         31: fixed key
+        */
+        idata1[11] = 0;
+        ins.en_4op = is4op;
+        raw2sbi(ins, idata1, false);
+        if(is4op)
+            raw2sbi(ins, idata2, true);
+        //???? Very weird acting: in 2-op banks it is usually 64, in 4-op - zero
+        //ins.note_offset1 = fileIsPercussion ? 0 :tempName[28];
+        ins.percNoteNum = uchar(tempName[31]);
+    }
+    file.close();
+    return ERR_OK;
+}
+
+int SbIBK::saveFileSBOP(QString filePath, FmBank &bank)
+{
+    return ERR_NOT_IMLEMENTED;
 }

@@ -237,6 +237,11 @@ bool BankEditor::saveBankFile(QString filePath, FmBankFormatBase::Formats format
         err = SbIBK::saveFile(filePath, m_bank);
         break;
 
+    case FmBankFormatBase::FORMAT_SB2OP:
+    case FmBankFormatBase::FORMAT_SB4OP:
+        err = SbIBK::saveFileSBOP(filePath, m_bank);
+        break;
+
     case FmBankFormatBase::FORMAT_ADLIB_BKN1:
         err = AdLibBnk::saveFile(filePath, m_bank, AdLibBnk::BNK_ADLIB);
         break;
@@ -414,11 +419,14 @@ void BankEditor::on_actionAbout_triggered()
     QMessageBox::about(this,
                        tr("About bank editor"),
                        tr("FM Bank Editor for Yamaha OPL3/OPL2 chip, Version %1\n\n"
-                          "(c) 2016, Vitaly Novichkov \"Wohlstand\"\n"
+                          "%2\n"
                           "\n"
                           "Licensed under GNU GPLv3\n\n"
                           "Source code available on GitHub:\n"
-                          "%2").arg(VERSION).arg("https://github.com/Wohlstand/OPL3BankEditor"));
+                          "%3")
+                       .arg(VERSION)
+                       .arg(COPYRIGHT)
+                       .arg("https://github.com/Wohlstand/OPL3BankEditor"));
 }
 
 void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QListWidgetItem *)

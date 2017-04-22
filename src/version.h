@@ -19,12 +19,14 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define COMPANY "Wohlhabend Networks"
+#define COMPANY "WohlSoft"
 
 #define PGE_URL "wohlsoft.ru"
 
-#define PROGRAM_NAME "FM Bank Editor by Wohlstand"
+#define PROGRAM_NAME "OPL3 Bank Editor"
 
-#define VERSION "1.2.2-beta"
+#define VERSION "1.2.3-beta"
+
+#define COPYRIGHT "© 2016-2017, Vitaly Novichkov \"Wohlstand\""
 
 #endif // VERSION_H

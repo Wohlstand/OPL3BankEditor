@@ -33,7 +33,9 @@ const char *openFilters[]
     "Sound Blaster IBK file (*.ibk)",
     "AdLib/HMI instrument Bank (*.bnk)",
     "",
-    "Audio Interface Library (Miles) bank (*.opl *.ad)"
+    "Audio Interface Library (Miles) bank (*.opl *.ad)",
+    "SoundBlaster 2-operators bank (*.sb)",
+    "SoundBlaster 4-operators bank (*.o3)",
 };
 
 const char *saveFilters[]
@@ -45,6 +47,8 @@ const char *saveFilters[]
     "AdLib instrument bank (*.bnk)",
     "HMI instrument bank (*.bnk)",
     "Audio Interface Library (Miles) bank (*.opl *.ad)",
+    openFilters[7],
+    openFilters[8],
 };
 
 #include "ffmt_base.h"
@@ -59,18 +63,22 @@ QString FmBankFormatBase::getSaveFiltersList()
             +  saveFilters[FORMAT_IBK]         + ";;" +
             +  saveFilters[FORMAT_ADLIB_BKN1]  + ";;" +
             +  saveFilters[FORMAT_ADLIB_BKNHMI] + ";;" +
-            +  saveFilters[FORMAT_MILES];
+            +  saveFilters[FORMAT_MILES] + ";;" +
+            +  saveFilters[FORMAT_SB2OP] + ";;" +
+            +  saveFilters[FORMAT_SB4OP];
 }
 
 QString FmBankFormatBase::getOpenFiltersList()
 {
-    return  QString("Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk *.opl *.ad);;") +
+    return  QString("Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk *.opl *.ad *.sb *.o3);;") +
             +  openFilters[FORMAT_JUNGLEVIZION] + ";;" +
             +  openFilters[FORMAT_DMX_OP2]      + ";;" +
             +  openFilters[FORMAT_APOGEE]       + ";;" +
             +  openFilters[FORMAT_IBK]          + ";;" +
             +  openFilters[FORMAT_ADLIB_BKN1]   + ";;" +
             +  openFilters[FORMAT_MILES] + ";;" +
+            +  openFilters[FORMAT_SB2OP] + ";;" +
+            +  openFilters[FORMAT_SB4OP] + ";;" +
             +  "All files (*.*)";
 }
 
@@ -117,10 +125,24 @@ int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *rece
     }
 
     //Check for Sound Blaster IBK file format
-    else if(SbIBK::detect(magic))
+    else if(SbIBK::detectIBK(magic))
     {
         err = SbIBK::loadFile(filePath, bank);
         fmt = FORMAT_IBK;
+    }
+
+    //Check for Sound Blaster 2 operators bank file formats
+    else if(SbIBK::detectUNIXO2(filePath))
+    {
+        err = SbIBK::loadFileSBOP(filePath, bank);
+        fmt = FORMAT_SB2OP;
+    }
+
+    //Check for Sound Blaster 4 operators bank file formats
+    else if(SbIBK::detectUNIXO3(filePath))
+    {
+        err = SbIBK::loadFileSBOP(filePath, bank);
+        fmt = FORMAT_SB4OP;
     }
 
     //Check for AdLib BNK file format
@@ -155,7 +177,7 @@ int FmBankFormatBase::OpenInstrumentFile(QString filePath, FmBank::Instrument &i
     int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
     InsFormats fmt = FORMAT_INST_UNKNOWN;
 
-    if(SbIBK::detectInst(magic))
+    if(SbIBK::detectSBI(magic))
     {
         err = SbIBK::loadFileInst(filePath, ins, isDrum);
         fmt = FORMAT_INST_SBI;
