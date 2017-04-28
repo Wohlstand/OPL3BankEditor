@@ -102,6 +102,20 @@ QString FmBankFormatBase::getFilterFromFormat(FmBankFormatBase::Formats format)
     return saveFilters[format];
 }
 
+bool FmBankFormatBase::isImportOnly(FmBankFormatBase::Formats format)
+{
+    switch(format)
+    {
+    //FIXME: Uncomment when implement IMF and CMF importers
+    //case FORMAT_IMF_IMPORTER:
+    //    return true;
+    //case FORMAT_CMF_IMPORTER:
+    //    return true;
+    default:
+        return false;
+    }
+}
+
 int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *recent)
 {
     char magic[32];
