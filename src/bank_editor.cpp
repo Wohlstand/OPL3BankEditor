@@ -629,25 +629,36 @@ void BankEditor::setDrums()
 void BankEditor::reloadInstrumentNames()
 {
     QList<QListWidgetItem *> items = ui->instruments->findItems("*", Qt::MatchWildcard);
-
     if(ui->percussion->isChecked())
     {
-        for(int i = 0; i < items.size(); i++)
+        if(items.size() != m_bank.Ins_Percussion_box.size())
+            setDrums();//Completely rebuild an instruments list
+        else
         {
-            int index = items[i]->data(Qt::UserRole).toInt();
-            items[i]->setText(m_bank.Ins_Percussion[index].name[0] != '\0' ?
-                              m_bank.Ins_Percussion[index].name :
-                              getMidiInsNameP(index));
+            //Change instrument names of existing entries
+            for(int i = 0; i < items.size(); i++)
+            {
+                int index = items[i]->data(Qt::UserRole).toInt();
+                items[i]->setText(m_bank.Ins_Percussion[index].name[0] != '\0' ?
+                                  m_bank.Ins_Percussion[index].name :
+                                  getMidiInsNameP(index));
+            }
         }
     }
     else
     {
-        for(int i = 0; i < items.size(); i++)
+        if(items.size() != m_bank.Ins_Melodic_box.size())
+            setMelodic();//Completely rebuild an instruments list
+        else
         {
-            int index = items[i]->data(Qt::UserRole).toInt();
-            items[i]->setText(m_bank.Ins_Melodic[index].name[0] != '\0' ?
-                              m_bank.Ins_Melodic[index].name :
-                              getMidiInsNameM(index));
+            //Change instrument names of existing entries
+            for(int i = 0; i < items.size(); i++)
+            {
+                int index = items[i]->data(Qt::UserRole).toInt();
+                items[i]->setText(m_bank.Ins_Melodic[index].name[0] != '\0' ?
+                                  m_bank.Ins_Melodic[index].name :
+                                  getMidiInsNameM(index));
+            }
         }
     }
 }
