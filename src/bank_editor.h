@@ -77,8 +77,11 @@ class BankEditor : public QMainWindow
         //! OPL chip emulator frontent
         Generator       *m_generator;
 
-        //! Recent file format which was been used
-        BankFormats         m_recentFormat;
+        //! Recent bank file format which was been used
+        BankFormats     m_recentFormat;
+
+        //! Recent instrument file format which was been used
+        InstFormats     m_recentInstFormat;
 
         /* ********** Audio output stuff ********** */
         //! Buffer for audio data transfering
@@ -142,17 +145,29 @@ class BankEditor : public QMainWindow
         bool openFile(QString filePath);
 
         /*!
-         * \brief Save file
+         * \brief Save bank file
          * \param filePath absolute path where save a file
          * \param format Target format to save a file
          * \return true if file successfully saved, false if failed
          */
         bool saveBankFile(QString filePath, BankFormats format);
         /*!
+         * \brief Save current instrument file
+         * \param filePath absolute path where save a file
+         * \param format Target format to save a file
+         * \return true if file successfully saved, false if failed
+         */
+        bool saveInstrumentFile(QString filePath, InstFormats format);
+        /*!
          * \brief Open Save-As dialog box
          * \return true if file successfuly saved, false on rejecting or on fail
          */
         bool saveFileAs();
+        /*!
+         * \brief Open Save-As dialog box for single instrument
+         * \return true if file successfuly saved, false on rejecting or on fail
+         */
+        bool saveInstFileAs();
 
         /*!
          * \brief Checks was file modified or not. If file modified, asks saving.
@@ -227,6 +242,10 @@ class BankEditor : public QMainWindow
          * @brief Save current bank state into the file
          */
         void on_actionSave_triggered();
+        /**
+         * @brief Save current instrument into the file
+         */
+        void on_actionSaveInstrument_triggered();
         /**
          * @brief Exit from the program
          */

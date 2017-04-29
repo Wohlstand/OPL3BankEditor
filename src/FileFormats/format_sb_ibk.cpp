@@ -30,9 +30,10 @@ public:
     static bool detectUNIXO2(QString filePath, BankFormats &format);
     static bool detectUNIXO3(QString filePath, BankFormats &format);
     // IBK/SBI for DOS
-    static FfmtErrCode loadFileF(QString filePath, FmBank &bank);
-    static FfmtErrCode loadFileSBI(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
+    static FfmtErrCode loadFileIBK(QString filePath, FmBank &bank);
     static FfmtErrCode saveFileIBK(QString filePath, FmBank &bank);
+    static FfmtErrCode loadFileSBI(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
+    static FfmtErrCode saveFileSBI(QString filePath, FmBank::Instrument &inst, bool isDrum = false);
     // SB/O3 for UNIX
     static FfmtErrCode loadFileSBOP(QString filePath, FmBank &bank, BankFormats &format);
     static FfmtErrCode saveFileSBOP(QString filePath, FmBank &bank, bool fourOp = false);
@@ -171,7 +172,7 @@ static void sbi2raw(unsigned char *odata, FmBank::Instrument &ins, bool fourOp =
 }
 
 
-FfmtErrCode SbIBK_impl::loadFileF(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank)
 {
     char magic[4];
     memset(magic, 0, 4);
@@ -232,6 +233,50 @@ FfmtErrCode SbIBK_impl::loadFileF(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
+FfmtErrCode SbIBK_impl::saveFileIBK(QString filePath, FmBank &bank)
+{
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::WriteOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    /* Temporary bank to prevent crash if current bank has less than 128 instruments
+     * (for example, imported from some small BNK file) */
+    TmpBank tmp(bank, 128, 128);
+
+    bool drumFlags[128];
+    memset(drumFlags, 0, sizeof(bool) * 128);
+    //Write header
+    file.write(char_p(ibk_magic), 4);
+
+    for(uint16_t i = 0; i < 128; i++)
+    {
+        drumFlags[i] = (tmp.insPercussion[i].adlib_drum_number != 0);
+        FmBank::Instrument &ins = drumFlags[i] ?
+                                  tmp.insPercussion[i] :
+                                  tmp.insMelodic[i];
+        uint8_t odata[16];
+        memset(odata, 0, 16);
+        sbi2raw(odata, ins, false);
+        if(file.write(char_p(&odata), 16) != 16)
+            return FfmtErrCode::ERR_BADFORMAT;
+    }
+
+    //store bank names
+    for(uint16_t i = 0; i < 128; i++)
+    {
+        FmBank::Instrument &ins = drumFlags[i] ?
+                                  tmp.insPercussion[i] :
+                                  tmp.insMelodic[i];
+        if(file.write(ins.name, 9) != 9)
+            return FfmtErrCode::ERR_BADFORMAT;
+    }
+    file.close();
+
+    return FfmtErrCode::ERR_OK;
+}
+
+
 FfmtErrCode SbIBK_impl::loadFileSBI(QString filePath, FmBank::Instrument &inst, bool *isDrum)
 {
     char magic[4];
@@ -277,48 +322,30 @@ FfmtErrCode SbIBK_impl::loadFileSBI(QString filePath, FmBank::Instrument &inst, 
     return FfmtErrCode::ERR_OK;
 }
 
-FfmtErrCode SbIBK_impl::saveFileIBK(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_impl::saveFileSBI(QString filePath, FmBank::Instrument &inst, bool)
 {
     QFile file(filePath);
 
     if(!file.open(QIODevice::WriteOnly))
         return FfmtErrCode::ERR_NOFILE;
 
-    /* Temporary bank to prevent crash if current bank has less than 128 instruments
-     * (for example, imported from some small BNK file) */
-    TmpBank tmp(bank, 128, 128);
+    if(file.write(char_p(sbi_magic), 4) != 4)
+        return FfmtErrCode::ERR_BADFORMAT;
+    if(file.write(inst.name, 32) != 32)
+        return FfmtErrCode::ERR_BADFORMAT;
 
-    bool drumFlags[128];
-    memset(drumFlags, 0, sizeof(bool) * 128);
-    //Write header
-    file.write(char_p(ibk_magic), 4);
+    uint8_t odata[16];
+    memset(odata, 0, 16);
+    sbi2raw(odata, inst, false);
+    if(file.write(char_p(&odata), 16) != 16)
+        return FfmtErrCode::ERR_BADFORMAT;
 
-    for(uint16_t i = 0; i < 128; i++)
-    {
-        drumFlags[i] = (tmp.insPercussion[i].adlib_drum_number != 0);
-        FmBank::Instrument &ins = drumFlags[i] ?
-                                  tmp.insPercussion[i] :
-                                  tmp.insMelodic[i];
-        uint8_t odata[16];
-        memset(odata, 0, 16);
-        sbi2raw(odata, ins, false);
-        if(file.write(char_p(&odata), 16) != 16)
-            return FfmtErrCode::ERR_BADFORMAT;
-    }
-
-    //store bank names
-    for(uint16_t i = 0; i < 128; i++)
-    {
-        FmBank::Instrument &ins = drumFlags[i] ?
-                                  tmp.insPercussion[i] :
-                                  tmp.insMelodic[i];
-        if(file.write(ins.name, 9) != 9)
-            return FfmtErrCode::ERR_BADFORMAT;
-    }
     file.close();
 
     return FfmtErrCode::ERR_OK;
 }
+
+
 
 
 FfmtErrCode SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, BankFormats &format)
@@ -433,7 +460,7 @@ bool SbIBK_DOS::detect(const QString &, char *magic)
 
 FfmtErrCode SbIBK_DOS::loadFile(QString filePath, FmBank &bank)
 {
-   return SbIBK_impl::loadFileF(filePath, bank);
+   return SbIBK_impl::loadFileIBK(filePath, bank);
 }
 
 FfmtErrCode SbIBK_DOS::saveFile(QString filePath, FmBank &bank)
@@ -471,9 +498,14 @@ FfmtErrCode SbIBK_DOS::loadFileInst(QString filePath, FmBank::Instrument &inst, 
     return SbIBK_impl::loadFileSBI(filePath, inst, isDrum);
 }
 
+FfmtErrCode SbIBK_DOS::saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum)
+{
+    return SbIBK_impl::saveFileSBI(filePath, inst, isDrum);
+}
+
 int SbIBK_DOS::formatInstCaps()
 {
-    return int(FormatCaps::FORMAT_CAPS_OPEN)|int(FormatCaps::FORMAT_CAPS_IMPORT);
+    return int(FormatCaps::FORMAT_CAPS_EVERYTHING);
 }
 
 QString SbIBK_DOS::formatInstName()

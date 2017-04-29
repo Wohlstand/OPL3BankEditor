@@ -73,7 +73,7 @@ bool Importer::openFile(QString filePath, bool isBank)
         m_bank.Ins_Percussion_box.clear();
         FmBank::Instrument ins = FmBank::emptyInst();
         bool isDrum = false;
-        err = FmBankFormatFactory::OpenInstrumentFile(filePath, ins, 0, &isDrum);
+        err = FmBankFormatFactory::OpenInstrumentFile(filePath, ins, 0, &isDrum, true);
         if(err == FfmtErrCode::ERR_OK)
         {
             ui->importReplace->click();
@@ -170,7 +170,7 @@ void Importer::setDrums()
 
 void Importer::initFileData(QString &filePath)
 {
-    m_recentPath = filePath;
+    m_recentPath = QFileInfo(filePath).absoluteDir().absolutePath();
     ui->doImport->setEnabled(true);
 
     if(ui->melodic->isChecked())

@@ -127,7 +127,7 @@ void BankEditor::dropEvent(QDropEvent *e)
 
 void BankEditor::initFileData(QString &filePath)
 {
-    m_recentPath = filePath;
+    m_recentPath = QFileInfo(filePath).absoluteDir().absolutePath();
 
     if(!ui->instruments->selectedItems().isEmpty())
     {
@@ -165,7 +165,7 @@ void BankEditor::initFileData(QString &filePath)
 void BankEditor::reInitFileDataAfterSave(QString &filePath)
 {
     ui->currentFile->setText(filePath);
-    m_recentPath = filePath;
+    m_recentPath = QFileInfo(filePath).absoluteDir().absolutePath();
     m_bankBackup = m_bank;
 }
 
@@ -243,6 +243,42 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format)
     }
 }
 
+bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
+{
+    Q_ASSERT(m_curInst);
+    FfmtErrCode err = FmBankFormatFactory::SaveInstrumentFile(filePath, *m_curInst, format, ui->percussion->isChecked());
+    if(err != FfmtErrCode::ERR_OK)
+    {
+        QString errText;
+        switch(err)
+        {
+        case FfmtErrCode::ERR_BADFORMAT:
+            errText = tr("bad file format");
+            break;
+        case FfmtErrCode::ERR_NOFILE:
+            errText = tr("can't open file for write");
+            break;
+        case FfmtErrCode::ERR_NOT_IMLEMENTED:
+            errText = tr("writing into this format is not implemented yet");
+            break;
+        case FfmtErrCode::ERR_UNSUPPORTED_FORMAT:
+            errText = tr("unsupported file format, please define file name extension to choice target file format");
+            break;
+        case FfmtErrCode::ERR_UNKNOWN:
+            errText = tr("unknown error occouped");
+            break;
+        case FfmtErrCode::ERR_OK:
+            break;
+        }
+        ErrMessageS(this, errText);
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 bool BankEditor::saveFileAs()
 {
     QString filters         = FmBankFormatFactory::getSaveFiltersList();
@@ -251,6 +287,23 @@ bool BankEditor::saveFileAs()
     if(fileToSave.isEmpty())
         return false;
     return saveBankFile(fileToSave, FmBankFormatFactory::getFormatFromFilter(selectedFilter));
+}
+
+bool BankEditor::saveInstFileAs()
+{
+    if(!m_curInst)
+    {
+        QMessageBox::information(this,
+                                 tr("Nothing to save"),
+                                 tr("No selected instrument to save. Please select an instrument first!"));
+        return false;
+    }
+    QString filters = FmBankFormatFactory::getInstSaveFiltersList();
+    QString selectedFilter = FmBankFormatFactory::getInstFilterFromFormat(m_recentInstFormat, (int)FormatCaps::FORMAT_CAPS_SAVE);
+    QString fileToSave = QFileDialog::getSaveFileName(this, "Save instrument file", m_recentPath, filters, &selectedFilter);
+    if(fileToSave.isEmpty())
+        return false;
+    return saveInstrumentFile(fileToSave, FmBankFormatFactory::getInstFormatFromFilter(selectedFilter));
 }
 
 bool BankEditor::askForSaving()
@@ -306,6 +359,11 @@ void BankEditor::on_actionOpen_triggered()
 void BankEditor::on_actionSave_triggered()
 {
     saveFileAs();
+}
+
+void BankEditor::on_actionSaveInstrument_triggered()
+{
+    saveInstFileAs();
 }
 
 void BankEditor::on_actionExit_triggered()

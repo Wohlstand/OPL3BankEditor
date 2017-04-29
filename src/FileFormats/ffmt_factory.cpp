@@ -137,6 +137,22 @@ QString FmBankFormatFactory::getInstOpenFiltersList(bool import)
     return out;
 }
 
+QString FmBankFormatFactory::getInstSaveFiltersList()
+{
+    QString formats;
+    for(FmBankFormatBase_uptr &p : g_formatsInstr)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if(p->formatCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE)
+        {
+            formats.append(QString("%1 (%2);;").arg(p->formatInstName()).arg(p->formatInstExtensionMask()));
+        }
+    }
+    if(formats.endsWith(";;"))
+        formats.remove(formats.size()-2, 2);
+    return formats;
+}
+
 BankFormats FmBankFormatFactory::getFormatFromFilter(QString filter)
 {
     for(FmBankFormatBase_uptr &p : g_formats)
@@ -156,6 +172,29 @@ QString FmBankFormatFactory::getFilterFromFormat(BankFormats format, int require
         Q_ASSERT(p.get());//It must be non-null!
         if((p->formatId() == format) && (p->formatCaps() & requiredCaps))
             return QString("%1 (%2)").arg(p->formatName()).arg(p->formatExtensionMask());
+    }
+    return "UNKNOWN";
+}
+
+InstFormats FmBankFormatFactory::getInstFormatFromFilter(QString filter)
+{
+    for(FmBankFormatBase_uptr &p : g_formatsInstr)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        QString f = QString("%1 (%2)").arg(p->formatInstName()).arg(p->formatInstExtensionMask());
+        if(f == filter)
+            return p->formatInstId();
+    }
+    return InstFormats::FORMAT_INST_UNKNOWN;
+}
+
+QString FmBankFormatFactory::getInstFilterFromFormat(InstFormats format, int requiredCaps)
+{
+    for(FmBankFormatBase_uptr &p : g_formatsInstr)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if((p->formatInstId() == format) && (p->formatInstCaps() & requiredCaps))
+            return QString("%1 (%2)").arg(p->formatInstName()).arg(p->formatInstExtensionMask());
     }
     return "UNKNOWN";
 }
@@ -239,18 +278,21 @@ FfmtErrCode FmBankFormatFactory::SaveBankFile(QString filePath, FmBank &bank, Ba
 FfmtErrCode FmBankFormatFactory::OpenInstrumentFile(QString filePath,
                                          FmBank::Instrument &ins,
                                          InstFormats *recent,
-                                         bool *isDrum)
+                                         bool *isDrum,
+                                         bool import)
 {
     char magic[32];
     getMagic(filePath, magic, 32);
 
     FfmtErrCode err = FfmtErrCode::ERR_UNSUPPORTED_FORMAT;
     InstFormats fmt = InstFormats::FORMAT_INST_UNKNOWN;
-
+    FormatCaps dst = import ?
+                FormatCaps::FORMAT_CAPS_IMPORT :
+                FormatCaps::FORMAT_CAPS_OPEN;
     for(FmBankFormatBase_uptr &p : g_formatsInstr)
     {
         Q_ASSERT(p.get());//It must be non-null!
-        if((p->formatInstCaps() & (int)FormatCaps::FORMAT_CAPS_OPEN) && p->detectInst(filePath, magic))
+        if((p->formatInstCaps() & (int)dst) && p->detectInst(filePath, magic))
         {
             err = p->loadFileInst(filePath, ins, isDrum);
             fmt = p->formatInstId();
@@ -260,5 +302,21 @@ FfmtErrCode FmBankFormatFactory::OpenInstrumentFile(QString filePath,
     if(recent)
         *recent = fmt;
 
+    return err;
+}
+
+
+FfmtErrCode FmBankFormatFactory::SaveInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats dest, bool isDrum)
+{
+    FfmtErrCode err = FfmtErrCode::ERR_UNSUPPORTED_FORMAT;
+    for(FmBankFormatBase_uptr &p : g_formats)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if((p->formatInstCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE) && (p->formatInstId() == dest))
+        {
+            err = p->saveFileInst(filePath, ins, isDrum);
+            break;
+        }
+    }
     return err;
 }

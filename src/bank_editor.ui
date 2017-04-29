@@ -2148,7 +2148,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>970</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2160,6 +2160,7 @@ of second voice</string>
     <addaction name="actionImport"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
+    <addaction name="actionSaveInstrument"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -2195,7 +2196,7 @@ of second voice</string>
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>Save</string>
+    <string>Save bank as...</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+S</string>
@@ -2256,6 +2257,11 @@ of second voice</string>
   <action name="actionDelInst">
    <property name="text">
     <string>Delete current instrument</string>
+   </property>
+  </action>
+  <action name="actionSaveInstrument">
+   <property name="text">
+    <string>Save current instrument as...</string>
    </property>
   </action>
  </widget>

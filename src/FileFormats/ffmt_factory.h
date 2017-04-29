@@ -31,9 +31,13 @@ public:
     static QString getSaveFiltersList();
     static QString getOpenFiltersList(bool import = false);
     static QString getInstOpenFiltersList(bool import = false);
+    static QString getInstSaveFiltersList();
 
-    static BankFormats getFormatFromFilter(QString filter);
-    static QString getFilterFromFormat(BankFormats format, int requiredCaps);
+    static BankFormats  getFormatFromFilter(QString filter);
+    static QString      getFilterFromFormat(BankFormats format, int requiredCaps);
+
+    static InstFormats  getInstFormatFromFilter(QString filter);
+    static QString      getInstFilterFromFormat(InstFormats format, int requiredCaps);
 
     /**
      * @brief Is given format designed for the instrument importing only
@@ -45,7 +49,8 @@ public:
     static FfmtErrCode OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent=0);
     static FfmtErrCode ImportBankFile(QString filePath, FmBank &bank, BankFormats *recent=0);
     static FfmtErrCode SaveBankFile(QString filePath, FmBank &bank, BankFormats dest);
-    static FfmtErrCode OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats *recent=0, bool *isDrum = 0);
+    static FfmtErrCode OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats *recent=0, bool *isDrum = 0, bool import = false);
+    static FfmtErrCode SaveInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats format, bool isDrum);
 };
 
 #endif // FFMT_FACTORY_H

@@ -34,19 +34,22 @@ public:
 
     virtual bool detect(const QString &filePath, char* magic);
     virtual bool detectInst(const QString &filePath, char* magic);
+
     virtual FfmtErrCode loadFile(QString filePath, FmBank &bank);
     virtual FfmtErrCode saveFile(QString filePath, FmBank &bank);
+
     virtual FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
     virtual FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false);
-    virtual int     formatCaps();
-    virtual QString formatName();
-    virtual QString formatExtensionMask();
+
+    virtual int         formatCaps();
+    virtual QString     formatName();
+    virtual QString     formatExtensionMask();
     virtual BankFormats formatId();
 
     virtual int         formatInstCaps();
     virtual QString     formatInstName();
     virtual QString     formatInstExtensionMask();
-    virtual InstFormats  formatInstId();
+    virtual InstFormats formatInstId();
 };
 
 #endif // FMBANKFORMATBASE_H
