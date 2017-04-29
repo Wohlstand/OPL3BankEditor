@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sb_ibk.h"
+#include "format_sb_ibk.h"
 #include "../common.h"
 
 /**
@@ -27,15 +27,15 @@ class SbIBK_impl : public FmBankFormatBase
 public:
     static bool detectIBK(char* magic);
     static bool detectSBI(char* magic);
-    static bool detectUNIXO2(QString filePath, Formats &format);
-    static bool detectUNIXO3(QString filePath, Formats &format);
+    static bool detectUNIXO2(QString filePath, BankFormats &format);
+    static bool detectUNIXO3(QString filePath, BankFormats &format);
     // IBK/SBI for DOS
-    static int  loadFileF(QString filePath, FmBank &bank);
-    static int  loadFileInstF(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
-    static int  saveFileF(QString filePath, FmBank &bank);
+    static FfmtErrCode loadFileF(QString filePath, FmBank &bank);
+    static FfmtErrCode loadFileSBI(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
+    static FfmtErrCode saveFileIBK(QString filePath, FmBank &bank);
     // SB/O3 for UNIX
-    static int  loadFileSBOP(QString filePath, FmBank &bank, Formats &format);
-    static int  saveFileSBOP(QString filePath, FmBank &bank, bool fourOp = false);
+    static FfmtErrCode loadFileSBOP(QString filePath, FmBank &bank, BankFormats &format);
+    static FfmtErrCode saveFileSBOP(QString filePath, FmBank &bank, bool fourOp = false);
 };
 
 // DOS SBK and SBI
@@ -57,7 +57,7 @@ bool SbIBK_impl::detectSBI(char *magic)
     return (strncmp(magic, sbi_magic, 4) == 0);
 }
 
-bool SbIBK_impl::detectUNIXO2(QString filePath, Formats &format)
+bool SbIBK_impl::detectUNIXO2(QString filePath, BankFormats &format)
 {
     if(hasExt(filePath, ".sb"))
         return true;
@@ -69,11 +69,11 @@ bool SbIBK_impl::detectUNIXO2(QString filePath, Formats &format)
 
     qint64 fileSize = file.bytesAvailable();
     file.close();
-    format = FORMAT_SB2OP;
+    format = BankFormats::FORMAT_SB2OP;
     return (fileSize == 6656);
 }
 
-bool SbIBK_impl::detectUNIXO3(QString filePath, Formats &format)
+bool SbIBK_impl::detectUNIXO3(QString filePath, BankFormats &format)
 {
     if(hasExt(filePath, ".o3"))
         return true;
@@ -85,7 +85,7 @@ bool SbIBK_impl::detectUNIXO3(QString filePath, Formats &format)
 
     qint64 fileSize = file.bytesAvailable();
     file.close();
-    format = FORMAT_SB4OP;
+    format = BankFormats::FORMAT_SB4OP;
     return (fileSize == 7680);
 }
 
@@ -171,34 +171,33 @@ static void sbi2raw(unsigned char *odata, FmBank::Instrument &ins, bool fourOp =
 }
 
 
-int SbIBK_impl::loadFileF(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_impl::loadFileF(QString filePath, FmBank &bank)
 {
     char magic[4];
     memset(magic, 0, 4);
     QFile file(filePath);
 
     if(!file.open(QIODevice::ReadOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
 
     bank.reset();
 
     if(file.read(magic, 4) != 4)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     if(strncmp(magic, ibk_magic, 4) != 0)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     bool drumFlags[128];
     memset(drumFlags, 0, sizeof(bool) * 128);
 
-    for(unsigned short i = 0; i < 128; i++)
+    for(uint16_t i = 0; i < 128; i++)
     {
-        unsigned char   idata[16];
-
+        uint8_t idata[16];
         if(file.read(char_p(idata), 16) != 16)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
 
         char tempName[10];
@@ -220,7 +219,7 @@ int SbIBK_impl::loadFileF(QString filePath, FmBank &bank)
         if(file.read(ins.name, 9) != 9)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
     }
 
@@ -230,10 +229,10 @@ int SbIBK_impl::loadFileF(QString filePath, FmBank &bank)
     //            SBTIMBRE snd[128];           /* Instrument block */
     //            char     name[128][9];       /* name block: NUL terminated strings */
     //            } IBKFMT;
-    return ERR_OK;
+    return FfmtErrCode::ERR_OK;
 }
 
-int SbIBK_impl::loadFileInstF(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+FfmtErrCode SbIBK_impl::loadFileSBI(QString filePath, FmBank::Instrument &inst, bool *isDrum)
 {
     char magic[4];
     memset(magic, 0, 4);
@@ -241,22 +240,22 @@ int SbIBK_impl::loadFileInstF(QString filePath, FmBank::Instrument &inst, bool *
     QFile file(filePath);
 
     if(!file.open(QIODevice::ReadOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
 
     bool isExtended = file.bytesAvailable() > 52;
     Q_UNUSED(isExtended);
 
     if(file.read(magic, 4) != 4)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     if(strncmp(magic, sbi_magic, 4) != 0)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     //char tempName[32];
     //sprintf(tempName, "NONAME%03d", 0);
     //strncpy(inst.name, tempName, 32 );
     if(file.read(inst.name, 32) != 32)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     bool drumFlag = false;
     unsigned char   idata[16];
@@ -264,7 +263,7 @@ int SbIBK_impl::loadFileInstF(QString filePath, FmBank::Instrument &inst, bool *
     if(file.read(char_p(idata), 16) != 16)
     {
         memset(&inst, 0, sizeof(FmBank::Instrument));
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
     }
 
     FmBank::Instrument &ins = inst;
@@ -275,52 +274,54 @@ int SbIBK_impl::loadFileInstF(QString filePath, FmBank::Instrument &inst, bool *
         *isDrum = drumFlag;
 
     file.close();
-    return ERR_OK;
+    return FfmtErrCode::ERR_OK;
 }
 
-int SbIBK_impl::saveFileF(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_impl::saveFileIBK(QString filePath, FmBank &bank)
 {
     QFile file(filePath);
 
     if(!file.open(QIODevice::WriteOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
+
+    /* Temporary bank to prevent crash if current bank has less than 128 instruments
+     * (for example, imported from some small BNK file) */
+    TmpBank tmp(bank, 128, 128);
 
     bool drumFlags[128];
     memset(drumFlags, 0, sizeof(bool) * 128);
     //Write header
     file.write(char_p(ibk_magic), 4);
 
-    for(unsigned short i = 0; i < 128; i++)
+    for(uint16_t i = 0; i < 128; i++)
     {
-        drumFlags[i] = (bank.Ins_Percussion[i].adlib_drum_number != 0);
+        drumFlags[i] = (tmp.insPercussion[i].adlib_drum_number != 0);
         FmBank::Instrument &ins = drumFlags[i] ?
-                                  bank.Ins_Percussion[i] :
-                                  bank.Ins_Melodic[i];
-        unsigned char   odata[16];
+                                  tmp.insPercussion[i] :
+                                  tmp.insMelodic[i];
+        uint8_t odata[16];
         memset(odata, 0, 16);
         sbi2raw(odata, ins, false);
-
         if(file.write(char_p(&odata), 16) != 16)
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
     }
 
     //store bank names
-    for(unsigned short i = 0; i < 128; i++)
+    for(uint16_t i = 0; i < 128; i++)
     {
         FmBank::Instrument &ins = drumFlags[i] ?
-                                  bank.Ins_Percussion[i] :
-                                  bank.Ins_Melodic[i];
-
+                                  tmp.insPercussion[i] :
+                                  tmp.insMelodic[i];
         if(file.write(ins.name, 9) != 9)
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
     }
-
     file.close();
-    return ERR_OK;
+
+    return FfmtErrCode::ERR_OK;
 }
 
 
-int SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, Formats &format)
+FfmtErrCode SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, BankFormats &format)
 {
     char magic[4];
     bool valid = false;
@@ -329,14 +330,14 @@ int SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, Formats &format)
     QFile file(filePath);
 
     if(!file.open(QIODevice::ReadOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
 
     bank.reset();
 
     qint64  fileSize = file.bytesAvailable();
     bool    fileIs4op = (fileSize == 7680);
     bool    fileIsPercussion = false;
-    format = fileIs4op ? FORMAT_SB4OP : FORMAT_SB2OP;
+    format = fileIs4op ? BankFormats::FORMAT_SB4OP : BankFormats::FORMAT_SB2OP;
     for(uint16_t i = 0; i < 128; i++)
     {
         uint8_t idata1[16];
@@ -346,7 +347,7 @@ int SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, Formats &format)
         if(file.read(magic, 4) != 4)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
 
         if(strncmp(magic, zero_magic, 4) == 0)
@@ -365,13 +366,13 @@ int SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, Formats &format)
         if(!valid)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
 
         if(file.read(tempName, 32) != 32)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
 
         memset(idata1, 0, 16);
@@ -380,13 +381,13 @@ int SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, Formats &format)
         if(!fileIs4op && file.read(char_p(idata1), 16) != 16)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
 
         if(fileIs4op && ((file.read(char_p(idata1), 11) != 11) || (file.read(char_p(idata2), 13) != 13)))
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
 
         FmBank::Instrument &ins = fileIsPercussion ? bank.Ins_Percussion[i] : bank.Ins_Melodic[i];
@@ -412,16 +413,13 @@ int SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, Formats &format)
         ins.percNoteNum = uchar(tempName[31]);
     }
     file.close();
-    return ERR_OK;
+    return FfmtErrCode::ERR_OK;
 }
 
-int SbIBK_impl::saveFileSBOP(QString, FmBank &, bool)
+FfmtErrCode SbIBK_impl::saveFileSBOP(QString, FmBank &, bool)
 {
-    return ERR_NOT_IMLEMENTED;
+    return FfmtErrCode::ERR_NOT_IMLEMENTED;
 }
-
-
-
 
 
 
@@ -433,51 +431,19 @@ bool SbIBK_DOS::detect(const QString &, char *magic)
     return SbIBK_impl::detectIBK(magic);
 }
 
-bool SbIBK_DOS::detectInst(const QString &, char *magic)
-{
-    return SbIBK_impl::detectSBI(magic);
-}
-
-int SbIBK_DOS::loadFile(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_DOS::loadFile(QString filePath, FmBank &bank)
 {
    return SbIBK_impl::loadFileF(filePath, bank);
 }
 
-int SbIBK_DOS::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+FfmtErrCode SbIBK_DOS::saveFile(QString filePath, FmBank &bank)
 {
-    return SbIBK_impl::loadFileInstF(filePath, inst, isDrum);
-}
-
-
-
-int SbIBK_DOS::saveFile(QString filePath, FmBank &bank)
-{
-    return SbIBK_impl::saveFileF(filePath, bank);
+    return SbIBK_impl::saveFileIBK(filePath, bank);
 }
 
 int SbIBK_DOS::formatCaps()
 {
-    return FORMAT_CAPS_EVERYTHING;
-}
-
-int SbIBK_DOS::formatInstCaps()
-{
-    return FORMAT_CAPS_OPEN|FORMAT_CAPS_IMPORT;
-}
-
-QString SbIBK_DOS::formatInstName()
-{
-    return "Sound Blaster Instrument";
-}
-
-QString SbIBK_DOS::formatInstExtensionMask()
-{
-    return "*.sbi";
-}
-
-FmBankFormatBase::InsFormats SbIBK_DOS::formatInstId()
-{
-    return FORMAT_INST_SBI;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
 QString SbIBK_DOS::formatName()
@@ -490,10 +456,41 @@ QString SbIBK_DOS::formatExtensionMask()
     return "*.ibk";
 }
 
-FmBankFormatBase::Formats SbIBK_DOS::formatId()
+BankFormats SbIBK_DOS::formatId()
 {
-    return FORMAT_IBK;
+    return BankFormats::FORMAT_IBK;
 }
+
+bool SbIBK_DOS::detectInst(const QString &, char *magic)
+{
+    return SbIBK_impl::detectSBI(magic);
+}
+
+FfmtErrCode SbIBK_DOS::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+{
+    return SbIBK_impl::loadFileSBI(filePath, inst, isDrum);
+}
+
+int SbIBK_DOS::formatInstCaps()
+{
+    return int(FormatCaps::FORMAT_CAPS_OPEN)|int(FormatCaps::FORMAT_CAPS_IMPORT);
+}
+
+QString SbIBK_DOS::formatInstName()
+{
+    return "Sound Blaster Instrument";
+}
+
+QString SbIBK_DOS::formatInstExtensionMask()
+{
+    return "*.sbi";
+}
+
+InstFormats SbIBK_DOS::formatInstId()
+{
+    return InstFormats::FORMAT_INST_SBI;
+}
+
 
 
 
@@ -509,14 +506,14 @@ bool SbIBK_UNIX_READ::detect(const QString &filePath, char *)
     return ret;
 }
 
-int SbIBK_UNIX_READ::loadFile(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_UNIX_READ::loadFile(QString filePath, FmBank &bank)
 {
     return SbIBK_impl::loadFileSBOP(filePath, bank, m_recentFormat);
 }
 
 int SbIBK_UNIX_READ::formatCaps()
 {
-    return FORMAT_CAPS_OPEN|FORMAT_CAPS_IMPORT;
+    return int(FormatCaps::FORMAT_CAPS_OPEN)|int(FormatCaps::FORMAT_CAPS_IMPORT);
 }
 
 QString SbIBK_UNIX_READ::formatName()
@@ -529,7 +526,7 @@ QString SbIBK_UNIX_READ::formatExtensionMask()
     return "*.sb *.o3";
 }
 
-FmBankFormatBase::Formats SbIBK_UNIX_READ::formatId()
+BankFormats SbIBK_UNIX_READ::formatId()
 {
     return m_recentFormat;
 }
@@ -540,14 +537,14 @@ FmBankFormatBase::Formats SbIBK_UNIX_READ::formatId()
 SbIBK_UNIX2OP_SAVE::SbIBK_UNIX2OP_SAVE() : FmBankFormatBase()
 {}
 
-int SbIBK_UNIX2OP_SAVE::saveFile(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_UNIX2OP_SAVE::saveFile(QString filePath, FmBank &bank)
 {
     return SbIBK_impl::saveFileSBOP(filePath, bank, false);
 }
 
 int SbIBK_UNIX2OP_SAVE::formatCaps()
 {
-    return FORMAT_CAPS_SAVE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE;
 }
 
 QString SbIBK_UNIX2OP_SAVE::formatName()
@@ -560,9 +557,9 @@ QString SbIBK_UNIX2OP_SAVE::formatExtensionMask()
     return "*.sb";
 }
 
-FmBankFormatBase::Formats SbIBK_UNIX2OP_SAVE::formatId()
+BankFormats SbIBK_UNIX2OP_SAVE::formatId()
 {
-    return FORMAT_SB2OP;
+    return BankFormats::FORMAT_SB2OP;
 }
 
 
@@ -571,14 +568,14 @@ FmBankFormatBase::Formats SbIBK_UNIX2OP_SAVE::formatId()
 SbIBK_UNIX4OP_SAVE::SbIBK_UNIX4OP_SAVE() : FmBankFormatBase()
 {}
 
-int SbIBK_UNIX4OP_SAVE::saveFile(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_UNIX4OP_SAVE::saveFile(QString filePath, FmBank &bank)
 {
     return SbIBK_impl::saveFileSBOP(filePath, bank, true);
 }
 
 int SbIBK_UNIX4OP_SAVE::formatCaps()
 {
-    return FORMAT_CAPS_SAVE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE;
 }
 
 QString SbIBK_UNIX4OP_SAVE::formatName()
@@ -591,9 +588,9 @@ QString SbIBK_UNIX4OP_SAVE::formatExtensionMask()
     return "*.o3";
 }
 
-FmBankFormatBase::Formats SbIBK_UNIX4OP_SAVE::formatId()
+BankFormats SbIBK_UNIX4OP_SAVE::formatId()
 {
-    return FORMAT_SB4OP;
+    return BankFormats::FORMAT_SB4OP;
 }
 
 

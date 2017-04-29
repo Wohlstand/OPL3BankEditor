@@ -16,27 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BUILDENGINETMB_H
-#define BUILDENGINETMB_H
+#ifndef JUNLEVIZION_H
+#define JUNLEVIZION_H
 
 #include "ffmt_base.h"
 
 /**
- * @brief Reader and Writer of the Apogee Sound System TMB Bank format
+ * @brief Reader and Writer of the Junglevision Patch file format
  */
-class ApogeeTMB : public FmBankFormatBase
+class JunleVizion final : public FmBankFormatBase
 {
 public:
-    ApogeeTMB();
-    ~ApogeeTMB() = default;
+    JunleVizion();
+    ~JunleVizion() = default;
 
-    bool detect(const QString &filePath, char* magic);
-    int  loadFile(QString filePath, FmBank &bank);
-    int  saveFile(QString filePath, FmBank &bank);
-    int  formatCaps();
-    QString formatName();
-    QString formatExtensionMask();
-    Formats formatId();
+    bool detect(const QString &filePath, char* magic) override;
+    FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int  formatCaps() override;
+    QString formatName() override;
+    QString formatExtensionMask() override;
+    BankFormats formatId() override;
 };
 
-#endif // BUILDENGINETMB_H
+#endif // JUNLEVIZION_H

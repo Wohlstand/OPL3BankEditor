@@ -247,3 +247,26 @@ unsigned int FmBank::Instrument::getDataE862(int OpID)
                   | (0x0F &  uchar(OP[OpID].fmult)));
 }
 
+
+TmpBank::TmpBank(FmBank &bank, int minMelodic, int minPercusive)
+{
+    insMelodic = bank.Ins_Melodic;
+    insPercussion = bank.Ins_Percussion;
+    if(bank.Ins_Melodic_box.size() < minMelodic)
+    {
+        tmpMelodic = bank.Ins_Melodic_box;
+        tmpMelodic.reserve(128 - tmpMelodic.size());
+        while(tmpMelodic.size() < 128)
+            tmpMelodic.push_back(FmBank::emptyInst());
+        insMelodic = tmpMelodic.data();
+    }
+
+    if(bank.Ins_Percussion_box.size() < minPercusive)
+    {
+        tmpPercussion = bank.Ins_Percussion_box;
+        tmpPercussion.reserve(128 - tmpPercussion.size());
+        while(tmpPercussion.size() < 128)
+            tmpPercussion.push_back(FmBank::emptyInst());
+        insPercussion = tmpPercussion.data();
+    }
+}

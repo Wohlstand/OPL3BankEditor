@@ -29,7 +29,7 @@
 
 #include "ins_names.h"
 
-#include "FileFormats/ffmt_base.h"
+#include "FileFormats/ffmt_factory.h"
 
 #include "common.h"
 
@@ -57,15 +57,15 @@ Importer::~Importer()
 
 bool Importer::openFile(QString filePath, bool isBank)
 {
-    int err = FmBankFormatBase::ERR_UNKNOWN;
-    FmBankFormatBase::Formats format = FmBankFormatBase::FORMAT_UNKNOWN;
+    FfmtErrCode err = FfmtErrCode::ERR_UNKNOWN;
+    BankFormats format = BankFormats::FORMAT_UNKNOWN;
     ui->importAssoc->setEnabled(true);
     ui->importReplace->setEnabled(true);
     ui->melodic->setEnabled(true);
     ui->percussion->setEnabled(true);
 
     if(isBank)
-        err = FmBankFormatBase::ImportBankFile(filePath, m_bank, &format);
+        err = FmBankFormatFactory::ImportBankFile(filePath, m_bank, &format);
     else
     {
         m_bank.reset();
@@ -73,8 +73,8 @@ bool Importer::openFile(QString filePath, bool isBank)
         m_bank.Ins_Percussion_box.clear();
         FmBank::Instrument ins = FmBank::emptyInst();
         bool isDrum = false;
-        err = FmBankFormatBase::OpenInstrumentFile(filePath, ins, 0, &isDrum);
-        if(err == FmBankFormatBase::ERR_OK)
+        err = FmBankFormatFactory::OpenInstrumentFile(filePath, ins, 0, &isDrum);
+        if(err == FfmtErrCode::ERR_OK)
         {
             ui->importReplace->click();
             ui->importAssoc->setEnabled(false);
@@ -99,38 +99,33 @@ bool Importer::openFile(QString filePath, bool isBank)
             m_bank.reset();
     }
 
-    if(err != FmBankFormatBase::ERR_OK)
+    if(err != FfmtErrCode::ERR_OK)
     {
         QString errText;
-
         switch(err)
         {
-        case FmBankFormatBase::ERR_BADFORMAT:
+        case FfmtErrCode::ERR_BADFORMAT:
             errText = tr("bad file format");
             break;
-
-        case FmBankFormatBase::ERR_NOFILE:
+        case FfmtErrCode::ERR_NOFILE:
             errText = tr("can't open file");
             break;
-
-        case FmBankFormatBase::ERR_NOT_IMLEMENTED:
+        case FfmtErrCode::ERR_NOT_IMLEMENTED:
             errText = tr("reading of this format is not implemented yet");
             break;
-
-        case FmBankFormatBase::ERR_UNSUPPORTED_FORMAT:
+        case FfmtErrCode::ERR_UNSUPPORTED_FORMAT:
             errText = tr("unsupported file format");
             break;
-
-        case FmBankFormatBase::ERR_UNKNOWN:
+        case FfmtErrCode::ERR_UNKNOWN:
             errText = tr("unknown error occouped");
             break;
+        case FfmtErrCode::ERR_OK:
+            break;
         }
-
         ErrMessageO(this, errText);
         return false;
     }
-
-    if(FmBankFormatBase::isImportOnly(format))
+    if(FmBankFormatFactory::isImportOnly(format))
     {
         ui->importReplace->click();
         ui->importAssoc->setEnabled(false);
@@ -200,7 +195,7 @@ void Importer::initFileData(QString &filePath)
 
 void Importer::on_openBank_clicked()
 {
-    QString filters = FmBankFormatBase::getOpenFiltersList(true);
+    QString filters = FmBankFormatFactory::getOpenFiltersList(true);
     QString fileToOpen;
     fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
     if(fileToOpen.isEmpty())
@@ -211,7 +206,7 @@ void Importer::on_openBank_clicked()
 
 void Importer::on_openInst_clicked()
 {
-    QString filters = FmBankFormatBase::getInstOpenFiltersList(true);
+    QString filters = FmBankFormatFactory::getInstOpenFiltersList(true);
     QString fileToOpen;
     fileToOpen = QFileDialog::getOpenFileName(this, "Open instrument file", m_recentPath, filters);
     if(fileToOpen.isEmpty())

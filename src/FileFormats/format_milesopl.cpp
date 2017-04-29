@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "milesopl.h"
+#include "format_milesopl.h"
 #include "../common.h"
 
 bool MilesOPL::detect(const QString &filePath, char *)
@@ -100,11 +100,11 @@ struct GTL_Head // GTL file header entry structure
 MilesOPL::MilesOPL() : FmBankFormatBase()
 {}
 
-int MilesOPL::loadFile(QString filePath, FmBank &bank)
+FfmtErrCode MilesOPL::loadFile(QString filePath, FmBank &bank)
 {
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
 
     GTL_Head head;
     QVector<GTL_Head> heads;
@@ -114,7 +114,7 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
     do
     {
         if(file.read(char_p(hdata), 6) != 6)
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         head.patch = hdata[0];
         head.bank  = hdata[1];
         head.offset = toUint32LE(hdata + 2);
@@ -129,28 +129,28 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
     bank.reset();
 
     unsigned int totalInsts = static_cast<unsigned int>(heads.size());
-    for(unsigned int i = 0; i < totalInsts; i++)
+    for(uint32_t i = 0; i < totalInsts; i++)
     {
-        GTL_Head &h = heads[i];
+        GTL_Head &h = heads[int(i)];
         int gmPatchId = h.bank == 0x7F ? h.patch + 0x80 : h.patch;
         FmBank::Instrument &ins = (gmPatchId < 128) ? bank.Ins_Melodic[gmPatchId] : bank.Ins_Percussion[gmPatchId - 128];
 
         if(!file.seek(h.offset))
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
         uint16_t insLen = 0;
         if(readLE(file, insLen) != 2)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
 
         if((insLen < 14) || (insLen > 25))
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
 
         insLen -= 2;
@@ -159,7 +159,7 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
         if(file.read(char_p(idata), insLen) != insLen)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
         //Operators mode: length 12 - 2-op, 23 - 4-op
         ins.en_4op = (insLen / 11) > 1;
@@ -203,10 +203,10 @@ int MilesOPL::loadFile(QString filePath, FmBank &bank)
     }
     file.close();
 
-    return ERR_OK;
+    return FfmtErrCode::ERR_OK;
 }
 
-int MilesOPL::saveFile(QString filePath, FmBank &bank)
+FfmtErrCode MilesOPL::saveFile(QString filePath, FmBank &bank)
 {
     FmBank::Instrument null;
     memset(&null, 0, sizeof(FmBank::Instrument));
@@ -224,7 +224,7 @@ int MilesOPL::saveFile(QString filePath, FmBank &bank)
         {
             FmBank::Instrument &ins = bank.Ins_Melodic[i];
             head.patch = i % 128;
-            head.bank  = i / 128;
+            head.bank  = uint8_t(i) / 128;
             heads.push_back(head);
             head.offset += (ins.en_4op && !ins.en_pseudo4op) ? 25 : 14;
         }
@@ -249,12 +249,12 @@ int MilesOPL::saveFile(QString filePath, FmBank &bank)
     heads.push_back(head);
 
     // Calculate the global offset
-    uint32_t ins_offset = (heads.size() * 6) - 4;
+    uint32_t ins_offset = uint32_t((heads.size() * 6) - 4);
 
     // Open the file
     QFile file(filePath);
     if(!file.open(QIODevice::WriteOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
 
     //2) Build the header
     for(GTL_Head &h : heads)
@@ -283,7 +283,7 @@ int MilesOPL::saveFile(QString filePath, FmBank &bank)
 //        //NoteNum
 //        ins.percNoteNum  = (gmPatchId < 128) ? 0 : idata[0];
 //        ins.note_offset1 = (gmPatchId < 128) ? static_cast<char>(idata[0]) : 0;
-        odata[0] = h.bank == 0x7F ? ins.percNoteNum : ins.note_offset1;
+        odata[0] = h.bank == 0x7F ? ins.percNoteNum : uint8_t(ins.note_offset1);
 //        //OP1
         odata[1] = ins.getAVEKM(MODULATOR1);
         odata[2] = ins.getKSLL(MODULATOR1);
@@ -310,7 +310,7 @@ int MilesOPL::saveFile(QString filePath, FmBank &bank)
 //            //Feedback/Connection 3<->4
 //            uint8_t fb_c = idata[6]; //idata[17] is always zero, true FB field is bitwisely concoctated with idata[6]
             odata[17] = 0;
-            odata[6] = ins.getFBConn1() | (ins.getFBConn2() << 7);
+            odata[6] = uint8_t(ins.getFBConn1() | (ins.getFBConn2() << 7));
 //            ins.setFBConn1(fb_c & 0x0F);
 //            ins.setFBConn2((fb_c & 0x0E) | (fb_c >> 7));
 //            //OP4
@@ -322,16 +322,16 @@ int MilesOPL::saveFile(QString filePath, FmBank &bank)
         }
 
         if(file.write(char_p(odata), ins_len) != ins_len)
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
     }
     file.close();
 
-    return ERR_OK;
+    return FfmtErrCode::ERR_OK;
 }
 
 int MilesOPL::formatCaps()
 {
-    return FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
 QString MilesOPL::formatName()
@@ -344,7 +344,7 @@ QString MilesOPL::formatExtensionMask()
     return "*.opl *.ad";
 }
 
-FmBankFormatBase::Formats MilesOPL::formatId()
+BankFormats MilesOPL::formatId()
 {
-    return FORMAT_MILES;
+    return BankFormats::FORMAT_MILES;
 }

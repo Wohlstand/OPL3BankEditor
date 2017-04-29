@@ -16,27 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef JUNLEVIZION_H
-#define JUNLEVIZION_H
+#ifndef MILESOPL_K
+#define MILESOPL_K
 
 #include "ffmt_base.h"
 
 /**
- * @brief Reader and Writer of the Junglevision Patch file format
+ * @brief Reader and Writer of the Miles Sound System TMB Bank format
  */
-class JunleVizion : public FmBankFormatBase
+class MilesOPL final : public FmBankFormatBase
 {
 public:
-    JunleVizion();
-    ~JunleVizion() = default;
+    MilesOPL();
+    ~MilesOPL() = default;
 
-    bool detect(const QString &filePath, char* magic);
-    int  loadFile(QString filePath, FmBank &bank);
-    int  saveFile(QString filePath, FmBank &bank);
-    int  formatCaps();
-    QString formatName();
-    QString formatExtensionMask();
-    Formats formatId();
+    bool detect(const QString &filePath, char* magic) override;
+    FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int  formatCaps() override;
+    QString formatName() override;
+    QString formatExtensionMask() override;
+    BankFormats formatId() override;
 };
 
-#endif // JUNLEVIZION_H
+#endif // MILESOPL_K

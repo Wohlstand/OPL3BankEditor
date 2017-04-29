@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "dmxopl2.h"
+#include "format_dmxopl2.h"
 #include "../common.h"
 
 static const char *dmx_magic = "#OPL_II#";
@@ -29,22 +29,22 @@ bool DmxOPL2::detect(const QString &, char *magic)
 DmxOPL2::DmxOPL2() : FmBankFormatBase()
 {}
 
-int DmxOPL2::loadFile(QString filePath, FmBank &bank)
+FfmtErrCode DmxOPL2::loadFile(QString filePath, FmBank &bank)
 {
     char magic[8];
     memset(magic, 0, 8);
 
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
 
     bank.reset();
 
     if(file.read(magic, 8) != 8)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     if(strncmp(magic, dmx_magic, 8) != 0)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
 
     for(unsigned short i = 0; i < 175; i++)
@@ -58,22 +58,22 @@ int DmxOPL2::loadFile(QString filePath, FmBank &bank)
         unsigned char   idata[32];
 
         if(readLE(file, flags) != 2)
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
 
         if(file.read(char_p(&fine_tuning), 1) != 1)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
         if(file.read(char_p(&note_number), 1) != 1)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
         if(file.read(char_p(idata), 32) != 32)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
 
         ins.fine_tune = char(int(fine_tuning) - 128);
@@ -127,20 +127,24 @@ int DmxOPL2::loadFile(QString filePath, FmBank &bank)
         if(file.read(ins.name, 32) != 32)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
     }
 
     file.close();
 
-    return ERR_OK;
+    return FfmtErrCode::ERR_OK;
 }
 
-int DmxOPL2::saveFile(QString filePath, FmBank &bank)
+FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
 {
     QFile file(filePath);
     if(!file.open(QIODevice::WriteOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
+
+    /* Temporary bank to prevent crash if current bank has less than 128 instruments
+     * (for example, imported from some small BNK file) */
+    TmpBank tmp(bank, 128, 128);
 
     //Write header
     file.write(char_p(dmx_magic), 8);
@@ -148,8 +152,8 @@ int DmxOPL2::saveFile(QString filePath, FmBank &bank)
     for(unsigned short i = 0; i < 175; i++)
     {
         FmBank::Instrument &ins = (i < 128) ?
-                                  bank.Ins_Melodic[i] :
-                                  bank.Ins_Percussion[(i - 128) + 35];
+                                  tmp.insMelodic[i] :
+                                  tmp.tmpPercussion[(i - 128) + 35];
         unsigned short  flags       = 0;
         unsigned char   fine_tuning = 0;
         unsigned char   note_number = 0;
@@ -201,36 +205,35 @@ int DmxOPL2::saveFile(QString filePath, FmBank &bank)
         fromSint16LE(ins.note_offset2 - 12, &odata[30]);
 
         if(writeLE(file, flags) != 2)
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
 
         if(file.write(char_p(&fine_tuning), 1) != 1)
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
 
         if(file.write(char_p(&note_number), 1) != 1)
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
 
         if(file.write(char_p(&odata), 32) != 32)
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
     }
 
     //Instrument names
     for(unsigned short i = 0; i < 175; i++)
     {
         FmBank::Instrument &ins = (i < 128) ?
-                                  bank.Ins_Melodic[i] :
-                                  bank.Ins_Percussion[(i - 128) + 35];
+                                  tmp.insMelodic[i] :
+                                  tmp.insPercussion[(i - 128) + 35];
         if(file.write(ins.name, 32) != 32)
             bank.reset();
     }
-
     file.close();
 
-    return ERR_OK;
+    return FfmtErrCode::ERR_OK;
 }
 
 int DmxOPL2::formatCaps()
 {
-    return FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
 QString DmxOPL2::formatName()
@@ -243,7 +246,7 @@ QString DmxOPL2::formatExtensionMask()
     return "*.op2 *.htc *.hxn";
 }
 
-FmBankFormatBase::Formats DmxOPL2::formatId()
+BankFormats DmxOPL2::formatId()
 {
-    return FORMAT_DMX_OP2;
+    return BankFormats::FORMAT_DMX_OP2;
 }

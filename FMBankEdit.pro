@@ -57,44 +57,46 @@ UI_DIR      = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.ui
 win32: RC_FILE = $$PWD/src/resources/res.rc
 
 SOURCES += \
-    src/FileFormats/dmxopl2.cpp \
-    src/FileFormats/junlevizion.cpp \
     src/audio.cpp \
     src/bank.cpp \
     src/bank_editor.cpp \
     src/common.cpp \
     src/controlls.cpp \
-    src/main.cpp \
-    src/ins_names.cpp \
-    src/opl/nukedopl3.c \
-    src/opl/generator.cpp \
-    src/piano.cpp \
-    src/FileFormats/apogeetmb.cpp \
-    src/FileFormats/sb_ibk.cpp \
-    src/FileFormats/adlibbnk.cpp \
-    src/importer.cpp \
     src/FileFormats/ffmt_base.cpp \
-    src/FileFormats/milesopl.cpp
+    src/FileFormats/ffmt_factory.cpp \
+    src/FileFormats/format_adlibbnk.cpp \
+    src/FileFormats/format_apogeetmb.cpp \
+    src/FileFormats/format_dmxopl2.cpp \
+    src/FileFormats/format_junlevizion.cpp \
+    src/FileFormats/format_milesopl.cpp \
+    src/FileFormats/format_sb_ibk.cpp \
+    src/importer.cpp \
+    src/ins_names.cpp \
+    src/main.cpp \
+    src/opl/generator.cpp \
+    src/opl/nukedopl3.c \
+    src/piano.cpp
 
 
 HEADERS += \
-    src/FileFormats/dmxopl2.h \
-    src/FileFormats/ffmt_base.h \
-    src/FileFormats/junlevizion.h \
-    src/bank.h \
     src/bank_editor.h \
+    src/bank.h \
     src/common.h \
-    src/ins_names.h \
-    src/opl/nukedopl3.h \
-    src/opl/generator.h \
-    src/piano.h \
-    src/version.h \
-    src/FileFormats/apogeetmb.h \
-    src/FileFormats/sb_ibk.h \
-    src/FileFormats/adlibbnk.h \
+    src/FileFormats/ffmt_base.h \
+    src/FileFormats/ffmt_enums.h \
+    src/FileFormats/ffmt_factory.h \
+    src/FileFormats/format_adlibbnk.h \
+    src/FileFormats/format_apogeetmb.h \
+    src/FileFormats/format_dmxopl2.h \
+    src/FileFormats/format_junlevizion.h \
+    src/FileFormats/format_milesopl.h \
+    src/FileFormats/format_sb_ibk.h \
     src/importer.h \
-    src/FileFormats/milesopl.h
-
+    src/ins_names.h \
+    src/opl/generator.h \
+    src/opl/nukedopl3.h \
+    src/piano.h \
+    src/version.h
 
 FORMS += \
     src/bank_editor.ui \

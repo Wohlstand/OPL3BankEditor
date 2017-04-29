@@ -303,4 +303,19 @@ public:
     QVector<Instrument> Ins_Percussion_box;
 };
 
+class TmpBank
+{
+public:
+    TmpBank(FmBank &bank, int minMelodic, int minPercusive);
+
+    //! Pointer to array of melodic instruments
+    FmBank::Instrument* insMelodic;
+    //! Pointer to array of percussion instruments
+    FmBank::Instrument* insPercussion;
+    //! Array of melodic instruments
+    QVector<FmBank::Instrument> tmpMelodic;
+    //! Array of percussion instruments
+    QVector<FmBank::Instrument> tmpPercussion;
+};
+
 #endif // BANK_H

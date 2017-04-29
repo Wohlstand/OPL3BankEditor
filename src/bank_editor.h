@@ -78,7 +78,7 @@ class BankEditor : public QMainWindow
         Generator       *m_generator;
 
         //! Recent file format which was been used
-        FmBankFormatBase::Formats m_recentFormat;
+        BankFormats         m_recentFormat;
 
         /* ********** Audio output stuff ********** */
         //! Buffer for audio data transfering
@@ -147,7 +147,7 @@ class BankEditor : public QMainWindow
          * \param format Target format to save a file
          * \return true if file successfully saved, false if failed
          */
-        bool saveBankFile(QString filePath, FmBankFormatBase::Formats format);
+        bool saveBankFile(QString filePath, BankFormats format);
         /*!
          * \brief Open Save-As dialog box
          * \return true if file successfuly saved, false on rejecting or on fail

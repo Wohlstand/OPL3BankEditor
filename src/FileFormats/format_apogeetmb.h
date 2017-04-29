@@ -16,27 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MILESOPL_K
-#define MILESOPL_K
+#ifndef BUILDENGINETMB_H
+#define BUILDENGINETMB_H
 
 #include "ffmt_base.h"
 
 /**
- * @brief Reader and Writer of the Miles Sound System TMB Bank format
+ * @brief Reader and Writer of the Apogee Sound System TMB Bank format
  */
-class MilesOPL : public FmBankFormatBase
+class ApogeeTMB final : public FmBankFormatBase
 {
 public:
-    MilesOPL();
-    ~MilesOPL() = default;
+    ApogeeTMB();
+    ~ApogeeTMB() = default;
 
-    bool detect(const QString &filePath, char* magic);
-    int  loadFile(QString filePath, FmBank &bank);
-    int  saveFile(QString filePath, FmBank &bank);
-    int  formatCaps();
-    QString formatName();
-    QString formatExtensionMask();
-    Formats formatId();
+    bool detect(const QString &filePath, char* magic) override;
+    FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int  formatCaps() override;
+    QString formatName() override;
+    QString formatExtensionMask() override;
+    BankFormats formatId() override;
 };
 
-#endif // MILESOPL_K
+#endif // BUILDENGINETMB_H

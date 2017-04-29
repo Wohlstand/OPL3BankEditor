@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "junlevizion.h"
+#include "format_junlevizion.h"
 #include "../common.h"
 
 static const char *jv_magic = "Junglevision Patch File\x1A\0\0\0\0\0\0\0\0";
@@ -29,53 +29,53 @@ bool JunleVizion::detect(const QString &, char *magic)
 JunleVizion::JunleVizion() : FmBankFormatBase()
 {}
 
-int JunleVizion::loadFile(QString filePath, FmBank &bank)
+FfmtErrCode JunleVizion::loadFile(QString filePath, FmBank &bank)
 {
-    unsigned short count_melodic     = 0;
-    unsigned short count_percusive   = 0;
-    unsigned short startAt_melodic   = 0;
-    unsigned short startAt_percusive = 0;
+    uint16_t count_melodic     = 0;
+    uint16_t count_percusive   = 0;
+    uint16_t startAt_melodic   = 0;
+    uint16_t startAt_percusive = 0;
     char magic[32];
     memset(magic, 0, 32);
 
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
 
     bank.reset();
 
     if(file.read(magic, 32) != 32)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     if(strncmp(magic, jv_magic, 32) != 0)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
     if(readLE(file, count_melodic) != 2)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
     if(readLE(file, count_percusive) != 2)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
     if(readLE(file, startAt_melodic) != 2)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
     if(readLE(file, startAt_percusive) != 2)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     if(count_melodic > 128)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
     if(count_percusive > 128)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     if((count_melodic + startAt_melodic) > 128)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
     if((count_percusive + startAt_percusive) > 128)
-        return ERR_BADFORMAT;
-    unsigned short total = count_melodic + count_percusive;
-    for(unsigned short i = 0; i < total; i++)
+        return FfmtErrCode::ERR_BADFORMAT;
+    uint16_t total = count_melodic + count_percusive;
+    for(uint16_t i = 0; i < total; i++)
     {
         FmBank::Instrument &ins = (i < count_melodic) ? bank.Ins_Melodic[i + startAt_melodic] : bank.Ins_Percussion[(i - count_melodic) + startAt_percusive];
-        unsigned char idata[24];
+        uint8_t idata[24];
         if(file.read(char_p(idata), 24) != 24)
         {
             bank.reset();
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
         }
 
         //Operators mode: 0 - 2-op, 1 - 4-op
@@ -112,26 +112,29 @@ int JunleVizion::loadFile(QString filePath, FmBank &bank)
         ins.setSusRel(CARRIER2, idata[22]);
         ins.setWaveForm(CARRIER2, idata[23]);
     }
-
     file.close();
 
-    return ERR_OK;
+    return FfmtErrCode::ERR_OK;
 }
 
-int JunleVizion::saveFile(QString filePath, FmBank &bank)
+FfmtErrCode JunleVizion::saveFile(QString filePath, FmBank &bank)
 {
     FmBank::Instrument null;
     memset(&null, 0, sizeof(FmBank::Instrument));
 
-    unsigned short count_melodic     = 128;
-    unsigned short count_percusive   = 128;
-    unsigned short startAt_melodic   = 0;
-    unsigned short startAt_percusive = 0;
+    uint16_t count_melodic     = 128;
+    uint16_t count_percusive   = 128;
+    uint16_t startAt_melodic   = 0;
+    uint16_t startAt_percusive = 0;
+
+    /* Temporary bank to prevent crash if current bank has less than 128 instruments
+     * (for example, imported from some small BNK file) */
+    TmpBank tmp(bank, 128, 128);
 
     //Find begin
-    for(unsigned short i = 0; i < 128; i++)
+    for(uint16_t i = 0; i < 128; i++)
     {
-        if((memcmp(&bank.Ins_Percussion[i], &null, sizeof(FmBank::Instrument)) != 0) && (startAt_melodic == 0))
+        if((memcmp(&tmp.insPercussion[i], &null, sizeof(FmBank::Instrument)) != 0) && (startAt_melodic == 0))
         {
             startAt_percusive = i;
             break;
@@ -142,9 +145,9 @@ int JunleVizion::saveFile(QString filePath, FmBank &bank)
     //Find tail
     if(count_percusive != 0)
     {
-        for(unsigned short i = 127; i >= startAt_percusive; i--)
+        for(uint16_t i = 127; i >= startAt_percusive; i--)
         {
-            if((memcmp(&bank.Ins_Percussion[i], &null, sizeof(FmBank::Instrument)) != 0) && (startAt_melodic == 0))
+            if((memcmp(&tmp.insPercussion[i], &null, sizeof(FmBank::Instrument)) != 0) && (startAt_melodic == 0))
                 break;
             count_percusive -= 1;
         }
@@ -154,7 +157,7 @@ int JunleVizion::saveFile(QString filePath, FmBank &bank)
 
     QFile file(filePath);
     if(!file.open(QIODevice::WriteOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
 
     //Write header
     file.write(char_p(jv_magic), 32);
@@ -164,12 +167,14 @@ int JunleVizion::saveFile(QString filePath, FmBank &bank)
     writeLE(file, startAt_melodic);
     writeLE(file, startAt_percusive);
 
-    unsigned short total = count_melodic + count_percusive;
+    uint16_t total = count_melodic + count_percusive;
     bool had4op = false;
-    for(unsigned short i = 0; i < total; i++)
+    for(uint16_t i = 0; i < total; i++)
     {
-        FmBank::Instrument &ins = (i < count_melodic) ? bank.Ins_Melodic[i + startAt_melodic] : bank.Ins_Percussion[(i - count_melodic) + startAt_percusive];
-        unsigned char odata[24];
+        FmBank::Instrument &ins = (i < count_melodic) ?
+                                    tmp.insMelodic[i + startAt_melodic] :
+                                    tmp.insPercussion[(i - count_melodic) + startAt_percusive];
+        uint8_t odata[24];
         memset(odata, 0, 24);
         had4op |= ins.en_4op;
         //Operators mode: 0 - 2-op, 1 - 4-op
@@ -208,17 +213,16 @@ int JunleVizion::saveFile(QString filePath, FmBank &bank)
         odata[23] = ins.getWaveForm(CARRIER2) | (ins.en_4op ? 0x80 : 0x00);
 
         if(file.write(char_p(odata), 24) != 24)
-            return ERR_BADFORMAT;
+            return FfmtErrCode::ERR_BADFORMAT;
     }
-
     file.close();
 
-    return ERR_OK;
+    return FfmtErrCode::ERR_OK;
 }
 
 int JunleVizion::formatCaps()
 {
-    return FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
 QString JunleVizion::formatName()
@@ -231,7 +235,7 @@ QString JunleVizion::formatExtensionMask()
     return "*.op3";
 }
 
-FmBankFormatBase::Formats JunleVizion::formatId()
+BankFormats JunleVizion::formatId()
 {
-    return FORMAT_JUNGLEVIZION;
+    return BankFormats::FORMAT_JUNGLEVIZION;
 }

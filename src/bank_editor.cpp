@@ -27,13 +27,7 @@
 #include "ui_bank_editor.h"
 #include "ins_names.h"
 
-#include "FileFormats/adlibbnk.h"
-#include "FileFormats/apogeetmb.h"
-#include "FileFormats/dmxopl2.h"
-#include "FileFormats/junlevizion.h"
-#include "FileFormats/sb_ibk.h"
-#include "FileFormats/milesopl.h"
-
+#include "FileFormats/ffmt_factory.h"
 #include "common.h"
 #include "version.h"
 
@@ -41,12 +35,12 @@ BankEditor::BankEditor(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::BankEditor)
 {
-    FmBankFormatBase::registerAllFormats();
+    FmBankFormatFactory::registerAllFormats();
     memset(&m_clipboard, 0, sizeof(FmBank::Instrument));
     m_curInst = NULL;
     m_curInstBackup = NULL;
     m_lock = false;
-    m_recentFormat = FmBankFormatBase::FORMAT_JUNGLEVIZION;
+    m_recentFormat = BankFormats::FORMAT_JUNGLEVIZION;
     m_recentNum     = -1;
     m_recentPerc    = false;
     ui->setupUi(this);
@@ -177,31 +171,31 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
 
 bool BankEditor::openFile(QString filePath)
 {
-    int err = FmBankFormatBase::OpenBankFile(filePath, m_bank, &m_recentFormat);
+    FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &m_recentFormat);
 
-    if(err != FmBankFormatBase::ERR_OK)
+    if(err != FfmtErrCode::ERR_OK)
     {
         QString errText;
-
         switch(err)
         {
-        case FmBankFormatBase::ERR_BADFORMAT:
+        case FfmtErrCode::ERR_BADFORMAT:
             errText = tr("bad file format");
             break;
-        case FmBankFormatBase::ERR_NOFILE:
+        case FfmtErrCode::ERR_NOFILE:
             errText = tr("can't open file");
             break;
-        case FmBankFormatBase::ERR_NOT_IMLEMENTED:
+        case FfmtErrCode::ERR_NOT_IMLEMENTED:
             errText = tr("reading of this format is not implemented yet");
             break;
-        case FmBankFormatBase::ERR_UNSUPPORTED_FORMAT:
+        case FfmtErrCode::ERR_UNSUPPORTED_FORMAT:
             errText = tr("unsupported file format");
             break;
-        case FmBankFormatBase::ERR_UNKNOWN:
+        case FfmtErrCode::ERR_UNKNOWN:
             errText = tr("unknown error occouped");
             break;
+        case FfmtErrCode::ERR_OK:
+            break;
         }
-
         ErrMessageO(this, errText);
         return false;
     }
@@ -212,29 +206,31 @@ bool BankEditor::openFile(QString filePath)
     }
 }
 
-bool BankEditor::saveBankFile(QString filePath, FmBankFormatBase::Formats format)
+bool BankEditor::saveBankFile(QString filePath, BankFormats format)
 {
-    int err = FmBankFormatBase::SaveBankFile(filePath, m_bank, format);
+    FfmtErrCode err = FmBankFormatFactory::SaveBankFile(filePath, m_bank, format);
 
-    if(err != FmBankFormatBase::ERR_OK)
+    if(err != FfmtErrCode::ERR_OK)
     {
         QString errText;
         switch(err)
         {
-        case FmBankFormatBase::ERR_BADFORMAT:
+        case FfmtErrCode::ERR_BADFORMAT:
             errText = tr("bad file format");
             break;
-        case FmBankFormatBase::ERR_NOFILE:
+        case FfmtErrCode::ERR_NOFILE:
             errText = tr("can't open file for write");
             break;
-        case FmBankFormatBase::ERR_NOT_IMLEMENTED:
+        case FfmtErrCode::ERR_NOT_IMLEMENTED:
             errText = tr("writing into this format is not implemented yet");
             break;
-        case FmBankFormatBase::ERR_UNSUPPORTED_FORMAT:
+        case FfmtErrCode::ERR_UNSUPPORTED_FORMAT:
             errText = tr("unsupported file format, please define file name extension to choice target file format");
             break;
-        case FmBankFormatBase::ERR_UNKNOWN:
+        case FfmtErrCode::ERR_UNKNOWN:
             errText = tr("unknown error occouped");
+            break;
+        case FfmtErrCode::ERR_OK:
             break;
         }
         ErrMessageS(this, errText);
@@ -249,12 +245,12 @@ bool BankEditor::saveBankFile(QString filePath, FmBankFormatBase::Formats format
 
 bool BankEditor::saveFileAs()
 {
-    QString filters         = FmBankFormatBase::getSaveFiltersList();
-    QString selectedFilter  = FmBankFormatBase::getFilterFromFormat(m_recentFormat, FmBankFormatBase::FORMAT_CAPS_SAVE);
+    QString filters         = FmBankFormatFactory::getSaveFiltersList();
+    QString selectedFilter  = FmBankFormatFactory::getFilterFromFormat(m_recentFormat, (int)FormatCaps::FORMAT_CAPS_SAVE);
     QString fileToSave      = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, filters, &selectedFilter);
     if(fileToSave.isEmpty())
         return false;
-    return saveBankFile(fileToSave, FmBankFormatBase::getFormatFromFilter(selectedFilter));
+    return saveBankFile(fileToSave, FmBankFormatFactory::getFormatFromFilter(selectedFilter));
 }
 
 bool BankEditor::askForSaving()
@@ -286,7 +282,7 @@ void BankEditor::on_actionNew_triggered()
 {
     if(!askForSaving())
         return;
-    m_recentFormat = FmBankFormatBase::FORMAT_JUNGLEVIZION;
+    m_recentFormat = BankFormats::FORMAT_JUNGLEVIZION;
     ui->currentFile->setText(tr("<Untitled>"));
     ui->instruments->clearSelection();
     m_bank.reset();
@@ -299,7 +295,7 @@ void BankEditor::on_actionOpen_triggered()
 {
     if(!askForSaving())
         return;
-    QString filters = FmBankFormatBase::getOpenFiltersList();
+    QString filters = FmBankFormatFactory::getOpenFiltersList();
     QString fileToOpen;
     fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
     if(fileToOpen.isEmpty())
@@ -316,7 +312,6 @@ void BankEditor::on_actionExit_triggered()
 {
     this->close();
 }
-
 
 void BankEditor::on_actionCopy_triggered()
 {

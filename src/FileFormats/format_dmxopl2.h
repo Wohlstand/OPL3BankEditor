@@ -24,25 +24,25 @@
 /**
  * @brief Reader and Writer of the DMX OP2 Bank format
  */
-class DmxOPL2 : public FmBankFormatBase
+class DmxOPL2 final : public FmBankFormatBase
 {
 public:
+    DmxOPL2();
+    ~DmxOPL2() = default;
+
     enum DmxFlags
     {
         Dmx_FixedPitch  = 0x0001,
         Dmx_Unknown     = 0x0002,
         Dmx_DoubleVoice = 0x0004
     };
-    DmxOPL2();
-    ~DmxOPL2() = default;
-
-    bool detect(const QString &filePath, char* magic);
-    int  loadFile(QString filePath, FmBank &bank);
-    int  saveFile(QString filePath, FmBank &bank);
-    int  formatCaps();
-    QString formatName();
-    QString formatExtensionMask();
-    Formats formatId();
+    bool detect(const QString &filePath, char* magic) override;
+    FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int  formatCaps() override;
+    QString formatName() override;
+    QString formatExtensionMask() override;
+    BankFormats formatId() override;
 };
 
 #endif // DMXOPL2_H
