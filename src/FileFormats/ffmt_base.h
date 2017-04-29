@@ -27,13 +27,21 @@
  */
 class FmBankFormatBase
 {
+protected:
+    static void registerBankFormat(FmBankFormatBase* format);
+    static void registerInstFormat(FmBankFormatBase *format);
 public:
+    static void registerAllFormats();
+
+    FmBankFormatBase();
+    virtual ~FmBankFormatBase();
     /**
      * @brief The bank formats enum
      */
     enum Formats
     {
         FORMAT_UNKNOWN = -1,
+
         FORMAT_JUNGLEVIZION =   0,
         FORMAT_DMX_OP2      =   1,
         FORMAT_APOGEE       =   2,
@@ -55,11 +63,37 @@ public:
         FORMAT_INST_SBIex   = 1,
     };
 
+    enum FormatCaps
+    {
+        FORMAT_CAPS_NOTHING = 0x00,
+        FORMAT_CAPS_OPEN    = 0x01,
+        FORMAT_CAPS_SAVE    = 0x02,
+        FORMAT_CAPS_IMPORT  = 0x04,
+        FORMAT_CAPS_EVERYTHING = FORMAT_CAPS_OPEN|FORMAT_CAPS_SAVE|FORMAT_CAPS_IMPORT
+    };
+
     static QString getSaveFiltersList();
-    static QString getOpenFiltersList();
+    static QString getOpenFiltersList(bool import = false);
+    static QString getInstOpenFiltersList(bool import = false);
 
     static Formats getFormatFromFilter(QString filter);
-    static QString getFilterFromFormat(Formats format);
+    static QString getFilterFromFormat(Formats format, int requiredCaps);
+
+    virtual bool detect(const QString &filePath, char* magic);
+    virtual bool detectInst(const QString &filePath, char* magic);
+    virtual int  loadFile(QString filePath, FmBank &bank);
+    virtual int  saveFile(QString filePath, FmBank &bank);
+    virtual int  loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
+    virtual int  saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false);
+    virtual int     formatCaps();
+    virtual QString formatName();
+    virtual QString formatExtensionMask();
+    virtual Formats formatId();
+
+    virtual int         formatInstCaps();
+    virtual QString     formatInstName();
+    virtual QString     formatInstExtensionMask();
+    virtual InsFormats  formatInstId();
 
     /**
      * @brief Is given format designed for the instrument importing only
@@ -88,6 +122,8 @@ public:
     };
 
     static int  OpenBankFile(QString filePath, FmBank &bank, Formats *recent=0);
+    static int  ImportBankFile(QString filePath, FmBank &bank, Formats *recent=0);
+    static int  SaveBankFile(QString filePath, FmBank &bank, Formats dest);
     static int  OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, InsFormats *recent=0, bool *isDrum = 0);
 };
 

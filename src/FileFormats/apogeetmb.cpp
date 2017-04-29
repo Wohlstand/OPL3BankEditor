@@ -19,7 +19,10 @@
 #include "apogeetmb.h"
 #include "../common.h"
 
-bool ApogeeTMB::detect(QString filePath)
+ApogeeTMB::ApogeeTMB() : FmBankFormatBase()
+{}
+
+bool ApogeeTMB::detect(const QString &filePath, char* /*magic*/)
 {
     if(hasExt(filePath, ".tmb"))
         return true;
@@ -120,4 +123,24 @@ int ApogeeTMB::saveFile(QString filePath, FmBank &bank)
 
     file.close();
     return ERR_OK;
+}
+
+int ApogeeTMB::formatCaps()
+{
+    return FORMAT_CAPS_EVERYTHING;
+}
+
+QString ApogeeTMB::formatName()
+{
+    return "Apogee Sound System timbre bank";
+}
+
+QString ApogeeTMB::formatExtensionMask()
+{
+    return "*.tmb";
+}
+
+FmBankFormatBase::Formats ApogeeTMB::formatId()
+{
+    return FORMAT_APOGEE;
 }

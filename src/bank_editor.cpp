@@ -41,6 +41,7 @@ BankEditor::BankEditor(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::BankEditor)
 {
+    FmBankFormatBase::registerAllFormats();
     memset(&m_clipboard, 0, sizeof(FmBank::Instrument));
     m_curInst = NULL;
     m_curInstBackup = NULL;
@@ -187,19 +188,15 @@ bool BankEditor::openFile(QString filePath)
         case FmBankFormatBase::ERR_BADFORMAT:
             errText = tr("bad file format");
             break;
-
         case FmBankFormatBase::ERR_NOFILE:
             errText = tr("can't open file");
             break;
-
         case FmBankFormatBase::ERR_NOT_IMLEMENTED:
             errText = tr("reading of this format is not implemented yet");
             break;
-
         case FmBankFormatBase::ERR_UNSUPPORTED_FORMAT:
             errText = tr("unsupported file format");
             break;
-
         case FmBankFormatBase::ERR_UNKNOWN:
             errText = tr("unknown error occouped");
             break;
@@ -217,77 +214,29 @@ bool BankEditor::openFile(QString filePath)
 
 bool BankEditor::saveBankFile(QString filePath, FmBankFormatBase::Formats format)
 {
-    int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
-
-    switch(format)
-    {
-    case FmBankFormatBase::FORMAT_JUNGLEVIZION:
-        err = JunleVizion::saveFile(filePath, m_bank);
-        break;
-
-    case FmBankFormatBase::FORMAT_DMX_OP2:
-        err = DmxOPL2::saveFile(filePath, m_bank);
-        break;
-
-    case FmBankFormatBase::FORMAT_APOGEE:
-        err = ApogeeTMB::saveFile(filePath, m_bank);
-        break;
-
-    case FmBankFormatBase::FORMAT_IBK:
-        err = SbIBK::saveFile(filePath, m_bank);
-        break;
-
-    case FmBankFormatBase::FORMAT_SB2OP:
-    case FmBankFormatBase::FORMAT_SB4OP:
-        err = SbIBK::saveFileSBOP(filePath, m_bank);
-        break;
-
-    case FmBankFormatBase::FORMAT_ADLIB_BKN1:
-        err = AdLibBnk::saveFile(filePath, m_bank, AdLibBnk::BNK_ADLIB);
-        break;
-
-    case FmBankFormatBase::FORMAT_ADLIB_BKNHMI:
-        err = AdLibBnk::saveFile(filePath, m_bank, AdLibBnk::BNK_HMI);
-        break;
-
-    case FmBankFormatBase::FORMAT_MILES:
-        err = MilesOPL::saveFile(filePath, m_bank);
-        break;
-
-    case FmBankFormatBase::FORMAT_UNKNOWN:
-        break;
-
-    case FmBankFormatBase::FORMATS_END:
-        break;
-    }
+    int err = FmBankFormatBase::SaveBankFile(filePath, m_bank, format);
 
     if(err != FmBankFormatBase::ERR_OK)
     {
         QString errText;
-
         switch(err)
         {
         case FmBankFormatBase::ERR_BADFORMAT:
             errText = tr("bad file format");
             break;
-
         case FmBankFormatBase::ERR_NOFILE:
             errText = tr("can't open file for write");
             break;
-
         case FmBankFormatBase::ERR_NOT_IMLEMENTED:
             errText = tr("writing into this format is not implemented yet");
             break;
-
         case FmBankFormatBase::ERR_UNSUPPORTED_FORMAT:
             errText = tr("unsupported file format, please define file name extension to choice target file format");
             break;
-
         case FmBankFormatBase::ERR_UNKNOWN:
             errText = tr("unknown error occouped");
             break;
         }
-
         ErrMessageS(this, errText);
         return false;
     }
@@ -300,13 +249,11 @@ bool BankEditor::saveBankFile(QString filePath, FmBankFormatBase::Formats format
 
 bool BankEditor::saveFileAs()
 {
-    QString filters = FmBankFormatBase::getSaveFiltersList();
-    QString selectedFilter = FmBankFormatBase::getFilterFromFormat(m_recentFormat);
-    QString fileToSave = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, filters, &selectedFilter);
-
+    QString filters         = FmBankFormatBase::getSaveFiltersList();
+    QString selectedFilter  = FmBankFormatBase::getFilterFromFormat(m_recentFormat, FmBankFormatBase::FORMAT_CAPS_SAVE);
+    QString fileToSave      = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, filters, &selectedFilter);
     if(fileToSave.isEmpty())
         return false;
-
     return saveBankFile(fileToSave, FmBankFormatBase::getFormatFromFilter(selectedFilter));
 }
 
@@ -315,7 +262,6 @@ bool BankEditor::askForSaving()
     if(m_bank != m_bankBackup)
     {
         QMessageBox::StandardButton res = QMessageBox::question(this, tr("File is not saved"), tr("File is modified and not saved. Do you want to save it?"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-
         if((res == QMessageBox::Cancel) || (res == QMessageBox::NoButton))
             return false;
         else if(res == QMessageBox::Yes)
@@ -331,10 +277,8 @@ bool BankEditor::askForSaving()
 void BankEditor::flushInstrument()
 {
     loadInstrument();
-
     if(m_curInst && ui->percussion->isChecked())
         ui->noteToTest->setValue(m_curInst->percNoteNum);
-
     sendPatch();
 }
 
@@ -342,7 +286,6 @@ void BankEditor::on_actionNew_triggered()
 {
     if(!askForSaving())
         return;
-
     m_recentFormat = FmBankFormatBase::FORMAT_JUNGLEVIZION;
     ui->currentFile->setText(tr("<Untitled>"));
     ui->instruments->clearSelection();
@@ -356,14 +299,11 @@ void BankEditor::on_actionOpen_triggered()
 {
     if(!askForSaving())
         return;
-
     QString filters = FmBankFormatBase::getOpenFiltersList();
     QString fileToOpen;
     fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
-
     if(fileToOpen.isEmpty())
         return;
-
     openFile(fileToOpen);
 }
 
@@ -381,14 +321,12 @@ void BankEditor::on_actionExit_triggered()
 void BankEditor::on_actionCopy_triggered()
 {
     if(!m_curInst) return;
-
     memcpy(&m_clipboard, m_curInst, sizeof(FmBank::Instrument));
 }
 
 void BankEditor::on_actionPaste_triggered()
 {
     if(!m_curInst) return;
-
     memcpy(m_curInst, &m_clipboard, sizeof(FmBank::Instrument));
     flushInstrument();
 }
@@ -397,10 +335,8 @@ void BankEditor::on_actionReset_current_instrument_triggered()
 {
     if(!m_curInstBackup || !m_curInst)
         return; //Some pointer is Null!!!
-
     if(memcmp(m_curInst, m_curInstBackup, sizeof(FmBank::Instrument)) == 0)
         return; //Nothing to do
-
     if(QMessageBox::Yes == QMessageBox::question(this,
             tr("Reset instrument to initial state"),
             tr("This instrument will be reseted to initial state "
@@ -478,7 +414,6 @@ void BankEditor::loadInstrument()
         m_lock = false;
         return;
     }
-
     ui->editzone->setEnabled(true);
     ui->editzone2->setEnabled(true);
     ui->testNoteBox->setEnabled(true);
@@ -560,9 +495,7 @@ void BankEditor::loadInstrument()
 void BankEditor::sendPatch()
 {
     if(!m_curInst) return;
-
     if(!m_generator) return;
-
     m_generator->changePatch(*m_curInst, ui->percussion->isChecked());
 }
 
@@ -575,7 +508,6 @@ void BankEditor::setDrumMode(bool dmode)
     }
     else
         ui->noteToTest->setValue(m_recentMelodicNote);
-
     ui->percMode->setEnabled(dmode);
     ui->noteToTest->setDisabled(dmode);
     ui->testMajor->setDisabled(dmode);
@@ -596,7 +528,6 @@ void BankEditor::setMelodic()
 {
     setDrumMode(false);
     ui->instruments->clear();
-
     for(int i = 0; i < m_bank.countMelodic(); i++)
     {
         QListWidgetItem *item = new QListWidgetItem();
@@ -613,7 +544,6 @@ void BankEditor::setDrums()
 {
     setDrumMode(true);
     ui->instruments->clear();
-
     for(int i = 0; i < m_bank.countDrums(); i++)
     {
         QListWidgetItem *item = new QListWidgetItem();
@@ -686,7 +616,6 @@ void BankEditor::on_actionAddInst_triggered()
         id = m_bank.countDrums() - 1;
         item->setText(ins.name[0] != '\0' ? ins.name : getMidiInsNameP(id));
     }
-
     item->setData(Qt::UserRole, id);
     item->setToolTip(QString("ID: %1").arg(id));
     item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);

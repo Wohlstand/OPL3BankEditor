@@ -21,10 +21,13 @@
 
 static const char *jv_magic = "Junglevision Patch File\x1A\0\0\0\0\0\0\0\0";
 
-bool JunleVizion::detect(char *magic)
+bool JunleVizion::detect(const QString &, char *magic)
 {
     return (strncmp(magic, jv_magic, 32) == 0);
 }
+
+JunleVizion::JunleVizion() : FmBankFormatBase()
+{}
 
 int JunleVizion::loadFile(QString filePath, FmBank &bank)
 {
@@ -211,4 +214,24 @@ int JunleVizion::saveFile(QString filePath, FmBank &bank)
     file.close();
 
     return ERR_OK;
+}
+
+int JunleVizion::formatCaps()
+{
+    return FORMAT_CAPS_EVERYTHING;
+}
+
+QString JunleVizion::formatName()
+{
+    return "JunleVision bank";
+}
+
+QString JunleVizion::formatExtensionMask()
+{
+    return "*.op3";
+}
+
+FmBankFormatBase::Formats JunleVizion::formatId()
+{
+    return FORMAT_JUNGLEVIZION;
 }

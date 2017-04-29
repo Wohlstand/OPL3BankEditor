@@ -19,13 +19,12 @@
 #include "milesopl.h"
 #include "../common.h"
 
-bool MilesOPL::detect(QString filePath)
+bool MilesOPL::detect(const QString &filePath, char *)
 {
     if(hasExt(filePath, ".opl"))
         return true;
     if(hasExt(filePath, ".ad"))
         return true;
-
     return false;
 }
 
@@ -97,6 +96,9 @@ struct GTL_Head // GTL file header entry structure
     uint8_t  bank   = 0;
     uint32_t offset = 0;
 };
+
+MilesOPL::MilesOPL() : FmBankFormatBase()
+{}
 
 int MilesOPL::loadFile(QString filePath, FmBank &bank)
 {
@@ -325,4 +327,24 @@ int MilesOPL::saveFile(QString filePath, FmBank &bank)
     file.close();
 
     return ERR_OK;
+}
+
+int MilesOPL::formatCaps()
+{
+    return FORMAT_CAPS_EVERYTHING;
+}
+
+QString MilesOPL::formatName()
+{
+    return "Audio Interface Library (Miles) bank";
+}
+
+QString MilesOPL::formatExtensionMask()
+{
+    return "*.opl *.ad";
+}
+
+FmBankFormatBase::Formats MilesOPL::formatId()
+{
+    return FORMAT_MILES;
 }

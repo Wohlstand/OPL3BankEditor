@@ -19,6 +19,25 @@
 #include "sb_ibk.h"
 #include "../common.h"
 
+/**
+ * @brief Reader and Writer of the Sound Blaster IBK Bank format
+ */
+class SbIBK_impl : public FmBankFormatBase
+{
+public:
+    static bool detectIBK(char* magic);
+    static bool detectSBI(char* magic);
+    static bool detectUNIXO2(QString filePath, Formats &format);
+    static bool detectUNIXO3(QString filePath, Formats &format);
+    // IBK/SBI for DOS
+    static int  loadFileF(QString filePath, FmBank &bank);
+    static int  loadFileInstF(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
+    static int  saveFileF(QString filePath, FmBank &bank);
+    // SB/O3 for UNIX
+    static int  loadFileSBOP(QString filePath, FmBank &bank, Formats &format);
+    static int  saveFileSBOP(QString filePath, FmBank &bank, bool fourOp = false);
+};
+
 // DOS SBK and SBI
 static const char *sbi_magic = "SBI\x1A";
 static const char *ibk_magic = "IBK\x1A";
@@ -28,17 +47,17 @@ static const char *top_magic = "2OP\x1A";
 static const char *fop_magic = "4OP\x1A";
 static const char *zero_magic = "\0\0\0\0";
 
-bool SbIBK::detectIBK(char *magic)
+bool SbIBK_impl::detectIBK(char *magic)
 {
     return (strncmp(magic, ibk_magic, 4) == 0);
 }
 
-bool SbIBK::detectSBI(char *magic)
+bool SbIBK_impl::detectSBI(char *magic)
 {
     return (strncmp(magic, sbi_magic, 4) == 0);
 }
 
-bool SbIBK::detectUNIXO2(QString filePath)
+bool SbIBK_impl::detectUNIXO2(QString filePath, Formats &format)
 {
     if(hasExt(filePath, ".sb"))
         return true;
@@ -50,10 +69,11 @@ bool SbIBK::detectUNIXO2(QString filePath)
 
     qint64 fileSize = file.bytesAvailable();
     file.close();
+    format = FORMAT_SB2OP;
     return (fileSize == 6656);
 }
 
-bool SbIBK::detectUNIXO3(QString filePath)
+bool SbIBK_impl::detectUNIXO3(QString filePath, Formats &format)
 {
     if(hasExt(filePath, ".o3"))
         return true;
@@ -65,6 +85,7 @@ bool SbIBK::detectUNIXO3(QString filePath)
 
     qint64 fileSize = file.bytesAvailable();
     file.close();
+    format = FORMAT_SB4OP;
     return (fileSize == 7680);
 }
 
@@ -150,7 +171,7 @@ static void sbi2raw(unsigned char *odata, FmBank::Instrument &ins, bool fourOp =
 }
 
 
-int SbIBK::loadFile(QString filePath, FmBank &bank)
+int SbIBK_impl::loadFileF(QString filePath, FmBank &bank)
 {
     char magic[4];
     memset(magic, 0, 4);
@@ -212,7 +233,7 @@ int SbIBK::loadFile(QString filePath, FmBank &bank)
     return ERR_OK;
 }
 
-int SbIBK::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+int SbIBK_impl::loadFileInstF(QString filePath, FmBank::Instrument &inst, bool *isDrum)
 {
     char magic[4];
     memset(magic, 0, 4);
@@ -257,7 +278,7 @@ int SbIBK::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum
     return ERR_OK;
 }
 
-int SbIBK::saveFile(QString filePath, FmBank &bank)
+int SbIBK_impl::saveFileF(QString filePath, FmBank &bank)
 {
     QFile file(filePath);
 
@@ -299,7 +320,7 @@ int SbIBK::saveFile(QString filePath, FmBank &bank)
 }
 
 
-int SbIBK::loadFileSBOP(QString filePath, FmBank &bank)
+int SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, Formats &format)
 {
     char magic[4];
     bool valid = false;
@@ -315,12 +336,12 @@ int SbIBK::loadFileSBOP(QString filePath, FmBank &bank)
     qint64  fileSize = file.bytesAvailable();
     bool    fileIs4op = (fileSize == 7680);
     bool    fileIsPercussion = false;
-
-    for(unsigned short i = 0; i < 128; i++)
+    format = fileIs4op ? FORMAT_SB4OP : FORMAT_SB2OP;
+    for(uint16_t i = 0; i < 128; i++)
     {
-        unsigned char   idata1[16];
-        unsigned char   idata2[16];
-        char tempName[32];
+        uint8_t idata1[16];
+        uint8_t idata2[16];
+        char    tempName[32];
 
         if(file.read(magic, 4) != 4)
         {
@@ -394,7 +415,185 @@ int SbIBK::loadFileSBOP(QString filePath, FmBank &bank)
     return ERR_OK;
 }
 
-int SbIBK::saveFileSBOP(QString filePath, FmBank &bank)
+int SbIBK_impl::saveFileSBOP(QString, FmBank &, bool)
 {
     return ERR_NOT_IMLEMENTED;
 }
+
+
+
+
+
+
+SbIBK_DOS::SbIBK_DOS() : FmBankFormatBase()
+{}
+
+bool SbIBK_DOS::detect(const QString &, char *magic)
+{
+    return SbIBK_impl::detectIBK(magic);
+}
+
+bool SbIBK_DOS::detectInst(const QString &, char *magic)
+{
+    return SbIBK_impl::detectSBI(magic);
+}
+
+int SbIBK_DOS::loadFile(QString filePath, FmBank &bank)
+{
+   return SbIBK_impl::loadFileF(filePath, bank);
+}
+
+int SbIBK_DOS::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+{
+    return SbIBK_impl::loadFileInstF(filePath, inst, isDrum);
+}
+
+
+
+int SbIBK_DOS::saveFile(QString filePath, FmBank &bank)
+{
+    return SbIBK_impl::saveFileF(filePath, bank);
+}
+
+int SbIBK_DOS::formatCaps()
+{
+    return FORMAT_CAPS_EVERYTHING;
+}
+
+int SbIBK_DOS::formatInstCaps()
+{
+    return FORMAT_CAPS_OPEN|FORMAT_CAPS_IMPORT;
+}
+
+QString SbIBK_DOS::formatInstName()
+{
+    return "Sound Blaster Instrument";
+}
+
+QString SbIBK_DOS::formatInstExtensionMask()
+{
+    return "*.sbi";
+}
+
+FmBankFormatBase::InsFormats SbIBK_DOS::formatInstId()
+{
+    return FORMAT_INST_SBI;
+}
+
+QString SbIBK_DOS::formatName()
+{
+    return "Sound Blaster IBK file";
+}
+
+QString SbIBK_DOS::formatExtensionMask()
+{
+    return "*.ibk";
+}
+
+FmBankFormatBase::Formats SbIBK_DOS::formatId()
+{
+    return FORMAT_IBK;
+}
+
+
+
+SbIBK_UNIX_READ::SbIBK_UNIX_READ() : FmBankFormatBase()
+{}
+
+bool SbIBK_UNIX_READ::detect(const QString &filePath, char *)
+{
+    bool ret = false;
+    ret = SbIBK_impl::detectUNIXO2(filePath, m_recentFormat);
+    if(!ret)
+        ret = SbIBK_impl::detectUNIXO3(filePath, m_recentFormat);
+    return ret;
+}
+
+int SbIBK_UNIX_READ::loadFile(QString filePath, FmBank &bank)
+{
+    return SbIBK_impl::loadFileSBOP(filePath, bank, m_recentFormat);
+}
+
+int SbIBK_UNIX_READ::formatCaps()
+{
+    return FORMAT_CAPS_OPEN|FORMAT_CAPS_IMPORT;
+}
+
+QString SbIBK_UNIX_READ::formatName()
+{
+    return "SoundBlaster UNIX 2 or 4 operators bank";
+}
+
+QString SbIBK_UNIX_READ::formatExtensionMask()
+{
+    return "*.sb *.o3";
+}
+
+FmBankFormatBase::Formats SbIBK_UNIX_READ::formatId()
+{
+    return m_recentFormat;
+}
+
+
+
+
+SbIBK_UNIX2OP_SAVE::SbIBK_UNIX2OP_SAVE() : FmBankFormatBase()
+{}
+
+int SbIBK_UNIX2OP_SAVE::saveFile(QString filePath, FmBank &bank)
+{
+    return SbIBK_impl::saveFileSBOP(filePath, bank, false);
+}
+
+int SbIBK_UNIX2OP_SAVE::formatCaps()
+{
+    return FORMAT_CAPS_SAVE;
+}
+
+QString SbIBK_UNIX2OP_SAVE::formatName()
+{
+    return "SoundBlaster UNIX 2-operators bank";
+}
+
+QString SbIBK_UNIX2OP_SAVE::formatExtensionMask()
+{
+    return "*.sb";
+}
+
+FmBankFormatBase::Formats SbIBK_UNIX2OP_SAVE::formatId()
+{
+    return FORMAT_SB2OP;
+}
+
+
+
+
+SbIBK_UNIX4OP_SAVE::SbIBK_UNIX4OP_SAVE() : FmBankFormatBase()
+{}
+
+int SbIBK_UNIX4OP_SAVE::saveFile(QString filePath, FmBank &bank)
+{
+    return SbIBK_impl::saveFileSBOP(filePath, bank, true);
+}
+
+int SbIBK_UNIX4OP_SAVE::formatCaps()
+{
+    return FORMAT_CAPS_SAVE;
+}
+
+QString SbIBK_UNIX4OP_SAVE::formatName()
+{
+    return "SoundBlaster UNIX 4-operators bank";
+}
+
+QString SbIBK_UNIX4OP_SAVE::formatExtensionMask()
+{
+    return "*.o3";
+}
+
+FmBankFormatBase::Formats SbIBK_UNIX4OP_SAVE::formatId()
+{
+    return FORMAT_SB4OP;
+}
+
+

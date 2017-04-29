@@ -33,9 +33,16 @@ public:
         Dmx_Unknown     = 0x0002,
         Dmx_DoubleVoice = 0x0004
     };
-    static bool detect(char* magic);
-    static int  loadFile(QString filePath, FmBank &bank);
-    static int  saveFile(QString filePath, FmBank &bank);
+    DmxOPL2();
+    ~DmxOPL2() = default;
+
+    bool detect(const QString &filePath, char* magic);
+    int  loadFile(QString filePath, FmBank &bank);
+    int  saveFile(QString filePath, FmBank &bank);
+    int  formatCaps();
+    QString formatName();
+    QString formatExtensionMask();
+    Formats formatId();
 };
 
 #endif // DMXOPL2_H

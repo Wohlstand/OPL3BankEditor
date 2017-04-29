@@ -65,7 +65,7 @@ bool Importer::openFile(QString filePath, bool isBank)
     ui->percussion->setEnabled(true);
 
     if(isBank)
-        err = FmBankFormatBase::OpenBankFile(filePath, m_bank, &format);
+        err = FmBankFormatBase::ImportBankFile(filePath, m_bank, &format);
     else
     {
         m_bank.reset();
@@ -74,12 +74,10 @@ bool Importer::openFile(QString filePath, bool isBank)
         FmBank::Instrument ins = FmBank::emptyInst();
         bool isDrum = false;
         err = FmBankFormatBase::OpenInstrumentFile(filePath, ins, 0, &isDrum);
-
         if(err == FmBankFormatBase::ERR_OK)
         {
             ui->importReplace->click();
             ui->importAssoc->setEnabled(false);
-
             if(isDrum)
             {
                 m_bank.Ins_Percussion_box.push_back(ins);
@@ -131,18 +129,14 @@ bool Importer::openFile(QString filePath, bool isBank)
         ErrMessageO(this, errText);
         return false;
     }
-    else
-    {
-        if(FmBankFormatBase::isImportOnly(format))
-        {
-            ui->importReplace->click();
-            ui->importAssoc->setEnabled(false);
-        }
-        initFileData(filePath);
-        return true;
-    }
 
-    return false;
+    if(FmBankFormatBase::isImportOnly(format))
+    {
+        ui->importReplace->click();
+        ui->importAssoc->setEnabled(false);
+    }
+    initFileData(filePath);
+    return true;
 }
 
 void Importer::setMelodic()
@@ -206,26 +200,22 @@ void Importer::initFileData(QString &filePath)
 
 void Importer::on_openBank_clicked()
 {
-    QString filters = FmBankFormatBase::getOpenFiltersList();
+    QString filters = FmBankFormatBase::getOpenFiltersList(true);
     QString fileToOpen;
     fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
-
     if(fileToOpen.isEmpty())
         return;
-
     openFile(fileToOpen, true);
 }
 
 
 void Importer::on_openInst_clicked()
 {
-    QString filters = "Sound Blaster Instrument (*.sbi);;All files (*.*)";
+    QString filters = FmBankFormatBase::getInstOpenFiltersList(true);
     QString fileToOpen;
-    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
-
+    fileToOpen = QFileDialog::getOpenFileName(this, "Open instrument file", m_recentPath, filters);
     if(fileToOpen.isEmpty())
         return;
-
     openFile(fileToOpen, false);
 }
 
@@ -574,10 +564,6 @@ void Importer::on_doImport_clicked()
                              ui->melodic->isChecked() ?
                                  m_bank.Ins_Melodic_box[id] :
                                  m_bank.Ins_Percussion_box[id], m_main->m_recentNum);
-                //if(ui->melodic->isChecked())
-                //    m_main->m_bank.Ins_Melodic_box[m_main->m_recentNum] = m_bank.Ins_Melodic_box[id];
-                //else
-                //    m_main->m_bank.Ins_Percussion_box[m_main->m_recentNum] = m_bank.Ins_Percussion_box[id];
         }
         else
         {

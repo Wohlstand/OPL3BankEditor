@@ -27,9 +27,16 @@
 class ApogeeTMB : public FmBankFormatBase
 {
 public:
-    static bool detect(QString filePath);
-    static int  loadFile(QString filePath, FmBank &bank);
-    static int  saveFile(QString filePath, FmBank &bank);
+    ApogeeTMB();
+    ~ApogeeTMB() = default;
+
+    bool detect(const QString &filePath, char* magic);
+    int  loadFile(QString filePath, FmBank &bank);
+    int  saveFile(QString filePath, FmBank &bank);
+    int  formatCaps();
+    QString formatName();
+    QString formatExtensionMask();
+    Formats formatId();
 };
 
 #endif // BUILDENGINETMB_H

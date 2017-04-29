@@ -27,9 +27,16 @@
 class JunleVizion : public FmBankFormatBase
 {
 public:
-    static bool detect(char* magic);
-    static int  loadFile(QString filePath, FmBank &bank);
-    static int  saveFile(QString filePath, FmBank &bank);
+    JunleVizion();
+    ~JunleVizion() = default;
+
+    bool detect(const QString &filePath, char* magic);
+    int  loadFile(QString filePath, FmBank &bank);
+    int  saveFile(QString filePath, FmBank &bank);
+    int  formatCaps();
+    QString formatName();
+    QString formatExtensionMask();
+    Formats formatId();
 };
 
 #endif // JUNLEVIZION_H

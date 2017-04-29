@@ -19,6 +19,22 @@
 #include "adlibbnk.h"
 #include "../common.h"
 
+/**
+ * @brief Reader and Writer of the Apogee Sound System TMB Bank format
+ */
+class AdLibBnk_Impl : public FmBankFormatBase
+{
+public:
+    enum BnkType
+    {
+        BNK_ADLIB,
+        BNK_HMI
+    };
+    static bool detect(char* magic);
+    static int  loadFile(QString filePath, FmBank &bank, Formats &format);
+    static int  saveFile(QString filePath, FmBank &bank, BnkType type);
+};
+
 //! Enables strict validation of every parameter.
 //! Or all parameters are will be filtered even data is an invalid crap
 //#define STRICT_BNK
@@ -44,12 +60,12 @@ inline void VERIFY_BYTE(unsigned char &param, unsigned char mask)
 
 static const char *bnk_magic = "ADLIB-";
 
-bool AdLibBnk::detect(char *magic)
+bool AdLibBnk_Impl::detect(char *magic)
 {
     return (strncmp(magic + 2, bnk_magic, 6) == 0);
 }
 
-int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
+int AdLibBnk_Impl::loadFile(QString filePath, FmBank &bank, Formats &format)
 {
     char magic[8];
     memset(magic, 0, 8);
@@ -240,7 +256,7 @@ int AdLibBnk::loadFile(QString filePath, FmBank &bank, Formats &format)
     return ERR_OK;
 }
 
-int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
+int AdLibBnk_Impl::saveFile(QString filePath, FmBank &bank, BnkType type)
 {
     QFile file(filePath);
     if(!file.open(QIODevice::WriteOnly))
@@ -479,4 +495,106 @@ int AdLibBnk::saveFile(QString filePath, FmBank &bank, BnkType type)
     file.close();
 
     return ERR_OK;
+}
+
+
+
+
+AdLibBnk_read::AdLibBnk_read() : FmBankFormatBase()
+{}
+
+bool AdLibBnk_read::detect(const QString &, char *magic)
+{
+    return AdLibBnk_Impl::detect(magic);
+}
+
+int AdLibBnk_read::loadFile(QString filePath, FmBank &bank)
+{
+    m_recentFormat = FORMAT_UNKNOWN;
+    return AdLibBnk_Impl::loadFile(filePath, bank, m_recentFormat);
+}
+
+int AdLibBnk_read::formatCaps()
+{
+    return FORMAT_CAPS_OPEN|FORMAT_CAPS_IMPORT;
+}
+
+QString AdLibBnk_read::formatName()
+{
+    return "AdLib/HMI instrument Bank";
+}
+
+QString AdLibBnk_read::formatExtensionMask()
+{
+    return "*.bnk";
+}
+
+FmBankFormatBase::Formats AdLibBnk_read::formatId()
+{
+    return m_recentFormat;
+}
+
+
+
+
+
+
+AdLibBnk_save::AdLibBnk_save() : FmBankFormatBase()
+{}
+
+int AdLibBnk_save::saveFile(QString filePath, FmBank &bank)
+{
+    return AdLibBnk_Impl::saveFile(filePath, bank, AdLibBnk_Impl::BNK_ADLIB);
+}
+
+int AdLibBnk_save::formatCaps()
+{
+    return FORMAT_CAPS_SAVE;
+}
+
+QString AdLibBnk_save::formatName()
+{
+    return "AdLib instrument bank";
+}
+
+QString AdLibBnk_save::formatExtensionMask()
+{
+    return "*.bnk";
+}
+
+FmBankFormatBase::Formats AdLibBnk_save::formatId()
+{
+    return FORMAT_ADLIB_BKN1;
+}
+
+
+
+
+
+HmiBnk_save::HmiBnk_save() : FmBankFormatBase()
+{}
+
+int HmiBnk_save::saveFile(QString filePath, FmBank &bank)
+{
+    return AdLibBnk_Impl::saveFile(filePath, bank, AdLibBnk_Impl::BNK_HMI);
+}
+
+int HmiBnk_save::formatCaps()
+{
+    return FORMAT_CAPS_SAVE;
+}
+
+QString HmiBnk_save::formatName()
+{
+    return "HMI instrument bank";
+}
+
+QString HmiBnk_save::formatExtensionMask()
+{
+    return "*.bnk";
+}
+
+FmBankFormatBase::Formats HmiBnk_save::formatId()
+{
+    return FORMAT_ADLIB_BKNHMI;
 }

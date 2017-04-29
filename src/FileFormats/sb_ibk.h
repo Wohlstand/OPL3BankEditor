@@ -21,23 +21,70 @@
 
 #include "ffmt_base.h"
 
-/**
- * @brief Reader and Writer of the Sound Blaster IBK Bank format
- */
-class SbIBK : public FmBankFormatBase
+class SbIBK_DOS : public FmBankFormatBase
 {
 public:
-    static bool detectIBK(char* magic);
-    static bool detectSBI(char* magic);
-    static bool detectUNIXO2(QString filePath);
-    static bool detectUNIXO3(QString filePath);
-    // IBK/SBI for DOS
-    static int  loadFile(QString filePath, FmBank &bank);
-    static int  loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
-    static int  saveFile(QString filePath, FmBank &bank);
-    // SB/O3 for UNIX
-    static int  loadFileSBOP(QString filePath, FmBank &bank);
-    static int  saveFileSBOP(QString filePath, FmBank &bank);
+    SbIBK_DOS();
+    ~SbIBK_DOS() = default;
+
+    bool detect(const QString &filePath, char* magic);
+    int  loadFile(QString filePath, FmBank &bank);
+    int  saveFile(QString filePath, FmBank &bank);
+    int  formatCaps();
+    QString formatName();
+    QString formatExtensionMask();
+    Formats formatId();
+
+    bool detectInst(const QString &filePath, char* magic);
+    int  loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
+    int         formatInstCaps();
+    QString     formatInstName();
+    QString     formatInstExtensionMask();
+    InsFormats  formatInstId();
 };
+
+class SbIBK_UNIX_READ : public FmBankFormatBase
+{
+    Formats m_recentFormat = FORMAT_UNKNOWN;
+public:
+    SbIBK_UNIX_READ();
+    ~SbIBK_UNIX_READ() = default;
+
+    bool detect(const QString &filePath, char* magic);
+    int  loadFile(QString filePath, FmBank &bank);
+    int  formatCaps();
+    QString formatName();
+    QString formatExtensionMask();
+    Formats formatId();
+};
+
+
+class SbIBK_UNIX2OP_SAVE : public FmBankFormatBase
+{
+public:
+    SbIBK_UNIX2OP_SAVE();
+    ~SbIBK_UNIX2OP_SAVE() = default;
+    int  saveFile(QString filePath, FmBank &bank);
+    int  formatCaps();
+    QString formatName();
+    QString formatExtensionMask();
+    Formats formatId();
+};
+
+
+class SbIBK_UNIX4OP_SAVE : public FmBankFormatBase
+{
+public:
+    SbIBK_UNIX4OP_SAVE();
+    ~SbIBK_UNIX4OP_SAVE() = default;
+    int  saveFile(QString filePath, FmBank &bank);
+    int  formatCaps();
+    QString formatName();
+    QString formatExtensionMask();
+    Formats formatId();
+};
+
+
+
 
 #endif // SBIBK_H

@@ -21,20 +21,43 @@
 
 #include "ffmt_base.h"
 
-/**
- * @brief Reader and Writer of the Apogee Sound System TMB Bank format
- */
-class AdLibBnk : public FmBankFormatBase
+class AdLibBnk_read : public FmBankFormatBase
+{
+    Formats m_recentFormat = FORMAT_UNKNOWN;
+public:
+    AdLibBnk_read();
+    ~AdLibBnk_read() = default;
+
+    bool detect(const QString &filePath, char* magic);
+    int  loadFile(QString filePath, FmBank &bank);
+    int  formatCaps();
+    QString formatName();
+    QString formatExtensionMask();
+    Formats formatId();
+};
+
+class AdLibBnk_save : public FmBankFormatBase
 {
 public:
-    enum BnkType
-    {
-        BNK_ADLIB,
-        BNK_HMI
-    };
-    static bool detect(char* magic);
-    static int  loadFile(QString filePath, FmBank &bank, Formats &format);
-    static int  saveFile(QString filePath, FmBank &bank, BnkType type);
+    AdLibBnk_save();
+    ~AdLibBnk_save() = default;
+    int  saveFile(QString filePath, FmBank &bank);
+    int  formatCaps();
+    QString formatName();
+    QString formatExtensionMask();
+    Formats formatId();
+};
+
+class HmiBnk_save : public FmBankFormatBase
+{
+public:
+    HmiBnk_save();
+    ~HmiBnk_save() = default;
+    int  saveFile(QString filePath, FmBank &bank);
+    int  formatCaps();
+    QString formatName();
+    QString formatExtensionMask();
+    Formats formatId();
 };
 
 #endif // ADLIBBNK_H

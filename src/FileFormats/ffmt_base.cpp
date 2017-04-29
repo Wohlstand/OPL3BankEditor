@@ -18,102 +18,226 @@
 
 #include "../common.h"
 
+#include <memory>
+#include <list>
 #include "adlibbnk.h"
 #include "apogeetmb.h"
 #include "dmxopl2.h"
 #include "junlevizion.h"
 #include "milesopl.h"
 #include "sb_ibk.h"
-
-const char *openFilters[]
-{
-    "JunleVision bank (*.op3)",
-    "DMX OPL-2 bank (*.op2 *.htc *.hxn)",
-    "Apogee Sound System timbre bank (*.tmb)",
-    "Sound Blaster IBK file (*.ibk)",
-    "AdLib/HMI instrument Bank (*.bnk)",
-    "",
-    "Audio Interface Library (Miles) bank (*.opl *.ad)",
-    "SoundBlaster 2-operators bank (*.sb)",
-    "SoundBlaster 4-operators bank (*.o3)",
-};
-
-const char *saveFilters[]
-{
-    openFilters[0],
-    openFilters[1],
-    openFilters[2],
-    openFilters[3],
-    "AdLib instrument bank (*.bnk)",
-    "HMI instrument bank (*.bnk)",
-    "Audio Interface Library (Miles) bank (*.opl *.ad)",
-    openFilters[7],
-    openFilters[8],
-};
-
 #include "ffmt_base.h"
 
+typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
+typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
+
+//! Bank formats
+static FmBankFormatsL g_formats;
+//! Single-Instrument formats
+static FmBankFormatsL g_formatsInstr;
+
+void FmBankFormatBase::registerBankFormat(FmBankFormatBase *format)
+{
+    g_formats.push_back(FmBankFormatBase_uptr(format));
+}
+
+void FmBankFormatBase::registerInstFormat(FmBankFormatBase *format)
+{
+    g_formatsInstr.push_back(FmBankFormatBase_uptr(format));
+}
+
+void FmBankFormatBase::registerAllFormats()
+{
+    g_formats.clear();
+    registerBankFormat(new JunleVizion());
+    registerBankFormat(new DmxOPL2());
+    registerBankFormat(new ApogeeTMB());
+    registerBankFormat(new MilesOPL());
+    registerBankFormat(new SbIBK_DOS());
+    registerInstFormat(new SbIBK_DOS());
+    registerBankFormat(new SbIBK_UNIX_READ());
+    registerBankFormat(new SbIBK_UNIX2OP_SAVE());
+    registerBankFormat(new SbIBK_UNIX4OP_SAVE());
+    registerBankFormat(new AdLibBnk_read());
+    registerBankFormat(new AdLibBnk_save());
+    registerBankFormat(new HmiBnk_save());
+}
+
+FmBankFormatBase::FmBankFormatBase() {}
+
+FmBankFormatBase::~FmBankFormatBase()
+{}
 
 QString FmBankFormatBase::getSaveFiltersList()
 {
-    return  QString()
-            +  saveFilters[FORMAT_JUNGLEVIZION] + ";;" +
-            +  saveFilters[FORMAT_DMX_OP2]     + ";;" +
-            +  saveFilters[FORMAT_APOGEE]      + ";;" +
-            +  saveFilters[FORMAT_IBK]         + ";;" +
-            +  saveFilters[FORMAT_ADLIB_BKN1]  + ";;" +
-            +  saveFilters[FORMAT_ADLIB_BKNHMI] + ";;" +
-            +  saveFilters[FORMAT_MILES] + ";;" +
-            +  saveFilters[FORMAT_SB2OP] + ";;" +
-            +  saveFilters[FORMAT_SB4OP];
+    QString formats;
+    for(FmBankFormatBase_uptr &p : g_formats)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if(p->formatCaps() & FORMAT_CAPS_SAVE)
+        {
+            formats.append(QString("%1 (%2);;").arg(p->formatName()).arg(p->formatExtensionMask()));
+        }
+    }
+    if(formats.endsWith(";;"))
+        formats.remove(formats.size()-2, 2);
+    return formats;
 }
 
-QString FmBankFormatBase::getOpenFiltersList()
+QString FmBankFormatBase::getOpenFiltersList(bool import)
 {
-    return  QString("Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk *.opl *.ad *.sb *.o3);;") +
-            +  openFilters[FORMAT_JUNGLEVIZION] + ";;" +
-            +  openFilters[FORMAT_DMX_OP2]      + ";;" +
-            +  openFilters[FORMAT_APOGEE]       + ";;" +
-            +  openFilters[FORMAT_IBK]          + ";;" +
-            +  openFilters[FORMAT_ADLIB_BKN1]   + ";;" +
-            +  openFilters[FORMAT_MILES] + ";;" +
-            +  openFilters[FORMAT_SB2OP] + ";;" +
-            +  openFilters[FORMAT_SB4OP] + ";;" +
-            +  "All files (*.*)";
+    QString out;
+    QString masks;
+    QString formats;
+    //! Look for importable or openable formats?
+    FormatCaps dst = import ? FORMAT_CAPS_IMPORT : FORMAT_CAPS_OPEN;
+
+    for(FmBankFormatBase_uptr &p : g_formats)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if(!masks.isEmpty())
+            masks.append(' ');
+        if(p->formatCaps() & dst)
+        {
+            masks.append(p->formatExtensionMask());
+            formats.append(QString("%1 (%2);;").arg(p->formatName()).arg(p->formatExtensionMask()));
+        }
+    }
+    out.append(QString("Supported bank files (%1);;").arg(masks));
+    out.append(formats);
+    out.push_back("All files (*.*)");
+    return out;
+}
+
+QString FmBankFormatBase::getInstOpenFiltersList(bool import)
+{
+    QString out;
+    QString masks;
+    QString formats;
+    //! Look for importable or openable formats?
+    FormatCaps dst = import ? FORMAT_CAPS_IMPORT : FORMAT_CAPS_OPEN;
+    for(FmBankFormatBase_uptr &p : g_formatsInstr)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if(!masks.isEmpty())
+            masks.append(' ');
+        if(p->formatCaps() & dst)
+        {
+            masks.append(p->formatInstExtensionMask());
+            formats.append(QString("%1 (%2);;").arg(p->formatInstName()).arg(p->formatInstExtensionMask()));
+        }
+    }
+    out.append(QString("Supported instrument files (%1);;").arg(masks));
+    out.append(formats);
+    out.push_back("All files (*.*)");
+    return out;
 }
 
 FmBankFormatBase::Formats FmBankFormatBase::getFormatFromFilter(QString filter)
 {
-    for(int i = (int)FORMATS_BEGIN; i < (int)FORMATS_END; i++)
+    for(FmBankFormatBase_uptr &p : g_formats)
     {
-        if(filter == saveFilters[i])
-            return (Formats)i;
+        Q_ASSERT(p.get());//It must be non-null!
+        QString f = QString("%1 (%2)").arg(p->formatName()).arg(p->formatExtensionMask());
+        if(f == filter)
+            return p->formatId();
     }
     return FORMAT_UNKNOWN;
 }
 
-QString FmBankFormatBase::getFilterFromFormat(FmBankFormatBase::Formats format)
+QString FmBankFormatBase::getFilterFromFormat(FmBankFormatBase::Formats format, int requiredCaps)
 {
-    if(format >= FORMATS_END)
-        return "UNKNOWN";
-    if(format < FORMATS_BEGIN)
-        return "UNKNOWN";
-
-    return saveFilters[format];
+    for(FmBankFormatBase_uptr &p : g_formats)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if((p->formatId() == format) && (p->formatCaps() & requiredCaps))
+            return QString("%1 (%2)").arg(p->formatName()).arg(p->formatExtensionMask());
+    }
+    return "UNKNOWN";
 }
+
+
+
+bool FmBankFormatBase::detect(const QString&, char*)
+{
+    return false;
+}
+
+bool FmBankFormatBase::detectInst(const QString &, char *)
+{
+    return false;
+}
+
+int FmBankFormatBase::loadFile(QString, FmBank &)
+{
+    return ERR_NOT_IMLEMENTED;
+}
+
+int FmBankFormatBase::saveFile(QString, FmBank &)
+{
+    return ERR_NOT_IMLEMENTED;
+}
+
+int FmBankFormatBase::loadFileInst(QString, FmBank::Instrument &, bool *)
+{
+    return ERR_NOT_IMLEMENTED;
+}
+
+int FmBankFormatBase::saveFileInst(QString, FmBank::Instrument &, bool)
+{
+    return ERR_NOT_IMLEMENTED;
+}
+
+int FmBankFormatBase::formatCaps()
+{
+    return FORMAT_CAPS_NOTHING;
+}
+
+int FmBankFormatBase::formatInstCaps()
+{
+    return FORMAT_CAPS_NOTHING;
+}
+
+QString FmBankFormatBase::formatInstName()
+{
+    return "Unknown format";
+}
+
+QString FmBankFormatBase::formatInstExtensionMask()
+{
+    return "*.*";
+}
+
+QString FmBankFormatBase::formatName()
+{
+    return "Unknown format";
+}
+
+QString FmBankFormatBase::formatExtensionMask()
+{
+    return "*.*";
+}
+
+FmBankFormatBase::Formats FmBankFormatBase::formatId()
+{
+    return FORMAT_UNKNOWN;
+}
+
+FmBankFormatBase::InsFormats FmBankFormatBase::formatInstId()
+{
+    return FORMAT_INST_UNKNOWN;
+}
+
 
 bool FmBankFormatBase::isImportOnly(FmBankFormatBase::Formats format)
 {
-    switch(format)
+    for(FmBankFormatBase_uptr &p : g_formats)
     {
-    //FIXME: Uncomment when implement IMF and CMF importers
-    //case FORMAT_IMF_IMPORTER:
-    //    return true;
-    //case FORMAT_CMF_IMPORTER:
-    //    return true;
-    default:
-        return false;
+        Q_ASSERT(p.get());//It must be non-null!
+        if(p->formatId() == format)
+            return (p->formatCaps() == FORMAT_CAPS_IMPORT);
     }
+     return false;;\
 }
 
 int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *recent)
@@ -124,66 +248,65 @@ int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *rece
     int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
     Formats fmt = FORMAT_UNKNOWN;
 
-    //Check out for Junglevision file format
-    if(JunleVizion::detect(magic))
+    for(FmBankFormatBase_uptr &p : g_formats)
     {
-        err = JunleVizion::loadFile(filePath, bank);
-        fmt = FORMAT_JUNGLEVIZION;
+        Q_ASSERT(p.get());//It must be non-null!
+        if((p->formatCaps() & FORMAT_CAPS_OPEN) && p->detect(filePath, magic))
+        {
+            err = p->loadFile(filePath, bank);
+            fmt = p->formatId();
+            break;
+        }
     }
-
-    //Check for DMX OPL2 file format
-    else if(DmxOPL2::detect(magic))
-    {
-        err = DmxOPL2::loadFile(filePath, bank);
-        fmt = FORMAT_DMX_OP2;
-    }
-
-    //Check for Sound Blaster IBK file format
-    else if(SbIBK::detectIBK(magic))
-    {
-        err = SbIBK::loadFile(filePath, bank);
-        fmt = FORMAT_IBK;
-    }
-
-    //Check for Sound Blaster 2 operators bank file formats
-    else if(SbIBK::detectUNIXO2(filePath))
-    {
-        err = SbIBK::loadFileSBOP(filePath, bank);
-        fmt = FORMAT_SB2OP;
-    }
-
-    //Check for Sound Blaster 4 operators bank file formats
-    else if(SbIBK::detectUNIXO3(filePath))
-    {
-        err = SbIBK::loadFileSBOP(filePath, bank);
-        fmt = FORMAT_SB4OP;
-    }
-
-    //Check for AdLib BNK file format
-    else if(AdLibBnk::detect(magic))
-        err = AdLibBnk::loadFile(filePath, bank, fmt);
-
-    //Check for Apogee Sound System TMB file format
-    else if(ApogeeTMB::detect(filePath))
-    {
-        err = ApogeeTMB::loadFile(filePath, bank);
-        fmt = FORMAT_APOGEE;
-    }
-
-    //Check for Miles Sound System TMB file format
-    else if(MilesOPL::detect(filePath))
-    {
-        err = MilesOPL::loadFile(filePath, bank);
-        fmt = FORMAT_MILES;
-    }
-
     if(recent)
         *recent = fmt;
 
     return err;
 }
 
-int FmBankFormatBase::OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, FmBankFormatBase::InsFormats *recent, bool *isDrum)
+int FmBankFormatBase::ImportBankFile(QString filePath, FmBank &bank, FmBankFormatBase::Formats *recent)
+{
+    char magic[32];
+    getMagic(filePath, magic, 32);
+
+    int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
+    Formats fmt = FORMAT_UNKNOWN;
+
+    for(FmBankFormatBase_uptr &p : g_formats)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if((p->formatCaps() & FORMAT_CAPS_IMPORT) && p->detect(filePath, magic))
+        {
+            err = p->loadFile(filePath, bank);
+            fmt = p->formatId();
+            break;
+        }
+    }
+
+    if(recent)
+        *recent = fmt;
+    return err;
+}
+
+int FmBankFormatBase::SaveBankFile(QString filePath, FmBank &bank, FmBankFormatBase::Formats dest)
+{
+    int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
+    for(FmBankFormatBase_uptr &p : g_formats)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if((p->formatCaps() & FORMAT_CAPS_SAVE) && (p->formatId() == dest))
+        {
+            err = p->saveFile(filePath, bank);
+            break;
+        }
+    }
+    return err;
+}
+
+int FmBankFormatBase::OpenInstrumentFile(QString filePath,
+                                         FmBank::Instrument &ins,
+                                         FmBankFormatBase::InsFormats *recent,
+                                         bool *isDrum)
 {
     char magic[32];
     getMagic(filePath, magic, 32);
@@ -191,12 +314,16 @@ int FmBankFormatBase::OpenInstrumentFile(QString filePath, FmBank::Instrument &i
     int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
     InsFormats fmt = FORMAT_INST_UNKNOWN;
 
-    if(SbIBK::detectSBI(magic))
+    for(FmBankFormatBase_uptr &p : g_formatsInstr)
     {
-        err = SbIBK::loadFileInst(filePath, ins, isDrum);
-        fmt = FORMAT_INST_SBI;
+        Q_ASSERT(p.get());//It must be non-null!
+        if((p->formatInstCaps() & FORMAT_CAPS_OPEN) && p->detectInst(filePath, magic))
+        {
+            err = p->loadFileInst(filePath, ins, isDrum);
+            fmt = p->formatInstId();
+            break;
+        }
     }
-
     if(recent)
         *recent = fmt;
 

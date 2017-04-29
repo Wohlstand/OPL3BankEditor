@@ -21,10 +21,13 @@
 
 static const char *dmx_magic = "#OPL_II#";
 
-bool DmxOPL2::detect(char *magic)
+bool DmxOPL2::detect(const QString &, char *magic)
 {
     return (strncmp(magic, dmx_magic, 8) == 0);
 }
+
+DmxOPL2::DmxOPL2() : FmBankFormatBase()
+{}
 
 int DmxOPL2::loadFile(QString filePath, FmBank &bank)
 {
@@ -223,4 +226,24 @@ int DmxOPL2::saveFile(QString filePath, FmBank &bank)
     file.close();
 
     return ERR_OK;
+}
+
+int DmxOPL2::formatCaps()
+{
+    return FORMAT_CAPS_EVERYTHING;
+}
+
+QString DmxOPL2::formatName()
+{
+    return "DMX OPL-2 bank";
+}
+
+QString DmxOPL2::formatExtensionMask()
+{
+    return "*.op2 *.htc *.hxn";
+}
+
+FmBankFormatBase::Formats DmxOPL2::formatId()
+{
+    return FORMAT_DMX_OP2;
 }
