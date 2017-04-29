@@ -16,16 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../common.h"
-
-#include <memory>
-#include <list>
-#include "format_adlibbnk.h"
-#include "format_apogeetmb.h"
-#include "format_dmxopl2.h"
-#include "format_junlevizion.h"
-#include "format_milesopl.h"
-#include "format_sb_ibk.h"
 #include "ffmt_base.h"
 
 FmBankFormatBase::FmBankFormatBase() {}
