@@ -1,5 +1,6 @@
 Version 1.2.3-beta
 - Added experimental read-only support for UNIX SB/O3 bank formats
+- Added support for single-instrument saving (for now is SBI-only)
 
 Version 1.2.2-beta
 - Added support for AIL bank format
