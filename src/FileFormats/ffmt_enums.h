@@ -17,6 +17,7 @@ enum class BankFormats
     FORMAT_MILES        =   6,
     FORMAT_SB2OP        =   7,
     FORMAT_SB4OP        =   8,
+    FORMAT_IMF_IMPORTER =   9,
 
     FORMATS_END,
     FORMATS_BEGIN = FORMAT_JUNGLEVIZION,

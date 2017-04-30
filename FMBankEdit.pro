@@ -67,6 +67,7 @@ SOURCES += \
     src/FileFormats/format_adlibbnk.cpp \
     src/FileFormats/format_apogeetmb.cpp \
     src/FileFormats/format_dmxopl2.cpp \
+    src/FileFormats/format_imf_importer.cpp \
     src/FileFormats/format_junlevizion.cpp \
     src/FileFormats/format_milesopl.cpp \
     src/FileFormats/format_sb_ibk.cpp \
@@ -76,7 +77,6 @@ SOURCES += \
     src/opl/generator.cpp \
     src/opl/nukedopl3.c \
     src/piano.cpp
-
 
 HEADERS += \
     src/bank_editor.h \
@@ -89,6 +89,7 @@ HEADERS += \
     src/FileFormats/format_apogeetmb.h \
     src/FileFormats/format_dmxopl2.h \
     src/FileFormats/format_junlevizion.h \
+    src/FileFormats/format_imf_importer.h \
     src/FileFormats/format_milesopl.h \
     src/FileFormats/format_sb_ibk.h \
     src/importer.h \

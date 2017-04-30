@@ -29,6 +29,7 @@
 #include "format_junlevizion.h"
 #include "format_milesopl.h"
 #include "format_sb_ibk.h"
+#include "format_imf_importer.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -56,14 +57,18 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new DmxOPL2());
     registerBankFormat(new ApogeeTMB());
     registerBankFormat(new MilesOPL());
+
     registerBankFormat(new SbIBK_DOS());
     registerInstFormat(new SbIBK_DOS());
     registerBankFormat(new SbIBK_UNIX_READ());
     registerBankFormat(new SbIBK_UNIX2OP_SAVE());
     registerBankFormat(new SbIBK_UNIX4OP_SAVE());
+
     registerBankFormat(new AdLibAndHmiBnk_reader());
     registerBankFormat(new AdLibBnk_writer());
     registerBankFormat(new HmiBnk_writer());
+
+    registerBankFormat(new IMF_Importer());
 }
 
 
