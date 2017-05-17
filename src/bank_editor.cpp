@@ -331,6 +331,19 @@ void BankEditor::flushInstrument()
     sendPatch();
 }
 
+void BankEditor::syncInstrumentName()
+{
+    QListWidgetItem *curInstr = ui->instruments->currentItem();
+    if(m_curInst && curInstr)
+    {
+        curInstr->setText(
+                    m_curInst->name[0] != '\0' ?
+                    QString::fromUtf8(m_curInst->name) :
+                    (m_recentPerc ? getMidiInsNameP(m_recentNum) : getMidiInsNameM(m_recentNum))
+                    );
+    }
+}
+
 void BankEditor::on_actionNew_triggered()
 {
     if(!askForSaving())
@@ -382,6 +395,7 @@ void BankEditor::on_actionPaste_triggered()
     if(!m_curInst) return;
     memcpy(m_curInst, &m_clipboard, sizeof(FmBank::Instrument));
     flushInstrument();
+    syncInstrumentName();
 }
 
 void BankEditor::on_actionReset_current_instrument_triggered()
@@ -399,6 +413,7 @@ void BankEditor::on_actionReset_current_instrument_triggered()
     {
         memcpy(m_curInst, m_curInstBackup, sizeof(FmBank::Instrument));
         flushInstrument();
+        syncInstrumentName();
     }
 }
 

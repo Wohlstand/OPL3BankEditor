@@ -181,6 +181,10 @@ class BankEditor : public QMainWindow
          */
         void flushInstrument();
         /**
+         * @brief Syncronize instrument name in the list widget with actual instrument name in the data store
+         */
+        void syncInstrumentName();
+        /**
          * @brief Sets current instrument to editand test
          * @param num Number of instrument (from 0 to 127)
          * @param isPerc Use percusive set

@@ -567,6 +567,9 @@ void Importer::on_doImport_clicked()
         }
     }
 
+    //Drop instrument editing away from importer to don't confuse user after instrument was imported
+    m_main->setCurrentInstrument(m_main->m_recentNum, m_main->m_recentPerc);
+
     m_main->reloadInstrumentNames();
     m_main->loadInstrument();
 }
