@@ -1,0 +1,47 @@
+#--------------------------------------------------------------------------------
+# AppVeyor CI building configuration file for Microsoft Windows Operating system
+#                             created 2016-08-09
+#--------------------------------------------------------------------------------
+
+version: 0.1.{build}
+
+branches:
+  only:  # whitelist
+    - master
+
+skip_tags: true
+
+skip_commits:
+    message: /Created.*\.(png|jpg|jpeg|bmp|gif|md)/       # Regex for matching commit message
+    files:
+        - '*.md'
+        - 'LICENSE'
+        - '.gitignore'
+
+# Operating system (build VM template)
+os: unstable
+
+# clone directory
+clone_folder: C:\_Repos\OPL3BankEditor
+clone_depth:  3  # clone entire repository history if not defined
+# Uncommend those two lines to enable RDP (which can be used to debug stuff and test built stuff)
+# init:
+# - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+install:
+  - git submodule init
+  - git submodule update
+  - echo set QtDir=C:\Qt\5.7\mingw53_32\bin>> _paths.bat
+  - echo set MinGW=C:\Qt\Tools\mingw530_32\bin>> _paths.bat
+  - echo set GitDir=C:\Program Files\Git\cmd>> _paths.bat
+
+build_script:
+  - build.bat
+
+artifacts:
+  - path: opl3-bank-editor\opl3-bank-editor-dev-win32.zip
+
+deploy:
+  - provider: Environment
+    name: WohlnetFTP
+
