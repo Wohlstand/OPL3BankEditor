@@ -47,15 +47,15 @@ FfmtErrCode DmxOPL2::loadFile(QString filePath, FmBank &bank)
         return FfmtErrCode::ERR_BADFORMAT;
 
 
-    for(unsigned short i = 0; i < 175; i++)
+    for(uint16_t i = 0; i < 175; i++)
     {
         FmBank::Instrument &ins = (i < 128) ?
                                   bank.Ins_Melodic[i] :
                                   bank.Ins_Percussion[(i - 128) + 35];
-        unsigned short  flags       = 0;
-        unsigned char   fine_tuning = 0;
-        unsigned char   note_number = 0;
-        unsigned char   idata[32];
+        uint16_t  flags       = 0;
+        uint8_t   fine_tuning = 0;
+        uint8_t   note_number = 0;
+        uint8_t   idata[32];
 
         if(readLE(file, flags) != 2)
             return FfmtErrCode::ERR_BADFORMAT;
@@ -119,7 +119,7 @@ FfmtErrCode DmxOPL2::loadFile(QString filePath, FmBank &bank)
     }
 
     //Instrument names
-    for(unsigned short i = 0; i < 175; i++)
+    for(uint16_t i = 0; i < 175; i++)
     {
         FmBank::Instrument &ins = (i < 128) ?
                                   bank.Ins_Melodic[i] :
@@ -149,15 +149,15 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
     //Write header
     file.write(char_p(dmx_magic), 8);
 
-    for(unsigned short i = 0; i < 175; i++)
+    for(uint16_t i = 0; i < 175; i++)
     {
         FmBank::Instrument &ins = (i < 128) ?
                                   tmp.insMelodic[i] :
-                                  tmp.tmpPercussion[(i - 128) + 35];
-        unsigned short  flags       = 0;
-        unsigned char   fine_tuning = 0;
-        unsigned char   note_number = 0;
-        unsigned char   odata[32];
+                                  tmp.insPercussion[(i - 128) + 35];
+        uint16_t    flags       = 0;
+        uint8_t     fine_tuning = 0;
+        uint8_t     note_number = 0;
+        uint8_t     odata[32];
         memset(odata, 0, 32);
 
         fine_tuning = uchar(int(ins.fine_tune) + 128);
@@ -218,7 +218,7 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
     }
 
     //Instrument names
-    for(unsigned short i = 0; i < 175; i++)
+    for(uint16_t i = 0; i < 175; i++)
     {
         FmBank::Instrument &ins = (i < 128) ?
                                   tmp.insMelodic[i] :
