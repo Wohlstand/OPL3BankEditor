@@ -14,6 +14,12 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 * *.adlraw - bank format created by Bisquit - author of ADLMIDI utiltiy
 * Own bank format which supports all parameters provided by editor, and also implement support for GS and XG standard into ADLMIDI
 
+## Download
+* **Stable builds:** https://github.com/Wohlstand/OPL3BankEditor/releases
+* **Fresh dev builds:**
+  * [Download for Windows x86](http://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win32.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor))
+  * CIs for other operating systems are coming soon... (However, it's easy to build it by yourself :wink:)
+
 # How to build
 You need a Qt 5 to build this project.
 
