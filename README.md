@@ -1,6 +1,8 @@
 # OPL3BankEditor
 A small cross-platform editor of the OPL3 FM banks of different formats
 
+[![Build status](https://ci.appveyor.com/api/projects/status/llbyd0blk0i7amih?svg=true)](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor)
+
 ## Currently supported bank formats
 * Junglevision patch (*.OP3)
 * DMX OPL-2 (OP2)
