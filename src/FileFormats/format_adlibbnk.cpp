@@ -18,6 +18,7 @@
 
 #include "format_adlibbnk.h"
 #include "../common.h"
+#include <QMap>
 
 //! Enables strict validation of every parameter.
 //! Or all parameters are will be filtered even data is an invalid crap
@@ -283,78 +284,96 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
     //{
     //    uchar verMajor;
     //    uchar verMinor;
-    file.write(char_p(ver), 2);
+    file.write(char_p(ver), 2);         //0..1
     //    char  magic[6];
-    file.write(char_p(bnk_magic), 6);
+    file.write(char_p(bnk_magic), 6);   //2..7
 
-    uint32_t insts = uint32_t(bank.Ins_Melodic_box.size() + bank.Ins_Percussion_box.size());
-    uint16_t instsU = insts > 65515 ? 65515 : uint16_t(insts);
-    uint16_t instsS = (insts + 20) > 65535 ? 65535 : uint16_t(insts + 20);
+    uint16_t instMax = isHMI ? 128 : 65515;
+    uint32_t insts  = uint32_t(bank.Ins_Melodic_box.size() + bank.Ins_Percussion_box.size());
+    uint16_t instsU = insts > instMax ? instMax : uint16_t(insts);
+    uint16_t instsS = instsU;
     uint32_t nameAddress = 28;
-    uint32_t dataAddress = 28 + SIZEOF_NAME * insts;
-    if(isHMI)
-    {
-        instsU = instsU > 128 ? 128 : instsU;
-        instsS = instsU;
-    }
+    uint32_t dataAddress = 28 + SIZEOF_NAME * instsS;
 
     //    uchar numUsed[2];
-    writeLE(file, instsU);
+    writeLE(file, instsU);          //8,9
     //    uchar numInstruments[2];
-    writeLE(file, instsS);
+    writeLE(file, instsS);          //10,11
     //    uchar offsetName[2];
-    writeLE(file, nameAddress);
+    writeLE(file, nameAddress);     //12..15
     //    uchar offsetData[2];
-    writeLE(file, dataAddress);
+    writeLE(file, dataAddress);     //16..19
     //    uchar pad[8];
     char pad[8];
     memset(pad, 0, 8);
-    file.write(pad, 8);
+    file.write(pad, 8);             //20...27
     //} __attribute__((__packed__));
 
+    nameAddress = uint32_t(file.pos());
+    file.seek(0x0C);
+    writeLE(file, nameAddress);
+    file.seek(nameAddress);
 
-    for(unsigned short ins = 0; ins < instsU; ins++)
+    /*
+        http://www.shikadi.net/moddingwiki/AdLib_Instrument_Bank_Format
+
+        It's important that it must be sorted by instrument name
+        in alphabetical order to be correctly processed by Ad Lib tools.
+    */
+    struct InstrName
+    {
+        uint16_t index = 0;
+        uint8_t  flags = 0;
+        char     name[9] = {0};
+    };
+    typedef QMap<QString, InstrName> instNameMap;
+    instNameMap ins_sorted;
+
+    for(unsigned short ins = 0; ins < instsS; ins++)
     {
         bool isDrum = (bank.Ins_Melodic_box.size() <= ins);
+        InstrName inst;
         FmBank::Instrument &Ins = isDrum ?
                                   bank.Ins_Percussion_box[ ins - bank.Ins_Melodic_box.size() ] :
                                   bank.Ins_Melodic_box[ ins ];
-        char name[9];
-        strncpy(name, Ins.name, 8);
-        name[8] = '\n';
+        strncpy(inst.name, Ins.name, 8);
+        if(inst.name[0] == '\0')
+            snprintf(inst.name, 8, "%c-%05d", (isDrum?'P':'M'), ins);
+        inst.name[8] = '\0';
+        inst.index = ins;
+        inst.flags = 0x01/*YES, IT'S "USED"! (I see no reasons to keep junk data in the file)*/ /*(char)isDrum*/;
+
+        QString key_s = QString::fromLatin1(inst.name).toLower();
+        QString key = key_s;
+        uint64_t counter = 0;
+        while(ins_sorted.contains(key))
+            key = key_s + "-" + QString::number(counter++);
+        ins_sorted.insert(key, inst);
+    }
+
+    for(instNameMap::iterator it = ins_sorted.begin();
+        it != ins_sorted.end();
+        it++)
+    {
+        InstrName &inst = it.value();
         //isDrum
         //struct BNK_InsName
         //{
         //    uchar index[2];
-        writeLE(file, ins);
+        writeLE(file, inst.index);
         //    uchar flags;
-        uchar flags = 0x01/*YES, IT'S "USED"! (I see no reasons to keep junk data in the file)*/ /*(char)isDrum*/;
-        file.write(char_p(&flags), 1);
+        file.write(char_p(&inst.flags), 1);
         //    char  name[9];
-        file.write(name, 9);
+        file.write(inst.name, 9);
         //} __attribute__((__packed__));
     }
 
-    if(!isHMI)
-    {
-        for(uint16_t ins = instsU; ins < instsS; ins++)
-        {
-            char name[9];
-            memset(name, 0, 9);
-            //struct BNK_InsName
-            //{
-            //    uchar index[2];
-            writeLE(file, ins);
-            //    uchar flags;
-            uchar flags = 0x00/*NO, IT'S NOTHING - just an unused crap!*/;
-            file.write(char_p(&flags), 1);
-            //    char  name[9];
-            file.write(name, 9);
-            //} __attribute__((__packed__));
-        }
-    }
+    dataAddress = uint32_t(file.pos());
+    file.seek(0x10);
+    writeLE(file, dataAddress);
+    file.seek(dataAddress);
 
-    for(uint16_t ins = 0; ins < instsU; ins++)
+    for(uint16_t ins = 0; ins < instsS; ins++)
     {
         bool isDrum = (bank.Ins_Melodic_box.size() <= ins);
         FmBank::Instrument &Ins = isDrum ?
@@ -480,16 +499,6 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
         //    uchar   carWaveSel;
         file.write(char_p(&Ins.OP[CARRIER1].waveform), 1);
         //} __attribute__((__packed__));
-    }
-
-    if(!isHMI)
-    {
-        for(unsigned short ins = instsU; ins < instsS; ins++)
-        {
-            uchar nullIns[SIZEOF_INST];
-            memset(nullIns, 0, SIZEOF_INST);
-            file.write(char_p(nullIns), SIZEOF_INST);
-        }
     }
 
     file.close();
