@@ -19,7 +19,7 @@ windeployqt opl3_bank_editor.exe
 IF ERRORLEVEL 1 goto error
 cd ..
 
-"%SEVENZIP%\7z" a -tzip "opl3-bank-editor\opl3-bank-editor-dev-win32.zip" .\formats_info.htm .\license.txt .\bin-release\opl3_bank_editor.exe Bank_Examples
+"%SEVENZIP%\7z" a -tzip "opl3-bank-editor\opl3-bank-editor-dev-win32.zip" .\formats_info.htm .\license.txt .\bin-release\* Bank_Examples
 
 goto quit
 :error
