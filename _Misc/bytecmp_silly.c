@@ -2,8 +2,8 @@
 
 int main()
 {
-    FILE* f1 = fopen("file53.opl", "rb");
-    FILE* f2 = fopen("file53_dupe.opl", "rb");
+    FILE* f1 = fopen("lostvik1.opl", "rb");
+    FILE* f2 = fopen("lostvik2.opl", "rb");
 
     unsigned char byte1=0, byte2=0;
     int count=0;
