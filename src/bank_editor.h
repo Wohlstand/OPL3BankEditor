@@ -209,6 +209,8 @@ class BankEditor : public QMainWindow
 
         bool isDrumsMode();
 
+        void reloadBanks();
+
     public slots:
         /**
          * @brief Toggle melodic mode and fill instruments list with melodic instruments names
@@ -274,6 +276,47 @@ class BankEditor : public QMainWindow
          * @brief Show about dialog
          */
         void on_actionAbout_triggered();
+
+        /**
+         * @brief Reload instruments list for specific bank ID
+         * @param index ID of bank
+         */
+        void on_bank_no_currentIndexChanged(int index);
+
+        /**
+         * @brief Add new instrument into end
+         */
+        void on_actionAddInst_triggered();
+        /**
+         * @brief Clear currently selected instrument entry
+         */
+        void on_actionClearInstrument_triggered();
+        /**
+         * @brief Delete currently selected instrument entry
+         */
+        void on_actionDelInst_triggered();
+
+        /**
+         * @brief Add new bank entry (add 128 instruments into end)
+         */
+        void on_actionAddBank_triggered();
+        /**
+         * @brief Add new bank into end and copy all instruments from current bank into it
+         */
+        void on_actionCloneBank_triggered();
+        /**
+         * @brief Clear all instruments in current bank
+         */
+        void on_actionClearBank_triggered();
+        /**
+         * @brief Delete current bank (delete 128 instruments) except of last bank
+         */
+        void on_actionDeleteBank_triggered();
+        /**
+         * @brief Turn on the AdLib BNK mode where all instruments shown as united list without dividing by banks
+         * @param checked AdLib BNK mode is turned on
+         */
+        void on_actionAdLibBnkMode_triggered(bool checked);
 
 
         /* ***************** Instrument Parameters editing ***************** */
@@ -354,11 +397,7 @@ class BankEditor : public QMainWindow
 
         void on_velocityOffset_valueChanged(int arg1);
 
-        void on_actionAddInst_triggered();
-
-        void on_actionDelInst_triggered();
-
-    protected:
+protected:
         void closeEvent(QCloseEvent *event);
         void dragEnterEvent(QDragEnterEvent *e);
         void dropEvent(QDropEvent *e);

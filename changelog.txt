@@ -1,3 +1,9 @@
+Version 1.3.0-beta
+- Fixed support for AIL banks
+- Added support for 128-intstruments banks with ability to toggle, add, delete, clear
+- Added ability to clear or delete instrument entries
+- Fixed a possible crash on attempt to reset recently added instruments
+
 Version 1.2.3-beta
 - Added experimental read-only support for UNIX SB/O3 bank formats
 - Added support for single-instrument saving (for now is SBI-only)

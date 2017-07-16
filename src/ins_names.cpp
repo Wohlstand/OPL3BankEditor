@@ -284,10 +284,18 @@ const char *MidiPercName[128] =
 
 QString getMidiInsNameM(int index)
 {
-    return index < 128 ? MidiInsName[index] : QString("INS_%1").arg(index, 3);
+    return index < 128 ?
+                MidiInsName[index] :
+                QString("INS_%1:%2")
+                    .arg(index / 128, 3, 10, QChar('0'))
+                    .arg(index % 128, 3, 10, QChar('0'));
 }
 
 QString getMidiInsNameP(int index)
 {
-    return index < 128 ? MidiPercName[index] : QString("INS_%1").arg(index, 3);
+    return index < 128 ?
+                MidiPercName[index] :
+                QString("INS_%1:%2")
+                    .arg(index / 128, 3, 10, QChar('0'))
+                    .arg(index % 128, 3, 10, QChar('0'));
 }

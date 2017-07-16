@@ -25,7 +25,7 @@
 
 #define PROGRAM_NAME "OPL3 Bank Editor"
 
-#define VERSION "1.2.3-beta"
+#define VERSION "1.3.0-beta"
 
 #define COPYRIGHT "© 2016-2017, Vitaly Novichkov \"Wohlstand\""
 

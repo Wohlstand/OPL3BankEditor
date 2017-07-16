@@ -55,7 +55,7 @@
      <property name="bottomMargin">
       <number>2</number>
      </property>
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QRadioButton" name="melodic">
        <property name="text">
         <string>Melodic</string>
@@ -65,18 +65,27 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="1" column="1">
       <widget class="QRadioButton" name="percussion">
        <property name="text">
         <string>Percussion</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0" colspan="2">
+     <item row="2" column="0" colspan="2">
       <widget class="QListWidget" name="instruments">
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QComboBox" name="bank_no">
+       <item>
+        <property name="text">
+         <string>Bank 0</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>
@@ -2179,8 +2188,16 @@ of second voice</string>
     <addaction name="separator"/>
     <addaction name="actionReset_current_instrument"/>
     <addaction name="separator"/>
+    <addaction name="actionAddBank"/>
+    <addaction name="actionCloneBank"/>
+    <addaction name="actionClearBank"/>
+    <addaction name="actionDeleteBank"/>
+    <addaction name="separator"/>
     <addaction name="actionAddInst"/>
+    <addaction name="actionClearInstrument"/>
     <addaction name="actionDelInst"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdLibBnkMode"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdito"/>
@@ -2222,7 +2239,7 @@ of second voice</string>
   </action>
   <action name="actionCopy">
    <property name="text">
-    <string>Copy</string>
+    <string>Copy current instrument</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+C</string>
@@ -2230,7 +2247,7 @@ of second voice</string>
   </action>
   <action name="actionPaste">
    <property name="text">
-    <string>Paste</string>
+    <string>Paste instrument</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+V</string>
@@ -2262,6 +2279,45 @@ of second voice</string>
   <action name="actionSaveInstrument">
    <property name="text">
     <string>Save current instrument as...</string>
+   </property>
+  </action>
+  <action name="actionAdLibBnkMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>AdLib BNK mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Show all instruments without separating them between of 128-instrument banks</string>
+   </property>
+  </action>
+  <action name="actionAddBank">
+   <property name="text">
+    <string>Add bank</string>
+   </property>
+  </action>
+  <action name="actionDeleteBank">
+   <property name="text">
+    <string>Delete bank</string>
+   </property>
+  </action>
+  <action name="actionCloneBank">
+   <property name="text">
+    <string>Clone bank</string>
+   </property>
+  </action>
+  <action name="actionClearInstrument">
+   <property name="text">
+    <string>Clear instrument</string>
+   </property>
+  </action>
+  <action name="actionClearBank">
+   <property name="text">
+    <string>Clear bank</string>
    </property>
   </action>
  </widget>
