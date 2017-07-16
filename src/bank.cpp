@@ -81,7 +81,7 @@ bool FmBank::operator!=(const FmBank &fb)
 void FmBank::reset()
 {
     int insnum = 128;
-    int size = sizeof(Instrument) * insnum;
+    size_t size = sizeof(Instrument) * size_t(insnum);
     Ins_Melodic_box.resize(insnum);
     Ins_Percussion_box.resize(insnum);
     Ins_Melodic     = Ins_Melodic_box.data();

@@ -132,8 +132,20 @@ FfmtErrCode MilesOPL::loadFile(QString filePath, FmBank &bank)
     for(uint32_t i = 0; i < totalInsts; i++)
     {
         GTL_Head &h = heads[int(i)];
-        int gmPatchId = h.bank == 0x7F ? h.patch + 0x80 : h.patch;
-        FmBank::Instrument &ins = (gmPatchId < 128) ? bank.Ins_Melodic[gmPatchId] : bank.Ins_Percussion[gmPatchId - 128];
+        bool isPerc = (h.bank == 0x7F);
+        int gmPatchId = isPerc ? h.patch : (h.patch + (h.bank * 128));
+        if(!isPerc && (gmPatchId > 127))
+        {
+            while(bank.Ins_Melodic_box.size() <= gmPatchId)
+            {
+                int oldSize = bank.Ins_Melodic_box.size();
+                size_t size = sizeof(FmBank::Instrument) * 128;
+                bank.Ins_Melodic_box.resize(bank.Ins_Melodic_box.size() + 128);
+                bank.Ins_Melodic = bank.Ins_Melodic_box.data();
+                memset(bank.Ins_Melodic + oldSize, 0, size_t(size));
+            }
+        }
+        FmBank::Instrument &ins = isPerc ? bank.Ins_Percussion[gmPatchId] : bank.Ins_Melodic[gmPatchId];
 
         if(!file.seek(h.offset))
         {
@@ -156,16 +168,17 @@ FfmtErrCode MilesOPL::loadFile(QString filePath, FmBank &bank)
         insLen -= 2;
 
         memset(idata, 0, 24);
-        if(file.read(char_p(idata), insLen) != insLen)
-        {
-            bank.reset();
-            return FfmtErrCode::ERR_BADFORMAT;
-        }
+        /*qint64 got = */ file.read(char_p(idata), insLen);
+        //if(got != insLen)
+        //{
+        //    bank.reset();
+        //    return FfmtErrCode::ERR_BADFORMAT;
+        //}
         //Operators mode: length 12 - 2-op, 23 - 4-op
         ins.en_4op = (insLen / 11) > 1;
         //NoteNum
-        ins.percNoteNum  = (gmPatchId < 128) ? 0 : idata[0];
-        ins.note_offset1 = (gmPatchId < 128) ? static_cast<char>(idata[0]) : 0;
+        ins.percNoteNum  = (isPerc) ? idata[0] : 0;
+        ins.note_offset1 = (isPerc) ? 0 : static_cast<char>(idata[0]);
         //OP1
         ins.setAVEKM(MODULATOR1,    idata[1]);
         ins.setKSLL(MODULATOR1,     idata[2]);
@@ -200,6 +213,9 @@ FfmtErrCode MilesOPL::loadFile(QString filePath, FmBank &bank)
             ins.setSusRel(CARRIER2,   idata[21]);
             ins.setWaveForm(CARRIER2, idata[22]);
         }
+
+        if(file.atEnd())
+            break;//Nothing to read!
     }
     file.close();
 
@@ -224,7 +240,7 @@ FfmtErrCode MilesOPL::saveFile(QString filePath, FmBank &bank)
         {
             FmBank::Instrument &ins = bank.Ins_Melodic[i];
             head.patch = i % 128;
-            head.bank  = uint8_t(i) / 128;
+            head.bank  = uint8_t(i / 128);
             heads.push_back(head);
             head.offset += (ins.en_4op && !ins.en_pseudo4op) ? 25 : 14;
         }
@@ -273,9 +289,10 @@ FfmtErrCode MilesOPL::saveFile(QString filePath, FmBank &bank)
     {
         GTL_Head &h = heads[i];
         FmBank::Instrument &ins = (h.bank != 0x7F) ?
-                                bank.Ins_Melodic[h.patch * (h.bank + 1)] :
+                                bank.Ins_Melodic[h.patch + (h.bank * 128)] :
                                 bank.Ins_Percussion[h.patch];
-        uint16_t ins_len = (ins.en_4op && !ins.en_pseudo4op) ? 25 : 14;
+        bool is4op = (ins.en_4op && !ins.en_pseudo4op);
+        uint16_t ins_len = is4op ? 25 : 14;
 
 //        //Operators mode: length 12 - 2-op, 23 - 4-op
         writeLE(file, ins_len);
@@ -299,7 +316,7 @@ FfmtErrCode MilesOPL::saveFile(QString filePath, FmBank &bank)
         odata[10] = ins.getSusRel(CARRIER1);
         odata[11] = ins.getWaveForm(CARRIER1);
 
-        if(ins.en_4op)
+        if(is4op)
         {
 //            //OP3
             odata[12] = ins.getAVEKM(MODULATOR2);
