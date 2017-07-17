@@ -55,6 +55,7 @@ RCC_DIR     = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.rcc
 UI_DIR      = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.ui
 
 win32: RC_FILE = $$PWD/src/resources/res.rc
+macx: ICON = $$PWD/src/resources/opl3.icns
 
 SOURCES += \
     src/audio.cpp \
@@ -105,4 +106,3 @@ FORMS += \
 
 RESOURCES += \
     src/resources/resources.qrc
-
