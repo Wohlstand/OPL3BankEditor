@@ -138,7 +138,6 @@ void Importer::setMelodic()
 {
     //setDrumMode(false);
     ui->instruments->clear();
-
     for(int i = 0; i < m_bank.countMelodic(); i++)
     {
         QListWidgetItem *item = new QListWidgetItem();
@@ -155,7 +154,6 @@ void Importer::setDrums()
 {
     //setDrumMode(true);
     ui->instruments->clear();
-
     for(int i = 0; i < m_bank.countDrums(); i++)
     {
         QListWidgetItem *item = new QListWidgetItem();
@@ -203,7 +201,6 @@ void Importer::on_openBank_clicked()
     openFile(fileToOpen, true);
 }
 
-
 void Importer::on_openInst_clicked()
 {
     QString filters = FmBankFormatFactory::getInstOpenFiltersList(true);
@@ -213,7 +210,6 @@ void Importer::on_openInst_clicked()
         return;
     openFile(fileToOpen, false);
 }
-
 
 void Importer::dragEnterEvent(QDragEnterEvent *e)
 {

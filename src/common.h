@@ -94,6 +94,13 @@ uint16_t toUint16LE(uchar *arr);
  * \param arr Source array of bytes
  * \return Resulted number
  */
+uint16_t toUint16BE(uchar *arr);
+
+/*!
+ * \brief Convers array of big endian bytes into short
+ * \param arr Source array of bytes
+ * \return Resulted number
+ */
 int16_t toSint16BE(uchar *arr);
 
 /*!
@@ -117,6 +124,13 @@ void fromSint16LE(int16_t in, uchar *arr);
  * \param [out] arr Target byte array
  */
 void fromUint16LE(uint16_t in, uchar *arr);
+
+/*!
+ * \brief Converts unsigned short into big endian byte array
+ * \param [in] in Source number
+ * \param [out] arr Target byte array
+ */
+void fromUint16BE(uint16_t in, uchar *arr);
 
 /*!
  * \brief Converts signed short into big endian byte array

@@ -28,6 +28,7 @@
 #include "ins_names.h"
 
 #include "FileFormats/ffmt_factory.h"
+
 #include "common.h"
 #include "version.h"
 
@@ -144,15 +145,12 @@ void BankEditor::initFileData(QString &filePath)
     if(!ui->instruments->selectedItems().isEmpty())
     {
         int idOfSelected = ui->instruments->selectedItems().first()->data(Qt::UserRole).toInt();
-
         if(ui->melodic->isChecked())
             setMelodic();
         else
             setDrums();
-
         ui->instruments->clearSelection();
         QList<QListWidgetItem *> items = ui->instruments->findItems("*", Qt::MatchWildcard);
-
         for(int i = 0; i < items.size(); i++)
         {
             if(items[i]->data(Qt::UserRole).toInt() == idOfSelected)
@@ -161,7 +159,6 @@ void BankEditor::initFileData(QString &filePath)
                 break;
             }
         }
-
         if(!ui->instruments->selectedItems().isEmpty())
             on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
     }
@@ -184,7 +181,6 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
 bool BankEditor::openFile(QString filePath)
 {
     FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &m_recentFormat);
-
     if(err != FfmtErrCode::ERR_OK)
     {
         QString errText;
@@ -523,6 +519,7 @@ void BankEditor::loadInstrument()
     ui->fm1->setChecked(m_curInst->connection1 == FmBank::Instrument::FM);
     ui->am2->setChecked(m_curInst->connection2 == FmBank::Instrument::AM);
     ui->fm2->setChecked(m_curInst->connection2 == FmBank::Instrument::FM);
+
     ui->op1_attack->setValue(m_curInst->OP[MODULATOR1].attack);
     ui->op1_decay->setValue(m_curInst->OP[MODULATOR1].decay);
     ui->op1_sustain->setValue(m_curInst->OP[MODULATOR1].sustain);
@@ -535,6 +532,7 @@ void BankEditor::loadInstrument()
     ui->op1_am->setChecked(m_curInst->OP[MODULATOR1].am);
     ui->op1_eg->setChecked(m_curInst->OP[MODULATOR1].eg);
     ui->op1_ksr->setChecked(m_curInst->OP[MODULATOR1].ksr);
+
     ui->op2_attack->setValue(m_curInst->OP[CARRIER1].attack);
     ui->op2_decay->setValue(m_curInst->OP[CARRIER1].decay);
     ui->op2_sustain->setValue(m_curInst->OP[CARRIER1].sustain);
@@ -547,6 +545,7 @@ void BankEditor::loadInstrument()
     ui->op2_am->setChecked(m_curInst->OP[CARRIER1].am);
     ui->op2_eg->setChecked(m_curInst->OP[CARRIER1].eg);
     ui->op2_ksr->setChecked(m_curInst->OP[CARRIER1].ksr);
+
     ui->op3_attack->setValue(m_curInst->OP[MODULATOR2].attack);
     ui->op3_decay->setValue(m_curInst->OP[MODULATOR2].decay);
     ui->op3_sustain->setValue(m_curInst->OP[MODULATOR2].sustain);
@@ -559,6 +558,7 @@ void BankEditor::loadInstrument()
     ui->op3_am->setChecked(m_curInst->OP[MODULATOR2].am);
     ui->op3_eg->setChecked(m_curInst->OP[MODULATOR2].eg);
     ui->op3_ksr->setChecked(m_curInst->OP[MODULATOR2].ksr);
+
     ui->op4_attack->setValue(m_curInst->OP[CARRIER2].attack);
     ui->op4_decay->setValue(m_curInst->OP[CARRIER2].decay);
     ui->op4_sustain->setValue(m_curInst->OP[CARRIER2].sustain);
@@ -571,6 +571,7 @@ void BankEditor::loadInstrument()
     ui->op4_am->setChecked(m_curInst->OP[CARRIER2].am);
     ui->op4_eg->setChecked(m_curInst->OP[CARRIER2].eg);
     ui->op4_ksr->setChecked(m_curInst->OP[CARRIER2].ksr);
+
     m_lock = false;
 }
 
@@ -739,6 +740,7 @@ void BankEditor::on_actionAddInst_triggered()
         id = m_bank.countDrums() - 1;
         item->setText(ins.name[0] != '\0' ? ins.name : getMidiInsNameP(id));
     }
+
     setInstrumentMetaInfo(item, id);
     item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     ui->instruments->addItem(item);
@@ -996,4 +998,3 @@ void BankEditor::on_actionDeleteBank_triggered()
             ui->bank_no->setCurrentIndex(curBank);
     }
 }
-

@@ -212,7 +212,7 @@ bool FmBankFormatFactory::isImportOnly(BankFormats format)
         if(p->formatId() == format)
             return (p->formatCaps() == (int)FormatCaps::FORMAT_CAPS_IMPORT);
     }
-    return false;;\
+    return false;
 }
 
 
@@ -309,7 +309,6 @@ FfmtErrCode FmBankFormatFactory::OpenInstrumentFile(QString filePath,
 
     return err;
 }
-
 
 FfmtErrCode FmBankFormatFactory::SaveInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats dest, bool isDrum)
 {

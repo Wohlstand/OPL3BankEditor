@@ -79,7 +79,7 @@ qint64 writeBE(QFile &file, uint16_t &out)
 
 int16_t toSint16LE(uchar *arr)
 {
-    short num = *reinterpret_cast<signed char *>(&arr[1]);
+    int16_t num = *reinterpret_cast<signed char *>(&arr[1]);
     num *= 1 << 8;
     num |= arr[0];
     return num;
@@ -87,14 +87,22 @@ int16_t toSint16LE(uchar *arr)
 
 uint16_t toUint16LE(uchar *arr)
 {
-    unsigned short num = arr[0];
+    uint16_t num = arr[0];
     num |= ((arr[1] << 8) & 0xFF00);
     return num;
 }
 
+uint16_t toUint16BE(uchar *arr)
+{
+    uint16_t num = arr[1];
+    num |= ((arr[0] << 8) & 0xFF00);
+    return num;
+}
+
+
 int16_t toSint16BE(uchar *arr)
 {
-    short num = *reinterpret_cast<signed char *>(&arr[0]);
+    int16_t num = *reinterpret_cast<signed char *>(&arr[0]);
     num *= 1 << 8;
     num |= arr[1];
     return num;
@@ -102,7 +110,7 @@ int16_t toSint16BE(uchar *arr)
 
 uint32_t toUint32LE(uchar *arr)
 {
-    unsigned int num = arr[0];
+    uint32_t num = arr[0];
     num |= (static_cast<unsigned int>(arr[1] << 8)  & 0x0000FF00);
     num |= (static_cast<unsigned int>(arr[2] << 16) & 0x00FF0000);
     num |= (static_cast<unsigned int>(arr[3] << 24) & 0xFF000000);
@@ -120,6 +128,12 @@ void fromUint16LE(uint16_t in, uchar *arr)
 {
     arr[0] =  in & 0x00FF;
     arr[1] = (in >> 8) & 0x00FF;
+}
+
+void fromUint16BE(uint16_t in, uchar *arr)
+{
+    arr[1] =  in & 0x00FF;
+    arr[0] = (in >> 8) & 0x00FF;
 }
 
 void fromSint16BE(int16_t in, uchar *arr)
