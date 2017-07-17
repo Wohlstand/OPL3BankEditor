@@ -43,7 +43,7 @@ void BankEditor::initAudio()
 
     m_audioOutput = new QAudioOutput(m_device, m_format, this);
     m_audioOutput->setVolume(1.0);
-    m_generator = new Generator(44100, this);
+    m_generator = new Generator(uint32_t(m_format.sampleRate()), this);
     //Test note
     connect(ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(PlayNote()));
     connect(ui->testNote,  SIGNAL(released()), m_generator,  SLOT(NoteOffAllChans()));
