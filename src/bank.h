@@ -41,9 +41,16 @@ public:
     bool operator!=(const FmBank &fb);
 
     /**
-     * @brief Set everything to zero
+     * @brief Set everything to zero (one bank per melodic and percussion)
      */
     void reset();
+
+    /**
+     * @brief Set everything to zero and set count of banks
+     * @param melodic_banks Count of melodic banks
+     * @param percussion_banks Count of percussion banks
+     */
+    void reset(uint16_t melodic_banks, uint16_t percussion_banks);
 
     /**
      * @brief Operator specs

@@ -61,15 +61,13 @@ bool FmBank::operator==(const FmBank &fb)
     bool res = true;
     res &= (Ins_Melodic_box.size() == fb.Ins_Melodic_box.size());
     res &= (Ins_Percussion_box.size() == fb.Ins_Percussion_box.size());
-
     if(res)
     {
-        int size = Ins_Melodic_box.size() * sizeof(Instrument);
-        res &= (memcmp(Ins_Melodic,      fb.Ins_Melodic,    size) == 0);
-        size = Ins_Percussion_box.size() * sizeof(Instrument);
-        res &= (memcmp(Ins_Percussion,   fb.Ins_Percussion, size) == 0);
+        int size = Ins_Melodic_box.size() * static_cast<int>(sizeof(Instrument));
+        res &= (memcmp(Ins_Melodic,      fb.Ins_Melodic,    static_cast<size_t>(size)) == 0);
+        size = Ins_Percussion_box.size() * static_cast<int>(sizeof(Instrument));
+        res &= (memcmp(Ins_Percussion,   fb.Ins_Percussion, static_cast<size_t>(size)) == 0);
     }
-
     return res;
 }
 
@@ -80,14 +78,26 @@ bool FmBank::operator!=(const FmBank &fb)
 
 void FmBank::reset()
 {
-    int insnum = 128;
-    size_t size = sizeof(Instrument) * size_t(insnum);
-    Ins_Melodic_box.resize(insnum);
-    Ins_Percussion_box.resize(insnum);
+    size_t insnum = 128;
+    size_t size = sizeof(Instrument) * insnum;
+    Ins_Melodic_box.resize(static_cast<int>(insnum));
+    Ins_Percussion_box.resize(static_cast<int>(insnum));
     Ins_Melodic     = Ins_Melodic_box.data();
     Ins_Percussion  = Ins_Percussion_box.data();
     memset(Ins_Melodic,    0, size);
     memset(Ins_Percussion, 0, size);
+}
+
+void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
+{
+    size_t insnum = 128;
+    size_t size = sizeof(Instrument) * insnum;
+    Ins_Melodic_box.resize(static_cast<int>(insnum * melodic_banks));
+    Ins_Percussion_box.resize(static_cast<int>(insnum * percussion_banks));
+    Ins_Melodic     = Ins_Melodic_box.data();
+    Ins_Percussion  = Ins_Percussion_box.data();
+    memset(Ins_Melodic,    0, size * melodic_banks);
+    memset(Ins_Percussion, 0, size * percussion_banks);
 }
 
 FmBank::Instrument FmBank::emptyInst()

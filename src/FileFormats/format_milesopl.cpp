@@ -110,11 +110,13 @@ FfmtErrCode MilesOPL::loadFile(QString filePath, FmBank &bank)
     QVector<GTL_Head> heads;
     unsigned char   hdata[6];
     unsigned char   idata[24];
+    uint8_t max_bank_number = 0;
     heads.reserve(256);
     do
     {
         if(file.read(char_p(hdata), 6) != 6)
             return FfmtErrCode::ERR_BADFORMAT;
+
         head.patch = hdata[0];
         head.bank  = hdata[1];
         head.offset = toUint32LE(hdata + 2);
@@ -122,11 +124,17 @@ FfmtErrCode MilesOPL::loadFile(QString filePath, FmBank &bank)
         if((head.patch == 0xFF) || (head.bank == 0xFF))
             break;
 
+        if(head.patch > 127)//Patch ID is more than 127
+            return FfmtErrCode::ERR_BADFORMAT;
+
+        if((head.bank != 0x7F) && (head.bank > max_bank_number) )
+            max_bank_number = head.bank;
+
         heads.push_back(head);
     }
     while(!file.atEnd());
 
-    bank.reset();
+    bank.reset(max_bank_number + 1, 1);
 
     unsigned int totalInsts = static_cast<unsigned int>(heads.size());
     for(uint32_t i = 0; i < totalInsts; i++)
@@ -134,17 +142,6 @@ FfmtErrCode MilesOPL::loadFile(QString filePath, FmBank &bank)
         GTL_Head &h = heads[int(i)];
         bool isPerc = (h.bank == 0x7F);
         int gmPatchId = isPerc ? h.patch : (h.patch + (h.bank * 128));
-        if(!isPerc && (gmPatchId > 127))
-        {
-            while(bank.Ins_Melodic_box.size() <= gmPatchId)
-            {
-                int oldSize = bank.Ins_Melodic_box.size();
-                size_t size = sizeof(FmBank::Instrument) * 128;
-                bank.Ins_Melodic_box.resize(bank.Ins_Melodic_box.size() + 128);
-                bank.Ins_Melodic = bank.Ins_Melodic_box.data();
-                memset(bank.Ins_Melodic + oldSize, 0, size_t(size));
-            }
-        }
         FmBank::Instrument &ins = isPerc ? bank.Ins_Percussion[gmPatchId] : bank.Ins_Melodic[gmPatchId];
 
         if(!file.seek(h.offset))
@@ -152,6 +149,7 @@ FfmtErrCode MilesOPL::loadFile(QString filePath, FmBank &bank)
             bank.reset();
             return FfmtErrCode::ERR_BADFORMAT;
         }
+
         uint16_t insLen = 0;
         if(readLE(file, insLen) != 2)
         {
