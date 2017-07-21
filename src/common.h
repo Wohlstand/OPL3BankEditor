@@ -80,35 +80,35 @@ qint64 writeBE(QFile &file, uint16_t &out);
  * \param arr Source array of bytes
  * \return Resulted number
  */
-int16_t toSint16LE(uchar *arr);
+int16_t toSint16LE(const uint8_t *arr);
 
 /*!
  * \brief Convers array of little endian bytes into short
  * \param arr Source array of bytes
  * \return Resulted number
  */
-uint16_t toUint16LE(uchar *arr);
+uint16_t toUint16LE(const uint8_t *arr);
 
 /*!
  * \brief Convers array of big endian bytes into short
  * \param arr Source array of bytes
  * \return Resulted number
  */
-uint16_t toUint16BE(uchar *arr);
+uint16_t toUint16BE(const uint8_t *arr);
 
 /*!
  * \brief Convers array of big endian bytes into short
  * \param arr Source array of bytes
  * \return Resulted number
  */
-int16_t toSint16BE(uchar *arr);
+int16_t toSint16BE(const uint8_t *arr);
 
 /*!
  * \brief Convers array of big endian bytes into int
  * \param arr Source array of bytes
  * \return Resulted number
  */
-uint32_t toUint32LE(uchar *arr);
+uint32_t toUint32LE(const uint8_t *arr);
 
 
 /*!
@@ -116,14 +116,14 @@ uint32_t toUint32LE(uchar *arr);
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromSint16LE(int16_t in, uchar *arr);
+void fromSint16LE(int16_t in, uint8_t *arr);
 
 /*!
  * \brief Converts unsigned short into little endian byte array
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromUint16LE(uint16_t in, uchar *arr);
+void fromUint16LE(uint16_t in, uint8_t *arr);
 
 /*!
  * \brief Converts unsigned short into big endian byte array
@@ -137,14 +137,14 @@ void fromUint16BE(uint16_t in, uchar *arr);
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromSint16BE(int16_t in, uchar *arr);
+void fromSint16BE(int16_t in, uint8_t *arr);
 
 /*!
  * \brief Converts unsigned int into little endian byte array
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromUint32LE(int32_t in, uchar *arr);
+void fromUint32LE(int32_t in, uint8_t *arr);
 
 /*!
  * \brief Reads some bytes from begin of the file

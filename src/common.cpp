@@ -22,7 +22,7 @@
 
 qint64 readLE(QFile &file, uint16_t &out)
 {
-    uchar bytes[2] = {0, 0};
+    uint8_t bytes[2] = {0, 0};
     qint64 len = file.read(char_p(bytes), 2);
     out = (quint16(bytes[0]) & 0x00FF)
           | ((quint16(bytes[1]) << 8) & 0xFF00);
@@ -32,7 +32,7 @@ qint64 readLE(QFile &file, uint16_t &out)
 
 qint64 readLE(QFile &file, uint32_t &out)
 {
-    uchar bytes[4] = {0, 0, 0, 0};
+    uint8_t bytes[4] = {0, 0, 0, 0};
     qint64 len = file.read(char_p(bytes), 4);
     out = (quint32(bytes[0] << 0) & 0x000000FF)
           | ((quint32(bytes[1]) << 8)  & 0x0000FF00)
@@ -43,7 +43,7 @@ qint64 readLE(QFile &file, uint32_t &out)
 
 qint64 writeLE(QFile &file, uint16_t &out)
 {
-    uchar bytes[2] = {uchar(out & 0x00FF), uchar((out >> 8) & 0x00FF) };
+    uint8_t bytes[2] = {uint8_t(out & 0x00FF), uint8_t((out >> 8) & 0x00FF) };
     qint64 len = file.write(char_p(bytes), 2);
     return len;
 }
@@ -51,11 +51,11 @@ qint64 writeLE(QFile &file, uint16_t &out)
 
 qint64 writeLE(QFile &file, uint32_t &out)
 {
-    uchar bytes[4] = { uchar(out & 0x000000FF),
-                       uchar((out >> 8) & 0x000000FF),
-                       uchar((out >> 16) & 0x000000FF),
-                       uchar((out >> 24) & 0x000000FF)
-                     };
+    uint8_t bytes[4] = { uint8_t(out & 0x000000FF),
+                         uint8_t((out >> 8) & 0x000000FF),
+                         uint8_t((out >> 16) & 0x000000FF),
+                         uint8_t((out >> 24) & 0x000000FF)
+                       };
     qint64 len = file.write(char_p(bytes), 4);
     return len;
 }
@@ -63,7 +63,7 @@ qint64 writeLE(QFile &file, uint32_t &out)
 
 qint64 readBE(QFile &file, uint16_t &out)
 {
-    uchar bytes[2] = {0, 0};
+    uint8_t bytes[2] = {0, 0};
     qint64 len = file.read(char_p(bytes), 2);
     out = (quint16(bytes[1]) & 0x00FF)
           | ((quint16(bytes[0]) << 8) & 0xFF00);
@@ -72,27 +72,27 @@ qint64 readBE(QFile &file, uint16_t &out)
 
 qint64 writeBE(QFile &file, uint16_t &out)
 {
-    uchar bytes[2] = {uchar((out >> 8) & 0x00FF), uchar(out & 0x00FF)};
+    uint8_t bytes[2] = {uint8_t((out >> 8) & 0x00FF), uint8_t(out & 0x00FF)};
     qint64 len = file.write(char_p(bytes), 2);
     return len;
 }
 
-int16_t toSint16LE(uchar *arr)
+int16_t toSint16LE(const uint8_t *arr)
 {
-    int16_t num = *reinterpret_cast<signed char *>(&arr[1]);
+    int16_t num = *reinterpret_cast<const int8_t *>(&arr[1]);
     num *= 1 << 8;
     num |= arr[0];
     return num;
 }
 
-uint16_t toUint16LE(uchar *arr)
+uint16_t toUint16LE(const uint8_t *arr)
 {
     uint16_t num = arr[0];
     num |= ((arr[1] << 8) & 0xFF00);
     return num;
 }
 
-uint16_t toUint16BE(uchar *arr)
+uint16_t toUint16BE(const uint8_t *arr)
 {
     uint16_t num = arr[1];
     num |= ((arr[0] << 8) & 0xFF00);
@@ -100,15 +100,15 @@ uint16_t toUint16BE(uchar *arr)
 }
 
 
-int16_t toSint16BE(uchar *arr)
+int16_t toSint16BE(const uint8_t *arr)
 {
-    int16_t num = *reinterpret_cast<signed char *>(&arr[0]);
+    int16_t num = *reinterpret_cast<const int8_t *>(&arr[0]);
     num *= 1 << 8;
     num |= arr[1];
     return num;
 }
 
-uint32_t toUint32LE(uchar *arr)
+uint32_t toUint32LE(const uint8_t *arr)
 {
     uint32_t num = arr[0];
     num |= (static_cast<unsigned int>(arr[1] << 8)  & 0x0000FF00);
@@ -118,31 +118,31 @@ uint32_t toUint32LE(uchar *arr)
 }
 
 
-void fromSint16LE(int16_t in, uchar *arr)
+void fromSint16LE(int16_t in, uint8_t *arr)
 {
     arr[0] =  in & 0x00FF;
     arr[1] = (in >> 8) & 0x00FF;
 }
 
-void fromUint16LE(uint16_t in, uchar *arr)
+void fromUint16LE(uint16_t in, uint8_t *arr)
 {
     arr[0] =  in & 0x00FF;
     arr[1] = (in >> 8) & 0x00FF;
 }
 
-void fromUint16BE(uint16_t in, uchar *arr)
+void fromUint16BE(uint16_t in, uint8_t *arr)
 {
     arr[1] =  in & 0x00FF;
     arr[0] = (in >> 8) & 0x00FF;
 }
 
-void fromSint16BE(int16_t in, uchar *arr)
+void fromSint16BE(int16_t in, uint8_t *arr)
 {
     arr[1] =  in & 0x00FF;
     arr[0] = (in >> 8) & 0x00FF;
 }
 
-void fromUint32LE(int32_t in, uchar *arr)
+void fromUint32LE(int32_t in, uint8_t *arr)
 {
     arr[0] = (in)     & 0x00FF;
     arr[1] = (in >> 8)  & 0x00FF;
