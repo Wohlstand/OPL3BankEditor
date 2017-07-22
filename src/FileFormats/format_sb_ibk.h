@@ -41,7 +41,7 @@ public:
     int         formatInstCaps() override;
     QString     formatInstName() override;
     QString     formatInstExtensionMask() override;
-    InstFormats  formatInstId() override;
+    InstFormats formatInstId() override;
 };
 
 class SbIBK_UNIX_READ final : public FmBankFormatBase
@@ -57,6 +57,14 @@ public:
     QString formatName() override;
     QString formatExtensionMask() override;
     BankFormats formatId() override;
+
+    bool        detectInst(const QString &filePath, char* magic) override;
+    FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0) override;
+    FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false) override;
+    int         formatInstCaps() override;
+    QString     formatInstName() override;
+    QString     formatInstExtensionMask() override;
+    InstFormats formatInstId() override;
 };
 
 
@@ -73,12 +81,36 @@ public:
     BankFormats formatId() override;
 };
 
+class SbIBK_UNIX2OP_DRUMS_SAVE final : public FmBankFormatBase
+{
+public:
+    SbIBK_UNIX2OP_DRUMS_SAVE();
+    ~SbIBK_UNIX2OP_DRUMS_SAVE() = default;
+
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int     formatCaps() override;
+    QString formatName() override;
+    QString formatExtensionMask() override;
+    BankFormats formatId() override;
+};
 
 class SbIBK_UNIX4OP_SAVE final : public FmBankFormatBase
 {
 public:
     SbIBK_UNIX4OP_SAVE();
     ~SbIBK_UNIX4OP_SAVE() = default;
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int     formatCaps() override;
+    QString formatName() override;
+    QString formatExtensionMask() override;
+    BankFormats formatId() override;
+};
+
+class SbIBK_UNIX4OP_DRUMS_SAVE final : public FmBankFormatBase
+{
+public:
+    SbIBK_UNIX4OP_DRUMS_SAVE();
+    ~SbIBK_UNIX4OP_DRUMS_SAVE() = default;
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() override;
     QString formatName() override;

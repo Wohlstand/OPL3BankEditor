@@ -2,8 +2,8 @@
 
 int main()
 {
-    FILE* f1 = fopen("lostvik1.opl", "rb");
-    FILE* f2 = fopen("lostvik2.opl", "rb");
+    FILE* f1 = fopen("std.o3", "rb");
+    FILE* f2 = fopen("std-2.o3", "rb");
 
     unsigned char byte1=0, byte2=0;
     int count=0;
@@ -23,6 +23,5 @@ int main()
         printf("%03X: {0x%02x == 0x%02x}%s\n", count, byte1, byte2, (byte1==byte2)?"":" <- NOT SAME!!!");
         count++;
     }
-
-
 }
+

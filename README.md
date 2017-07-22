@@ -10,7 +10,7 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 * SoundBlaster IBK files (*.IBK)
 * AdLib/HMI BNK files (*.BNK)
 * Global Timbre Library files for Audio Interface Library (*.AD, *.OPL)
-* SB and O3 bank formats (a set of the concoctated SBI files) used with Linux drivers **(Read-only yet)**
+* SB and O3 bank formats (a set of the concoctated SBI files) used with Linux drivers
 
 ## Comming soon
 * *.adlraw - bank format created by Bisquit - author of ADLMIDI utiltiy

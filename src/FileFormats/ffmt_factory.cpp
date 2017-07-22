@@ -61,8 +61,11 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new SbIBK_DOS());
     registerInstFormat(new SbIBK_DOS());
     registerBankFormat(new SbIBK_UNIX_READ());
+    registerInstFormat(new SbIBK_UNIX_READ());
     registerBankFormat(new SbIBK_UNIX2OP_SAVE());
+    registerBankFormat(new SbIBK_UNIX2OP_DRUMS_SAVE());
     registerBankFormat(new SbIBK_UNIX4OP_SAVE());
+    registerBankFormat(new SbIBK_UNIX4OP_DRUMS_SAVE());
 
     registerBankFormat(new AdLibAndHmiBnk_reader());
     registerBankFormat(new AdLibBnk_writer());
@@ -130,7 +133,7 @@ QString FmBankFormatFactory::getInstOpenFiltersList(bool import)
         Q_ASSERT(p.get());//It must be non-null!
         if(!masks.isEmpty())
             masks.append(' ');
-        if(p->formatCaps() & (int)dst)
+        if(p->formatInstCaps() & (int)dst)
         {
             masks.append(p->formatInstExtensionMask());
             formats.append(QString("%1 (%2);;").arg(p->formatInstName()).arg(p->formatInstExtensionMask()));
@@ -148,7 +151,7 @@ QString FmBankFormatFactory::getInstSaveFiltersList()
     for(FmBankFormatBase_uptr &p : g_formatsInstr)
     {
         Q_ASSERT(p.get());//It must be non-null!
-        if(p->formatCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE)
+        if(p->formatInstCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE)
         {
             formats.append(QString("%1 (%2);;").arg(p->formatInstName()).arg(p->formatInstExtensionMask()));
         }

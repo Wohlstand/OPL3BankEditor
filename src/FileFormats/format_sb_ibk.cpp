@@ -27,6 +27,7 @@ class SbIBK_impl : public FmBankFormatBase
 public:
     static bool detectIBK(char* magic);
     static bool detectSBI(char* magic);
+    static bool detectSBI4OP(char* magic);
     static bool detectUNIXO2(QString filePath, BankFormats &format);
     static bool detectUNIXO3(QString filePath, BankFormats &format);
     // IBK/SBI for DOS
@@ -36,7 +37,7 @@ public:
     static FfmtErrCode saveFileSBI(QString filePath, FmBank::Instrument &inst, bool isDrum = false);
     // SB/O3 for UNIX
     static FfmtErrCode loadFileSBOP(QString filePath, FmBank &bank, BankFormats &format);
-    static FfmtErrCode saveFileSBOP(QString filePath, FmBank &bank, bool fourOp = false);
+    static FfmtErrCode saveFileSBOP(QString filePath, FmBank &bank, bool fourOp = false, bool isDrum = false);
 };
 
 // DOS SBK and SBI
@@ -57,6 +58,12 @@ bool SbIBK_impl::detectSBI(char *magic)
 {
     return (strncmp(magic, sbi_magic, 4) == 0);
 }
+
+bool SbIBK_impl::detectSBI4OP(char *magic)
+{
+    return (strncmp(magic, fop_magic, 4) == 0);
+}
+
 
 bool SbIBK_impl::detectUNIXO2(QString filePath, BankFormats &format)
 {
@@ -379,6 +386,7 @@ FfmtErrCode SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, BankFormats
 
         if(strncmp(magic, zero_magic, 4) == 0)
         {
+            format = fileIs4op ? BankFormats::FORMAT_SB4OP_DRUMS : BankFormats::FORMAT_SB2OP_DRUMS;
             //Skip empty instrument
             file.seek(file.pos() + (fileIs4op ? 56 : 48));
             fileIsPercussion = true; //Percussion banks are always begins from zero instruments
@@ -418,7 +426,7 @@ FfmtErrCode SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, BankFormats
         }
 
         FmBank::Instrument &ins = fileIsPercussion ? bank.Ins_Percussion[i] : bank.Ins_Melodic[i];
-        strncpy(ins.name, tempName, 15);
+        strncpy(ins.name, tempName, 30);
         /*
          0-15: voice name
          16-24: unused
@@ -443,9 +451,54 @@ FfmtErrCode SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, BankFormats
     return FfmtErrCode::ERR_OK;
 }
 
-FfmtErrCode SbIBK_impl::saveFileSBOP(QString, FmBank &, bool)
+FfmtErrCode SbIBK_impl::saveFileSBOP(QString filePath, FmBank &bank, bool fourOp, bool isDrum)
 {
-    return FfmtErrCode::ERR_NOT_IMLEMENTED;
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::WriteOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    /* Temporary bank to prevent crash if current bank has less than 128 instruments
+     * (for example, imported from some small BNK file) */
+    TmpBank tmp(bank, 128, 128);
+
+    FmBank::Instrument *insts = isDrum ? tmp.insPercussion : tmp.insMelodic;
+    for(uint16_t i = 0; i < 128; i++)
+    {
+        FmBank::Instrument &ins = insts[i];
+        const char *magic = (isDrum && (i == 0)) ? zero_magic : (ins.en_4op ? fop_magic : top_magic);
+        if(file.write(char_p(magic), 4) != 4)
+            return FfmtErrCode::ERR_BADFORMAT;
+        char tempName[32];
+        memset(tempName, 0, 32);
+        strncpy(tempName, ins.name, 31);
+        tempName[30] = 0;
+        tempName[31] = char(ins.percNoteNum);
+        if(file.write(tempName, 32) != 32)
+            return FfmtErrCode::ERR_BADFORMAT;
+        uint8_t odata[16];
+        memset(odata, 0, 16);
+        sbi2raw(odata, ins, false);
+
+        if(!fourOp)
+        {
+            if(file.write(char_p(&odata), 16) != 16)
+                return FfmtErrCode::ERR_BADFORMAT;
+        }
+        else
+        {
+            if(file.write(char_p(&odata), 11) != 11)
+                return FfmtErrCode::ERR_BADFORMAT;
+            memset(odata, 0, 16);
+            if(ins.en_4op)
+                sbi2raw(odata, ins, true);
+            if(file.write(char_p(&odata), 13) != 13)
+                return FfmtErrCode::ERR_BADFORMAT;
+        }
+    }
+    file.close();
+
+    return FfmtErrCode::ERR_OK;
 }
 
 
@@ -510,7 +563,7 @@ int SbIBK_DOS::formatInstCaps()
 
 QString SbIBK_DOS::formatInstName()
 {
-    return "Sound Blaster Instrument";
+    return "Sound Blaster Instrument [2OP DOS/UNIX]";
 }
 
 QString SbIBK_DOS::formatInstExtensionMask()
@@ -563,6 +616,122 @@ BankFormats SbIBK_UNIX_READ::formatId()
     return m_recentFormat;
 }
 
+bool SbIBK_UNIX_READ::detectInst(const QString &, char *magic)
+{
+    return SbIBK_impl::detectSBI4OP(magic);
+}
+
+FfmtErrCode SbIBK_UNIX_READ::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *)
+{
+    char    magic[4];
+    char    tempName[32];
+    memset(magic, 0, 4);
+    memset(&inst, 0, sizeof(FmBank::Instrument));
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::ReadOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    if(file.read(magic, 4) != 4)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    if(strncmp(magic, fop_magic, 4) != 0)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    if(file.read(tempName, 32) != 32)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    //bool    drumFlag = false;
+    uint8_t idata[16];
+
+    FmBank::Instrument &ins = inst;
+    ins.en_4op = true;
+    strncpy(ins.name, tempName, 30);
+
+    //Read 1'st and 2'nd operators
+    memset(idata, 0, 16);
+    if(file.read(char_p(idata), 11) != 11)
+    {
+        memset(&inst, 0, sizeof(FmBank::Instrument));
+        return FfmtErrCode::ERR_BADFORMAT;
+    }
+    raw2sbi(ins, idata, false);
+
+    //Read 3'st and 4'nd operators
+    memset(idata, 0, 16);
+    if(file.read(char_p(idata), 13) != 13)
+    {
+        memset(&inst, 0, sizeof(FmBank::Instrument));
+        return FfmtErrCode::ERR_BADFORMAT;
+    }
+    raw2sbi(ins, idata, true);
+
+    //drumFlag = (idata[11] != 0x00);
+    //if(isDrum)
+    //    *isDrum = drumFlag;
+    ins.percNoteNum = uchar(tempName[31]);
+
+    file.close();
+    return FfmtErrCode::ERR_OK;
+}
+
+FfmtErrCode SbIBK_UNIX_READ::saveFileInst(QString filePath, FmBank::Instrument &inst, bool)
+{
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::WriteOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    if(file.write(char_p(fop_magic), 4) != 4)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    char tempName[32];
+    memset(tempName, 0, 32);
+    strncpy(tempName, inst.name, 31);
+    tempName[30] = 0;
+    tempName[31] = char(inst.percNoteNum);
+
+    if(file.write(tempName, 32) != 32)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    uint8_t odata[16];
+    //Write 1'st and 2'nd operators
+    memset(odata, 0, 16);
+    sbi2raw(odata, inst, false);
+    if(file.write(char_p(&odata), 11) != 11)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    //Write 3'st and 4'nd operators
+    memset(odata, 0, 16);
+    sbi2raw(odata, inst, true);
+    if(file.write(char_p(&odata), 13) != 13)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    file.close();
+
+    return FfmtErrCode::ERR_OK;
+}
+
+int SbIBK_UNIX_READ::formatInstCaps()
+{
+    return int(FormatCaps::FORMAT_CAPS_EVERYTHING);
+}
+
+QString SbIBK_UNIX_READ::formatInstName()
+{
+    return "Sound Blaster Instrument [4OP UNIX]";
+}
+
+QString SbIBK_UNIX_READ::formatInstExtensionMask()
+{
+    return "*.sbi";
+}
+
+InstFormats SbIBK_UNIX_READ::formatInstId()
+{
+    return InstFormats::FORMAT_INST_SBIex;
+}
+
 
 
 
@@ -571,7 +740,7 @@ SbIBK_UNIX2OP_SAVE::SbIBK_UNIX2OP_SAVE() : FmBankFormatBase()
 
 FfmtErrCode SbIBK_UNIX2OP_SAVE::saveFile(QString filePath, FmBank &bank)
 {
-    return SbIBK_impl::saveFileSBOP(filePath, bank, false);
+    return SbIBK_impl::saveFileSBOP(filePath, bank, false, false);
 }
 
 int SbIBK_UNIX2OP_SAVE::formatCaps()
@@ -581,7 +750,7 @@ int SbIBK_UNIX2OP_SAVE::formatCaps()
 
 QString SbIBK_UNIX2OP_SAVE::formatName()
 {
-    return "SoundBlaster UNIX 2-operators bank";
+    return "SB UNIX 2-op bank [Melodic]";
 }
 
 QString SbIBK_UNIX2OP_SAVE::formatExtensionMask()
@@ -596,13 +765,43 @@ BankFormats SbIBK_UNIX2OP_SAVE::formatId()
 
 
 
+SbIBK_UNIX2OP_DRUMS_SAVE::SbIBK_UNIX2OP_DRUMS_SAVE() : FmBankFormatBase()
+{}
+
+FfmtErrCode SbIBK_UNIX2OP_DRUMS_SAVE::saveFile(QString filePath, FmBank &bank)
+{
+    return SbIBK_impl::saveFileSBOP(filePath, bank, false, true);
+}
+
+int SbIBK_UNIX2OP_DRUMS_SAVE::formatCaps()
+{
+    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+}
+
+QString SbIBK_UNIX2OP_DRUMS_SAVE::formatName()
+{
+    return "SB UNIX 2-op bank [Percussion]";
+}
+
+QString SbIBK_UNIX2OP_DRUMS_SAVE::formatExtensionMask()
+{
+    return "*.sb";
+}
+
+BankFormats SbIBK_UNIX2OP_DRUMS_SAVE::formatId()
+{
+    return BankFormats::FORMAT_SB2OP_DRUMS;
+}
+
+
+
 
 SbIBK_UNIX4OP_SAVE::SbIBK_UNIX4OP_SAVE() : FmBankFormatBase()
 {}
 
 FfmtErrCode SbIBK_UNIX4OP_SAVE::saveFile(QString filePath, FmBank &bank)
 {
-    return SbIBK_impl::saveFileSBOP(filePath, bank, true);
+    return SbIBK_impl::saveFileSBOP(filePath, bank, true, false);
 }
 
 int SbIBK_UNIX4OP_SAVE::formatCaps()
@@ -612,7 +811,7 @@ int SbIBK_UNIX4OP_SAVE::formatCaps()
 
 QString SbIBK_UNIX4OP_SAVE::formatName()
 {
-    return "SoundBlaster UNIX 4-operators bank";
+    return "SB UNIX 4-op bank [Melodic]";
 }
 
 QString SbIBK_UNIX4OP_SAVE::formatExtensionMask()
@@ -626,3 +825,30 @@ BankFormats SbIBK_UNIX4OP_SAVE::formatId()
 }
 
 
+SbIBK_UNIX4OP_DRUMS_SAVE::SbIBK_UNIX4OP_DRUMS_SAVE() : FmBankFormatBase()
+{}
+
+FfmtErrCode SbIBK_UNIX4OP_DRUMS_SAVE::saveFile(QString filePath, FmBank &bank)
+{
+    return SbIBK_impl::saveFileSBOP(filePath, bank, true, true);
+}
+
+int SbIBK_UNIX4OP_DRUMS_SAVE::formatCaps()
+{
+    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+}
+
+QString SbIBK_UNIX4OP_DRUMS_SAVE::formatName()
+{
+    return "SB UNIX 4-op bank [Percussion]";
+}
+
+QString SbIBK_UNIX4OP_DRUMS_SAVE::formatExtensionMask()
+{
+    return "*.o3";
+}
+
+BankFormats SbIBK_UNIX4OP_DRUMS_SAVE::formatId()
+{
+    return BankFormats::FORMAT_SB4OP_DRUMS;
+}
