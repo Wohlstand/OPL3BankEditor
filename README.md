@@ -11,6 +11,7 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 * AdLib/HMI BNK files (.BNK)
 * Global Timbre Library files for Audio Interface Library (.AD, .OPL)
 * SB and O3 bank formats (a set of the concoctated SBI files) used with Linux drivers
+* Bisqwit's ADLMIDI bank (.ADLRAW)
 
 ## Currently supported instrument formats
 * 2-operator Sound Blaster instruments for DOS and UNIX (.SBI)
@@ -22,7 +23,6 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 * Creative Music Format (.CMF)
 
 ## Comming soon
-* .ADLRAW - bank format created by Bisquit - author of ADLMIDI utiltiy
 * Own bank format which supports all parameters provided by editor, and also implement support for GS and XG standard into ADLMIDI
 
 ## Download

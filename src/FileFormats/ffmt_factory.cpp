@@ -31,6 +31,7 @@
 #include "format_sb_ibk.h"
 #include "format_imf_importer.h"
 #include "format_cmf_importer.h"
+#include "format_bisqwit.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -72,6 +73,8 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new AdLibAndHmiBnk_reader());
     registerBankFormat(new AdLibBnk_writer());
     registerBankFormat(new HmiBnk_writer());
+
+    registerBankFormat(new BisqwitBank());
 
     registerBankFormat(new IMF_Importer());
     registerBankFormat(new CMF_Importer());

@@ -67,6 +67,7 @@ SOURCES += \
     src/FileFormats/ffmt_factory.cpp \
     src/FileFormats/format_adlibbnk.cpp \
     src/FileFormats/format_apogeetmb.cpp \
+    src/FileFormats/format_bisqwit.cpp \
     src/FileFormats/format_cmf_importer.cpp \
     src/FileFormats/format_dmxopl2.cpp \
     src/FileFormats/format_imf_importer.cpp \
@@ -89,6 +90,7 @@ HEADERS += \
     src/FileFormats/ffmt_factory.h \
     src/FileFormats/format_adlibbnk.h \
     src/FileFormats/format_apogeetmb.h \
+    src/FileFormats/format_bisqwit.h \
     src/FileFormats/format_cmf_importer.h \
     src/FileFormats/format_dmxopl2.h \
     src/FileFormats/format_imf_importer.h \

@@ -35,6 +35,17 @@
     <td style="text-align: center;">NO</td>
     <td style="text-align: center;">NO</td>
 </tr>
+<tr><td style="font-weight: bold;">Bisqwit's ADLMIDI bank (ADLRAW)</td>
+    <td style="text-align: center;">128</td>
+    <td style="text-align: center;">128</td>
+    <td style="text-align: center;">YES</td>
+    <td style="text-align: center;">YES</td>
+    <td style="text-align: center;">YES</td>
+    <td style="text-align: center;">NO</td>
+    <td style="text-align: center;">NO</td>
+    <td style="text-align: center;">YES</td>
+    <td style="text-align: center;">NO</td>
+</tr>
 <tr><td style="font-weight: bold;">DMX (OP2)</td>
     <td style="text-align: center;">128</td>
     <td style="text-align: center;">47</td>
@@ -70,7 +81,7 @@
 </tr>
 <tr><td style="font-weight: bold;">AdLib bank (BNK)</td>
     <td style="text-align: center;">65536</td>
-    <td style="text-align: center;">MIXED</td>
+    <td style="text-align: center;">MIXED *</td>
     <td style="text-align: center;">YES</td>
     <td style="text-align: center;">NO</td>
     <td style="text-align: center;">NO</td>
@@ -81,7 +92,7 @@
 </tr>
 <tr><td style="font-weight: bold;">Human Machine Interface AdLib bank (BNK)</td>
     <td style="text-align: center;">128</td>
-    <td style="text-align: center;">MIXED</td>
+    <td style="text-align: center;">128 **</td>
     <td style="text-align: center;">YES</td>
     <td style="text-align: center;">NO</td>
     <td style="text-align: center;">NO</td>
@@ -103,7 +114,7 @@
 </tr>
 <tr><td style="font-weight: bold;">Sound Blaster bank (UNIX SB/OP)</td>
     <td style="text-align: center;">128</td>
-    <td style="text-align: center;">0</td>
+    <td style="text-align: center;">127 ***</td>
     <td style="text-align: center;">YES</td>
     <td style="text-align: center;">NO</td>
     <td style="text-align: center;">NO</td>
@@ -122,4 +133,21 @@
     <td style="text-align: center;"></td>
     <td style="text-align: center;"></td>
     <td style="text-align: center;"></td>
-</tr></tbody></table><br></body></html>
+</tr>
+<tr><td style="font-weight: bold;"></td>
+    <td style="text-align: center;"></td>
+    <td style="text-align: center;"></td>
+    <td style="text-align: center;"></td>
+    <td style="text-align: center;"></td>
+    <td style="text-align: center;"></td>
+    <td style="text-align: center;"></td>
+    <td style="text-align: center;"></td>
+    <td style="text-align: center;"></td>
+    <td style="text-align: center;"></td>
+</tr>
+</tbody></table><br>
+* <strong>MIXED</strong> means that percussion instruments are in same list together with melodic, but has a flag which tells is this instrument melodic or percussion<br>
+** HMI requires separated banks for melodic and percusive<br>
+*** First instrument is null which is required to have easy to detect the role of a bank: percussion or melodic
+</body></html>
+
