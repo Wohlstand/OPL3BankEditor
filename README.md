@@ -4,16 +4,25 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 [![Build status](https://ci.appveyor.com/api/projects/status/llbyd0blk0i7amih?svg=true)](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor)
 
 ## Currently supported bank formats
-* Junglevision patch (*.OP3)
-* DMX OPL-2 (OP2)
-* Apogee Sound System timbre formats (*.TMB)
-* SoundBlaster IBK files (*.IBK)
-* AdLib/HMI BNK files (*.BNK)
-* Global Timbre Library files for Audio Interface Library (*.AD, *.OPL)
+* Junglevision patch (.OP3)
+* DMX OPL-2 (.OP2)
+* Apogee Sound System timbre formats (.TMB)
+* SoundBlaster IBK files (.IBK)
+* AdLib/HMI BNK files (.BNK)
+* Global Timbre Library files for Audio Interface Library (.AD, .OPL)
 * SB and O3 bank formats (a set of the concoctated SBI files) used with Linux drivers
 
+## Currently supported instrument formats
+* 2-operator Sound Blaster instruments for DOS and UNIX (.SBI)
+* 4-operator Sound Blaster instruments for UNIX (.SBI)
+* Legacy AdLib instruments (.INS)
+
+## Currently supported music formats to import instruments
+* Id-Software Music Format (.IMF)
+* Creative Music Format (.CMF)
+
 ## Comming soon
-* *.adlraw - bank format created by Bisquit - author of ADLMIDI utiltiy
+* .ADLRAW - bank format created by Bisquit - author of ADLMIDI utiltiy
 * Own bank format which supports all parameters provided by editor, and also implement support for GS and XG standard into ADLMIDI
 
 ## Download
