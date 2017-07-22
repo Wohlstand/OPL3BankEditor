@@ -31,6 +31,7 @@ enum class InstFormats
     FORMAT_INST_UNKNOWN = -1,
     FORMAT_INST_SBI     = 0,
     FORMAT_INST_SBIex   = 1,
+    FORMAT_INST_ADLIB_INS = 2,
 };
 
 enum class FormatCaps

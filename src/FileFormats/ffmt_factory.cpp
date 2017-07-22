@@ -68,6 +68,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new SbIBK_UNIX4OP_DRUMS_SAVE());
 
     registerBankFormat(new AdLibAndHmiBnk_reader());
+    registerInstFormat(new AdLibAndHmiBnk_reader());
     registerBankFormat(new AdLibBnk_writer());
     registerBankFormat(new HmiBnk_writer());
 

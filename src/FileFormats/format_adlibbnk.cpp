@@ -19,6 +19,7 @@
 #include "format_adlibbnk.h"
 #include "../common.h"
 #include <QMap>
+#include <QFileInfo>
 
 //! Enables strict validation of every parameter.
 //! Or all parameters are will be filtered even data is an invalid crap
@@ -56,7 +57,8 @@ public:
         BNK_ADLIB,
         BNK_HMI
     };
-    static bool detectBank(char* magic);
+    static bool detectBank(char *magic);
+    static bool detectInst(QString filePath);
     static FfmtErrCode loadBankFile(QString filePath, FmBank &bank, BankFormats &format);
     static FfmtErrCode saveBankFile(QString filePath, FmBank &bank, BnkType type);
 };
@@ -64,6 +66,22 @@ public:
 bool AdLibBnk_impl::detectBank(char *magic)
 {
     return (strncmp(magic + 2, bnk_magic, 6) == 0);
+}
+
+bool AdLibBnk_impl::detectInst(QString filePath)
+{
+    QFile file(filePath);
+    if(!file.open(QIODevice::ReadOnly))
+        return false;
+    qint64 fileSize = file.bytesAvailable();
+    file.close();
+    /*
+     * Need to check both conditions, because some other files with "ins" extension are been used
+     * Unfortunately, AdLib INS files has no magic number
+     *
+     * File size formula: 2 + (13*2) + (13*2) + 20 + 6
+     */
+    return hasExt(filePath, ".ins") && (fileSize == 80);
 }
 
 FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankFormats &format)
@@ -82,7 +100,7 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
     bool        isHMI = false;
 
     uint32_t    size  = uint32_t(fileData.size());
-    uint8_t     *dataU = (uint8_t*)fileData.data();
+    uint8_t     *dataU = (uint8_t *)fileData.data();
     char        *dataS = (char *)fileData.data();
 
     bank.reset();
@@ -338,7 +356,7 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
                                   bank.Ins_Melodic_box[ ins ];
         strncpy(inst.name, Ins.name, 8);
         if(inst.name[0] == '\0')
-            snprintf(inst.name, 8, "%c-%05d", (isDrum?'P':'M'), ins);
+            snprintf(inst.name, 8, "%c-%05d", (isDrum ? 'P' : 'M'), ins);
         inst.name[8] = '\0';
         inst.index = ins;
         inst.flags = 0x01/*YES, IT'S "USED"! (I see no reasons to keep junk data in the file)*/ /*(char)isDrum*/;
@@ -525,7 +543,7 @@ FfmtErrCode AdLibAndHmiBnk_reader::loadFile(QString filePath, FmBank &bank)
 
 int AdLibAndHmiBnk_reader::formatCaps()
 {
-    return int(FormatCaps::FORMAT_CAPS_OPEN)|int(FormatCaps::FORMAT_CAPS_IMPORT);
+    return int(FormatCaps::FORMAT_CAPS_OPEN) | int(FormatCaps::FORMAT_CAPS_IMPORT);
 }
 
 QString AdLibAndHmiBnk_reader::formatName()
@@ -541,6 +559,182 @@ QString AdLibAndHmiBnk_reader::formatExtensionMask()
 BankFormats AdLibAndHmiBnk_reader::formatId()
 {
     return m_recentFormat;
+}
+
+
+
+bool AdLibAndHmiBnk_reader::detectInst(const QString &filePath, char *)
+{
+    return AdLibBnk_impl::detectInst(filePath);
+}
+
+/**
+ * @brief Parse operator data from INS file
+ * @param inst Destinition instrument
+ * @param opType Operator type (Modulator or carrier)
+ * @param idata Input raw data
+ * @return true if data valid, false if data contains broken or invalid data
+ */
+static bool insRawToOp(FmBank::Instrument &inst, const int opType, const uint8_t *idata)
+{
+    for(int i = 0; i < 13; i++)
+    {
+        //Validate instrument
+        if(idata[i * 2 + 1] != 0)
+            return false;
+    }
+    inst.OP[opType].ksl     = idata[0] & 0x03;
+    inst.OP[opType].fmult   = idata[2];
+    if(opType == MODULATOR1)
+        inst.feedback1 = idata[4] & 0x07;
+    inst.OP[opType].attack  = idata[6] & 0x0F;
+    inst.OP[opType].sustain = (0x0F - (idata[8] & 0x0F));
+    inst.OP[opType].eg      = idata[10];
+    inst.OP[opType].decay   = idata[12] & 0x0F;
+    inst.OP[opType].release = idata[14] & 0x0F;
+    inst.OP[opType].level   = (0x3F - (idata[16] & 0x3F));
+    inst.OP[opType].am      = idata[18] & 0x01;
+    inst.OP[opType].vib     = idata[20] & 0x01;
+    inst.OP[opType].ksr     = idata[22] & 0x01;
+    if(opType == MODULATOR1)
+        inst.connection1    = !(idata[24] & 0x01);
+    return true;
+}
+
+/**
+ * @brief Generate raw INS data from instrument's operator
+ * @param inst Source instrument
+ * @param opType Operator type (Modulator or carrier)
+ * @param odata Destinition output memory block to write
+ */
+static void opToRawIns(const FmBank::Instrument &inst, const int opType, uint8_t *odata)
+{
+    odata[0]  = inst.OP[opType].ksl;
+    odata[2]  = inst.OP[opType].fmult;
+    if(opType == MODULATOR1)
+        odata[4] = inst.feedback1;
+    odata[6]  = inst.OP[opType].attack & 0x0F;
+    odata[8]  = (0x0F - inst.OP[opType].sustain);
+    odata[10] = uint8_t(inst.OP[opType].eg) & 0x01;
+    odata[12] = inst.OP[opType].decay;
+    odata[14] = inst.OP[opType].release;
+    odata[16] = (0x3F - (inst.OP[opType].level & 0x3F));
+    odata[18] = uint8_t(inst.OP[opType].am) & 0x01;
+    odata[20] = inst.OP[opType].vib;
+    odata[22] = inst.OP[opType].ksr;
+    if(opType == MODULATOR1)
+        odata[24] = (!inst.connection1) & 0x01;
+}
+
+FfmtErrCode AdLibAndHmiBnk_reader::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *)
+{
+    memset(&inst, 0, sizeof(FmBank::Instrument));
+    QFile file(filePath);
+    uint8_t idata[80];
+
+    if(!file.open(QIODevice::ReadOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    if(file.read(char_p(idata), 80) != 80)
+        return FfmtErrCode::ERR_BADFORMAT;
+    if((idata[0] != 0) || (idata[1] != 0))
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    if(!insRawToOp(inst, MODULATOR1, idata + 2))
+    {
+        memset(&inst, 0, sizeof(FmBank::Instrument));
+        return FfmtErrCode::ERR_BADFORMAT;
+    }
+
+    if(!insRawToOp(inst, CARRIER1, idata + 28))
+    {
+        memset(&inst, 0, sizeof(FmBank::Instrument));
+        return FfmtErrCode::ERR_BADFORMAT;
+    }
+
+    //By this specification: http://www.shikadi.net/moddingwiki/AdLib_Instrument_Format
+    #if 0
+    strncpy(inst.name, char_p(idata + 54), 19);
+    if((idata[75] != 0) && (idata[77] != 0))
+    {
+        memset(&inst, 0, sizeof(FmBank::Instrument));
+        return FfmtErrCode::ERR_BADFORMAT;
+    }
+    inst.OP[MODULATOR1].waveform = idata[74];
+    inst.OP[CARRIER1].waveform = idata[76];
+    #else
+    //However, SBANK by Jammie O'Connel produces different:
+    if((idata[55] != 0) && (idata[57] != 0))
+    {
+        memset(&inst, 0, sizeof(FmBank::Instrument));
+        return FfmtErrCode::ERR_BADFORMAT;
+    }
+    inst.OP[MODULATOR1].waveform = idata[54];
+    inst.OP[CARRIER1].waveform = idata[56];
+    strncpy(inst.name, char_p(idata + 58), 19);
+    #endif
+
+    if(inst.name[0] == '\0')
+    {
+        QFileInfo i(filePath);
+        strncpy(inst.name, i.baseName().toUtf8().data(), 32);
+    }
+
+    //bytes 78 and 79 can be ignored
+    file.close();
+
+    return FfmtErrCode::ERR_OK;
+}
+
+FfmtErrCode AdLibAndHmiBnk_reader::saveFileInst(QString filePath, FmBank::Instrument &inst, bool)
+{
+    QFile file(filePath);
+
+    uint8_t odata[80];
+    memset(&odata, 0, 80);
+
+    opToRawIns(inst, MODULATOR1, odata + 2);
+    opToRawIns(inst, CARRIER1, odata + 28);
+
+    //By this specification: http://www.shikadi.net/moddingwiki/AdLib_Instrument_Format
+    #if 0
+    strncpy(char_p(odata + 54), inst.name, 19);
+    odata[75] = inst.OP[MODULATOR1].waveform;
+    odata[77] = inst.OP[CARRIER1].waveform;
+    #else
+    //By SBANK by Jammie O'Connel
+    odata[54] = inst.OP[MODULATOR1].waveform;
+    odata[56] = inst.OP[CARRIER1].waveform;
+    strncpy(char_p(odata + 58), inst.name, 19);
+    #endif
+
+    if(!file.open(QIODevice::WriteOnly))
+        return FfmtErrCode::ERR_NOFILE;
+    if(file.write(char_p(&odata), 80) != 80)
+        return FfmtErrCode::ERR_BADFORMAT;
+    file.close();
+
+    return FfmtErrCode::ERR_OK;
+}
+
+int AdLibAndHmiBnk_reader::formatInstCaps()
+{
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+}
+
+QString AdLibAndHmiBnk_reader::formatInstName()
+{
+    return "AdLib Instrument";
+}
+
+QString AdLibAndHmiBnk_reader::formatInstExtensionMask()
+{
+    return "*.ins";
+}
+
+InstFormats AdLibAndHmiBnk_reader::formatInstId()
+{
+    return InstFormats::FORMAT_INST_ADLIB_INS;
 }
 
 

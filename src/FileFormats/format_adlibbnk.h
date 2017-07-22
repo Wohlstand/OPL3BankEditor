@@ -34,6 +34,14 @@ public:
     QString formatName() override;
     QString formatExtensionMask() override;
     BankFormats formatId() override;
+
+    bool        detectInst(const QString &filePath, char* magic) override;
+    FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0) override;
+    FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false) override;
+    int         formatInstCaps() override;
+    QString     formatInstName() override;
+    QString     formatInstExtensionMask() override;
+    InstFormats formatInstId() override;
 };
 
 class AdLibBnk_writer final : public FmBankFormatBase
