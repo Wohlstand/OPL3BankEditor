@@ -26,12 +26,9 @@ bool ApogeeTMB::detect(const QString &filePath, char* /*magic*/)
 {
     if(hasExt(filePath, ".tmb"))
         return true;
-
     QFile file(filePath);
-
     if(!file.open(QIODevice::ReadOnly))
         return false;
-
     qint64 fileSize = file.bytesAvailable();
     file.close();
     return (fileSize == (256 * 13));
