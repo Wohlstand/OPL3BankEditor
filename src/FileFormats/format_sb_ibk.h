@@ -27,7 +27,7 @@ public:
     SbIBK_DOS();
     ~SbIBK_DOS() = default;
 
-    bool    detect(const QString &filePath, char* magic) override;
+    bool    detect(const QString &filePath, char *magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() override;
@@ -35,7 +35,7 @@ public:
     QString formatExtensionMask() override;
     BankFormats formatId() override;
 
-    bool        detectInst(const QString &filePath, char* magic) override;
+    bool        detectInst(const QString &filePath, char *magic) override;
     FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0) override;
     FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false) override;
     int         formatInstCaps() override;
@@ -51,14 +51,14 @@ public:
     SbIBK_UNIX_READ();
     ~SbIBK_UNIX_READ() = default;
 
-    bool    detect(const QString &filePath, char* magic) override;
+    bool    detect(const QString &filePath, char *magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
     int     formatCaps() override;
     QString formatName() override;
     QString formatExtensionMask() override;
     BankFormats formatId() override;
 
-    bool        detectInst(const QString &filePath, char* magic) override;
+    bool        detectInst(const QString &filePath, char *magic) override;
     FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0) override;
     FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false) override;
     int         formatInstCaps() override;

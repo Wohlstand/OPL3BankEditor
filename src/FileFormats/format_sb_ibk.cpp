@@ -18,6 +18,7 @@
 
 #include "format_sb_ibk.h"
 #include "../common.h"
+#include <QFileInfo>
 
 /**
  * @brief Reader and Writer of the Sound Blaster IBK Bank format
@@ -25,9 +26,9 @@
 class SbIBK_impl : public FmBankFormatBase
 {
 public:
-    static bool detectIBK(char* magic);
-    static bool detectSBI(char* magic);
-    static bool detectSBI4OP(char* magic);
+    static bool detectIBK(char *magic);
+    static bool detectSBI(char *magic);
+    static bool detectSBI4OP(char *magic);
     static bool detectUNIXO2(QString filePath, BankFormats &format);
     static bool detectUNIXO3(QString filePath, BankFormats &format);
     // IBK/SBI for DOS
@@ -134,10 +135,10 @@ static void raw2sbi(FmBank::Instrument &ins, unsigned char *idata, bool fourOp =
     {
         ins.adlib_drum_number  = idata[11];//47 //58
 
-    //            char transpos;  /* Number of notes to transpose timbre, signed: JWO */
+        //        char transpos;  /* Number of notes to transpose timbre, signed: JWO */
         ins.note_offset1 = char_p(idata)[12];//48   //59
 
-    //            BYTE dpitch;    /* percussion pitch: MIDI Note 0 - 127        : JWO */
+        //        BYTE dpitch;    /* percussion pitch: MIDI Note 0 - 127        : JWO */
         ins.percNoteNum  = idata[13];//49
     }
     //            BYTE rsv[2];    /* unsused - so far */
@@ -325,6 +326,12 @@ FfmtErrCode SbIBK_impl::loadFileSBI(QString filePath, FmBank::Instrument &inst, 
     if(isDrum)
         *isDrum = drumFlag;
 
+    if(inst.name[0] == '\0')
+    {
+        QFileInfo i(filePath);
+        strncpy(inst.name, i.baseName().toUtf8().data(), 32);
+    }
+
     file.close();
     return FfmtErrCode::ERR_OK;
 }
@@ -393,7 +400,7 @@ FfmtErrCode SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, BankFormats
             continue;
         }
 
-        is4op =  (strncmp(magic, fop_magic, 4) == 0);
+        is4op = (strncmp(magic, fop_magic, 4) == 0);
         valid |= is4op;
         valid |= (strncmp(magic, top_magic, 4) == 0);
         valid |= (strncmp(magic, sbi_magic, 4) == 0);
@@ -513,7 +520,7 @@ bool SbIBK_DOS::detect(const QString &, char *magic)
 
 FfmtErrCode SbIBK_DOS::loadFile(QString filePath, FmBank &bank)
 {
-   return SbIBK_impl::loadFileIBK(filePath, bank);
+    return SbIBK_impl::loadFileIBK(filePath, bank);
 }
 
 FfmtErrCode SbIBK_DOS::saveFile(QString filePath, FmBank &bank)
@@ -598,7 +605,7 @@ FfmtErrCode SbIBK_UNIX_READ::loadFile(QString filePath, FmBank &bank)
 
 int SbIBK_UNIX_READ::formatCaps()
 {
-    return int(FormatCaps::FORMAT_CAPS_OPEN)|int(FormatCaps::FORMAT_CAPS_IMPORT);
+    return int(FormatCaps::FORMAT_CAPS_OPEN) | int(FormatCaps::FORMAT_CAPS_IMPORT);
 }
 
 QString SbIBK_UNIX_READ::formatName()
@@ -670,6 +677,12 @@ FfmtErrCode SbIBK_UNIX_READ::loadFileInst(QString filePath, FmBank::Instrument &
     //if(isDrum)
     //    *isDrum = drumFlag;
     ins.percNoteNum = uchar(tempName[31]);
+
+    if(inst.name[0] == '\0')
+    {
+        QFileInfo i(filePath);
+        strncpy(inst.name, i.baseName().toUtf8().data(), 32);
+    }
 
     file.close();
     return FfmtErrCode::ERR_OK;
