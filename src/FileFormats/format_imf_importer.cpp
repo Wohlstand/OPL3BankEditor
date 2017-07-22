@@ -157,7 +157,7 @@ FfmtErrCode IMF_Importer::loadFile(QString filePath, FmBank &bank)
 
                 if(!cache.contains(insRaw))
                 {
-                    snprintf(ins.name, 32, "Ins %d, channel %d", insCount++, (int)(ch));
+                    snprintf(ins.name, 32, "Ins-%03d, channel %d", insCount++, (int)(ch));
                     bank.Ins_Melodic_box.push_back(ins);
                     bank.Ins_Melodic = bank.Ins_Melodic_box.data();
                     cache.insert(insRaw);

@@ -21,6 +21,7 @@ enum class BankFormats
     FORMAT_SB4OP                =   10,
     FORMAT_SB4OP_DRUMS          =   11,
     FORMAT_IMF_IMPORTER         =   12,
+    FORMAT_CMF_IMPORTER         =   13,
 
     FORMATS_END,
     FORMATS_BEGIN = FORMAT_JUNGLEVIZION,

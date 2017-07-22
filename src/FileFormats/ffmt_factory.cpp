@@ -30,6 +30,7 @@
 #include "format_milesopl.h"
 #include "format_sb_ibk.h"
 #include "format_imf_importer.h"
+#include "format_cmf_importer.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -73,6 +74,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new HmiBnk_writer());
 
     registerBankFormat(new IMF_Importer());
+    registerBankFormat(new CMF_Importer());
 }
 
 
