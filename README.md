@@ -8,19 +8,19 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 * DMX OPL-2 (.OP2)
 * Apogee Sound System timbre formats (.TMB)
 * SoundBlaster IBK files (.IBK)
-* AdLib/HMI BNK files (.BNK)
-* Global Timbre Library files for Audio Interface Library (.AD, .OPL)
+* AdLib/HMI BNK files (.BNK) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Instrument_Bank_Format))
+* Global Timbre Library files for Audio Interface Library (.AD, .OPL) ([Specification](http://www.shikadi.net/moddingwiki/Global_Timbre_Library))
 * SB and O3 bank formats (a set of the concoctated SBI files) used with Linux drivers
 * Bisqwit's ADLMIDI bank (.ADLRAW)
 
 ## Currently supported instrument formats
-* 2-operator Sound Blaster instruments for DOS and UNIX (.SBI)
+* 2-operator Sound Blaster instruments for DOS and UNIX (.SBI) ([Specification](http://www.shikadi.net/moddingwiki/SBI_Format))
 * 4-operator Sound Blaster instruments for UNIX (.SBI)
-* Legacy AdLib instruments (.INS)
+* Legacy AdLib instruments (.INS) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Instrument_Bank_Format))
 
 ## Currently supported music formats to import instruments
-* Id-Software Music Format (.IMF)
-* Creative Music Format (.CMF)
+* Id-Software Music Format (.IMF) ([Specification](http://www.shikadi.net/moddingwiki/IMF_Format))
+* Creative Music Format (.CMF) ([Specification](http://www.shikadi.net/moddingwiki/CMF_Format))
 
 ## Comming soon
 * Own bank format which supports all parameters provided by editor, and also implement support for GS and XG standard into ADLMIDI
