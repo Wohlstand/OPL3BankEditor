@@ -43,18 +43,18 @@ qint64 readLE(QFile &file, uint32_t &out);
 /*!
  * \brief Write little-endian unsigned short into the file
  * \param file File descriptor
- * \param out Source reference
+ * \param in Source reference
  * \return number of written bytes
  */
-qint64 writeLE(QFile &file, uint16_t &out);
+qint64 writeLE(QFile &file, const uint16_t &in);
 
 /*!
  * \brief Write little-endian unsigned int into the file
  * \param file File descriptor
- * \param out Source reference
+ * \param in Source reference
  * \return number of written bytes
  */
-qint64 writeLE(QFile &file, uint32_t &out);
+qint64 writeLE(QFile &file, const uint32_t &in);
 
 /*!
  * \brief Read big-endian unsigned short from a file
@@ -67,10 +67,10 @@ qint64 readBE(QFile &file, uint16_t &out);
 /*!
  * \brief Write big-endian unsigned short into the file
  * \param file File descriptor
- * \param out Source reference
+ * \param in Source reference
  * \return number of written bytes
  */
-qint64 writeBE(QFile &file, uint16_t &out);
+qint64 writeBE(QFile &file, const uint16_t &in);
 
 /*!
  * \brief Convers array of little endian bytes into short

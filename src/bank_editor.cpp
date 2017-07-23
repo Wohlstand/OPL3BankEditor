@@ -53,7 +53,7 @@ BankEditor::BankEditor(QWidget *parent) :
     m_curInst = NULL;
     m_curInstBackup = NULL;
     m_lock = false;
-    m_recentFormat = BankFormats::FORMAT_JUNGLEVIZION;
+    m_recentFormat = BankFormats::FORMATS_DEFAULT_FORMAT;
     m_recentNum     = -1;
     m_recentPerc    = false;
     ui->setupUi(this);
@@ -356,7 +356,7 @@ void BankEditor::on_actionNew_triggered()
 {
     if(!askForSaving())
         return;
-    m_recentFormat = BankFormats::FORMAT_JUNGLEVIZION;
+    m_recentFormat = BankFormats::FORMATS_DEFAULT_FORMAT;
     ui->currentFile->setText(tr("<Untitled>"));
     ui->instruments->clearSelection();
     m_bank.reset();

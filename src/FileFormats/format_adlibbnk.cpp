@@ -30,7 +30,7 @@
 
 #ifdef STRICT_BNK
 //#define VERIFY_BYTE(param, byte) if( ((param)|(byte)) != (byte) ) { bank.reset(); return ERR_BADFORMAT; }
-inline void VERIFY_BYTE(unsigned char &param, unsigned char mask)
+inline void VERIFY_BYTE(uint8_t &param, uint8_t mask)
 {
     if(((param) | (mask)) != (mask))
         throw("YOUR BYTE SUCK!");

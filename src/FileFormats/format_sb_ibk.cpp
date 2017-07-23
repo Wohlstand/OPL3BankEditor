@@ -98,7 +98,7 @@ bool SbIBK_impl::detectUNIXO3(QString filePath, BankFormats &format)
     return (fileSize == 7680);
 }
 
-static void raw2sbi(FmBank::Instrument &ins, unsigned char *idata, bool fourOp = false)
+static void raw2sbi(FmBank::Instrument &ins, uint8_t *idata, bool fourOp = false)
 {
     int MODULATOR   = fourOp ? MODULATOR2 : MODULATOR1;
     int CARRIER     = fourOp ? CARRIER2 : CARRIER1;
@@ -145,7 +145,7 @@ static void raw2sbi(FmBank::Instrument &ins, unsigned char *idata, bool fourOp =
     //            } SBTIMBRE;
 }
 
-static void sbi2raw(unsigned char *odata, FmBank::Instrument &ins, bool fourOp = false)
+static void sbi2raw(uint8_t *odata, FmBank::Instrument &ins, bool fourOp = false)
 {
     int MODULATOR   = fourOp ? MODULATOR2  : MODULATOR1;
     int CARRIER     = fourOp ? CARRIER2    : CARRIER1;
@@ -310,7 +310,7 @@ FfmtErrCode SbIBK_impl::loadFileSBI(QString filePath, FmBank::Instrument &inst, 
         return FfmtErrCode::ERR_BADFORMAT;
 
     bool drumFlag = false;
-    unsigned char   idata[16];
+    uint8_t idata[16];
 
     if(file.read(char_p(idata), 16) != 16)
     {

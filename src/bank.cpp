@@ -22,9 +22,6 @@
 //! Typedef to signed character pointer
 typedef char         *char_p;
 
-//! Typedef to unsigned integer
-typedef unsigned int uint;
-
 FmBank::FmBank()
 {
     reset();

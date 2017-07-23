@@ -41,20 +41,20 @@ qint64 readLE(QFile &file, uint32_t &out)
     return len;
 }
 
-qint64 writeLE(QFile &file, uint16_t &out)
+qint64 writeLE(QFile &file, const uint16_t &in)
 {
-    uint8_t bytes[2] = {uint8_t(out & 0x00FF), uint8_t((out >> 8) & 0x00FF) };
+    uint8_t bytes[2] = {uint8_t(in & 0x00FF), uint8_t((in >> 8) & 0x00FF) };
     qint64 len = file.write(char_p(bytes), 2);
     return len;
 }
 
 
-qint64 writeLE(QFile &file, uint32_t &out)
+qint64 writeLE(QFile &file, const uint32_t &in)
 {
-    uint8_t bytes[4] = { uint8_t(out & 0x000000FF),
-                         uint8_t((out >> 8) & 0x000000FF),
-                         uint8_t((out >> 16) & 0x000000FF),
-                         uint8_t((out >> 24) & 0x000000FF)
+    uint8_t bytes[4] = { uint8_t(in & 0x000000FF),
+                         uint8_t((in >> 8) & 0x000000FF),
+                         uint8_t((in >> 16) & 0x000000FF),
+                         uint8_t((in >> 24) & 0x000000FF)
                        };
     qint64 len = file.write(char_p(bytes), 4);
     return len;
@@ -70,9 +70,9 @@ qint64 readBE(QFile &file, uint16_t &out)
     return len;
 }
 
-qint64 writeBE(QFile &file, uint16_t &out)
+qint64 writeBE(QFile &file, const uint16_t &in)
 {
-    uint8_t bytes[2] = {uint8_t((out >> 8) & 0x00FF), uint8_t(out & 0x00FF)};
+    uint8_t bytes[2] = {uint8_t((in >> 8) & 0x00FF), uint8_t(in & 0x00FF)};
     qint64 len = file.write(char_p(bytes), 2);
     return len;
 }
@@ -111,9 +111,9 @@ int16_t toSint16BE(const uint8_t *arr)
 uint32_t toUint32LE(const uint8_t *arr)
 {
     uint32_t num = arr[0];
-    num |= (static_cast<unsigned int>(arr[1] << 8)  & 0x0000FF00);
-    num |= (static_cast<unsigned int>(arr[2] << 16) & 0x00FF0000);
-    num |= (static_cast<unsigned int>(arr[3] << 24) & 0xFF000000);
+    num |= (static_cast<uint32_t>(arr[1] << 8)  & 0x0000FF00);
+    num |= (static_cast<uint32_t>(arr[2] << 16) & 0x00FF0000);
+    num |= (static_cast<uint32_t>(arr[3] << 24) & 0xFF000000);
     return num;
 }
 

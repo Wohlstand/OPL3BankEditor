@@ -132,7 +132,7 @@ Generator::Generator(uint32_t sampleRate,
     memset(m_ins, 0, sizeof(uint16_t)*NUM_OF_CHANNELS);
     memset(m_pit, 0, sizeof(uint8_t)*NUM_OF_CHANNELS);
     memset(m_four_op_category, 0, NUM_OF_CHANNELS * 2);
-    unsigned p = 0;
+    uint32_t p = 0;
 
     for(uint32_t b = 0; b < 18; ++b)
         m_four_op_category[p++] = 0;
@@ -239,8 +239,7 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     }
     else if(m_four_op_category[c] == 1 || m_four_op_category[c] == 2)
     {
-        unsigned i0, i1;
-
+        uint32_t i0, i1;
         if(m_four_op_category[c] == 1)
         {
             i0 = i;
@@ -301,7 +300,7 @@ void Generator::Patch(uint32_t c, uint32_t i)
     uint16_t o1 = Operators[cc * 2 + 0], o2 = Operators[cc * 2 + 1];
     uint32_t x = m_patch.OPS[i].modulator_E862, y = m_patch.OPS[i].carrier_E862;
 
-    for(unsigned a = 0; a < 4; ++a)
+    for(uint32_t a = 0; a < 4; ++a)
     {
         WriteReg(data[a] + o1, x & 0xFF);
         x >>= 8;
@@ -313,10 +312,9 @@ void Generator::Patch(uint32_t c, uint32_t i)
     }
 }
 
-void Generator::Pan(unsigned c, unsigned value)
+void Generator::Pan(uint32_t c, uint32_t value)
 {
     uint8_t cc = c % 23;
-
     if(Channels[cc] != 0xFFF)
         WriteReg(0xC0 + Channels[cc], static_cast<uint8_t>(m_patch.OPS[m_ins[c]].feedconn | value));
 }
@@ -464,7 +462,7 @@ void Generator::switch4op(bool enabled)
     // Mark all channels that are reserved for four-operator function
     if(AdLibPercussionMode != 0)
     {
-        //for(unsigned a = 0; a < NumCards; ++a) {}
+        //for(uint32_t a = 0; a < NumCards; ++a) {}
         for(uint32_t b = 0; b < 5; ++b) m_four_op_category[18 + b] = static_cast<char>(b + 3);
         for(uint32_t b = 0; b < 3; ++b) m_four_op_category[6  + b] = 8;
     }
@@ -527,7 +525,7 @@ void Generator::switch4op(bool enabled)
 void Generator::Silence()
 {
     //Shutup!
-    for(unsigned c = 0; c < NUM_OF_CHANNELS; ++c)
+    for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
     {
         NoteOff(c);
         Touch_Real(c, 0);
@@ -536,7 +534,7 @@ void Generator::Silence()
 
 void Generator::NoteOffAllChans()
 {
-    for(unsigned c = 0; c < NUM_OF_CHANNELS; ++c)
+    for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
         NoteOff(c);
 }
 

@@ -1,0 +1,110 @@
+===============================================================================
+              MIDI playing bank for Yamaha OPL2 (YMF262) chip
+                 file format specification (WOPL and OPLI)
+===============================================================================
+                         Created in July, 23, 2017
+===============================================================================
+Author:             Vitaliy Novichkov "Wohlstand"
+Contacts emails:    admin@wohlnet.ru, nvd339@yandex.ru
+===============================================================================
+
+===============================================================================
+Contents:
+    1. Single-instrument entry
+    2. Instrument file (OPLI)
+    3. MIDI playing bank file (WOPL)
+===============================================================================
+
+
+===============================================================================
+                        1. Single-instrument entry
+===============================================================================
+
+    Each instrument file contains a set of data for single
+channel of YMF262 chip to setup the timbre
+
+Lenght of each instrument entry is 62 bytes
+
+Bytes-Lenght  | Description
+-------------------------------------------
+    32        | Name of instrument null-terminated string
+    2         | Big-Endian 16-bit signed integer, MIDI key offset value
+              | (master instrument, or first voice in pseudo 4-operators mode)
+    2         | Big-Endian 16-bit signed integer, MIDI key offset value
+              | (second voice in pseudo 4-operators mode)
+    1         | 8-bit signed integer, MIDI Velocity offset
+    1         | 8-bit signed integer, Second voice detune
+              | in pseudo-4-operators mode
+    1         | 8-bit unsigned integer, Percussion instrument key number
+    1         | 8-bit unsigned integer, Bitwise flags:
+              |     0x00 - 2-operator mode
+              |     0x01 - 4-operator mode
+              |     0x02 - pseudo-4-operator (two 2-operator voices) mode
+    1         | 8-bit unsigned integer, Feedback / Connection
+              | for 1'st and 2'nd operators or first voice
+    1         | 8-bit unsigned integer, Feedback / Connection
+              | for 3'st and 4'nd operators or second voice
+--- Operators 1/2/3/4 (repeats 4 times) ---
+    1         | AM/Vib/Env/Ksr/FMult characteristics
+    1         | Key Scale Level / Total level register data
+    1         | Attack / Decay
+    1         | Systain and Release register data
+    1         | Wave form
+-------------------------------------------
+
+
+===============================================================================
+                         2. Instrument file (OPLI)
+===============================================================================
+
+    Each instrument file contains a set of data for single
+channel of YMF262 chip to setup the timbre on it.
+
+Total data lenght: 76 bytes
+
+Bytes-Lenght |  Description
+---------------Header--------------------
+    11       |  Magic number "WOPL3-INST\0". Where '\0' is a zero byte which
+             |  termiates the string
+    2        |  Version. Little endian Unsigned 16-bit integer.
+             |  Latest version is 1
+    1        |  Is this instrument a percussion. 0 - melodic, or 1 - percussion
+----------------Data---------------------
+    62       |  [Single-instrument entry], look at top of this text file
+
+
+===============================================================================
+                      3. MIDI playing bank file (WOPL)
+===============================================================================
+
+    Bank format designed to store instrument bank for playing MIDI
+in multiple standards like GM, GS and XG. Format allows to save
+multiple sets with 128-instruments which is needed to store
+GS and XG instrument sets which are have more than standard 128
+instruments with a single bank.
+
+Total data lenght is sum of: 19 + (62*128*MBanks) + (62*128*PBanks) bytes
+
+Bytes-Lenght      |      Description
+---------------Header--------------------
+--Header--
+    11            | Magic number "WOPL3-BANK\0". Where '\0' is a zero byte
+                  |     which termiates the string
+    2             |  Version. Little endian Unsigned 16-bit integer.
+                  |  Latest version is 1
+    2             | [MBanks] Unsigned 16-bit integer, count of melodic
+                  |     MIDI banks (every bank contains 128 instruments)
+    2             | [PBanks] Unsigned 16-bit integer, count of percussion
+                  |     MIDI banks (every bank contains 128 instruments)
+    1             | Chip global Deep-Tremolo and Deep-Vibrato register
+    1             | ADLMIDI's Volume model. Default is 0, "Generic"
+-----------Melodic Instruments-----------
+    62*128*MBanks | 128 [Single-instrument entries] per each bank,
+                  |     look at top of this text file
+---------Percussion Instruments----------
+    62*128*PBanks | 128 [Single-instrument entries] per each bank,
+                  |     look at top of this text file
+-----------------------------------------
+
+
+

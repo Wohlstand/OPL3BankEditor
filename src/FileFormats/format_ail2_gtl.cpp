@@ -108,9 +108,9 @@ FfmtErrCode AIL_GTL::loadFile(QString filePath, FmBank &bank)
 
     GTL_Head head;
     QVector<GTL_Head> heads;
-    unsigned char   hdata[6];
-    unsigned char   idata[24];
-    uint8_t max_bank_number = 0;
+    uint8_t   hdata[6];
+    uint8_t   idata[24];
+    uint8_t   max_bank_number = 0;
     heads.reserve(256);
     do
     {
@@ -136,7 +136,7 @@ FfmtErrCode AIL_GTL::loadFile(QString filePath, FmBank &bank)
 
     bank.reset(max_bank_number + 1, 1);
 
-    unsigned int totalInsts = static_cast<unsigned int>(heads.size());
+    uint32_t totalInsts = static_cast<uint32_t>(heads.size());
     for(uint32_t i = 0; i < totalInsts; i++)
     {
         GTL_Head &h = heads[int(i)];
@@ -282,7 +282,7 @@ FfmtErrCode AIL_GTL::saveFile(QString filePath, FmBank &bank)
     file.seek(ins_offset);
 
     //3) Sequentially write all instruments into the file
-    unsigned char  odata[24];
+    uint8_t odata[24];
     for(int i = 0; i < heads.size() - 1; i++)
     {
         GTL_Head &h = heads[i];
@@ -361,5 +361,5 @@ QString AIL_GTL::formatExtensionMask()
 
 BankFormats AIL_GTL::formatId()
 {
-    return BankFormats::FORMAT_MILES;
+    return BankFormats::FORMAT_AIL2;
 }

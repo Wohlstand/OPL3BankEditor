@@ -24,14 +24,15 @@
 #include "ffmt_factory.h"
 
 #include "format_adlibbnk.h"
-#include "format_apogeetmb.h"
-#include "format_dmxopl2.h"
-#include "format_junlevizion.h"
 #include "format_ail2_gtl.h"
-#include "format_sb_ibk.h"
-#include "format_imf_importer.h"
-#include "format_cmf_importer.h"
+#include "format_apogeetmb.h"
 #include "format_bisqwit.h"
+#include "format_cmf_importer.h"
+#include "format_dmxopl2.h"
+#include "format_imf_importer.h"
+#include "format_junlevizion.h"
+#include "format_sb_ibk.h"
+#include "format_wohlstand_opl3.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -55,13 +56,24 @@ void FmBankFormatFactory::registerAllFormats()
 {
     g_formats.clear();
     g_formatsInstr.clear();
+
+    //Own bank format
+    registerBankFormat(new WohlstandOPL3());
+    registerInstFormat(new WohlstandOPL3());
+
+    //Junglevision
     registerBankFormat(new JunleVizion());
+    //DMX
     registerBankFormat(new DmxOPL2());
+    //Apogee
     registerBankFormat(new ApogeeTMB());
+    //AIL
     registerBankFormat(new AIL_GTL());
 
+    //SB IBK DOS
     registerBankFormat(new SbIBK_DOS());
     registerInstFormat(new SbIBK_DOS());
+    //SBI UNIX
     registerBankFormat(new SbIBK_UNIX_READ());
     registerInstFormat(new SbIBK_UNIX_READ());
     registerBankFormat(new SbIBK_UNIX2OP_SAVE());
@@ -69,13 +81,16 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new SbIBK_UNIX4OP_SAVE());
     registerBankFormat(new SbIBK_UNIX4OP_DRUMS_SAVE());
 
+    //AdLib/HMI
     registerBankFormat(new AdLibAndHmiBnk_reader());
     registerInstFormat(new AdLibAndHmiBnk_reader());
     registerBankFormat(new AdLibBnk_writer());
     registerBankFormat(new HmiBnk_writer());
 
+    //Bisqwit
     registerBankFormat(new BisqwitBank());
 
+    //Importers from music files
     registerBankFormat(new IMF_Importer());
     registerBankFormat(new CMF_Importer());
 }

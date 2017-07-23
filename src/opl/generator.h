@@ -79,7 +79,7 @@ class Generator : public QIODevice
         void Touch_Real(uint32_t c, uint32_t volume);
         void Touch(uint32_t c, uint32_t volume);
         void Patch(uint32_t c, uint32_t i);
-        void Pan(unsigned c, unsigned value);
+        void Pan(uint32_t c, uint32_t value);
         void PlayNoteF(int noteID);
         void PlayDrum(uint8_t drum, int noteID);
         void switch4op(bool enabled);

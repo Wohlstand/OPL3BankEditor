@@ -26,32 +26,36 @@ enum class BankFormats
 {
     FORMAT_UNKNOWN = -1,
 
-    FORMAT_JUNGLEVIZION         =   0,
-    FORMAT_DMX_OP2              =   1,
-    FORMAT_APOGEE               =   2,
-    FORMAT_IBK                  =   3,
-    FORMAT_ADLIB_BKN1           =   4,
-    FORMAT_ADLIB_BKNHMI         =   5,
-    FORMAT_ADLIB_BKNHMI_DRUMS   =   6,
-    FORMAT_MILES                =   7,
-    FORMAT_SB2OP                =   8,
-    FORMAT_SB2OP_DRUMS          =   9,
-    FORMAT_SB4OP                =   10,
-    FORMAT_SB4OP_DRUMS          =   11,
-    FORMAT_IMF_IMPORTER         =   12,
-    FORMAT_CMF_IMPORTER         =   13,
-    FORMAT_BISQWIT              =   14,
+    FORMAT_ADLIB_BKN1,
+    FORMAT_ADLIB_BKNHMI,
+    FORMAT_ADLIB_BKNHMI_DRUMS,
+    FORMAT_AIL2,
+    FORMAT_APOGEE,
+    FORMAT_BISQWIT,
+    FORMAT_DMX_OP2,
+    FORMAT_IBK,
+    FORMAT_JUNGLEVIZION,
+    FORMAT_SB2OP,
+    FORMAT_SB2OP_DRUMS,
+    FORMAT_SB4OP,
+    FORMAT_SB4OP_DRUMS,
+    FORMAT_WOHLSTAND_OPL3,
+
+    FORMAT_IMF_IMPORTER,
+    FORMAT_CMF_IMPORTER,
 
     FORMATS_END,
-    FORMATS_BEGIN = FORMAT_JUNGLEVIZION,
+    FORMATS_BEGIN = FORMAT_ADLIB_BKN1,
+    FORMATS_DEFAULT_FORMAT = FORMAT_WOHLSTAND_OPL3,
 };
 
 enum class InstFormats
 {
     FORMAT_INST_UNKNOWN = -1,
-    FORMAT_INST_SBI     = 0,
-    FORMAT_INST_SBIex   = 1,
-    FORMAT_INST_ADLIB_INS = 2,
+    FORMAT_INST_WOPL3 = 0,
+    FORMAT_INST_SBI,
+    FORMAT_INST_SBIex,
+    FORMAT_INST_ADLIB_INS,
 };
 
 enum class FormatCaps

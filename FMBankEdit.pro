@@ -74,6 +74,7 @@ SOURCES += \
     src/FileFormats/format_imf_importer.cpp \
     src/FileFormats/format_junlevizion.cpp \
     src/FileFormats/format_sb_ibk.cpp \
+    src/FileFormats/format_wohlstand_opl3.cpp \
     src/importer.cpp \
     src/ins_names.cpp \
     src/main.cpp \
@@ -97,6 +98,7 @@ HEADERS += \
     src/FileFormats/format_imf_importer.h \
     src/FileFormats/format_junlevizion.h \
     src/FileFormats/format_sb_ibk.h \
+    src/FileFormats/format_wohlstand_opl3.h \
     src/importer.h \
     src/ins_names.h \
     src/opl/generator.h \
