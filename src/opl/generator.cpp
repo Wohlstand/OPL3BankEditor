@@ -754,7 +754,7 @@ void Generator::stop()
 
 qint64 Generator::readData(char *data, qint64 len)
 {
-    int16_t *_out = reinterpret_cast<short *>(data);
+    int16_t *_out = reinterpret_cast<int16_t *>(data);
     len -= len % 4; //must be multiple 4!
     uint32_t lenS = (static_cast<uint32_t>(len) / 4);
     OPL3_GenerateStream(&chip, _out, lenS);

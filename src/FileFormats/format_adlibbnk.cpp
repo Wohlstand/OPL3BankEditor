@@ -119,10 +119,10 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
     if((ver_maj == 0) && (ver_min == 0))
         isHMI = true;
 
-    //unsigned short  totalInsUsed = 0;
-    unsigned short  totalIns = 0;
-    unsigned int    offsetName = 0;
-    unsigned int    offsetData = 0;
+    //uint16_t  totalInsUsed = 0;
+    uint16_t    totalIns = 0;
+    uint32_t    offsetName = 0;
+    uint32_t    offsetData = 0;
 
     //totalInsUsed = toUint16LE( dataU + BNK_HEAD_OFFSET + 0 );
     totalIns     = toUint16LE(dataU + BNK_HEAD_OFFSET + 2);
@@ -133,9 +133,9 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
     bank.Ins_Percussion_box.clear();
 
     //offsetInstr = offsetData + (index * sizeof(PackedTimbre))
-    for(unsigned int i = 0; i < totalIns; i++)
+    for(uint32_t i = 0; i < totalIns; i++)
     {
-        unsigned int name_address = offsetName + SIZEOF_NAME * i;
+        uint32_t name_address   = offsetName + SIZEOF_NAME * i;
         if(name_address + SIZEOF_NAME > size)
         {
             bank.reset();
@@ -146,8 +146,8 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
         //    UINT8     flags   0 if this record is not used, else 1
         //    char[9]   name    Instrument name - must be NULL-terminated
 
-        unsigned short ins_index   = toUint16LE(dataU + name_address);
-        unsigned int   ins_address = offsetData + ins_index * SIZEOF_INST;
+        uint16_t ins_index      = toUint16LE(dataU + name_address);
+        uint32_t ins_address    = offsetData + ins_index * SIZEOF_INST;
 
         #ifdef SKIP_UNUSED
         if(!isHMI && (dataU[name_address + 2] == 0))
@@ -347,7 +347,7 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
     typedef QMap<QString, InstrName> instNameMap;
     instNameMap ins_sorted;
 
-    for(unsigned short ins = 0; ins < instsS; ins++)
+    for(uint16_t ins = 0; ins < instsS; ins++)
     {
         bool isDrum = (bank.Ins_Melodic_box.size() <= ins);
         InstrName inst;

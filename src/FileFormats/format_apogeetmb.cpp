@@ -43,12 +43,12 @@ FfmtErrCode ApogeeTMB::loadFile(QString filePath, FmBank &bank)
 
     bank.reset();
 
-    for(unsigned short i = 0; i < 256; i++)
+    for(uint16_t i = 0; i < 256; i++)
     {
         FmBank::Instrument &ins = (i < 128) ?
                                   bank.Ins_Melodic[i] :
                                   bank.Ins_Percussion[(i - 128)];
-        unsigned char   idata[13];
+        uint8_t   idata[13];
 
         if(file.read(char_p(idata), 13) != 13)
         {
@@ -91,12 +91,12 @@ FfmtErrCode ApogeeTMB::saveFile(QString filePath, FmBank &bank)
      * (for example, imported from some small BNK file) */
     TmpBank tmp(bank, 128, 128);
 
-    for(unsigned short i = 0; i < 256; i++)
+    for(uint16_t i = 0; i < 256; i++)
     {
         FmBank::Instrument &ins = (i < 128) ?
                                   tmp.insMelodic[i] :
                                   tmp.insPercussion[(i - 128)];
-        unsigned char   odata[13];
+        uint8_t   odata[13];
         memset(odata, 0, 13);
         odata[0] = ins.getAVEKM(MODULATOR1);
         odata[1] = ins.getAVEKM(CARRIER1);
@@ -112,7 +112,7 @@ FfmtErrCode ApogeeTMB::saveFile(QString filePath, FmBank &bank)
         char *sodata = char_p(odata);
 
         if(i < 128)
-            sodata[11] = char(ins.note_offset1);
+            sodata[11] = int8_t(ins.note_offset1);
         else
             odata[11] = ins.percNoteNum;
 

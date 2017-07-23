@@ -219,12 +219,11 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank)
     }
 
     //fetch bank names
-    for(unsigned short i = 0; i < 128; i++)
+    for(uint16_t i = 0; i < 128; i++)
     {
         FmBank::Instrument &ins = drumFlags[i] ?
                                   bank.Ins_Percussion[i] :
                                   bank.Ins_Melodic[i];
-
         if(file.read(ins.name, 9) != 9)
         {
             bank.reset();

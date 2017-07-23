@@ -90,21 +90,21 @@ public:
          */
 
         //! Attacking level (from 0 to 15)
-        unsigned char attack;
+        uint8_t attack;
         //! Decaying level (from 0 to 15)
-        unsigned char decay;
+        uint8_t decay;
         //! Sustain level (from 0 to 15)
-        unsigned char sustain;
+        uint8_t sustain;
         //! Release level (from 0 to 15)
-        unsigned char release;
+        uint8_t release;
         //! Wave shape (from 0 to 7)
-        unsigned char waveform;
+        uint8_t waveform;
         //! Frequency multiplication (from 0 to 15)
-        unsigned char fmult;
+        uint8_t fmult;
         //! Volume level (from 0 to 63)
-        unsigned char level;
+        uint8_t level;
         //! Key Scale level (from 0 to 3)
-        unsigned char ksl;
+        uint8_t ksl;
         //! Vibrato (0 or 1)
         bool vib;
         //! Tremolo (0 or 1)
@@ -125,9 +125,9 @@ public:
         //! FM operators
         Operator OP[4];
         //! Feedback for a first modulator and carrier
-        unsigned char feedback1;
+        uint8_t feedback1;
         //! Feedback for a second modulator and carrier (used in 4-operators or double-voice mode)
-        unsigned char feedback2;
+        uint8_t feedback2;
         /**
          * @brief Types of synthesis
          */
@@ -143,21 +143,21 @@ public:
         //! Connections for a second operators pair
         bool connection2;
         //! Play only this note number independent from a requested key
-        unsigned char percNoteNum;
+        uint8_t percNoteNum;
         //! Is enabled four operators mode
         bool en_4op;
         //! Enable double-voice mode instead of real 4-operator mode
         bool en_pseudo4op;
         //! Fine tuning of second voice (pseudo-4-operators only, DMX-Specific)
-        char fine_tune;
+        int8_t fine_tune;
         //! Note offset (first operator pair)
-        short note_offset1;
+        int16_t note_offset1;
         //! Note offset (second operator pair, DMX-Specific)
-        short note_offset2;
+        int16_t note_offset2;
         //! Note velocity offset (TMB-Specific)
-        char velocity_offset;
+        int8_t velocity_offset;
         //! AdLib specific parameter: Drum Number
-        unsigned char adlib_drum_number;
+        uint8_t adlib_drum_number;
 
         /* ******** OPL3 merged values ******** */
 
@@ -166,120 +166,120 @@ public:
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        unsigned char getAVEKM(int OpID);
+        uint8_t getAVEKM(int OpID);
 
         /*!
          * \brief Split AM/VIB/EG/KSR/Multiple bits byte into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \param in merged byte
          */
-        void setAVEKM(int OpID, unsigned char in);
+        void setAVEKM(int OpID, uint8_t in);
 
         /*!
          * \brief Merge into KSL/attenuation settings byte
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        unsigned char getKSLL(int OpID);
+        uint8_t getKSLL(int OpID);
 
         /*!
          * \brief Split KSL/attenuation settings byte into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \param in merged byte
          */
-        void setKSLL(int OpID, unsigned char in);
+        void setKSLL(int OpID, uint8_t in);
 
         /*!
          * \brief Merge into KSL/attenuation settings byte without attenuation
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        unsigned char getKSL(int OpID);
+        uint8_t getKSL(int OpID);
         /*!
          * \brief Store KSL value into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \param in merged byte
          */
-        void setKSL(int OpID, unsigned char in);
+        void setKSL(int OpID, uint8_t in);
 
         /*!
          * \brief Merge into KSL/attenuation settings byte without KSL
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        unsigned char getLevel(int OpID);
+        uint8_t getLevel(int OpID);
 
         /*!
          * \brief Store attenuation value into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \param in merged byte
          */
-        void setLevel(int OpID, unsigned char in);
+        void setLevel(int OpID, uint8_t in);
 
         /*!
          * \brief Merge into Attack/decay rates byte
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        unsigned char getAtDec(int OpID);
+        uint8_t getAtDec(int OpID);
         /*!
          * \brief Split Attack/decay rates byte into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \param in merged byte
          */
-        void setAtDec(int OpID, unsigned char in);
+        void setAtDec(int OpID, uint8_t in);
 
         /*!
          * \brief Merge into Sustain/release rates byte
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        unsigned char getSusRel(int OpID);
+        uint8_t getSusRel(int OpID);
 
         /*!
          * \brief Split Sustain/release rates byte into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \param in merged byte
          */
-        void setSusRel(int OpID, unsigned char in);
+        void setSusRel(int OpID, uint8_t in);
 
         /*!
          * \brief Merge into waveform byte
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        unsigned char getWaveForm(int OpID);
+        uint8_t getWaveForm(int OpID);
 
         /*!
          * \brief Store and clear-up waveform byte into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \param in merged byte
          */
-        void setWaveForm(int OpID, unsigned char in);
+        void setWaveForm(int OpID, uint8_t in);
 
         /*!
          * \brief Merge into Feedback/connection byte
          * \return merged byte
          */
-        unsigned char getFBConn1();
+        uint8_t getFBConn1();
 
         /*!
          * \brief Split Feedback/connection byte for first carrier and modulator into internal values
          * \param in merged byte
          */
-        void setFBConn1(unsigned char in);
+        void setFBConn1(uint8_t in);
 
         /*!
          * \brief Merge into Feedback/connection byte
          * \return merged byte
          */
-        unsigned char getFBConn2();
+        uint8_t getFBConn2();
 
         /*!
          * \brief Split Feedback/connection byte for second carrier and modulator into internal values
          * \param in merged byte
          */
-        void setFBConn2(unsigned char in);
+        void setFBConn2(uint8_t in);
 
         /*!
          * \brief Merge operator data to send into 0xE862 register
@@ -297,7 +297,6 @@ public:
     static Instrument emptyInst();
 
     inline int countMelodic()   { return Ins_Melodic_box.size(); }
-
     inline int countDrums()     { return Ins_Percussion_box.size(); }
 
     //! Pointer to array of melodic instruments

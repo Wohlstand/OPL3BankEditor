@@ -104,7 +104,7 @@ FmBank::Instrument FmBank::emptyInst()
     return inst;
 }
 
-unsigned char FmBank::Instrument::getAVEKM(int OpID)
+uint8_t FmBank::Instrument::getAVEKM(int OpID)
 {
     uint8_t out = 0;
     out |= 0x80 & (uint8_t(OP[OpID].am) << 7);
@@ -115,7 +115,7 @@ unsigned char FmBank::Instrument::getAVEKM(int OpID)
     return out;
 }
 
-void FmBank::Instrument::setAVEKM(int OpID, unsigned char in)
+void FmBank::Instrument::setAVEKM(int OpID, uint8_t in)
 {
     OP[OpID].am     = (in >> 7) & 0x01;
     OP[OpID].vib    = (in >> 6) & 0x01;
@@ -126,7 +126,7 @@ void FmBank::Instrument::setAVEKM(int OpID, unsigned char in)
 
 
 
-unsigned char FmBank::Instrument::getKSLL(int OpID)
+uint8_t FmBank::Instrument::getKSLL(int OpID)
 {
     uint8_t out = 0;
     out |= 0xC0 & (uint8_t(OP[OpID].ksl) << 6);
@@ -134,39 +134,39 @@ unsigned char FmBank::Instrument::getKSLL(int OpID)
     return out;
 }
 
-void FmBank::Instrument::setKSLL(int OpID, unsigned char in)
+void FmBank::Instrument::setKSLL(int OpID, uint8_t in)
 {
     OP[OpID].ksl   = (in >> 6) & 0x03;
     OP[OpID].level = 0x3F - (in & 0x3F);
 }
 
-unsigned char FmBank::Instrument::getKSL(int OpID)
+uint8_t FmBank::Instrument::getKSL(int OpID)
 {
     uint8_t out = 0;
     out |= 0xC0 & (uint8_t(OP[OpID].ksl) << 6);
     return out;
 }
 
-void FmBank::Instrument::setKSL(int OpID, unsigned char in)
+void FmBank::Instrument::setKSL(int OpID, uint8_t in)
 {
     OP[OpID].ksl   = (in >> 6) & 0x03;
 }
 
-unsigned char FmBank::Instrument::getLevel(int OpID)
+uint8_t FmBank::Instrument::getLevel(int OpID)
 {
     uint8_t out = 0;
     out |= 0x3F & uint8_t(0x3F - OP[OpID].level);
     return out;
 }
 
-void FmBank::Instrument::setLevel(int OpID, unsigned char in)
+void FmBank::Instrument::setLevel(int OpID, uint8_t in)
 {
     OP[OpID].level = 0x3F - (in & 0x3F);
 }
 
 
 
-unsigned char FmBank::Instrument::getAtDec(int OpID)
+uint8_t FmBank::Instrument::getAtDec(int OpID)
 {
     uint8_t out = 0;
     out |= 0xF0 & uint8_t(OP[OpID].attack << 4);
@@ -174,7 +174,7 @@ unsigned char FmBank::Instrument::getAtDec(int OpID)
     return out;
 }
 
-void FmBank::Instrument::setAtDec(int OpID, unsigned char in)
+void FmBank::Instrument::setAtDec(int OpID, uint8_t in)
 {
     OP[OpID].attack = (in >> 4) & 0x0F;
     OP[OpID].decay  = (in)    & 0x0F;
@@ -182,7 +182,7 @@ void FmBank::Instrument::setAtDec(int OpID, unsigned char in)
 
 
 
-unsigned char FmBank::Instrument::getSusRel(int OpID)
+uint8_t FmBank::Instrument::getSusRel(int OpID)
 {
     uint8_t out = 0;
     out |= 0xF0 & (uint8_t(0x0F - OP[OpID].sustain) << 4);
@@ -190,28 +190,28 @@ unsigned char FmBank::Instrument::getSusRel(int OpID)
     return out;
 }
 
-void FmBank::Instrument::setSusRel(int OpID, unsigned char in)
+void FmBank::Instrument::setSusRel(int OpID, uint8_t in)
 {
     OP[OpID].sustain = 0x0F - ((in >> 4) & 0x0F);
     OP[OpID].release = (in) & 0x0F;
 }
 
 
-unsigned char FmBank::Instrument::getWaveForm(int OpID)
+uint8_t FmBank::Instrument::getWaveForm(int OpID)
 {
     uint8_t out = 0;
     out |= 0x07 & OP[OpID].waveform;
     return out;
 }
 
-void FmBank::Instrument::setWaveForm(int OpID, unsigned char in)
+void FmBank::Instrument::setWaveForm(int OpID, uint8_t in)
 {
     OP[OpID].waveform  = in & 0x07;
 }
 
 
 
-unsigned char FmBank::Instrument::getFBConn1()
+uint8_t FmBank::Instrument::getFBConn1()
 {
     uint8_t out = 0;
     out |= uint8_t(connection1);
@@ -219,13 +219,13 @@ unsigned char FmBank::Instrument::getFBConn1()
     return out;
 }
 
-void FmBank::Instrument::setFBConn1(unsigned char in)
+void FmBank::Instrument::setFBConn1(uint8_t in)
 {
     connection1 =  in & 0x01;
     feedback1   = (in >> 1) & 0x07;
 }
 
-unsigned char FmBank::Instrument::getFBConn2()
+uint8_t FmBank::Instrument::getFBConn2()
 {
     uint8_t out = 0;
     out |= uint8_t(connection2);
@@ -233,7 +233,7 @@ unsigned char FmBank::Instrument::getFBConn2()
     return out;
 }
 
-void FmBank::Instrument::setFBConn2(unsigned char in)
+void FmBank::Instrument::setFBConn2(uint8_t in)
 {
     connection2 =  in & 0x01;
     feedback2   = (in >> 1) & 0x07;
