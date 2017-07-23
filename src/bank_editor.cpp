@@ -624,6 +624,7 @@ void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
     ui->bank_no->setHidden(checked);
     ui->actionAddBank->setDisabled(checked);
     ui->actionCloneBank->setDisabled(checked);
+    ui->actionClearBank->setDisabled(checked);
     ui->actionDeleteBank->setDisabled(checked);
     if(checked)
         on_bank_no_currentIndexChanged(ui->bank_no->currentIndex());
