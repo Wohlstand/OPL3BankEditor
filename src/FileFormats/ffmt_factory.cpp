@@ -27,7 +27,7 @@
 #include "format_apogeetmb.h"
 #include "format_dmxopl2.h"
 #include "format_junlevizion.h"
-#include "format_milesopl.h"
+#include "format_ail2_gtl.h"
 #include "format_sb_ibk.h"
 #include "format_imf_importer.h"
 #include "format_cmf_importer.h"

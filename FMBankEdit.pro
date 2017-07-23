@@ -66,13 +66,13 @@ SOURCES += \
     src/FileFormats/ffmt_base.cpp \
     src/FileFormats/ffmt_factory.cpp \
     src/FileFormats/format_adlibbnk.cpp \
+    src/FileFormats/format_ail2_gtl.cpp \
     src/FileFormats/format_apogeetmb.cpp \
     src/FileFormats/format_bisqwit.cpp \
     src/FileFormats/format_cmf_importer.cpp \
     src/FileFormats/format_dmxopl2.cpp \
     src/FileFormats/format_imf_importer.cpp \
     src/FileFormats/format_junlevizion.cpp \
-    src/FileFormats/format_milesopl.cpp \
     src/FileFormats/format_sb_ibk.cpp \
     src/importer.cpp \
     src/ins_names.cpp \
@@ -89,13 +89,13 @@ HEADERS += \
     src/FileFormats/ffmt_enums.h \
     src/FileFormats/ffmt_factory.h \
     src/FileFormats/format_adlibbnk.h \
+    src/FileFormats/format_ail2_gtl.h \
     src/FileFormats/format_apogeetmb.h \
     src/FileFormats/format_bisqwit.h \
     src/FileFormats/format_cmf_importer.h \
     src/FileFormats/format_dmxopl2.h \
     src/FileFormats/format_imf_importer.h \
     src/FileFormats/format_junlevizion.h \
-    src/FileFormats/format_milesopl.h \
     src/FileFormats/format_sb_ibk.h \
     src/importer.h \
     src/ins_names.h \

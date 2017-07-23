@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "format_milesopl.h"
+#include "format_ail2_gtl.h"
 #include "../common.h"
 
 bool AIL_GTL::detect(const QString &filePath, char *)
