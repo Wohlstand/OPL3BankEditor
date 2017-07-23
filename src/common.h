@@ -21,9 +21,6 @@
 
 #include <QFile>
 
-//! Typedef to unsigned char
-typedef unsigned char uchar;
-
 //! Typedef to signed character pointer
 typedef char*         char_p;
 
@@ -130,7 +127,7 @@ void fromUint16LE(uint16_t in, uint8_t *arr);
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromUint16BE(uint16_t in, uchar *arr);
+void fromUint16BE(uint16_t in, uint8_t *arr);
 
 /*!
  * \brief Converts signed short into big endian byte array

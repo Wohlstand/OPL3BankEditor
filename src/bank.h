@@ -286,7 +286,7 @@ public:
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged 4-byte register data
          */
-        unsigned int getDataE862(int OpID);
+        uint32_t getDataE862(int OpID);
 
     };
 

@@ -19,9 +19,6 @@
 #include "bank.h"
 #include <memory.h>
 
-//! Typedef to unsigned char
-typedef unsigned char uchar;
-
 //! Typedef to signed character pointer
 typedef char         *char_p;
 
@@ -109,12 +106,12 @@ FmBank::Instrument FmBank::emptyInst()
 
 unsigned char FmBank::Instrument::getAVEKM(int OpID)
 {
-    uchar out = 0;
-    out |= 0x80 & (uchar(OP[OpID].am) << 7);
-    out |= 0x40 & (uchar(OP[OpID].vib) << 6);
-    out |= 0x20 & (uchar(OP[OpID].eg) << 5);
-    out |= 0x10 & (uchar(OP[OpID].ksr) << 4);
-    out |= 0x0F &  uchar(OP[OpID].fmult);
+    uint8_t out = 0;
+    out |= 0x80 & (uint8_t(OP[OpID].am) << 7);
+    out |= 0x40 & (uint8_t(OP[OpID].vib) << 6);
+    out |= 0x20 & (uint8_t(OP[OpID].eg) << 5);
+    out |= 0x10 & (uint8_t(OP[OpID].ksr) << 4);
+    out |= 0x0F &  uint8_t(OP[OpID].fmult);
     return out;
 }
 
@@ -131,9 +128,9 @@ void FmBank::Instrument::setAVEKM(int OpID, unsigned char in)
 
 unsigned char FmBank::Instrument::getKSLL(int OpID)
 {
-    uchar out = 0;
-    out |= 0xC0 & (uchar(OP[OpID].ksl) << 6);
-    out |= 0x3F & uchar(0x3F - OP[OpID].level);
+    uint8_t out = 0;
+    out |= 0xC0 & (uint8_t(OP[OpID].ksl) << 6);
+    out |= 0x3F & uint8_t(0x3F - OP[OpID].level);
     return out;
 }
 
@@ -145,8 +142,8 @@ void FmBank::Instrument::setKSLL(int OpID, unsigned char in)
 
 unsigned char FmBank::Instrument::getKSL(int OpID)
 {
-    uchar out = 0;
-    out |= 0xC0 & (uchar(OP[OpID].ksl) << 6);
+    uint8_t out = 0;
+    out |= 0xC0 & (uint8_t(OP[OpID].ksl) << 6);
     return out;
 }
 
@@ -157,8 +154,8 @@ void FmBank::Instrument::setKSL(int OpID, unsigned char in)
 
 unsigned char FmBank::Instrument::getLevel(int OpID)
 {
-    uchar out = 0;
-    out |= 0x3F & uchar(0x3F - OP[OpID].level);
+    uint8_t out = 0;
+    out |= 0x3F & uint8_t(0x3F - OP[OpID].level);
     return out;
 }
 
@@ -171,8 +168,8 @@ void FmBank::Instrument::setLevel(int OpID, unsigned char in)
 
 unsigned char FmBank::Instrument::getAtDec(int OpID)
 {
-    uchar out = 0;
-    out |= 0xF0 & uchar(OP[OpID].attack << 4);
+    uint8_t out = 0;
+    out |= 0xF0 & uint8_t(OP[OpID].attack << 4);
     out |= 0x0F & OP[OpID].decay;
     return out;
 }
@@ -187,8 +184,8 @@ void FmBank::Instrument::setAtDec(int OpID, unsigned char in)
 
 unsigned char FmBank::Instrument::getSusRel(int OpID)
 {
-    uchar out = 0;
-    out |= 0xF0 & (uchar(0x0F - OP[OpID].sustain) << 4);
+    uint8_t out = 0;
+    out |= 0xF0 & (uint8_t(0x0F - OP[OpID].sustain) << 4);
     out |= 0x0F & OP[OpID].release;
     return out;
 }
@@ -202,7 +199,7 @@ void FmBank::Instrument::setSusRel(int OpID, unsigned char in)
 
 unsigned char FmBank::Instrument::getWaveForm(int OpID)
 {
-    uchar out = 0;
+    uint8_t out = 0;
     out |= 0x07 & OP[OpID].waveform;
     return out;
 }
@@ -216,9 +213,9 @@ void FmBank::Instrument::setWaveForm(int OpID, unsigned char in)
 
 unsigned char FmBank::Instrument::getFBConn1()
 {
-    uchar out = 0;
-    out |= uchar(connection1);
-    out |= 0x0E & uchar(feedback1 << 1);
+    uint8_t out = 0;
+    out |= uint8_t(connection1);
+    out |= 0x0E & uint8_t(feedback1 << 1);
     return out;
 }
 
@@ -230,9 +227,9 @@ void FmBank::Instrument::setFBConn1(unsigned char in)
 
 unsigned char FmBank::Instrument::getFBConn2()
 {
-    uchar out = 0;
-    out |= uchar(connection2);
-    out |= 0x0E & uchar(feedback2 << 1);
+    uint8_t out = 0;
+    out |= uint8_t(connection2);
+    out |= 0x0E & uint8_t(feedback2 << 1);
     return out;
 }
 
@@ -243,18 +240,18 @@ void FmBank::Instrument::setFBConn2(unsigned char in)
 }
 
 
-unsigned int FmBank::Instrument::getDataE862(int OpID)
+uint32_t FmBank::Instrument::getDataE862(int OpID)
 {
-    return (uint(OP[OpID].waveform) << 24)
-           | (uint((0xF0 & (uchar(0x0F - OP[OpID].sustain) << 4))
-                   | (0x0F & OP[OpID].release)) << 16)
-           | (uint((0xF0 & uchar(OP[OpID].attack << 4))
-                   | (0x0F & OP[OpID].decay)) << 8)
-           | uint((0x80 & (uchar(OP[OpID].am) << 7))
-                  | (0x40 & (uchar(OP[OpID].vib) << 6))
-                  | (0x20 & (uchar(OP[OpID].eg) << 5))
-                  | (0x10 & (uchar(OP[OpID].ksr) << 4))
-                  | (0x0F &  uchar(OP[OpID].fmult)));
+    return (uint32_t(OP[OpID].waveform) << 24)
+           | (uint32_t((0xF0 & (uint8_t(0x0F - OP[OpID].sustain) << 4))
+                    | (0x0F & OP[OpID].release)) << 16)
+           | (uint32_t((0xF0 & uint8_t(OP[OpID].attack << 4))
+                    | (0x0F & OP[OpID].decay)) << 8)
+           | uint32_t((0x80 & (uint8_t(OP[OpID].am) << 7))
+                    | (0x40 & (uint8_t(OP[OpID].vib) << 6))
+                    | (0x20 & (uint8_t(OP[OpID].eg) << 5))
+                    | (0x10 & (uint8_t(OP[OpID].ksr) << 4))
+                    | (0x0F &  uint8_t(OP[OpID].fmult)));
 }
 
 

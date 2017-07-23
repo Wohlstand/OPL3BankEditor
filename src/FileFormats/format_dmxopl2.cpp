@@ -160,7 +160,7 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
         uint8_t     odata[32];
         memset(odata, 0, 32);
 
-        fine_tuning = uchar(int(ins.fine_tune) + 128);
+        fine_tuning = uint8_t(int16_t(ins.fine_tune) + 128);
         flags |= (ins.en_4op && ins.en_pseudo4op) ? Dmx_DoubleVoice : 0;
         flags |= (ins.percNoteNum != 0) ? Dmx_FixedPitch : 0;
         flags |= (i == 65) ? Dmx_Unknown : 0;

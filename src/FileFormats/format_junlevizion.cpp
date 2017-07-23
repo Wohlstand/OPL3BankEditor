@@ -178,7 +178,7 @@ FfmtErrCode JunleVizion::saveFile(QString filePath, FmBank &bank)
         memset(odata, 0, 24);
         had4op |= ins.en_4op;
         //Operators mode: 0 - 2-op, 1 - 4-op
-        odata[0] = uchar(ins.en_4op);
+        odata[0] = uint8_t(ins.en_4op);
         //NoteNum
         odata[1] = ins.percNoteNum;
 
@@ -189,7 +189,7 @@ FfmtErrCode JunleVizion::saveFile(QString filePath, FmBank &bank)
         odata[5]  = ins.getSusRel(MODULATOR1);
         odata[6]  = ins.getWaveForm(MODULATOR1) | (had4op ? 0x80 : 0x00);
         //Feedback/Connection 1<->2
-        odata[7]  = ins.getFBConn1() | (had4op ? (0x30 & uchar(3) << 4) : 0);
+        odata[7]  = ins.getFBConn1() | (had4op ? (0x30 & uint8_t(3) << 4) : 0);
         //OP2
         odata[8]  = ins.getAVEKM(CARRIER1);
         odata[9]  = ins.getKSLL(CARRIER1);
@@ -204,7 +204,7 @@ FfmtErrCode JunleVizion::saveFile(QString filePath, FmBank &bank)
         odata[16] = ins.getSusRel(MODULATOR2);
         odata[17] = ins.getWaveForm(MODULATOR2) | (ins.en_4op ? 0x80 : 0x00);
         //Feedback/Connection 3<->4
-        odata[18] = ins.getFBConn2() | (had4op ? (0x30 & uchar(3) << 4) : 0);
+        odata[18] = ins.getFBConn2() | (had4op ? (0x30 & uint8_t(3) << 4) : 0);
         //OP4
         odata[19] = ins.getAVEKM(CARRIER2);
         odata[20] = ins.getKSLL(CARRIER2);

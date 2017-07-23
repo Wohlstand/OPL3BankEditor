@@ -281,7 +281,7 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
     if(!file.open(QIODevice::WriteOnly))
         return FfmtErrCode::ERR_NOFILE;
 
-    uchar ver[2] = { 1, 0 };
+    uint8_t ver[2] = { 1, 0 };
 
     bool isHMI = false;
 
@@ -300,8 +300,8 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
 
     //struct BNK_Head
     //{
-    //    uchar verMajor;
-    //    uchar verMinor;
+    //    uint8_t verMajor;
+    //    uint8_t verMinor;
     file.write(char_p(ver), 2);         //0..1
     //    char  magic[6];
     file.write(char_p(bnk_magic), 6);   //2..7
@@ -313,15 +313,15 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
     uint32_t nameAddress = 28;
     uint32_t dataAddress = 28 + SIZEOF_NAME * instsS;
 
-    //    uchar numUsed[2];
+    //    uint8_t numUsed[2];
     writeLE(file, instsU);          //8,9
-    //    uchar numInstruments[2];
+    //    uint8_t numInstruments[2];
     writeLE(file, instsS);          //10,11
-    //    uchar offsetName[2];
+    //    uint8_t offsetName[2];
     writeLE(file, nameAddress);     //12..15
-    //    uchar offsetData[2];
+    //    uint8_t offsetData[2];
     writeLE(file, dataAddress);     //16..19
-    //    uchar pad[8];
+    //    uint8_t pad[8];
     char pad[8];
     memset(pad, 0, 8);
     file.write(pad, 8);             //20...27
@@ -377,9 +377,9 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
         //isDrum
         //struct BNK_InsName
         //{
-        //    uchar index[2];
+        //    uint8_t index[2];
         writeLE(file, inst.index);
-        //    uchar flags;
+        //    uint8_t flags;
         file.write(char_p(&inst.flags), 1);
         //    char  name[9];
         file.write(inst.name, 9);
@@ -400,62 +400,62 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
 
         //struct BNK_OPLRegs
         //{
-        //    uchar ksl;
-        //    uchar fmult;
-        //    uchar feedback;
-        //    uchar attack;
-        //    uchar sustain;
-        //    uchar eg;
-        //    uchar decay;
-        //    uchar release;
-        //    uchar level;
-        //    uchar am;
-        //    uchar vib;
-        //    uchar ksr;
-        //    uchar con;
+        //    uint8_t ksl;
+        //    uint8_t fmult;
+        //    uint8_t feedback;
+        //    uint8_t attack;
+        //    uint8_t sustain;
+        //    uint8_t eg;
+        //    uint8_t decay;
+        //    uint8_t release;
+        //    uint8_t level;
+        //    uint8_t am;
+        //    uint8_t vib;
+        //    uint8_t ksr;
+        //    uint8_t con;
         //} __attribute__((__packed__));
 
         //struct BNK_Instrument
         //{
-        //    uchar   is_percusive;
-        uchar buff = uchar(isDrum);
+        //    uint8_t   is_percusive;
+        uint8_t buff = uint8_t(isDrum);
         file.write(char_p(&buff), 1);
-        //    uchar   voicenum;
+        //    uint8_t   voicenum;
         file.write(char_p(&Ins.adlib_drum_number), 1);
         //BNK_OPLRegs oplModulator;
         //struct BNK_OPLRegs
         //{
-        //    uchar ksl;
+        //    uint8_t ksl;
         file.write(char_p(&Ins.OP[MODULATOR1].ksl), 1);
-        //    uchar fmult;
+        //    uint8_t fmult;
         file.write(char_p(&Ins.OP[MODULATOR1].fmult), 1);
-        //    uchar feedback;
+        //    uint8_t feedback;
         file.write(char_p(&Ins.feedback1), 1);
-        //    uchar attack;
+        //    uint8_t attack;
         file.write(char_p(&Ins.OP[MODULATOR1].attack), 1);
-        //    uchar sustain;
+        //    uint8_t sustain;
         buff = 0x0F - Ins.OP[MODULATOR1].sustain;
         file.write(char_p(&buff), 1);
-        //    uchar eg;
+        //    uint8_t eg;
         buff = Ins.OP[MODULATOR1].eg;
         file.write(char_p(&buff), 1);
-        //    uchar decay;
+        //    uint8_t decay;
         file.write(char_p(&Ins.OP[MODULATOR1].decay), 1);
-        //    uchar release;
+        //    uint8_t release;
         file.write(char_p(&Ins.OP[MODULATOR1].release), 1);
-        //    uchar level;
+        //    uint8_t level;
         buff = 0x3F - Ins.OP[MODULATOR1].level;
         file.write(char_p(&buff), 1);
-        //    uchar am;
+        //    uint8_t am;
         buff = Ins.OP[MODULATOR1].am;
         file.write(char_p(&buff), 1);
-        //    uchar vib;
+        //    uint8_t vib;
         buff = Ins.OP[MODULATOR1].vib;
         file.write(char_p(&buff), 1);
-        //    uchar ksr;
+        //    uint8_t ksr;
         buff = Ins.OP[MODULATOR1].ksr;
         file.write(char_p(&buff), 1);
-        //    uchar con;
+        //    uint8_t con;
         switch(type)
         {
         case BNK_ADLIB:
@@ -470,37 +470,37 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
         //BNK_OPLRegs oplCarrier;
         //struct BNK_OPLRegs
         //{
-        //    uchar ksl;
+        //    uint8_t ksl;
         file.write(char_p(&Ins.OP[CARRIER1].ksl), 1);
-        //    uchar fmult;
+        //    uint8_t fmult;
         file.write(char_p(&Ins.OP[CARRIER1].fmult), 1);
-        //    uchar feedback;
+        //    uint8_t feedback;
         file.write(char_p(&Ins.feedback1), 1);
-        //    uchar attack;
+        //    uint8_t attack;
         file.write(char_p(&Ins.OP[CARRIER1].attack), 1);
-        //    uchar sustain;
+        //    uint8_t sustain;
         buff = 0x0F - Ins.OP[CARRIER1].sustain;
         file.write(char_p(&buff), 1);
-        //    uchar eg;
+        //    uint8_t eg;
         buff = Ins.OP[CARRIER1].eg;
         file.write(char_p(&buff), 1);
-        //    uchar decay;
+        //    uint8_t decay;
         file.write(char_p(&Ins.OP[CARRIER1].decay), 1);
-        //    uchar release;
+        //    uint8_t release;
         file.write(char_p(&Ins.OP[CARRIER1].release), 1);
-        //    uchar level;
+        //    uint8_t level;
         buff = 0x3F - Ins.OP[CARRIER1].level;
         file.write(char_p(&buff), 1);
-        //    uchar am;
+        //    uint8_t am;
         buff = Ins.OP[CARRIER1].am;
         file.write(char_p(&buff), 1);
-        //    uchar vib;
+        //    uint8_t vib;
         buff = Ins.OP[CARRIER1].vib;
         file.write(char_p(&buff), 1);
-        //    uchar ksr;
+        //    uint8_t ksr;
         buff = Ins.OP[CARRIER1].ksr;
         file.write(char_p(&buff), 1);
-        //    uchar con;
+        //    uint8_t con;
         switch(type)
         {
         case BNK_ADLIB:
@@ -512,9 +512,9 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
         }
         file.write(char_p(&buff), 1);
         //} __attribute__((__packed__));
-        //    uchar   modWaveSel;
+        //    uint8_t   modWaveSel;
         file.write(char_p(&Ins.OP[MODULATOR1].waveform), 1);
-        //    uchar   carWaveSel;
+        //    uint8_t   carWaveSel;
         file.write(char_p(&Ins.OP[CARRIER1].waveform), 1);
         //} __attribute__((__packed__));
     }

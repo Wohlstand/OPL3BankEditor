@@ -452,7 +452,7 @@ FfmtErrCode SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, BankFormats
             raw2sbi(ins, idata2, true);
         //???? Very weird acting: in 2-op banks it is usually 64, in 4-op - zero
         //ins.note_offset1 = fileIsPercussion ? 0 :tempName[28];
-        ins.percNoteNum = uchar(tempName[31]);
+        ins.percNoteNum = uint8_t(tempName[31]);
     }
     file.close();
     return FfmtErrCode::ERR_OK;
@@ -676,7 +676,7 @@ FfmtErrCode SbIBK_UNIX_READ::loadFileInst(QString filePath, FmBank::Instrument &
     //drumFlag = (idata[11] != 0x00);
     //if(isDrum)
     //    *isDrum = drumFlag;
-    ins.percNoteNum = uchar(tempName[31]);
+    ins.percNoteNum = uint8_t(tempName[31]);
 
     if(inst.name[0] == '\0')
     {
