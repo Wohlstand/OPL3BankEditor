@@ -20,11 +20,37 @@
 #include "../common.h"
 
 
-bool AdLibTimbre::detect(const QString &filePath, char *)
+bool AdLibTimbre::detect(const QString &filePath, char *magic)
 {
     if(hasExt(filePath, ".tim") || hasExt(filePath, ".snd"))
         return true;
-    return false;
+
+    // Attempt to detect by file size and offset validation
+    uint16_t instruments_count = 0;
+    uint16_t instruments_offset = 0;
+
+    QFile file(filePath);
+    if(!file.open(QIODevice::ReadOnly))
+        return false;
+
+    uint64_t fileSize = uint64_t(file.bytesAvailable());
+    file.close();
+
+    uint8_t *head = reinterpret_cast<uint8_t*>(magic);
+    if((head[0] != 1) || (head[1] != 0))
+        return false;
+    instruments_count  = toUint16LE(head + 2);
+    instruments_offset = toUint16LE(head + 4);
+
+    uint16_t minFileSize = (instruments_count * 9) + (instruments_count * 56) + 6;
+    //Validate offste to instruments
+    if(instruments_offset != (instruments_count * 9) + 6)
+        return false;
+    //Validate file size
+    if(minFileSize < fileSize)
+        return false;
+
+    return true;
 }
 
 /**
