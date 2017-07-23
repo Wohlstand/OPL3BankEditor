@@ -625,6 +625,7 @@ FfmtErrCode AdLibAndHmiBnk_reader::loadFileInst(QString filePath, FmBank::Instru
     memset(&inst, 0, sizeof(FmBank::Instrument));
     QFile file(filePath);
     uint8_t idata[80];
+    memset(&idata, 0, 80);
 
     if(!file.open(QIODevice::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;
