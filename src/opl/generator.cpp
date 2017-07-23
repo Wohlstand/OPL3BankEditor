@@ -53,6 +53,37 @@ static const uint16_t Channels[NUM_OF_CHANNELS] =
     0x006, 0x007, 0x008, 0xFFF, 0xFFF
 }; // <- hw percussions, 0xFFF = no support for pitch/pan
 
+/*
+    In OPL3 mode:
+         0    1    2    6    7    8     9   10   11    16   17   18
+       op0  op1  op2 op12 op13 op14  op18 op19 op20  op30 op31 op32
+       op3  op4  op5 op15 op16 op17  op21 op22 op23  op33 op34 op35
+         3    4    5                   13   14   15
+       op6  op7  op8                 op24 op25 op26
+       op9 op10 op11                 op27 op28 op29
+    Ports:
+        +0   +1   +2  +10  +11  +12  +100 +101 +102  +110 +111 +112
+        +3   +4   +5  +13  +14  +15  +103 +104 +105  +113 +114 +115
+        +8   +9   +A                 +108 +109 +10A
+        +B   +C   +D                 +10B +10C +10D
+
+    Percussion:
+      bassdrum = op(0): 0xBD bit 0x10, operators 12 (0x10) and 15 (0x13) / channels 6, 6b
+      snare    = op(3): 0xBD bit 0x08, operators 16 (0x14)               / channels 7b
+      tomtom   = op(4): 0xBD bit 0x04, operators 14 (0x12)               / channels 8
+      cym      = op(5): 0xBD bit 0x02, operators 17 (0x17)               / channels 8b
+      hihat    = op(2): 0xBD bit 0x01, operators 13 (0x11)               / channels 7
+
+
+    In OPTi mode ("extended FM" in 82C924, 82C925, 82C931 chips):
+         0   1   2    3    4    5    6    7     8    9   10   11   12   13   14   15   16   17
+       op0 op4 op6 op10 op12 op16 op18 op22  op24 op28 op30 op34 op36 op38 op40 op42 op44 op46
+       op1 op5 op7 op11 op13 op17 op19 op23  op25 op29 op31 op35 op37 op39 op41 op43 op45 op47
+       op2     op8      op14      op20       op26      op32
+       op3     op9      op15      op21       op27      op33    for a total of 6 quad + 12 dual
+    Ports: ???
+*/
+
 #define USED_CHANNELS_2OP       18
 #define USED_CHANNELS_2OP_PS4   9
 #define USED_CHANNELS_4OP       6
@@ -181,7 +212,8 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
         x &= ~0x2000u;
         //x |= 0x800; // for test
     }
-    else if(chn != 0xFFF)
+
+    if(chn != 0xFFF)
     {
         WriteReg(0xA0 + chn, x & 0xFF);
         WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(x >> 8));
@@ -253,17 +285,17 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     //   63 + chanvol * (instrvol / 63.0 - 1)
 }
 
-void Generator::Touch(unsigned c, unsigned volume) // Volume maxes at 127*127*127
+void Generator::Touch(uint32_t c, uint32_t volume) // Volume maxes at 127*127*127
 {
     // The formula below: SOLVE(V=127^3 * 2^( (A-63.49999) / 8), A)
-    Touch_Real(c, static_cast<unsigned int>(volume > 8725  ? std::log(volume) * 11.541561 + (0.5 - 104.22845) : 0));
+    Touch_Real(c, static_cast<uint32_t>(volume > 8725  ? std::log(volume) * 11.541561 + (0.5 - 104.22845) : 0));
     // The incorrect formula below: SOLVE(V=127^3 * (2^(A/63)-1), A)
     //Touch_Real(c, volume>11210 ? 91.61112 * std::log(4.8819E-7*volume + 1.0)+0.5 : 0);
 }
 
-void Generator::Patch(unsigned c, unsigned i)
+void Generator::Patch(uint32_t c, uint32_t i)
 {
-    unsigned cc = c % 23;
+    uint32_t cc = c % 23;
     static const uint16_t data[4] = {0x20, 0x60, 0x80, 0xE0};
     m_ins[c] = static_cast<uint16_t>(i);
     uint16_t o1 = Operators[cc * 2 + 0], o2 = Operators[cc * 2 + 1];
@@ -424,20 +456,27 @@ void Generator::switch4op(bool enabled)
     }
 
     memset(&m_four_op_category, 0, sizeof(m_four_op_category));
-    unsigned p = 0;
+    uint32_t p = 0;
 
-    for(unsigned b = 0; b < 18; ++b) m_four_op_category[p++] = 0;
+    for(uint32_t b = 0; b < 18; ++b) m_four_op_category[p++] = 0;
+    for(uint32_t b = 0; b < 5; ++b)  m_four_op_category[p++] = 8;
 
-    for(unsigned b = 0; b < 5; ++b) m_four_op_category[p++] = 8;
+    // Mark all channels that are reserved for four-operator function
+    if(AdLibPercussionMode != 0)
+    {
+        //for(unsigned a = 0; a < NumCards; ++a) {}
+        for(uint32_t b = 0; b < 5; ++b) m_four_op_category[18 + b] = static_cast<char>(b + 3);
+        for(uint32_t b = 0; b < 3; ++b) m_four_op_category[6  + b] = 8;
+    }
 
     if(enabled)
     {
         //Enable 4-operators mode
         WriteReg(0x104, 0xFF);
-        unsigned fours = 6;
-        unsigned nextfour = 0;
+        uint32_t fours = 6;
+        uint32_t nextfour = 0;
 
-        for(unsigned a = 0; a < fours; ++a)
+        for(uint32_t a = 0; a < fours; ++a)
         {
             m_four_op_category[nextfour  ] = 1;
             m_four_op_category[nextfour + 3] = 2;
@@ -448,16 +487,13 @@ void Generator::switch4op(bool enabled)
             case 1:
                 nextfour += 1;
                 break;
-
             case 2:
                 nextfour += 9 - 2;
                 break;
-
             case 3:
             case 4:
                 nextfour += 1;
                 break;
-
             case 5:
                 nextfour += 23 - 9 - 2;
                 break;
@@ -468,8 +504,7 @@ void Generator::switch4op(bool enabled)
     {
         //Disable 4-operators mode
         WriteReg(0x104, 0x00);
-
-        for(unsigned a = 0; a < 18; ++a)
+        for(uint32_t a = 0; a < 18; ++a)
             m_four_op_category[a] = 0;
     }
 
@@ -481,7 +516,7 @@ void Generator::switch4op(bool enabled)
     m_patch.OPS[1].carrier_E862   = 0x00FFFF00;
 
     //Clear all operator registers from crap from previous patches
-    for(unsigned b = 0; b < NUM_OF_CHANNELS; ++b)
+    for(uint32_t b = 0; b < NUM_OF_CHANNELS; ++b)
     {
         Patch(b, 0);
         Pan(b, 0x00);
@@ -572,10 +607,10 @@ void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
     //Shutup everything
     Silence();
     switch4op(instrument.en_4op && !instrument.en_pseudo4op && (instrument.adlib_drum_number == 0));
-    bool isADrums = isDrum && (instrument.adlib_drum_number > 0);
-    changeAdLibPercussion(isADrums);
+    bool isAdLibDrums = isDrum && (instrument.adlib_drum_number > 0);
+    changeAdLibPercussion(isAdLibDrums);
 
-    if(isADrums)
+    if(isAdLibDrums)
     {
         testDrum = instrument.adlib_drum_number - 6;
 
@@ -583,7 +618,7 @@ void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
         {
             if(instrument.percNoteNum && instrument.percNoteNum < 20)
             {
-                uchar nnum = instrument.percNoteNum;
+                uint8_t nnum = instrument.percNoteNum;
 
                 while(nnum && nnum < 20)
                 {
@@ -637,7 +672,7 @@ void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
         {
             if(instrument.percNoteNum && instrument.percNoteNum < 20)
             {
-                uchar nnum = instrument.percNoteNum;
+                uint8_t nnum = instrument.percNoteNum;
 
                 while(nnum && nnum < 20)
                 {
@@ -683,7 +718,7 @@ void Generator::changeNote(int32_t newnote)
 
 void Generator::changeDeepTremolo(bool enabled)
 {
-    DeepTremoloMode   = uchar(enabled);
+    DeepTremoloMode   = uint8_t(enabled);
     WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
                                + DeepVibratoMode * 0x40
                                + AdLibPercussionMode * 0x20));
@@ -691,7 +726,7 @@ void Generator::changeDeepTremolo(bool enabled)
 
 void Generator::changeDeepVibrato(bool enabled)
 {
-    DeepVibratoMode   = uchar(enabled);
+    DeepVibratoMode   = uint8_t(enabled);
     WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
                                + DeepVibratoMode * 0x40
                                + AdLibPercussionMode * 0x20));
@@ -699,7 +734,7 @@ void Generator::changeDeepVibrato(bool enabled)
 
 void Generator::changeAdLibPercussion(bool enabled)
 {
-    AdLibPercussionMode = uchar(enabled);
+    AdLibPercussionMode = uint8_t(enabled);
     WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
                                + DeepVibratoMode * 0x40
                                + AdLibPercussionMode * 0x20));
