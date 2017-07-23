@@ -81,7 +81,7 @@ bool AdLibBnk_impl::detectInst(QString filePath)
      *
      * File size formula: 2 + (13*2) + (13*2) + 20 + 6
      */
-    return hasExt(filePath, ".ins") && (fileSize == 80);
+    return hasExt(filePath, ".ins") && ((fileSize == 80) || (fileSize == 54));
 }
 
 FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankFormats &format)
@@ -577,19 +577,13 @@ bool AdLibAndHmiBnk_reader::detectInst(const QString &filePath, char *)
  */
 static bool insRawToOp(FmBank::Instrument &inst, const int opType, const uint8_t *idata)
 {
-    for(int i = 0; i < 13; i++)
-    {
-        //Validate instrument
-        if(idata[i * 2 + 1] != 0)
-            return false;
-    }
     inst.OP[opType].ksl     = idata[0] & 0x03;
-    inst.OP[opType].fmult   = idata[2];
+    inst.OP[opType].fmult   = idata[2] & 0x0F;
     if(opType == MODULATOR1)
         inst.feedback1 = idata[4] & 0x07;
     inst.OP[opType].attack  = idata[6] & 0x0F;
     inst.OP[opType].sustain = (0x0F - (idata[8] & 0x0F));
-    inst.OP[opType].eg      = idata[10];
+    inst.OP[opType].eg      = idata[10] & 0x01;
     inst.OP[opType].decay   = idata[12] & 0x0F;
     inst.OP[opType].release = idata[14] & 0x0F;
     inst.OP[opType].level   = (0x3F - (idata[16] & 0x3F));
@@ -635,8 +629,12 @@ FfmtErrCode AdLibAndHmiBnk_reader::loadFileInst(QString filePath, FmBank::Instru
     if(!file.open(QIODevice::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;
 
-    if(file.read(char_p(idata), 80) != 80)
+    qint64 fileSize = file.bytesAvailable();
+    if((fileSize == 80) && file.read(char_p(idata), 80) != 80)
         return FfmtErrCode::ERR_BADFORMAT;
+    if((fileSize == 54) && file.read(char_p(idata), 54) != 54)
+        return FfmtErrCode::ERR_BADFORMAT;
+
     if((idata[0] != 0) || (idata[1] != 0))
         return FfmtErrCode::ERR_BADFORMAT;
 
@@ -669,8 +667,8 @@ FfmtErrCode AdLibAndHmiBnk_reader::loadFileInst(QString filePath, FmBank::Instru
         memset(&inst, 0, sizeof(FmBank::Instrument));
         return FfmtErrCode::ERR_BADFORMAT;
     }
-    inst.OP[MODULATOR1].waveform = idata[54];
-    inst.OP[CARRIER1].waveform = idata[56];
+    inst.setWaveForm(MODULATOR1, idata[54]);
+    inst.setWaveForm(CARRIER1, idata[56]);
     strncpy(inst.name, char_p(idata + 58), 19);
     #endif
 
@@ -703,8 +701,8 @@ FfmtErrCode AdLibAndHmiBnk_reader::saveFileInst(QString filePath, FmBank::Instru
     odata[77] = inst.OP[CARRIER1].waveform;
     #else
     //By SBANK by Jammie O'Connel
-    odata[54] = inst.OP[MODULATOR1].waveform;
-    odata[56] = inst.OP[CARRIER1].waveform;
+    odata[54] = inst.getWaveForm(MODULATOR1);
+    odata[56] = inst.getWaveForm(CARRIER1);
     strncpy(char_p(odata + 58), inst.name, 19);
     #endif
 
