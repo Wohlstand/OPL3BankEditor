@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "format_adlibbnk.h"
+#include "format_adlib_bnk.h"
 #include "../common.h"
 #include <QMap>
 #include <QFileInfo>
@@ -575,7 +575,7 @@ bool AdLibAndHmiBnk_reader::detectInst(const QString &filePath, char *)
  * @param idata Input raw data
  * @return true if data valid, false if data contains broken or invalid data
  */
-static bool insRawToOp(FmBank::Instrument &inst, const int opType, const uint8_t *idata)
+bool adlib_ins_insRawToOp(FmBank::Instrument &inst, const int opType, const uint8_t *idata)
 {
     inst.OP[opType].ksl     = idata[0] & 0x03;
     inst.OP[opType].fmult   = idata[2] & 0x0F;
@@ -601,7 +601,7 @@ static bool insRawToOp(FmBank::Instrument &inst, const int opType, const uint8_t
  * @param opType Operator type (Modulator or carrier)
  * @param odata Destinition output memory block to write
  */
-static void opToRawIns(const FmBank::Instrument &inst, const int opType, uint8_t *odata)
+void adlib_ins_opToRawIns(const FmBank::Instrument &inst, const int opType, uint8_t *odata)
 {
     odata[0]  = inst.OP[opType].ksl;
     odata[2]  = inst.OP[opType].fmult;
@@ -639,13 +639,13 @@ FfmtErrCode AdLibAndHmiBnk_reader::loadFileInst(QString filePath, FmBank::Instru
     if((idata[0] != 0) || (idata[1] != 0))
         return FfmtErrCode::ERR_BADFORMAT;
 
-    if(!insRawToOp(inst, MODULATOR1, idata + 2))
+    if(!adlib_ins_insRawToOp(inst, MODULATOR1, idata + 2))
     {
         memset(&inst, 0, sizeof(FmBank::Instrument));
         return FfmtErrCode::ERR_BADFORMAT;
     }
 
-    if(!insRawToOp(inst, CARRIER1, idata + 28))
+    if(!adlib_ins_insRawToOp(inst, CARRIER1, idata + 28))
     {
         memset(&inst, 0, sizeof(FmBank::Instrument));
         return FfmtErrCode::ERR_BADFORMAT;
@@ -692,8 +692,8 @@ FfmtErrCode AdLibAndHmiBnk_reader::saveFileInst(QString filePath, FmBank::Instru
     uint8_t odata[80];
     memset(&odata, 0, 80);
 
-    opToRawIns(inst, MODULATOR1, odata + 2);
-    opToRawIns(inst, CARRIER1, odata + 28);
+    adlib_ins_opToRawIns(inst, MODULATOR1, odata + 2);
+    adlib_ins_opToRawIns(inst, CARRIER1, odata + 28);
 
     //By this specification: http://www.shikadi.net/moddingwiki/AdLib_Instrument_Format
     #if 0

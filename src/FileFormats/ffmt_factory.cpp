@@ -23,7 +23,8 @@
 
 #include "ffmt_factory.h"
 
-#include "format_adlibbnk.h"
+#include "format_adlib_bnk.h"
+#include "format_adlib_tim.h"
 #include "format_ail2_gtl.h"
 #include "format_apogeetmb.h"
 #include "format_bisqwit.h"
@@ -86,6 +87,9 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new AdLibAndHmiBnk_reader());
     registerBankFormat(new AdLibBnk_writer());
     registerBankFormat(new HmiBnk_writer());
+
+    //Legacy AdLib Timbre format
+    registerBankFormat(new AdLibTimbre());
 
     //Bisqwit
     registerBankFormat(new BisqwitBank());

@@ -65,7 +65,6 @@ SOURCES += \
     src/controlls.cpp \
     src/FileFormats/ffmt_base.cpp \
     src/FileFormats/ffmt_factory.cpp \
-    src/FileFormats/format_adlibbnk.cpp \
     src/FileFormats/format_ail2_gtl.cpp \
     src/FileFormats/format_apogeetmb.cpp \
     src/FileFormats/format_bisqwit.cpp \
@@ -80,7 +79,9 @@ SOURCES += \
     src/main.cpp \
     src/opl/generator.cpp \
     src/opl/nukedopl3.c \
-    src/piano.cpp
+    src/piano.cpp \
+    src/FileFormats/format_adlib_bnk.cpp \
+    src/FileFormats/format_adlib_tim.cpp
 
 HEADERS += \
     src/bank_editor.h \
@@ -89,7 +90,6 @@ HEADERS += \
     src/FileFormats/ffmt_base.h \
     src/FileFormats/ffmt_enums.h \
     src/FileFormats/ffmt_factory.h \
-    src/FileFormats/format_adlibbnk.h \
     src/FileFormats/format_ail2_gtl.h \
     src/FileFormats/format_apogeetmb.h \
     src/FileFormats/format_bisqwit.h \
@@ -104,7 +104,9 @@ HEADERS += \
     src/opl/generator.h \
     src/opl/nukedopl3.h \
     src/piano.h \
-    src/version.h
+    src/version.h \
+    src/FileFormats/format_adlib_tim.h \
+    src/FileFormats/format_adlib_bnk.h
 
 FORMS += \
     src/bank_editor.ui \

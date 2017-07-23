@@ -4,18 +4,19 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 [![Build status](https://ci.appveyor.com/api/projects/status/llbyd0blk0i7amih?svg=true)](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor)
 
 ## Currently supported bank formats
-* Own bank format (.WOPL)
+* Own bank format (.WOPL) (Specification in the **WOPL-and-OPLI-Specification.txt** file)
 * Junglevision patch (.OP3)
 * DMX OPL-2 (.OP2)
 * Apogee Sound System timbre formats (.TMB)
 * SoundBlaster IBK files (.IBK)
 * AdLib/HMI BNK files (.BNK) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Instrument_Bank_Format))
+* AdLib Timbe bank files (.SND, .TIM) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Timbre_Bank_Format))
 * Global Timbre Library files for Audio Interface Library (.AD, .OPL) ([Specification](http://www.shikadi.net/moddingwiki/Global_Timbre_Library))
 * SB and O3 bank formats (a set of the concoctated SBI files) used with Linux drivers
 * Bisqwit's ADLMIDI bank (.ADLRAW)
 
 ## Currently supported instrument formats
-* Own 2/4-operator instrument format (.OPLI)
+* Own 2/4-operator instrument format (.OPLI) (Specification in the **WOPL-and-OPLI-Specification.txt** file)
 * 2-operator Sound Blaster instruments for DOS and UNIX (.SBI) ([Specification](http://www.shikadi.net/moddingwiki/SBI_Format))
 * 4-operator Sound Blaster instruments for UNIX (.SBI)
 * Legacy AdLib instruments (.INS) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Instrument_Bank_Format))
