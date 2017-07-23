@@ -19,7 +19,7 @@
 #include "format_milesopl.h"
 #include "../common.h"
 
-bool MilesOPL::detect(const QString &filePath, char *)
+bool AIL_GTL::detect(const QString &filePath, char *)
 {
     if(hasExt(filePath, ".opl"))
         return true;
@@ -97,10 +97,10 @@ struct GTL_Head // GTL file header entry structure
     uint32_t offset = 0;
 };
 
-MilesOPL::MilesOPL() : FmBankFormatBase()
+AIL_GTL::AIL_GTL() : FmBankFormatBase()
 {}
 
-FfmtErrCode MilesOPL::loadFile(QString filePath, FmBank &bank)
+FfmtErrCode AIL_GTL::loadFile(QString filePath, FmBank &bank)
 {
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
@@ -220,7 +220,7 @@ FfmtErrCode MilesOPL::loadFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-FfmtErrCode MilesOPL::saveFile(QString filePath, FmBank &bank)
+FfmtErrCode AIL_GTL::saveFile(QString filePath, FmBank &bank)
 {
     FmBank::Instrument null;
     memset(&null, 0, sizeof(FmBank::Instrument));
@@ -344,22 +344,22 @@ FfmtErrCode MilesOPL::saveFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int MilesOPL::formatCaps()
+int AIL_GTL::formatCaps()
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString MilesOPL::formatName()
+QString AIL_GTL::formatName()
 {
     return "Audio Interface Library (Miles) bank";
 }
 
-QString MilesOPL::formatExtensionMask()
+QString AIL_GTL::formatExtensionMask()
 {
     return "*.opl *.ad";
 }
 
-BankFormats MilesOPL::formatId()
+BankFormats AIL_GTL::formatId()
 {
     return BankFormats::FORMAT_MILES;
 }

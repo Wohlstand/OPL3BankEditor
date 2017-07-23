@@ -16,19 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MILESOPL_K
-#define MILESOPL_K
+#ifndef AIL2_GTL_K
+#define AIL2_GTL_K
 
 #include "ffmt_base.h"
 
 /**
- * @brief Reader and Writer of the Miles Sound System TMB Bank format
+ * @brief Reader and Writer of the Audio Interfaces Library Global Timbre Library format
  */
-class MilesOPL final : public FmBankFormatBase
+class AIL_GTL final : public FmBankFormatBase
 {
 public:
-    MilesOPL();
-    ~MilesOPL() = default;
+    AIL_GTL();
+    ~AIL_GTL() = default;
 
     bool detect(const QString &filePath, char* magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
@@ -39,4 +39,4 @@ public:
     BankFormats formatId() override;
 };
 
-#endif // MILESOPL_K
+#endif // AIL2_GTL_K

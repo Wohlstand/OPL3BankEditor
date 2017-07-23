@@ -58,7 +58,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new JunleVizion());
     registerBankFormat(new DmxOPL2());
     registerBankFormat(new ApogeeTMB());
-    registerBankFormat(new MilesOPL());
+    registerBankFormat(new AIL_GTL());
 
     registerBankFormat(new SbIBK_DOS());
     registerInstFormat(new SbIBK_DOS());
