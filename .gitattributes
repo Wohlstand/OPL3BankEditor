@@ -1,2 +1,8 @@
-_Misc/* linguist-vendored
+_Misc/*         linguist-vendored
 Bank_Examples/* linguist-vendored
+*.h             linguist-language=cpp
+*.bat           linguist-vendored
+*.pro           linguist-vendored
+*.sh            linguist-vendored
+*.htm           linguist-vendored
+
