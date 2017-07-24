@@ -24,6 +24,7 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 ## Currently supported music formats to import instruments
 * Id-Software Music Format (.IMF) ([Specification](http://www.shikadi.net/moddingwiki/IMF_Format))
 * Creative Music Format (.CMF) ([Specification](http://www.shikadi.net/moddingwiki/CMF_Format))
+* Reality ADlib Tracker Music Format (.RAD) ([Specification](http://hackipedia.org/File%20formats/Music/Sample%20based/text/Reality%20ADlib%20Tracker%20format.cp437.txt.utf-8.txt))
 
 ## Download
 * **Stable builds:** https://github.com/Wohlstand/OPL3BankEditor/releases

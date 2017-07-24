@@ -72,6 +72,8 @@ SOURCES += \
     src/controlls.cpp \
     src/FileFormats/ffmt_base.cpp \
     src/FileFormats/ffmt_factory.cpp \
+    src/FileFormats/format_adlib_bnk.cpp \
+    src/FileFormats/format_adlib_tim.cpp \
     src/FileFormats/format_ail2_gtl.cpp \
     src/FileFormats/format_apogeetmb.cpp \
     src/FileFormats/format_bisqwit.cpp \
@@ -79,6 +81,7 @@ SOURCES += \
     src/FileFormats/format_dmxopl2.cpp \
     src/FileFormats/format_imf_importer.cpp \
     src/FileFormats/format_junlevizion.cpp \
+    src/FileFormats/format_rad_importer.cpp \
     src/FileFormats/format_sb_ibk.cpp \
     src/FileFormats/format_wohlstand_opl3.cpp \
     src/importer.cpp \
@@ -86,9 +89,7 @@ SOURCES += \
     src/main.cpp \
     src/opl/generator.cpp \
     src/opl/nukedopl3.c \
-    src/piano.cpp \
-    src/FileFormats/format_adlib_bnk.cpp \
-    src/FileFormats/format_adlib_tim.cpp
+    src/piano.cpp
 
 HEADERS += \
     src/bank_editor.h \
@@ -97,6 +98,8 @@ HEADERS += \
     src/FileFormats/ffmt_base.h \
     src/FileFormats/ffmt_enums.h \
     src/FileFormats/ffmt_factory.h \
+    src/FileFormats/format_adlib_bnk.h \
+    src/FileFormats/format_adlib_tim.h \
     src/FileFormats/format_ail2_gtl.h \
     src/FileFormats/format_apogeetmb.h \
     src/FileFormats/format_bisqwit.h \
@@ -104,6 +107,7 @@ HEADERS += \
     src/FileFormats/format_dmxopl2.h \
     src/FileFormats/format_imf_importer.h \
     src/FileFormats/format_junlevizion.h \
+    src/FileFormats/format_rad_importer.h \
     src/FileFormats/format_sb_ibk.h \
     src/FileFormats/format_wohlstand_opl3.h \
     src/importer.h \
@@ -111,9 +115,7 @@ HEADERS += \
     src/opl/generator.h \
     src/opl/nukedopl3.h \
     src/piano.h \
-    src/version.h \
-    src/FileFormats/format_adlib_tim.h \
-    src/FileFormats/format_adlib_bnk.h
+    src/version.h
 
 FORMS += \
     src/bank_editor.ui \
