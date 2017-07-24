@@ -60,7 +60,7 @@ public:
     static bool detectBank(char *magic);
     static bool detectInst(QString filePath);
     static FfmtErrCode loadBankFile(QString filePath, FmBank &bank, BankFormats &format);
-    static FfmtErrCode saveBankFile(QString filePath, FmBank &bank, BnkType type);
+    static FfmtErrCode saveBankFile(QString filePath, FmBank &bank, BnkType type, bool hmiIsDrum);
 };
 
 bool AdLibBnk_impl::detectBank(char *magic)
@@ -148,9 +148,10 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
 
         uint16_t ins_index      = toUint16LE(dataU + name_address);
         uint32_t ins_address    = offsetData + ins_index * SIZEOF_INST;
+        uint8_t  ins_used       = dataU[name_address + 2];
 
         #ifdef SKIP_UNUSED
-        if(!isHMI && (dataU[name_address + 2] == 0))
+        if(!isHMI && (ins_used == 0))
             continue;
         #endif
 
@@ -165,30 +166,44 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
         else
             format = BankFormats::FORMAT_ADLIB_BKN1;
 
+        FmBank::Instrument *ins_m = 0;
         FmBank::Instrument *ins_p = 0;
         //At this point, the current position should be the same as offsetData. The actual instrument
         //data follows, again repeated once for each instrument. The instrument data is in the following
         //format, which is almost identical to the AdLib Instrument Format except with only one byte to
         //store each field instead of two.
-
-        //0    UINT8    iPercussive     0: Melodic instrument
-        //                              1: Percussive instrument
-        if(dataU[ins_address + 0] == 0)
+        if(!isHMI)
         {
-            FmBank::Instrument ins = FmBank::emptyInst();
-            bank.Ins_Melodic_box.push_back(ins);
-            ins_p = &bank.Ins_Melodic_box.last();
-            bank.Ins_Melodic = bank.Ins_Melodic_box.data();
+            //0    UINT8    iPercussive     0: Melodic instrument
+            //                              1: Percussive instrument
+            if(dataU[ins_address + 0] == 0)
+            {
+                FmBank::Instrument ins = FmBank::emptyInst();
+                bank.Ins_Melodic_box.push_back(ins);
+                ins_m = &bank.Ins_Melodic_box.last();
+                bank.Ins_Melodic = bank.Ins_Melodic_box.data();
+            }
+            else
+            {
+                FmBank::Instrument ins = FmBank::emptyInst();
+                bank.Ins_Percussion_box.push_back(ins);
+                ins_m = &bank.Ins_Percussion_box.last();
+                bank.Ins_Percussion = bank.Ins_Percussion_box.data();
+            }
         }
         else
         {
+            //Store both melodic and percussion while loading HMI bank
             FmBank::Instrument ins = FmBank::emptyInst();
+            bank.Ins_Melodic_box.push_back(ins);
             bank.Ins_Percussion_box.push_back(ins);
-            ins_p = &bank.Ins_Percussion_box.last();
+            bank.Ins_Melodic    = bank.Ins_Melodic_box.data();
             bank.Ins_Percussion = bank.Ins_Percussion_box.data();
+            ins_m = &bank.Ins_Melodic_box.last();
+            ins_p = &bank.Ins_Percussion_box.last();
         }
 
-        FmBank::Instrument &ins = *ins_p;
+        FmBank::Instrument &ins = *ins_m;
 
         strncpy(ins.name, dataS + name_address + 3, 8);
         try
@@ -265,6 +280,13 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
             ins.OP[MODULATOR1].waveform = dataU[ins_address + 28] & 0x07;
 
             ins.OP[CARRIER1].waveform   = dataU[ins_address + 29] & 0x07;
+
+            if(isHMI)
+            {
+                //in HMI instead of "is Used" flag is the actual percussion note number
+                memcpy(ins_p, ins_m, sizeof(FmBank::Instrument));
+                ins_p->percNoteNum = ins_used;
+            }
         }
         catch(...)
         {
@@ -272,10 +294,11 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
             return FfmtErrCode::ERR_BADFORMAT;
         }
     }
+
     return FfmtErrCode::ERR_OK;
 }
 
-FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType type)
+FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType type, bool hmiIsDrum)
 {
     QFile file(filePath);
     if(!file.open(QIODevice::WriteOnly))
@@ -307,7 +330,9 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
     file.write(char_p(bnk_magic), 6);   //2..7
 
     uint16_t instMax = isHMI ? 128 : 65515;
-    uint32_t insts  = uint32_t(bank.Ins_Melodic_box.size() + bank.Ins_Percussion_box.size());
+    uint32_t insts   = isHMI ?
+                        uint32_t(hmiIsDrum ? bank.Ins_Percussion_box.size() : bank.Ins_Melodic_box.size()) :
+                        uint32_t(bank.Ins_Melodic_box.size() + bank.Ins_Percussion_box.size());
     uint16_t instsU = insts > instMax ? instMax : uint16_t(insts);
     uint16_t instsS = instsU;
     uint32_t nameAddress = 28;
@@ -349,41 +374,55 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
 
     for(uint16_t ins = 0; ins < instsS; ins++)
     {
-        bool isDrum = (bank.Ins_Melodic_box.size() <= ins);
         InstrName inst;
+        bool isDrum = isHMI ? hmiIsDrum : (bank.Ins_Melodic_box.size() <= ins);
         FmBank::Instrument &Ins = isDrum ?
-                                  bank.Ins_Percussion_box[ ins - bank.Ins_Melodic_box.size() ] :
+                                  bank.Ins_Percussion_box[ isHMI ? ins : (ins - bank.Ins_Melodic_box.size()) ] :
                                   bank.Ins_Melodic_box[ ins ];
         strncpy(inst.name, Ins.name, 8);
         if(inst.name[0] == '\0')
             snprintf(inst.name, 8, "%c-%05d", (isDrum ? 'P' : 'M'), ins);
         inst.name[8] = '\0';
         inst.index = ins;
-        inst.flags = 0x01/*YES, IT'S "USED"! (I see no reasons to keep junk data in the file)*/ /*(char)isDrum*/;
+        /*YES, IT'S "USED"! (I see no reasons to keep junk data in the file)*/ /*(char)isDrum*/
+        //NOTE: in HMI it's a "Percussive note number"
+        inst.flags = isHMI ? (hmiIsDrum ? Ins.percNoteNum : 0) : 0x01;
 
         QString key_s = QString::fromLatin1(inst.name).toLower();
         QString key = key_s;
         uint64_t counter = 0;
-        while(ins_sorted.contains(key))
-            key = key_s + "-" + QString::number(counter++);
-        ins_sorted.insert(key, inst);
+        if(isHMI) // in HMI just store instruments as-is
+        {
+            writeLE(file, inst.index);
+            file.write(char_p(&inst.flags), 1);
+            file.write(inst.name, 9);
+        }
+        else //in AdLib BNK all instruments must be sorted alphabetically
+        {
+            while(ins_sorted.contains(key))
+                key = key_s + "-" + QString::number(counter++);
+            ins_sorted.insert(key, inst);
+        }
     }
 
-    for(instNameMap::iterator it = ins_sorted.begin();
-        it != ins_sorted.end();
-        it++)
+    if(!isHMI)
     {
-        InstrName &inst = it.value();
-        //isDrum
-        //struct BNK_InsName
-        //{
-        //    uint8_t index[2];
-        writeLE(file, inst.index);
-        //    uint8_t flags;
-        file.write(char_p(&inst.flags), 1);
-        //    char  name[9];
-        file.write(inst.name, 9);
-        //} __attribute__((__packed__));
+        for(instNameMap::iterator it = ins_sorted.begin();
+            it != ins_sorted.end();
+            it++)
+        {
+            InstrName &inst = it.value();
+            //isDrum
+            //struct BNK_InsName
+            //{
+            //    uint8_t index[2];
+            writeLE(file, inst.index);
+            //    uint8_t flags;
+            file.write(char_p(&inst.flags), 1);
+            //    char  name[9];
+            file.write(inst.name, 9);
+            //} __attribute__((__packed__));
+        }
     }
 
     dataAddress = uint32_t(file.pos());
@@ -393,9 +432,9 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
 
     for(uint16_t ins = 0; ins < instsS; ins++)
     {
-        bool isDrum = (bank.Ins_Melodic_box.size() <= ins);
+        bool isDrum = isHMI ? hmiIsDrum : (bank.Ins_Melodic_box.size() <= ins);
         FmBank::Instrument &Ins = isDrum ?
-                                  bank.Ins_Percussion_box[ ins - bank.Ins_Melodic_box.size() ] :
+                                  bank.Ins_Percussion_box[ isHMI ? ins : (ins - bank.Ins_Melodic_box.size()) ] :
                                   bank.Ins_Melodic_box[ ins ];
 
         //struct BNK_OPLRegs
@@ -418,7 +457,7 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
         //struct BNK_Instrument
         //{
         //    uint8_t   is_percusive;
-        uint8_t buff = uint8_t(isDrum);
+        uint8_t buff = isHMI ? 0 : uint8_t(isDrum);
         file.write(char_p(&buff), 1);
         //    uint8_t   voicenum;
         file.write(char_p(&Ins.adlib_drum_number), 1);
@@ -738,7 +777,7 @@ InstFormats AdLibAndHmiBnk_reader::formatInstId()
 
 FfmtErrCode AdLibBnk_writer::saveFile(QString filePath, FmBank &bank)
 {
-    return AdLibBnk_impl::saveBankFile(filePath, bank, AdLibBnk_impl::BNK_ADLIB);
+    return AdLibBnk_impl::saveBankFile(filePath, bank, AdLibBnk_impl::BNK_ADLIB, false);
 }
 
 int AdLibBnk_writer::formatCaps()
@@ -767,7 +806,7 @@ BankFormats AdLibBnk_writer::formatId()
 
 FfmtErrCode HmiBnk_writer::saveFile(QString filePath, FmBank &bank)
 {
-    return AdLibBnk_impl::saveBankFile(filePath, bank, AdLibBnk_impl::BNK_HMI);
+    return AdLibBnk_impl::saveBankFile(filePath, bank, AdLibBnk_impl::BNK_HMI, false);
 }
 
 int HmiBnk_writer::formatCaps()
@@ -777,7 +816,7 @@ int HmiBnk_writer::formatCaps()
 
 QString HmiBnk_writer::formatName()
 {
-    return "HMI instrument bank";
+    return "HMI instrument bank [Melodic]";
 }
 
 QString HmiBnk_writer::formatExtensionMask()
@@ -788,4 +827,31 @@ QString HmiBnk_writer::formatExtensionMask()
 BankFormats HmiBnk_writer::formatId()
 {
     return BankFormats::FORMAT_ADLIB_BKNHMI;
+}
+
+
+
+FfmtErrCode HmiBnk_Drums_writer::saveFile(QString filePath, FmBank &bank)
+{
+    return AdLibBnk_impl::saveBankFile(filePath, bank, AdLibBnk_impl::BNK_HMI, true);
+}
+
+int HmiBnk_Drums_writer::formatCaps()
+{
+    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+}
+
+QString HmiBnk_Drums_writer::formatName()
+{
+    return "HMI instrument bank [Percussion]";
+}
+
+QString HmiBnk_Drums_writer::formatExtensionMask()
+{
+    return "*.bnk";
+}
+
+BankFormats HmiBnk_Drums_writer::formatId()
+{
+    return BankFormats::FORMAT_ADLIB_BKNHMI_DRUMS;
 }

@@ -61,4 +61,14 @@ public:
     BankFormats formatId() override;
 };
 
+class HmiBnk_Drums_writer final : public FmBankFormatBase
+{
+public:
+    FfmtErrCode  saveFile(QString filePath, FmBank &bank) override;
+    int  formatCaps() override;
+    QString formatName() override;
+    QString formatExtensionMask() override;
+    BankFormats formatId() override;
+};
+
 #endif // ADLIBBNK_H

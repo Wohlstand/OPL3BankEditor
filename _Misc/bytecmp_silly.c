@@ -2,8 +2,8 @@
 
 int main()
 {
-    FILE* f1 = fopen("tim.snd", "rb");
-    FILE* f2 = fopen("tim.tim", "rb");
+    FILE* f1 = fopen("file144.bnk", "rb");
+    FILE* f2 = fopen("file144-2.bnk", "rb");
 
     unsigned char byte1=0, byte2=0;
     int count=0;

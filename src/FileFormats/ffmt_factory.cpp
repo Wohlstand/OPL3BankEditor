@@ -88,6 +88,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new AdLibAndHmiBnk_reader());
     registerBankFormat(new AdLibBnk_writer());
     registerBankFormat(new HmiBnk_writer());
+    registerBankFormat(new HmiBnk_Drums_writer());
 
     //Legacy AdLib Timbre format
     registerBankFormat(new AdLibTimbre());
