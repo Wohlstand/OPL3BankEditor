@@ -6,9 +6,9 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 ## Currently supported bank formats
 * Own bank format (.WOPL) (Specification in the **WOPL-and-OPLI-Specification.txt** file)
 * Junglevision patch (.OP3)
-* DMX OPL-2 (.OP2)
-* Apogee Sound System timbre formats (.TMB)
-* SoundBlaster IBK files (.IBK)
+* DMX OPL-2 (.OP2) ([Specification](http://www.shikadi.net/moddingwiki/OP2_Bank_Format))
+* Apogee Sound System timbre formats (.TMB) ([Specification](http://www.shikadi.net/moddingwiki/Apogee_Sound_System_Timbre_Format))
+* SoundBlaster IBK files (.IBK) ([Specification](http://www.shikadi.net/moddingwiki/IBK_Format))
 * AdLib/HMI BNK files (.BNK) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Instrument_Bank_Format))
 * AdLib Timbe bank files (.SND, .TIM) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Timbre_Bank_Format))
 * Global Timbre Library files for Audio Interface Library (.AD, .OPL) ([Specification](http://www.shikadi.net/moddingwiki/Global_Timbre_Library))
