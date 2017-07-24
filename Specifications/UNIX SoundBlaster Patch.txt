@@ -1,5 +1,4 @@
-Here is the layout of a SoundBlaster patch (as
-I suppose it to be):
+Here is the layout of a SoundBlaster patch (as I suppose it to be):
 
 offset:
  0-3: "SBI", 0x1a
@@ -46,3 +45,4 @@ like 42-43, and 55-56 are like 44-45.  57 is like
 58-59 are unused.
 53-54
 			--gl
+

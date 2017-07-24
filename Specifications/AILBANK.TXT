@@ -1,0 +1,64 @@
+Miles Design AIL 2.0 Global Timbre Library Format (.AD/.OPL)
+------------------------------------------------------------
+
+Every instrument has a bank number and a patch number. The patch number is
+selected via MIDI Program Change messages, the bank number via controller
+number 114.
+
+Bank number 127 is special: It represents Rhythm channel instruments.
+The patch number on bank 127 is selected via the key number on MIDI channel 0x09
+
+OPL2 uses a bank file with the .AD extension, OPL3 with the .OPL extension.
+.AD files will only contain 2-OP instruments; .OPL files can contain
+both 2-OP and 4-OP instruments. The bank file starts with the index of
+the following format:
+
+For every instrument in the file:
+	byte	programNumber;
+	byte	bankNumber;
+	dword	fileOffset;
+
+The end of the index is marked by the programNumber and bankNumber being both 0xFF.
+
+Format of a 2-OP instrument:
+	word	size;			// including itself, value 0x0E denotes 2-OP instrument
+	byte	transpose;
+	byte	op0_misc;		// register 0x20
+	byte	op0_scaleLevel;		// register 0x40
+	byte	op0_attackDecay;	// register 0x60
+	byte	op0_sustainRelease;	// register 0x80
+	byte	op0_waveform;		// register 0xE0
+	byte	feedbackConnection;	// register 0xC0
+	byte	op1_misc;		// register 0x23
+	byte	op1_scaleLevel;		// register 0x43
+	byte	op1_attackDecay;	// register 0x63
+	byte	op1_sustainRelease;	// register 0x83
+	byte	op1_waveform;		// register 0xE3
+
+Format of a 4-OP instrument:
+	word	size;			// including itself, value 0x19 denotes 2-OP instrument
+	byte	transpose;
+	byte	op0_misc;		// register 0x20
+	byte	op0_scaleLevel;		// register 0x40
+	byte	op0_attackDecay;	// register 0x60
+	byte	op0_sustainRelease;	// register 0x80
+	byte	op0_waveform;		// register 0xE0
+	byte	feedbackConnection1;	// bits 0-6 go into register 0xC0 bits 0-6, bit 7 goes into register 0xC3 bit 0
+	byte	op1_misc;		// register 0x23
+	byte	op1_scaleLevel;		// register 0x43
+	byte	op1_attackDecay;	// register 0x63
+	byte	op1_sustainRelease;	// register 0x83
+	byte	op1_waveform;		// register 0xE3
+	byte	op2_misc;		// register 0x28
+	byte	op2_scaleLevel;		// register 0x48
+	byte	op2_attackDecay;	// register 0x68
+	byte	op2_sustainRelease;	// register 0x88
+	byte	op2_waveform;		// register 0xE8
+	byte	unused;			// unused, as feedback1's bit 7 is used instead for register 0xC3
+	byte	op3_misc;		// register 0x2B
+	byte	op3_scaleLevel;		// register 0x4B
+	byte	op3_attackDecay;	// register 0x6B
+	byte	op3_sustainRelease;	// register 0x8B
+	byte	op3_waveform;		// register 0xEB
+
+

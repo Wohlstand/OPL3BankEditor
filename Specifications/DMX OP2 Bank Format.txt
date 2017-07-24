@@ -1,0 +1,126 @@
+------------------------- DMX OP2 Bank Format -------------------------
+
+The OP2 Bank Format is an instrument bank format used by the DMX sound library
+developed by Paul Radek of Digital Expressions, Inc. The 128 melodic and
+47 percussion instrument limit was most likely chosen so that a single OP2 file
+could store all the instruments for a General MIDI song. This bank has support
+for two-voice instruments to provide support for pseudo four-operator
+instruments. File of this format usually has GENMIDI name without extension as
+embedded WAD resource, but also can have .OP2 extension.
+
+
+== File format ==
+
+Data type       | Name          | Description
+===============================================================================
+char[8]         | magic 	    | #OPL_II# signature, doesn't null terminated
+BYTE[175][36] 	| instrument 	| Set of 175 instrument entry
+char[175][32] 	| names 	    | Instrument names per every instrument entry,
+                |               | must be null terminated
+
+
+== Instrument ==
+Each bank contains 128 melodic and 47 percussion instruments.
+
+
+Data type | Name           | OPL base register  | Description
+===============================================================================
+UINT16LE  | flags          | N/A                | Instrument flags:
+          |                |                    | 0x01 - fixed pitch,
+          |                |                    | 0x02 - Unknown flag,
+          |                |                    | 0x04 - Double-voice mode
+-------------------------------------------------------------------------------
+UINT8     | fineTune       | N/A                | Second voice detune level
+-------------------------------------------------------------------------------
+UINT8     | noteNum        | N/A                | Percussion note number
+          |                |                    | (between 0 and 128)
+======= First voice ===========================================================
+UINT8     | iModChar1      | 0x20               | Modulator characteristic
+          |                |                    | (Mult, KSR, EG, VIB, AM)
+-------------------------------------------------------------------------------
+UINT8     | iModAttack1    | 0x60               | Modulator attack/decay level
+-------------------------------------------------------------------------------
+UINT8     | iModSustain1   | 0x80               | Modulator sustain/release
+-------------------------------------------------------------------------------
+UINT8     | iModWaveSel1   | 0xE0               | Modulator wave select
+-------------------------------------------------------------------------------
+UINT8     | iModScale1     | 0x40               | Modulator key scaling
+          |                |                    | (first two bits)
+-------------------------------------------------------------------------------
+UINT8     | iModLevel1     | 0x40               | Modulator output level
+          |                |                    | (last six bits)
+-------------------------------------------------------------------------------
+UINT8     | iFeedback1     | 0xC0               | Feedback/connection
+-------------------------------------------------------------------------------
+UINT8     | iCarChar1      | 0x23               | Carrier characteristic
+          |                |                    | (Mult, KSR, EG, VIB, AM)
+-------------------------------------------------------------------------------
+UINT8     | iCarAttack1    | 0x63               | Carrier attack/decay level
+-------------------------------------------------------------------------------
+UINT8     | iCarSustain1   | 0x83               | Carrier sustain/release level
+-------------------------------------------------------------------------------
+UINT8     | iCarWaveSel1   | 0xE3               | Carrier wave select
+-------------------------------------------------------------------------------
+UINT8     | iCarScale1     | 0x43               | Carrier key scaling
+          |                |                    | (first two bits)
+-------------------------------------------------------------------------------
+UINT8     | iCarLevel1     | 0x43               | Carrier output level
+          |                |                    | (last six bits)
+-------------------------------------------------------------------------------
+UINT8     | reserved1      | N/A                | Unused byte
+-------------------------------------------------------------------------------
+INT16LE   | noteOffset1    | N/A                | MIDI note offset
+          |                |                    | for a first voice
+======= Second voice ==========================================================
+UINT8     | iModChar2      | 0x20               | Modulator characteristic
+          |                |                    | (Mult, KSR, EG, VIB, AM)
+-------------------------------------------------------------------------------
+UINT8     | iModAttack2    | 0x60               | Modulator attack/decay level
+-------------------------------------------------------------------------------
+UINT8     | iModSustain2   | 0x80               | Modulator sustain/release
+-------------------------------------------------------------------------------
+UINT8     | iModWaveSel2   | 0xE0               | Modulator wave select
+-------------------------------------------------------------------------------
+UINT8     | iModScale2     | 0x40               | Modulator key scaling
+          |                |                    | (first two bits)
+-------------------------------------------------------------------------------
+UINT8     | iModLevel2     | 0x40               | Modulator output level
+          |                |                    | (last six bits)
+-------------------------------------------------------------------------------
+UINT8     | iFeedback2     | 0xC0               | Feedback/connection
+-------------------------------------------------------------------------------
+UINT8     | iCarChar2      | 0x23               | Carrier characteristic
+          |                |                    | (Mult, KSR, EG, VIB, AM)
+-------------------------------------------------------------------------------
+UINT8     | iCarAttack2    | 0x63               | Carrier attack/decay level
+-------------------------------------------------------------------------------
+UINT8     | iCarSustain2   | 0x83               | Carrier sustain/release level
+-------------------------------------------------------------------------------
+UINT8     | iCarWaveSel2   | 0xE3               | Carrier wave select
+-------------------------------------------------------------------------------
+UINT8     | iCarScale2     | 0x43               | Carrier key scaling
+          |                |                    | (first two bits)
+-------------------------------------------------------------------------------
+UINT8     | iCarLevel2     | 0x43               | Carrier output level
+          |                |                    | (last six bits)
+-------------------------------------------------------------------------------
+UINT8     | reserved2      | N/A                | Unused byte
+-------------------------------------------------------------------------------
+INT16LE   | noteOffset2    | N/A                | MIDI note offset
+          |                |                    | for a second voice
+===============================================================================
+
+
+== Instrument names ==
+After 175'th instrument is folowing an array of 32-byte null-terminated
+instrument names
+
+== Fine tune ==
+Fine tune value is an index offset of frequencies table. 128 is a center,
+i.e. don't detune. Formula of index offset is: (fine_tune / 2) - 64. Each unit
+of fine tune field is approximately equal to 1/0.015625 of tone.
+
+== Percussion instruments ==
+Percussion instruments are in range between 35 (Bass drum 1)
+and 81 (Open Triangle) MIDI indeces.
+

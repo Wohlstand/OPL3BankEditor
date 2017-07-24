@@ -1,0 +1,52 @@
+---------------------- Apogee Sound System Timbre Format ----------------------
+The Apogee Sound System Timbre Format is an instrument bank format used by
+the Apogee Sound System library developed by 3D Realms. The 128 melodic and
+128 percussion instrument limit was most likely chosen so that a single
+TMB file could store all the instruments for a General MIDI song.
+Files of this format are has .tmb extension.
+
+
+== File format ==
+TMB files have no header and signature.
+The file contains 256 13-byte instrument entries (first 128 are melodic,
+and next 128 are percussion).
+
+
+Data type | Name     | OPL base register | Description
+==============================================================================
+UINT8     | SAVEK[0] | 0x20              | Modulator characteristic
+          |          |                   | (Mult, KSR, EG, VIB and AM flags)
+------------------------------------------------------------------------------
+UINT8     | SAVEK[1] | 0x23              | Carrier characteristic
+          |          |                   | (Mult, KSR, EG, VIB and AM flags)
+------------------------------------------------------------------------------
+UINT8     | Level[0] | 0x40              | Modulator key scaling/output level
+------------------------------------------------------------------------------
+UINT8     | Level[1] | 0x43              | Carrier key scaling/output level
+------------------------------------------------------------------------------
+UINT8     | Env1[0]  | 0x60              | Modulator attack/decay level
+------------------------------------------------------------------------------
+UINT8     | Env1[1]  | 0x63              | Carrier attack/decay level
+------------------------------------------------------------------------------
+UINT8     | Env2[0]  | 0x80              | Modulator sustain/release level
+------------------------------------------------------------------------------
+UINT8     | Env2[1]  | 0x83              | Carrier sustain/release level
+------------------------------------------------------------------------------
+UINT8     | Wave[0]  | 0xE0              | Modulator wave select
+------------------------------------------------------------------------------
+UINT8     | Wave[1]  | 0xE3              | Carrier wave select
+------------------------------------------------------------------------------
+UINT8     | Feedback | 0xC0              | Feedback/connection
+------------------------------------------------------------------------------
+INT8      | Transpose| N/A               | Note offset for melodic instruments,
+          |          |                   | and key number for percussion
+------------------------------------------------------------------------------
+INT8      | Velocity | N/A               | Velocity offset
+==============================================================================
+
+The TMB format is directly based on IBK Format, and has first 12 bytes be same
+as in the IBK Format. Official MAKETMB.EXE utility (Can be found with the
+source code of 3D Realms games in the Audio Library public folder) generates
+TMB files from the set of IBK files.
+
+
