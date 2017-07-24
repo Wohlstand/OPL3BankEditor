@@ -25,9 +25,6 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 * Id-Software Music Format (.IMF) ([Specification](http://www.shikadi.net/moddingwiki/IMF_Format))
 * Creative Music Format (.CMF) ([Specification](http://www.shikadi.net/moddingwiki/CMF_Format))
 
-## Comming soon
-* Own bank format which supports all parameters provided by editor, and also implement support for GS and XG standard into ADLMIDI
-
 ## Download
 * **Stable builds:** https://github.com/Wohlstand/OPL3BankEditor/releases
 * **Fresh dev builds:**
