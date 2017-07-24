@@ -22,7 +22,14 @@
 #
 #-------------------------------------------------
 
-QT += core gui widgets multimedia
+QT += core gui
+greaterThan(QT_MAJOR_VERSION, 4):{
+    QT += widgets multimedia
+    DEFINES += ENABLE_AUDIO_TESTING
+    CONFIG += c++11
+} else {
+    QMAKE_CXXFLAGS += -std=c++11
+}
 
 TEMPLATE = app
 

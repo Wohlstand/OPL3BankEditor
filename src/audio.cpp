@@ -25,6 +25,7 @@
 void BankEditor::initAudio()
 {
     /*INIT AUDIO!!!*/
+    #ifdef ENABLE_AUDIO_TESTING
     m_device = QAudioDeviceInfo::defaultOutputDevice();
     connect(&m_pushTimer, SIGNAL(timeout()), SLOT(pushTimerExpired()));
     m_format.setSampleRate(44100);
@@ -40,10 +41,13 @@ void BankEditor::initAudio()
         //qWarning() << "Default format not supported - trying to use nearest";
         m_format = info.nearestFormat(m_format);
     }
-
     m_audioOutput = new QAudioOutput(m_device, m_format, this);
     m_audioOutput->setVolume(1.0);
     m_generator = new Generator(uint32_t(m_format.sampleRate()), this);
+    #else
+    m_generator = new Generator(uint32_t(44100), this);
+    #endif
+
     //Test note
     connect(ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(PlayNote()));
     connect(ui->testNote,  SIGNAL(released()), m_generator,  SLOT(NoteOffAllChans()));
@@ -68,7 +72,11 @@ void BankEditor::initAudio()
     //Shut up that annoying noice!
     connect(ui->shutUp, SIGNAL(clicked()), m_generator, SLOT(Silence()));
     //Note to test
+    #if QT_VERSION >= 0x050000
     connect(ui->noteToTest, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), m_generator, &Generator::changeNote);
+    #else
+    connect(ui->noteToTest, SIGNAL(valueChanged(int)), m_generator, SLOT(changeNote(int32_t)));
+    #endif
     m_generator->changeNote(ui->noteToTest->value());
     //Deep tremolo and vibrato
     connect(ui->deepVibrato,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepVibrato(bool)));
@@ -76,9 +84,15 @@ void BankEditor::initAudio()
     //Generator's debug info
     connect(m_generator, SIGNAL(debugInfo(QString)), ui->debugBox, SLOT(setText(QString)));
     //Key pressed on piano bar
+    #if QT_VERSION >= 0x050000
     connect(ui->piano, &Piano::gotNote,     ui->noteToTest, &QSpinBox::setValue);
     connect(ui->piano, &Piano::pressed,     m_generator,    &Generator::PlayNote);
     connect(ui->piano, &Piano::released,    m_generator,    &Generator::NoteOffAllChans);
+    #else
+    connect(ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
+    connect(ui->piano, SIGNAL(pressed()),   m_generator,    SLOT(PlayNote()));
+    connect(ui->piano, SIGNAL(released()),  m_generator,    SLOT(NoteOffAllChans()));
+    #endif
     //Piano on the importer dialog pressed
     m_importer->connect(m_importer->ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
     m_importer->connect(m_importer->ui->piano, SIGNAL(pressed()),    m_generator, SLOT(PlayNote()));
@@ -88,12 +102,15 @@ void BankEditor::initAudio()
     m_importer->connect(m_importer->ui->testNote,  SIGNAL(released()), m_generator,  SLOT(NoteOffAllChans()));
     //Start generator!
     m_generator->start();
+    #ifdef ENABLE_AUDIO_TESTING
     m_output = m_audioOutput->start();
     m_pushTimer.start(4);
+    #endif
 }
 
 void BankEditor::pushTimerExpired()
 {
+    #ifdef ENABLE_AUDIO_TESTING
     if(m_audioOutput && m_audioOutput->state() != QAudio::StoppedState)
     {
         int chunks = m_audioOutput->bytesFree() / m_audioOutput->periodSize();
@@ -111,6 +128,7 @@ void BankEditor::pushTimerExpired()
             --chunks;
         }
     }
+    #endif
 }
 
 void BankEditor::keyPressEvent(QKeyEvent *event)

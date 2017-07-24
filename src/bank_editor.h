@@ -19,7 +19,9 @@
 #ifndef BANK_EDITOR_H
 #define BANK_EDITOR_H
 
+#ifdef ENABLE_AUDIO_TESTING
 #include <QAudioOutput>
+#endif
 #include <QTimer>
 #include <QMainWindow>
 #include <QList>
@@ -89,6 +91,7 @@ private:
     //! Timer to push audio data
     QTimer           m_pushTimer;
 
+    #ifdef ENABLE_AUDIO_TESTING
     //! Audio device spec
     QAudioDeviceInfo m_device;
     //! Audio output interface
@@ -97,6 +100,7 @@ private:
     QIODevice       *m_output;//not owned
     //! Audio format preferences
     QAudioFormat     m_format;
+    #endif
 
     /*!
      * \brief Initializes audio subsystem and FM generator

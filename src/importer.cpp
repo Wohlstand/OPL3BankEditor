@@ -22,8 +22,8 @@
 
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QUrl>
 #include <QMimeData>
-#include <QMimeType>
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -225,7 +225,6 @@ void Importer::dropEvent(QDropEvent *e)
     foreach(const QUrl &url, e->mimeData()->urls())
     {
         const QString &fileName = url.toLocalFile();
-
         if(openFile(fileName))
             break; //Only first valid file!
     }
@@ -511,7 +510,7 @@ void Importer::on_importReplace_clicked()
     ui->instruments->clearSelection();
 }
 
-static inline void importInstrument(QVector<FmBank::Instrument> &store, FmBank::Instrument& inst, int idDst)
+static inline void importInstrument(QVector<FmBank::Instrument> &store, FmBank::Instrument &inst, int idDst)
 {
     if(store.size() <= idDst)
     {
@@ -537,11 +536,11 @@ void Importer::on_doImport_clicked()
         {
             int id = item->data(Qt::UserRole).toInt();
             importInstrument(m_main->isDrumsMode() ?
-                                 m_main->m_bank.Ins_Percussion_box :
-                                 m_main->m_bank.Ins_Melodic_box,
+                             m_main->m_bank.Ins_Percussion_box :
+                             m_main->m_bank.Ins_Melodic_box,
                              ui->melodic->isChecked() ?
-                                 m_bank.Ins_Melodic_box[id] :
-                                 m_bank.Ins_Percussion_box[id], id);
+                             m_bank.Ins_Melodic_box[id] :
+                             m_bank.Ins_Percussion_box[id], id);
         }
     }
     else
@@ -550,11 +549,11 @@ void Importer::on_doImport_clicked()
         {
             int id = selected[0]->data(Qt::UserRole).toInt();
             importInstrument(m_main->isDrumsMode() ?
-                                 m_main->m_bank.Ins_Percussion_box :
-                                 m_main->m_bank.Ins_Melodic_box,
+                             m_main->m_bank.Ins_Percussion_box :
+                             m_main->m_bank.Ins_Melodic_box,
                              ui->melodic->isChecked() ?
-                                 m_bank.Ins_Melodic_box[id] :
-                                 m_bank.Ins_Percussion_box[id], m_main->m_recentNum);
+                             m_bank.Ins_Melodic_box[id] :
+                             m_bank.Ins_Percussion_box[id], m_main->m_recentNum);
         }
         else
         {

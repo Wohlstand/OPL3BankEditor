@@ -18,6 +18,7 @@
 
 #include <QSet>
 #include <QByteArray>
+#include <algorithm>
 
 #include "format_imf_importer.h"
 #include "../common.h"
