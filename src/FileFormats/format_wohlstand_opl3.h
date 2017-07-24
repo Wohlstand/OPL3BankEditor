@@ -22,7 +22,7 @@
 #include "ffmt_base.h"
 
 /**
- * @brief Reader and Writer of the Junglevision Patch file format
+ * @brief Reader and Writer of the Wohlstand's Standard OPL3 Bank
  */
 class WohlstandOPL3 final : public FmBankFormatBase
 {

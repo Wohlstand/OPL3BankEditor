@@ -24,9 +24,6 @@
 class SbIBK_DOS final : public FmBankFormatBase
 {
 public:
-    SbIBK_DOS();
-    ~SbIBK_DOS() = default;
-
     bool    detect(const QString &filePath, char *magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
@@ -48,9 +45,6 @@ class SbIBK_UNIX_READ final : public FmBankFormatBase
 {
     BankFormats m_recentFormat = BankFormats::FORMAT_UNKNOWN;
 public:
-    SbIBK_UNIX_READ();
-    ~SbIBK_UNIX_READ() = default;
-
     bool    detect(const QString &filePath, char *magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
     int     formatCaps() override;
@@ -71,9 +65,6 @@ public:
 class SbIBK_UNIX2OP_SAVE final : public FmBankFormatBase
 {
 public:
-    SbIBK_UNIX2OP_SAVE();
-    ~SbIBK_UNIX2OP_SAVE() = default;
-
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() override;
     QString formatName() override;
@@ -84,9 +75,6 @@ public:
 class SbIBK_UNIX2OP_DRUMS_SAVE final : public FmBankFormatBase
 {
 public:
-    SbIBK_UNIX2OP_DRUMS_SAVE();
-    ~SbIBK_UNIX2OP_DRUMS_SAVE() = default;
-
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() override;
     QString formatName() override;
@@ -97,8 +85,6 @@ public:
 class SbIBK_UNIX4OP_SAVE final : public FmBankFormatBase
 {
 public:
-    SbIBK_UNIX4OP_SAVE();
-    ~SbIBK_UNIX4OP_SAVE() = default;
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() override;
     QString formatName() override;
@@ -109,8 +95,6 @@ public:
 class SbIBK_UNIX4OP_DRUMS_SAVE final : public FmBankFormatBase
 {
 public:
-    SbIBK_UNIX4OP_DRUMS_SAVE();
-    ~SbIBK_UNIX4OP_DRUMS_SAVE() = default;
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() override;
     QString formatName() override;

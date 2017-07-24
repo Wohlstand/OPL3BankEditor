@@ -26,9 +26,6 @@ bool JunleVizion::detect(const QString &, char *magic)
     return (strncmp(magic, jv_magic, 32) == 0);
 }
 
-JunleVizion::JunleVizion() : FmBankFormatBase()
-{}
-
 FfmtErrCode JunleVizion::loadFile(QString filePath, FmBank &bank)
 {
     uint16_t count_melodic     = 0;

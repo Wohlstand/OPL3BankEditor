@@ -19,9 +19,6 @@
 #include "format_bisqwit.h"
 #include "../common.h"
 
-BisqwitBank::BisqwitBank()
-{}
-
 bool BisqwitBank::detect(const QString &filePath, char *)
 {
     if(hasExt(filePath, ".adlraw"))

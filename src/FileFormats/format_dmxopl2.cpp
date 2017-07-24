@@ -26,9 +26,6 @@ bool DmxOPL2::detect(const QString &, char *magic)
     return (strncmp(magic, dmx_magic, 8) == 0);
 }
 
-DmxOPL2::DmxOPL2() : FmBankFormatBase()
-{}
-
 FfmtErrCode DmxOPL2::loadFile(QString filePath, FmBank &bank)
 {
     char magic[8];

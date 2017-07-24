@@ -27,8 +27,6 @@
 class CMF_Importer : public FmBankFormatBase
 {
 public:
-    CMF_Importer();
-    ~CMF_Importer() = default;
     bool        detect(const QString &filePath, char* magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
     int         formatCaps() override;

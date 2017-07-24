@@ -97,9 +97,6 @@ struct GTL_Head // GTL file header entry structure
     uint32_t offset = 0;
 };
 
-AIL_GTL::AIL_GTL() : FmBankFormatBase()
-{}
-
 FfmtErrCode AIL_GTL::loadFile(QString filePath, FmBank &bank)
 {
     QFile file(filePath);

@@ -21,9 +21,6 @@
 
 static const char *cmf_magic = "CTMF";
 
-CMF_Importer::CMF_Importer()
-{}
-
 bool CMF_Importer::detect(const QString &, char *magic)
 {
     return (strncmp(magic, cmf_magic, 4) == 0);

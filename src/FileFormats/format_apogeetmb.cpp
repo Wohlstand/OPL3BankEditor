@@ -19,9 +19,6 @@
 #include "format_apogeetmb.h"
 #include "../common.h"
 
-ApogeeTMB::ApogeeTMB() : FmBankFormatBase()
-{}
-
 bool ApogeeTMB::detect(const QString &filePath, char* /*magic*/)
 {
     if(hasExt(filePath, ".tmb"))

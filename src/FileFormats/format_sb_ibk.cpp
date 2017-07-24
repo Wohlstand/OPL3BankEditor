@@ -509,9 +509,6 @@ FfmtErrCode SbIBK_impl::saveFileSBOP(QString filePath, FmBank &bank, bool fourOp
 
 
 
-SbIBK_DOS::SbIBK_DOS() : FmBankFormatBase()
-{}
-
 bool SbIBK_DOS::detect(const QString &, char *magic)
 {
     return SbIBK_impl::detectIBK(magic);
@@ -584,9 +581,6 @@ InstFormats SbIBK_DOS::formatInstId()
 
 
 
-
-SbIBK_UNIX_READ::SbIBK_UNIX_READ() : FmBankFormatBase()
-{}
 
 bool SbIBK_UNIX_READ::detect(const QString &filePath, char *)
 {
@@ -747,9 +741,6 @@ InstFormats SbIBK_UNIX_READ::formatInstId()
 
 
 
-SbIBK_UNIX2OP_SAVE::SbIBK_UNIX2OP_SAVE() : FmBankFormatBase()
-{}
-
 FfmtErrCode SbIBK_UNIX2OP_SAVE::saveFile(QString filePath, FmBank &bank)
 {
     return SbIBK_impl::saveFileSBOP(filePath, bank, false, false);
@@ -776,9 +767,6 @@ BankFormats SbIBK_UNIX2OP_SAVE::formatId()
 }
 
 
-
-SbIBK_UNIX2OP_DRUMS_SAVE::SbIBK_UNIX2OP_DRUMS_SAVE() : FmBankFormatBase()
-{}
 
 FfmtErrCode SbIBK_UNIX2OP_DRUMS_SAVE::saveFile(QString filePath, FmBank &bank)
 {
@@ -808,9 +796,6 @@ BankFormats SbIBK_UNIX2OP_DRUMS_SAVE::formatId()
 
 
 
-SbIBK_UNIX4OP_SAVE::SbIBK_UNIX4OP_SAVE() : FmBankFormatBase()
-{}
-
 FfmtErrCode SbIBK_UNIX4OP_SAVE::saveFile(QString filePath, FmBank &bank)
 {
     return SbIBK_impl::saveFileSBOP(filePath, bank, true, false);
@@ -836,9 +821,6 @@ BankFormats SbIBK_UNIX4OP_SAVE::formatId()
     return BankFormats::FORMAT_SB4OP;
 }
 
-
-SbIBK_UNIX4OP_DRUMS_SAVE::SbIBK_UNIX4OP_DRUMS_SAVE() : FmBankFormatBase()
-{}
 
 FfmtErrCode SbIBK_UNIX4OP_DRUMS_SAVE::saveFile(QString filePath, FmBank &bank)
 {

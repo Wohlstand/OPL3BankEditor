@@ -25,9 +25,6 @@ class AdLibAndHmiBnk_reader final : public FmBankFormatBase
 {
     BankFormats m_recentFormat = BankFormats::FORMAT_UNKNOWN;
 public:
-    AdLibAndHmiBnk_reader();
-    ~AdLibAndHmiBnk_reader() = default;
-
     bool detect(const QString &filePath, char* magic) override;
     FfmtErrCode  loadFile(QString filePath, FmBank &bank) override;
     int  formatCaps() override;
@@ -47,9 +44,6 @@ public:
 class AdLibBnk_writer final : public FmBankFormatBase
 {
 public:
-    AdLibBnk_writer();
-    ~AdLibBnk_writer() = default;
-
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int  formatCaps() override;
     QString formatName() override;
@@ -60,9 +54,6 @@ public:
 class HmiBnk_writer final : public FmBankFormatBase
 {
 public:
-    HmiBnk_writer();
-    ~HmiBnk_writer() = default;
-
     FfmtErrCode  saveFile(QString filePath, FmBank &bank) override;
     int  formatCaps() override;
     QString formatName() override;

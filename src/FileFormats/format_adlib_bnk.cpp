@@ -526,10 +526,6 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
 
 
 
-
-AdLibAndHmiBnk_reader::AdLibAndHmiBnk_reader() : FmBankFormatBase()
-{}
-
 bool AdLibAndHmiBnk_reader::detect(const QString &, char *magic)
 {
     return AdLibBnk_impl::detectBank(magic);
@@ -740,10 +736,6 @@ InstFormats AdLibAndHmiBnk_reader::formatInstId()
 
 
 
-
-AdLibBnk_writer::AdLibBnk_writer() : FmBankFormatBase()
-{}
-
 FfmtErrCode AdLibBnk_writer::saveFile(QString filePath, FmBank &bank)
 {
     return AdLibBnk_impl::saveBankFile(filePath, bank, AdLibBnk_impl::BNK_ADLIB);
@@ -772,9 +764,6 @@ BankFormats AdLibBnk_writer::formatId()
 
 
 
-
-HmiBnk_writer::HmiBnk_writer() : FmBankFormatBase()
-{}
 
 FfmtErrCode HmiBnk_writer::saveFile(QString filePath, FmBank &bank)
 {

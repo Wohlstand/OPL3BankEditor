@@ -27,9 +27,6 @@
 class ApogeeTMB final : public FmBankFormatBase
 {
 public:
-    ApogeeTMB();
-    ~ApogeeTMB() = default;
-
     bool detect(const QString &filePath, char* magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;

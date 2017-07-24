@@ -49,9 +49,6 @@ static const uint16_t Operators[NUM_OF_CHANNELS * 2] =
     0x011, 0xFFF
 }; // operator 13
 
-IMF_Importer::IMF_Importer() : FmBankFormatBase()
-{}
-
 bool IMF_Importer::detect(const QString &filePath, char *)
 {
     if(hasExt(filePath, ".imf"))

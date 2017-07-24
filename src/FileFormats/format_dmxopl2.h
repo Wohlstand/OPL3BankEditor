@@ -27,9 +27,6 @@
 class DmxOPL2 final : public FmBankFormatBase
 {
 public:
-    DmxOPL2();
-    ~DmxOPL2() = default;
-
     enum DmxFlags
     {
         Dmx_FixedPitch  = 0x0001,
