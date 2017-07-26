@@ -61,74 +61,74 @@ struct OPL_PatchSetup
 
 class Generator : public QIODevice
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
-        Generator(uint32_t sampleRate, QObject *parent);
-        ~Generator();
+public:
+    Generator(uint32_t sampleRate, QObject *parent);
+    ~Generator();
 
-        void start();
-        void stop();
+    void start();
+    void stop();
 
-        qint64 readData(char *data, qint64 maxlen);
-        qint64 writeData(const char *data, qint64 len);
-        qint64 bytesAvailable() const;
+    qint64 readData(char *data, qint64 maxlen);
+    qint64 writeData(const char *data, qint64 len);
+    qint64 bytesAvailable() const;
 
-        void NoteOn(uint32_t c, double hertz);
-        void NoteOff(uint32_t c);
-        void Touch_Real(uint32_t c, uint32_t volume);
-        void Touch(uint32_t c, uint32_t volume);
-        void Patch(uint32_t c, uint32_t i);
-        void Pan(uint32_t c, uint32_t value);
-        void PlayNoteF(int noteID);
-        void PlayDrum(uint8_t drum, int noteID);
-        void switch4op(bool enabled);
+    void NoteOn(uint32_t c, double hertz);
+    void NoteOff(uint32_t c);
+    void Touch_Real(uint32_t c, uint32_t volume);
+    void Touch(uint32_t c, uint32_t volume);
+    void Patch(uint32_t c, uint32_t i);
+    void Pan(uint32_t c, uint32_t value);
+    void PlayNoteF(int noteID);
+    void PlayDrum(uint8_t drum, int noteID);
+    void switch4op(bool enabled);
 
-    public slots:
-        void Silence();
-        void NoteOffAllChans();
+public slots:
+    void Silence();
+    void NoteOffAllChans();
 
-        void PlayNote();
-        void PlayMajorChord();
-        void PlayMinorChord();
-        void PlayAugmentedChord();
-        void PlayDiminishedChord();
-        void PlayMajor7Chord();
-        void PlayMinor7Chord();
+    void PlayNote();
+    void PlayMajorChord();
+    void PlayMinorChord();
+    void PlayAugmentedChord();
+    void PlayDiminishedChord();
+    void PlayMajor7Chord();
+    void PlayMinor7Chord();
 
-        void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
-        void changeNote(int newnote);
-        void changeDeepTremolo(bool enabled);
-        void changeDeepVibrato(bool enabled);
-        void changeAdLibPercussion(bool enabled);
-    signals:
-        void debugInfo(QString);
+    void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
+    void changeNote(int newnote);
+    void changeDeepTremolo(bool enabled);
+    void changeDeepVibrato(bool enabled);
+    void changeAdLibPercussion(bool enabled);
+signals:
+    void debugInfo(QString);
 
-    private:
-        void WriteReg(uint16_t address, uint8_t byte);
-        int32_t     note;
-        uint8_t     DeepTremoloMode;
-        uint8_t     DeepVibratoMode;
-        uint8_t     AdLibPercussionMode;
-        uint8_t     testDrum;
-        _opl3_chip  chip;
-        OPL_PatchSetup m_patch;
+private:
+    void WriteReg(uint16_t address, uint8_t byte);
+    int32_t     note;
+    uint8_t     DeepTremoloMode;
+    uint8_t     DeepVibratoMode;
+    uint8_t     AdLibPercussionMode;
+    uint8_t     testDrum;
+    _opl3_chip  chip;
+    OPL_PatchSetup m_patch;
 
-        uint8_t     m_regBD;
+    uint8_t     m_regBD;
 
-        int8_t      m_four_op_category[NUM_OF_CHANNELS * 2];
-        // 1 = quad-master, 2 = quad-slave, 0 = regular
-        // 3 = percussion BassDrum
-        // 4 = percussion Snare
-        // 5 = percussion Tom
-        // 6 = percussion Crash cymbal
-        // 7 = percussion Hihat
-        // 8 = percussion slave
+    int8_t      m_four_op_category[NUM_OF_CHANNELS * 2];
+    // 1 = quad-master, 2 = quad-slave, 0 = regular
+    // 3 = percussion BassDrum
+    // 4 = percussion Snare
+    // 5 = percussion Tom
+    // 6 = percussion Crash cymbal
+    // 7 = percussion Hihat
+    // 8 = percussion slave
 
-        //! index of operators pair, cached, needed by Touch()
-        uint16_t    m_ins[NUM_OF_CHANNELS];
-        //! value poked to B0, cached, needed by NoteOff)(
-        uint8_t     m_pit[NUM_OF_CHANNELS];
+    //! index of operators pair, cached, needed by Touch()
+    uint16_t    m_ins[NUM_OF_CHANNELS];
+    //! value poked to B0, cached, needed by NoteOff)(
+    uint8_t     m_pit[NUM_OF_CHANNELS];
 };
 
 #endif // GENERATOR_H
