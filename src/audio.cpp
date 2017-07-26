@@ -75,7 +75,7 @@ void BankEditor::initAudio()
     #if QT_VERSION >= 0x050000
     connect(ui->noteToTest, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), m_generator, &Generator::changeNote);
     #else
-    connect(ui->noteToTest, SIGNAL(valueChanged(int)), m_generator, SLOT(changeNote(int32_t)));
+    connect(ui->noteToTest, SIGNAL(valueChanged(int)), m_generator, SLOT(changeNote(int)));
     #endif
     m_generator->changeNote(ui->noteToTest->value());
     //Deep tremolo and vibrato

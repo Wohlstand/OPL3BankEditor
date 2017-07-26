@@ -97,7 +97,7 @@ class Generator : public QIODevice
         void PlayMinor7Chord();
 
         void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
-        void changeNote(int32_t newnote);
+        void changeNote(int newnote);
         void changeDeepTremolo(bool enabled);
         void changeDeepVibrato(bool enabled);
         void changeAdLibPercussion(bool enabled);
