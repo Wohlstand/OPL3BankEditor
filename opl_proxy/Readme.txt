@@ -3,5 +3,4 @@ to provide ability to test instruments on real OPL3 chip by running under Window
 
 On Windows NT family operating system this trick will not work.
 
-Build this tool is simple by any Borland C since 1992, OpenWattcom, or by DGGCPP
-
+Build this tool by OpenWatcom

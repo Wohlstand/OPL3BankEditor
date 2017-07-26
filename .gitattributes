@@ -1,8 +1,12 @@
 _Misc/*         linguist-vendored
 Bank_Examples/* linguist-vendored
 *.h             linguist-language=cpp
-*.bat           linguist-vendored
+*.bat           linguist-vendored text eol=crlf
 *.pro           linguist-vendored
 *.sh            linguist-vendored
 *.htm           linguist-vendored
+*.txt text eol=crlf
 
+# Watcom's project files
+*.wpj text eol=crlf
+*.tgt text eol=crlf

@@ -19,18 +19,19 @@
  */
 
 /*
-    Can be built by Borland C, OpenWattcom, or DGJPP
+    Can be built by OpenWattcom
  */
 
+#include <windows.h>
+#include <conio.h>
 #include <stdio.h>
 #include <bios.h>
 #include <dos.h>
 #include <string.h>
 
-#define BIOStimer   biostime(0, 0l);
-
-#define BIOSTICK    55			/* biostime() increases one tick about
-					               every 55 msec */
+#define DLLExport __declspec( dllexport )
+#define STDCall _stdcall
+/*#define STDCall*/
 
 typedef unsigned char   uint8_t;
 typedef char            int8_t;
@@ -40,75 +41,34 @@ typedef unsigned long   uint32_t;
 typedef long            int32_t;
 
 static const uint16_t   NewTimerFreq = 209;
-
-static const uint16_t   MaxCards = 1;
 static const uint16_t   OPLBase = 0x388;
 
-static uint32_t         BIOStimer_begin = 0;
-
-void mch_delay(int32_t msec)
-{
-	/*
-	 * We busy-wait here.  Unfortunately, delay() and usleep() have been
-	 * reported to give problems with the original Windows 95.  This is
-	 * fixed in service pack 1, but not everybody installed that.
-	 */
-	long starttime = biostime(0, 0L);
-	while(biostime(0, 0L) < starttime + msec / BIOSTICK);
-}
-
-void chipInit(void)
+DLLExport void STDCall chipInit(void)
 {
     unsigned TimerPeriod = 0x1234DDul / NewTimerFreq;
+    #ifndef _WIN32
     BIOStimer_begin = BIOStimer;
-    /*disable();*/
-    outportb(0x43, 0x34);
-    outportb(0x40, TimerPeriod & 0xFF);
-    outportb(0x40, TimerPeriod >>   8);
-    /*enable();*/
+    #endif
+    outp(0x43, 0x34);
+    outp(0x40, TimerPeriod & 0xFF);
+    outp(0x40, TimerPeriod >>   8);
 }
 
-void chipPoke(uint16_t index, uint16_t value)
+DLLExport void STDCall chipPoke(uint16_t index, uint16_t value)
 {
     uint16_t c;
     uint16_t o = index >> 8;
     uint16_t port = OPLBase + o * 2;
-    outportb(port, index);
-    for(c = 0; c < 6; ++c)  inportb(port);
-    outportb(port + 1, value);
-    for(c = 0; c < 35; ++c) inportb(port);
+    outp(port, index);
+    for(c = 0; c < 6; ++c)  inp(port);
+    outp(port + 1, value);
+    for(c = 0; c < 35; ++c) inp(port);
 }
 
 /* On Quit */
-void chipUnInit(void)
+DLLExport void STDCall chipUnInit(void)
 {
-    /* disable(); */
-    outportb(0x43, 0x34);
-    outportb(0x40, 0);
-    outportb(0x40, 0);
-    /* enable(); */
+    outp(0x43, 0x34);
+    outp(0x40, 0);
+    outp(0x40, 0);
 }
-
-int main()
-{
-    char cmd[4] = "XXX";
-    uint16_t reg = 0, value = 0;
-
-    chipInit(); /* Initialize OPL3 chip */
-
-    while(1)
-    {
-        scanf("%3s %X %X", cmd, &reg, &value);
-        if(strcmp(cmd, "EX") == 0)
-            break;
-        if(strcmp(cmd, "REG") == 0)
-            chipPoke(reg, value);
-        if(strcmp(cmd, "OUT") == 0)
-            printf("Received command %s with register %02X and value %02X\n", cmd, reg, value);
-    }
-
-    chipUnInit(); /* DeInitialize OPL3 chip */
-
-    return 0;
-}
-
