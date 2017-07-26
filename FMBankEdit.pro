@@ -29,6 +29,12 @@ greaterThan(QT_MAJOR_VERSION, 4):{
     CONFIG += c++11
 } else {
     QMAKE_CXXFLAGS += -std=c++11
+    win32: {
+        CONFIG += static
+        QMAKE_LFLAGS += -static-libgcc -static-libstdc++
+        DEFINES += snprintf=_snprintf
+        DEFINES += NO_NATIVE_OPEN_DIALOGS
+    }
 }
 
 TEMPLATE = app

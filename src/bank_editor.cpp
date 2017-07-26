@@ -295,7 +295,9 @@ bool BankEditor::saveFileAs()
 {
     QString filters         = FmBankFormatFactory::getSaveFiltersList();
     QString selectedFilter  = FmBankFormatFactory::getFilterFromFormat(m_recentFormat, (int)FormatCaps::FORMAT_CAPS_SAVE);
-    QString fileToSave      = QFileDialog::getSaveFileName(this, "Save bank file", m_recentPath, filters, &selectedFilter);
+    QString fileToSave      = QFileDialog::getSaveFileName(this, "Save bank file",
+                                                           m_recentPath, filters, &selectedFilter,
+                                                           FILE_OPEN_DIALOG_OPTIONS);
     if(fileToSave.isEmpty())
         return false;
     return saveBankFile(fileToSave, FmBankFormatFactory::getFormatFromFilter(selectedFilter));
@@ -312,7 +314,9 @@ bool BankEditor::saveInstFileAs()
     }
     QString filters = FmBankFormatFactory::getInstSaveFiltersList();
     QString selectedFilter = FmBankFormatFactory::getInstFilterFromFormat(m_recentInstFormat, (int)FormatCaps::FORMAT_CAPS_SAVE);
-    QString fileToSave = QFileDialog::getSaveFileName(this, "Save instrument file", m_recentPath, filters, &selectedFilter);
+    QString fileToSave = QFileDialog::getSaveFileName(this, "Save instrument file",
+                                                      m_recentPath, filters, &selectedFilter,
+                                                      FILE_OPEN_DIALOG_OPTIONS);
     if(fileToSave.isEmpty())
         return false;
     return saveInstrumentFile(fileToSave, FmBankFormatFactory::getInstFormatFromFilter(selectedFilter));
@@ -375,7 +379,9 @@ void BankEditor::on_actionOpen_triggered()
         return;
     QString filters = FmBankFormatFactory::getOpenFiltersList();
     QString fileToOpen;
-    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
+    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file",
+                                              m_recentPath, filters, nullptr,
+                                              FILE_OPEN_DIALOG_OPTIONS);
     if(fileToOpen.isEmpty())
         return;
     openFile(fileToOpen);

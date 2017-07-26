@@ -31,6 +31,12 @@
 
 #include "FileFormats/ffmt_base.h"
 
+#ifdef NO_NATIVE_OPEN_DIALOGS
+#define FILE_OPEN_DIALOG_OPTIONS QFileDialog::DontUseNativeDialog
+#else
+#define FILE_OPEN_DIALOG_OPTIONS 0
+#endif
+
 namespace Ui
 {
     class BankEditor;

@@ -195,7 +195,9 @@ void Importer::on_openBank_clicked()
 {
     QString filters = FmBankFormatFactory::getOpenFiltersList(true);
     QString fileToOpen;
-    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file", m_recentPath, filters);
+    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file",
+                                              m_recentPath, filters, nullptr,
+                                              FILE_OPEN_DIALOG_OPTIONS);
     if(fileToOpen.isEmpty())
         return;
     openFile(fileToOpen, true);
@@ -205,7 +207,9 @@ void Importer::on_openInst_clicked()
 {
     QString filters = FmBankFormatFactory::getInstOpenFiltersList(true);
     QString fileToOpen;
-    fileToOpen = QFileDialog::getOpenFileName(this, "Open instrument file", m_recentPath, filters);
+    fileToOpen = QFileDialog::getOpenFileName(this, "Open instrument file",
+                                              m_recentPath, filters, nullptr,
+                                              FILE_OPEN_DIALOG_OPTIONS);
     if(fileToOpen.isEmpty())
         return;
     openFile(fileToOpen, false);
