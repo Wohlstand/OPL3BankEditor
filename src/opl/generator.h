@@ -19,10 +19,24 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include "nukedopl3.h"
-#include "../bank.h"
+#include <QtGlobal>
+#if (QT_VERSION < 0x050000) && defined(_WIN32)
+#define ENABLE_OPL_PROXY
+#endif//QT<5 and WIN32
+
+#ifdef ENABLE_AUDIO_TESTING
+#define ENABLE_OPL_EMULATOR
+#endif//HasAudio
+
 #include <stdint.h>
 
+#ifdef ENABLE_OPL_EMULATOR
+#include "nukedopl3.h"
+#else
+typedef uint8_t Bit8u;
+#endif
+
+#include "../bank.h"
 #include <QIODevice>
 #include <QObject>
 
@@ -111,7 +125,9 @@ private:
     uint8_t     DeepVibratoMode;
     uint8_t     AdLibPercussionMode;
     uint8_t     testDrum;
-    _opl3_chip  chip;
+    #ifdef ENABLE_OPL_EMULATOR
+    _opl3_chip  m_chip;
+    #endif
     OPL_PatchSetup m_patch;
 
     uint8_t     m_regBD;

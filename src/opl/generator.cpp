@@ -19,6 +19,37 @@
 #include "generator.h"
 #include <qendian.h>
 #include <cmath>
+#ifdef ENABLE_OPL_PROXY
+#include <QSysInfo>
+#include <QMessageBox>
+extern "C"
+{
+    typedef void (_stdcall *opl_poke)(uint16_t index, uint16_t value);
+    typedef void (_stdcall *opl_init)(void);
+    typedef void (_stdcall *opl_unInit)(void);
+}
+static opl_poke     chip_oplPoke = NULL;
+static opl_init     chip_oplInit = NULL;
+static opl_unInit   chip_oplUninit = NULL;
+static HINSTANCE    chip_lib = NULL;
+
+template<class FunkPtr>
+void initOplFunction(FunkPtr &ptr, const char *procName)
+{
+    ptr = (FunkPtr)GetProcAddress(chip_lib, procName);
+    if(!ptr)
+    {
+        QMessageBox::warning(NULL,
+                             "liboplproxy.dll error",
+                             QString("Oops... I have failed to load %1 function:\n"
+                                     "Error %2\n"
+                                     "Continuing without FM sound.")
+                                    .arg(procName)
+                                    .arg(GetLastError()));
+    }
+}
+
+#endif
 
 #define BEND_COEFFICIENT 172.4387
 
@@ -150,8 +181,35 @@ Generator::Generator(uint32_t sampleRate,
         0x105,  0, 0x105, 1,  0x105, 0, // Pulse OPL3 enable
         0x001, 32, 0x105, 1             // Enable wave, OPL3 extensions
     };
-    memset(&chip, 0, sizeof(_opl3_chip));
-    OPL3_Reset(&chip, sampleRate);
+
+    #ifdef ENABLE_OPL_PROXY
+    QSysInfo::WinVersion wver = QSysInfo::windowsVersion();
+    bool m_enableProxy =    (wver == QSysInfo::WV_98) ||
+                            (wver == QSysInfo::WV_95) ||
+                            (wver == QSysInfo::WV_Me) ||
+                            (wver == QSysInfo::WV_32s);
+    if(m_enableProxy)
+    {
+        chip_lib = LoadLibraryA("liboplproxy.dll");
+        if(!chip_lib)
+            QMessageBox::warning(NULL, "liboplproxy.dll error", "Can't load liboplproxy.dll library");
+        else
+        {
+            initOplFunction(chip_oplInit,   "_chipInit@0");
+            initOplFunction(chip_oplPoke,   "_chipPoke@8");
+            initOplFunction(chip_oplUninit, "_chipUnInit@0");
+            if(chip_oplInit)
+                chip_oplInit();
+        }
+    }
+    #endif
+
+    #ifdef ENABLE_OPL_EMULATOR
+    memset(&m_chip, 0, sizeof(_opl3_chip));
+    OPL3_Reset(&m_chip, sampleRate);
+    #else
+    Q_UNUSED(sampleRate);
+    #endif
 
     for(uint32_t a = 0; a < 18; ++a)
         WriteReg(0xB0 + Channels[a], 0x00);
@@ -171,7 +229,19 @@ Generator::~Generator()
 
 void Generator::WriteReg(uint16_t address, uint8_t byte)
 {
-    OPL3_WriteReg(&chip, address, byte);
+    #ifdef ENABLE_OPL_PROXY
+    if(chip_oplPoke)
+        chip_oplPoke(address, byte);
+    #endif
+
+    #ifdef ENABLE_OPL_EMULATOR
+    OPL3_WriteReg(&m_chip, address, byte);
+    #endif
+
+    #if !defined(ENABLE_OPL_EMULATOR) && !defined(ENABLE_OPL_PROXY)
+    Q_UNUSED(address);
+    Q_UNUSED(byte);
+    #endif
 }
 
 void Generator::NoteOff(uint32_t c)
@@ -747,15 +817,23 @@ void Generator::start()
 
 void Generator::stop()
 {
+    #ifdef ENABLE_OPL_PROXY
+    if(chip_oplUninit)
+        chip_oplUninit();
+    #endif
     close();
 }
 
 qint64 Generator::readData(char *data, qint64 len)
 {
+    #ifdef ENABLE_OPL_EMULATOR
     int16_t *_out = reinterpret_cast<int16_t *>(data);
     len -= len % 4; //must be multiple 4!
     uint32_t lenS = (static_cast<uint32_t>(len) / 4);
-    OPL3_GenerateStream(&chip, _out, lenS);
+    OPL3_GenerateStream(&m_chip, _out, lenS);
+    #else
+    memset(data, 0, size_t(len));
+    #endif
     return len;
 }
 
@@ -768,5 +846,5 @@ qint64 Generator::writeData(const char *data, qint64 len)
 
 qint64 Generator::bytesAvailable() const
 {
-    return 4096;// + QIODevice::bytesAvailable();
+    return MAX_OPLGEN_BUFFER_SIZE;
 }
