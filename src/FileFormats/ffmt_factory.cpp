@@ -133,11 +133,15 @@ QString FmBankFormatFactory::getOpenFiltersList(bool import)
     for(FmBankFormatBase_uptr &p : g_formats)
     {
         Q_ASSERT(p.get());//It must be non-null!
-        if(!masks.isEmpty())
-            masks.append(' ');
         if(p->formatCaps() & (int)dst)
         {
-            masks.append(p->formatExtensionMask());
+            //Don't add duplicated extensions into "supported" list
+            if(!masks.contains(p->formatExtensionMask()))
+            {
+                if(!masks.isEmpty())
+                    masks.append(' ');
+                masks.append(p->formatExtensionMask());
+            }
             formats.append(QString("%1 (%2);;").arg(p->formatName()).arg(p->formatExtensionMask()));
         }
     }
@@ -159,11 +163,15 @@ QString FmBankFormatFactory::getInstOpenFiltersList(bool import)
     for(FmBankFormatBase_uptr &p : g_formatsInstr)
     {
         Q_ASSERT(p.get());//It must be non-null!
-        if(!masks.isEmpty())
-            masks.append(' ');
         if(p->formatInstCaps() & (int)dst)
         {
-            masks.append(p->formatInstExtensionMask());
+            //Don't add duplicated extensions into "supported" list
+            if(!masks.contains(p->formatExtensionMask()))
+            {
+                if(!masks.isEmpty())
+                    masks.append(' ');
+                masks.append(p->formatExtensionMask());
+            }
             formats.append(QString("%1 (%2);;").arg(p->formatInstName()).arg(p->formatInstExtensionMask()));
         }
     }
