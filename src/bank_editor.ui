@@ -24,7 +24,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources/resources.qrc">
-    <normaloff>:/icons/opl3icon.ico</normaloff>:/icons/opl3icon.ico</iconset>
+    <normaloff>:/icons/opl3_16.png</normaloff>:/icons/opl3_16.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_2">
@@ -2157,7 +2157,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>970</width>
-     <height>22</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

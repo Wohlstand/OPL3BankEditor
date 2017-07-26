@@ -44,6 +44,15 @@ static void setInstrumentMetaInfo(QListWidgetItem *item, int index)
     item->setToolTip(QString("Bank %1, ID: %2").arg(index / 128).arg(index % 128));
 }
 
+static QIcon makeWindowIcon()
+{
+    QIcon icon;
+    icon.addPixmap(QPixmap(":/icons/opl3_16.png"));
+    icon.addPixmap(QPixmap(":/icons/opl3_32.png"));
+    icon.addPixmap(QPixmap(":/icons/opl3_48.png"));
+    return icon;
+}
+
 BankEditor::BankEditor(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::BankEditor)
@@ -57,6 +66,7 @@ BankEditor::BankEditor(QWidget *parent) :
     m_recentNum     = -1;
     m_recentPerc    = false;
     ui->setupUi(this);
+    this->setWindowIcon(makeWindowIcon());
     ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     m_recentMelodicNote = ui->noteToTest->value();
     setMelodic();
@@ -70,11 +80,7 @@ BankEditor::BankEditor(QWidget *parent) :
                          Qt::WindowCloseButtonHint |
                          Qt::WindowMinimizeButtonHint);
     #else
-    QIcon icon;
-    icon.addPixmap(QPixmap(":/icons/opl3_16.png"));
-    icon.addPixmap(QPixmap(":/icons/opl3_32.png"));
-    icon.addPixmap(QPixmap(":/icons/opl3_48.png"));
-    this->setWindowIcon(icon);
+    this->setWindowFlags(this->windowFlags() & ~Qt::WindowMaximizeButtonHint);
     #endif
     this->setFixedSize(this->window()->width(), this->window()->height());
     m_importer = new Importer(this);
