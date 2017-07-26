@@ -38,8 +38,8 @@ greaterThan(QT_MAJOR_VERSION, 4):{
 }
 
 TEMPLATE = app
-
 TARGET = opl3_bank_editor
+INCLUDEPATH += $$PWD/
 
 android:{
     ARCH=android_arm
