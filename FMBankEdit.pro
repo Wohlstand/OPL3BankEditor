@@ -31,8 +31,8 @@ greaterThan(QT_MAJOR_VERSION, 4):{
     QMAKE_CXXFLAGS += -std=c++11
     win32: {
         CONFIG += static
-        QMAKE_LFLAGS += -static-libgcc -static-libstdc++
-        DEFINES += snprintf=_snprintf
+        QMAKE_LFLAGS += -static-libgcc -static-libstdc++ -static
+        #DEFINES += snprintf=_snprintf
         DEFINES += NO_NATIVE_OPEN_DIALOGS
     }
 }
