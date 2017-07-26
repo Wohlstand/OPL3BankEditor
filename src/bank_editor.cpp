@@ -69,6 +69,12 @@ BankEditor::BankEditor(QWidget *parent) :
     this->setWindowFlags(Qt::WindowTitleHint | Qt::WindowSystemMenuHint |
                          Qt::WindowCloseButtonHint |
                          Qt::WindowMinimizeButtonHint);
+    #else
+    QIcon icon;
+    icon.addPixmap(QPixmap(":/icons/opl3_16.png"));
+    icon.addPixmap(QPixmap(":/icons/opl3_32.png"));
+    icon.addPixmap(QPixmap(":/icons/opl3_48.png"));
+    this->setWindowIcon(icon);
     #endif
     this->setFixedSize(this->window()->width(), this->window()->height());
     m_importer = new Importer(this);
