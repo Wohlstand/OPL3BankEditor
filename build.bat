@@ -14,10 +14,12 @@ mingw32-make
 IF ERRORLEVEL 1 goto error
 
 md opl3-bank-editor
-rem cd bin-release
-rem windeployqt opl3_bank_editor.exe
-rem IF ERRORLEVEL 1 goto error
-rem cd ..
+IF NOT -%1-==-win9x- (
+    cd bin-release
+    windeployqt opl3_bank_editor.exe
+    IF ERRORLEVEL 1 goto error
+    cd ..
+)
 
 SET DEST_ARCHIVE=opl3-bank-editor-dev-win32.zip
 SET DEPLOY_FILES=.\bin-release\*
