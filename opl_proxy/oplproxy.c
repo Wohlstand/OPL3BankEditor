@@ -46,9 +46,6 @@ static const uint16_t   OPLBase = 0x388;
 DLLExport void STDCall chipInit(void)
 {
     unsigned TimerPeriod = 0x1234DDul / NewTimerFreq;
-    #ifndef _WIN32
-    BIOStimer_begin = BIOStimer;
-    #endif
     outp(0x43, 0x34);
     outp(0x40, TimerPeriod & 0xFF);
     outp(0x40, TimerPeriod >>   8);
