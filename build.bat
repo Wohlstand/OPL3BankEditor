@@ -22,7 +22,7 @@ rem cd ..
 SET DEST_ARCHIVE=opl3-bank-editor-dev-win32.zip
 SET DEPLOY_FILES=.\bin-release\*
 IF -%1-==-win9x- (
-    SET DEPLOY_FILES=%DEPLOY_FILES% opl_proxy\liboplproxy.dll
+    SET DEPLOY_FILES=%DEPLOY_FILES% .\opl_proxy\liboplproxy.dll
     SET DEST_ARCHIVE=opl3-bank-editor-dev-win9x.zip
 )
 SET DEPLOY_FILES=%DEPLOY_FILES% Bank_Examples
