@@ -10,6 +10,11 @@ branches:
   only:
     - master
 
+language: cpp
+os: linux
+dist: trusty
+
+
 before_install:
  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
  - sudo apt-get update -qq
