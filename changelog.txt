@@ -8,6 +8,7 @@ Version 1.3.1-beta
 - Added own bank format to have ability keep all parameters supported by editor
 - Added support for AdLib Timbre Bank Format (.snd and .tim)
 - Added support for instrument import from Reality ADlib Tracker Music files
+- Added support for Windows 9x platform in separated builds with support for testing on real OPL3 chip
 
 Version 1.3.0-beta
 - Fixed support for AIL banks

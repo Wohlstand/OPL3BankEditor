@@ -14,12 +14,21 @@ mingw32-make
 IF ERRORLEVEL 1 goto error
 
 md opl3-bank-editor
-cd bin-release
-windeployqt opl3_bank_editor.exe
-IF ERRORLEVEL 1 goto error
-cd ..
+rem cd bin-release
+rem windeployqt opl3_bank_editor.exe
+rem IF ERRORLEVEL 1 goto error
+rem cd ..
 
-"%SEVENZIP%\7z" a -tzip "opl3-bank-editor\opl3-bank-editor-dev-win32.zip" .\formats_info.htm .\license.txt .\changelog.txt .\bin-release\* Bank_Examples
+SET DEST_ARCHIVE=opl3-bank-editor-dev-win32.zip
+SET DEPLOY_FILES=.\bin-release\*
+IF -%1-==-win9x- (
+    SET DEPLOY_FILES=%DEPLOY_FILES% opl_proxy\liboplproxy.dll
+    SET DEST_ARCHIVE=opl3-bank-editor-dev-win9x.zip
+)
+SET DEPLOY_FILES=%DEPLOY_FILES% Bank_Examples
+SET DEPLOY_FILES=%DEPLOY_FILES% .\formats_info.htm .\license.txt .\changelog.txt
+
+"%SEVENZIP%\7z" a -tzip "opl3-bank-editor\%DEST_ARCHIVE%" %DEPLOY_FILES%
 
 goto quit
 :error
