@@ -1,4 +1,6 @@
 # OPL3BankEditor
+![OPL3 Editor Logo](src/resources/opl3_48.png)
+
 A small cross-platform editor of the OPL3 FM banks of different formats
 
 # CI Build status
