@@ -18,8 +18,8 @@ File Type: DLL
     ordinal hint RVA      name
 
           1    0 00001010 _chipInit@0
-          2    1 00001072 _chipPoke@8
-          3    2 000010FF _chipUnInit@0
+          3    1 0000104A _chipPoke@8
+          2    2 0000102D _chipUnInit@0
 
   Summary
 

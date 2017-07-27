@@ -22,50 +22,26 @@
     Can be built by OpenWattcom
  */
 
-#include <windows.h>
 #include <conio.h>
-#include <stdio.h>
-#include <bios.h>
-#include <dos.h>
-#include <string.h>
 
-#define DLLExport __declspec( dllexport )
-#define STDCall _stdcall
-/*#define STDCall*/
-
-typedef unsigned char   uint8_t;
-typedef char            int8_t;
+#define DLLExport       __declspec(dllexport)
+#define STDCall         __stdcall
 typedef unsigned short  uint16_t;
-typedef short           int16_t;
-typedef unsigned long   uint32_t;
-typedef long            int32_t;
 
-static const uint16_t   NewTimerFreq = 209;
 static const uint16_t   OPLBase = 0x388;
 
 DLLExport void STDCall chipInit(void)
-{
-    unsigned TimerPeriod = 0x1234DDul / NewTimerFreq;
-    outp(0x43, 0x34);
-    outp(0x40, TimerPeriod & 0xFF);
-    outp(0x40, TimerPeriod >>   8);
-}
+{ /* Dummy */ }
+
+DLLExport void STDCall chipUnInit(void)
+{ /* Dummy */ }
 
 DLLExport void STDCall chipPoke(uint16_t index, uint16_t value)
 {
-    uint16_t c;
-    uint16_t o = index >> 8;
-    uint16_t port = OPLBase + o * 2;
+    uint16_t c, o = (index >> 8), port = (OPLBase + o * 2);
     outp(port, index);
     for(c = 0; c < 6; ++c)  inp(port);
     outp(port + 1, value);
     for(c = 0; c < 35; ++c) inp(port);
 }
 
-/* On Quit */
-DLLExport void STDCall chipUnInit(void)
-{
-    outp(0x43, 0x34);
-    outp(0x40, 0);
-    outp(0x40, 0);
-}
