@@ -23,5 +23,5 @@ before_install:
 
 script:
  - qmake CONFIG-=debug CONFIG+=release
- - make
+ - make -s -j 4
 
