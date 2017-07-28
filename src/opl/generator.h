@@ -19,8 +19,7 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include <QtGlobal>
-#if (QT_VERSION < 0x050000) && defined(_WIN32)
+#if defined(IS_QT_4) && defined(_WIN32)
 #define ENABLE_OPL_PROXY
 #endif//QT<5 and WIN32
 
