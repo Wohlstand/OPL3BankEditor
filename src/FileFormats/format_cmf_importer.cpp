@@ -130,6 +130,11 @@ QString CMF_Importer::formatName() const
     return "Creative Music Format";
 }
 
+QString CMF_Importer::formatModuleName() const
+{
+    return "Creative Music importer";
+}
+
 QString CMF_Importer::formatExtensionMask() const
 {
     return "*.cmf *.ddt";

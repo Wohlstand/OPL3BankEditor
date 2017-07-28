@@ -179,6 +179,11 @@ QString IMF_Importer::formatName() const
     return "Id-Software Music File";
 }
 
+QString IMF_Importer::formatModuleName() const
+{
+    return "Id-Software Music importer";
+}
+
 QString IMF_Importer::formatExtensionMask() const
 {
     return "*.imf";

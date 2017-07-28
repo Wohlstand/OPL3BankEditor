@@ -26,6 +26,41 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 
+static QString caps2string(int formatCaps)
+{
+    QString caps;
+    if(formatCaps == (int)FormatCaps::FORMAT_CAPS_NOTHING)
+        caps.append(formats_sup::tr("N/A"));
+    else
+    if(formatCaps == (int)FormatCaps::FORMAT_CAPS_EVERYTHING)
+        caps.append(formats_sup::tr("Open, Save, Import"));
+    else
+    {
+        if(formatCaps & (int)FormatCaps::FORMAT_CAPS_OPEN)
+            caps.append(formats_sup::tr("Open"));
+
+        if(formatCaps & (int)FormatCaps::FORMAT_CAPS_SAVE)
+        {
+            if(!caps.isEmpty()) caps.append(", ");
+            caps.append(formats_sup::tr("Save"));
+        }
+
+        if(formatCaps & (int)FormatCaps::FORMAT_CAPS_IMPORT)
+        {
+            if(!caps.isEmpty()) caps.append(", ");
+            caps.append(formats_sup::tr("Import"));
+        }
+    }
+    return caps;
+}
+
+static QTableWidgetItem *makeItem(const QString &label)
+{
+    QTableWidgetItem *item = new QTableWidgetItem(label);
+    item->setToolTip(label);
+    return item;
+}
+
 formats_sup::formats_sup(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::formats_sup)
@@ -33,87 +68,48 @@ formats_sup::formats_sup(QWidget *parent) :
     ui->setupUi(this);
 
     QStringList header;
-    header << tr("Title") << tr("Extension") << tr("Type") << tr("Capabilities");
+    header << tr("File format module") << tr("Extensions") << tr("Type") << tr("Capabilities");
+    QList<int>  header_widths;
+    header_widths << 240 << 110 << 75 << 120;
 
     ui->formats->setColumnCount(4);
     ui->formats->setHorizontalHeaderLabels(header);
-    ui->formats->setColumnWidth(0, 240);
-    ui->formats->setColumnWidth(1, 100);
-    ui->formats->setColumnWidth(2, 60);
-    ui->formats->setColumnWidth(3, 120);
-
-    QTableWidgetItem *item;
-    QList<const FmBankFormatBase *> formats = FmBankFormatFactory::allFormats();
-    int row = 0;
-    QSet<int> fmts_bank;
-    QSet<int> fmts_inst;
-    for(const FmBankFormatBase *b : formats)
+    int total_width = 0;
+    for(int col = 0; col < header_widths.size(); col++)
     {
-        if((b->formatCaps() != (int)FormatCaps::FORMAT_CAPS_NOTHING) &&
-            !fmts_bank.contains((int)b->formatId()))
+        const int &w = header_widths[col];
+        ui->formats->setColumnWidth(col, header_widths[col]);
+        total_width += w;
+    }
+
+    this->resize(total_width + 50, this->size().height());
+
+    QList<const FmBankFormatBase *> bank_formats = FmBankFormatFactory::allBankFormats();
+    QList<const FmBankFormatBase *> inst_formats = FmBankFormatFactory::allInstrumentFormats();
+    int row = 0;
+
+    for(const FmBankFormatBase *b : bank_formats)
+    {
+        if((b->formatCaps() != (int)FormatCaps::FORMAT_CAPS_NOTHING))
         {
             ui->formats->insertRow(row);
-            item = new QTableWidgetItem(b->formatName());
-            ui->formats->setItem(row, 0, item);
-            item = new QTableWidgetItem(b->formatExtensionMask());
-            ui->formats->setItem(row, 1, item);
-            item = new QTableWidgetItem(tr("Bank"));
-            ui->formats->setItem(row, 2, item);
-            QString caps;
-            if(b->formatCaps() == (int)FormatCaps::FORMAT_CAPS_EVERYTHING)
-                caps.append(tr("Open, Save, Import"));
-            else
-            {
-                if(b->formatCaps() & (int)FormatCaps::FORMAT_CAPS_OPEN)
-                    caps.append("Open");
-                if(b->formatCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE)
-                {
-                    if(!caps.isEmpty()) caps.append(", ");
-                    caps.append(tr("Save"));
-                }
-                if(b->formatCaps() & (int)FormatCaps::FORMAT_CAPS_IMPORT)
-                {
-                    if(!caps.isEmpty()) caps.append(", ");
-                    caps.append(tr("Import"));
-                }
-            }
-            item = new QTableWidgetItem(caps);
-            ui->formats->setItem(row, 3, item);
-            fmts_bank.insert((int)b->formatId());
+            ui->formats->setItem(row, 0, makeItem(b->formatModuleName()));
+            ui->formats->setItem(row, 1, makeItem(b->formatExtensionMask()));
+            ui->formats->setItem(row, 2, makeItem(tr("Bank")));
+            ui->formats->setItem(row, 3, makeItem(caps2string(b->formatCaps())));
             row++;
         }
+    }
 
-        if((b->formatInstCaps() != (int)FormatCaps::FORMAT_CAPS_NOTHING) &&
-            !fmts_inst.contains((int)b->formatInstId()))
+    for(const FmBankFormatBase *b : inst_formats)
+    {
+        if((b->formatInstCaps() != (int)FormatCaps::FORMAT_CAPS_NOTHING))
         {
             ui->formats->insertRow(row);
-            item = new QTableWidgetItem(b->formatInstName());
-            ui->formats->setItem(row, 0, item);
-            item = new QTableWidgetItem(b->formatInstExtensionMask());
-            ui->formats->setItem(row, 1, item);
-            item = new QTableWidgetItem(tr("Instrument"));
-            ui->formats->setItem(row, 2, item);
-            QString caps;
-            if(b->formatInstCaps() == (int)FormatCaps::FORMAT_CAPS_EVERYTHING)
-                caps.append(tr("Open, Save, Import"));
-            else
-            {
-                if(b->formatInstCaps() & (int)FormatCaps::FORMAT_CAPS_OPEN)
-                    caps.append("Open");
-                if(b->formatInstCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE)
-                {
-                    if(!caps.isEmpty()) caps.append(", ");
-                    caps.append(tr("Save"));
-                }
-                if(b->formatInstCaps() & (int)FormatCaps::FORMAT_CAPS_IMPORT)
-                {
-                    if(!caps.isEmpty()) caps.append(", ");
-                    caps.append(tr("Import"));
-                }
-            }
-            item = new QTableWidgetItem(caps);
-            ui->formats->setItem(row, 3, item);
-            fmts_inst.insert((int)b->formatInstId());
+            ui->formats->setItem(row, 0, makeItem(b->formatInstModuleName()));
+            ui->formats->setItem(row, 1, makeItem(b->formatInstExtensionMask()));
+            ui->formats->setItem(row, 2, makeItem(tr("Instrument")));
+            ui->formats->setItem(row, 3, makeItem(caps2string(b->formatInstCaps())));
             row++;
         }
     }

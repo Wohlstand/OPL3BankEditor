@@ -43,11 +43,13 @@ public:
 
     virtual int         formatCaps() const;
     virtual QString     formatName() const;
+    virtual QString     formatModuleName() const;
     virtual QString     formatExtensionMask() const;
     virtual BankFormats formatId() const;
 
     virtual int         formatInstCaps() const;
     virtual QString     formatInstName() const;
+    virtual QString     formatInstModuleName() const;
     virtual QString     formatInstExtensionMask() const;
     virtual InstFormats formatInstId() const;
 };

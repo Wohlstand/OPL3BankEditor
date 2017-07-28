@@ -586,6 +586,11 @@ QString AdLibAndHmiBnk_reader::formatName() const
     return "AdLib/HMI instrument Bank";
 }
 
+QString AdLibAndHmiBnk_reader::formatModuleName() const
+{
+    return "AdLib and HMI bank formats reader";
+}
+
 QString AdLibAndHmiBnk_reader::formatExtensionMask() const
 {
     return "*.bnk";
@@ -761,6 +766,11 @@ QString AdLibAndHmiBnk_reader::formatInstName() const
     return "AdLib Instrument";
 }
 
+QString AdLibAndHmiBnk_reader::formatInstModuleName() const
+{
+    return "AdLib Instrument (1987)";
+}
+
 QString AdLibAndHmiBnk_reader::formatInstExtensionMask() const
 {
     return "*.ins";
@@ -788,6 +798,11 @@ int AdLibBnk_writer::formatCaps() const
 QString AdLibBnk_writer::formatName() const
 {
     return "AdLib instrument bank";
+}
+
+QString AdLibBnk_writer::formatModuleName() const
+{
+    return "AdLib instrument bank writer";
 }
 
 QString AdLibBnk_writer::formatExtensionMask() const
@@ -819,6 +834,11 @@ QString HmiBnk_writer::formatName() const
     return "HMI instrument bank [Melodic]";
 }
 
+QString HmiBnk_writer::formatModuleName() const
+{
+    return "HMI melodic bank writer";
+}
+
 QString HmiBnk_writer::formatExtensionMask() const
 {
     return "*.bnk";
@@ -844,6 +864,11 @@ int HmiBnk_Drums_writer::formatCaps() const
 QString HmiBnk_Drums_writer::formatName() const
 {
     return "HMI instrument bank [Percussion]";
+}
+
+QString HmiBnk_Drums_writer::formatModuleName() const
+{
+    return "HMI percussion bank writer";
 }
 
 QString HmiBnk_Drums_writer::formatExtensionMask() const

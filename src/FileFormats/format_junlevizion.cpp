@@ -224,7 +224,7 @@ int JunleVizion::formatCaps() const
 
 QString JunleVizion::formatName() const
 {
-    return "JunleVision bank";
+    return "Junlevision bank";
 }
 
 QString JunleVizion::formatExtensionMask() const

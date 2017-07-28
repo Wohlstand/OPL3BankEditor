@@ -37,6 +37,7 @@ public:
     FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false) override;
     int         formatInstCaps() const override;
     QString     formatInstName() const override;
+    QString     formatInstModuleName() const override;
     QString     formatInstExtensionMask() const override;
     InstFormats formatInstId() const override;
 };
@@ -49,6 +50,7 @@ public:
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
     int     formatCaps() const override;
     QString formatName() const override;
+    QString formatModuleName() const override;
     QString formatExtensionMask() const override;
     BankFormats formatId() const override;
 
@@ -57,6 +59,7 @@ public:
     FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false) override;
     int         formatInstCaps() const override;
     QString     formatInstName() const override;
+    QString     formatInstModuleName() const override;
     QString     formatInstExtensionMask() const override;
     InstFormats formatInstId() const override;
 };
@@ -68,6 +71,7 @@ public:
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() const override;
     QString formatName() const override;
+    QString formatModuleName() const override;
     QString formatExtensionMask() const override;
     BankFormats formatId() const override;
 };
@@ -78,6 +82,7 @@ public:
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() const override;
     QString formatName() const override;
+    QString formatModuleName() const override;
     QString formatExtensionMask() const override;
     BankFormats formatId() const override;
 };
@@ -88,6 +93,7 @@ public:
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() const override;
     QString formatName() const override;
+    QString formatModuleName() const override;
     QString formatExtensionMask() const override;
     BankFormats formatId() const override;
 };
@@ -98,6 +104,7 @@ public:
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() const override;
     QString formatName() const override;
+    QString formatModuleName() const override;
     QString formatExtensionMask() const override;
     BankFormats formatId() const override;
 };

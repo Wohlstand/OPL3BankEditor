@@ -133,6 +133,11 @@ QString RAD_Importer::formatName() const
     return "Reality ADlib Tracker Music file";
 }
 
+QString RAD_Importer::formatModuleName() const
+{
+    return "Reality ADlib music importer";
+}
+
 QString RAD_Importer::formatExtensionMask() const
 {
     return "*.rad";

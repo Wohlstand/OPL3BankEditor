@@ -197,13 +197,23 @@ QString FmBankFormatFactory::getInstSaveFiltersList()
     return formats;
 }
 
-QList<const FmBankFormatBase *> FmBankFormatFactory::allFormats()
+static void fillBankFmtList(QList<const FmBankFormatBase *> &dest, FmBankFormatsL &fmts)
+{
+    for(FmBankFormatBase_uptr &p : fmts)
+        dest.push_back(p.get());
+}
+
+QList<const FmBankFormatBase *> FmBankFormatFactory::allBankFormats()
 {
     QList<const FmBankFormatBase *> fullList;
-    for(FmBankFormatBase_uptr &p : g_formats)
-        fullList.push_back(p.get());
-    for(FmBankFormatBase_uptr &p : g_formatsInstr)
-        fullList.push_back(p.get());
+    fillBankFmtList(fullList, g_formats);
+    return fullList;
+}
+
+QList<const FmBankFormatBase *> FmBankFormatFactory::allInstrumentFormats()
+{
+    QList<const FmBankFormatBase *> fullList;
+    fillBankFmtList(fullList, g_formatsInstr);
     return fullList;
 }
 

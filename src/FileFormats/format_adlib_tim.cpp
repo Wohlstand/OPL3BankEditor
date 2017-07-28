@@ -208,6 +208,11 @@ QString AdLibTimbre::formatName() const
     return "Legacy AdLib Timbre Bank Format";
 }
 
+QString AdLibTimbre::formatModuleName() const
+{
+    return "AdLib Timbre Bank (1987-1988)";
+}
+
 QString AdLibTimbre::formatExtensionMask() const
 {
     return "*.snd *.tim";

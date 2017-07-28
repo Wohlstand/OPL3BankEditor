@@ -32,6 +32,7 @@ public:
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int  formatCaps() const override;
     QString formatName() const override;
+    QString formatModuleName() const override;
     QString formatExtensionMask() const override;
     BankFormats formatId() const override;
 };

@@ -569,6 +569,11 @@ QString SbIBK_DOS::formatInstName() const
     return "Sound Blaster Instrument [2OP DOS/UNIX]";
 }
 
+QString SbIBK_DOS::formatInstModuleName() const
+{
+    return "SB DOS/UNIX 2-Op instrument";
+}
+
 QString SbIBK_DOS::formatInstExtensionMask() const
 {
     return "*.sbi";
@@ -603,7 +608,12 @@ int SbIBK_UNIX_READ::formatCaps() const
 
 QString SbIBK_UNIX_READ::formatName() const
 {
-    return "SoundBlaster UNIX 2 or 4 operators bank";
+    return "SB UNIX bank (2 and/or 4 operators)";
+}
+
+QString SbIBK_UNIX_READ::formatModuleName() const
+{
+    return "SB UNIX bank reader (2-Op and 4-Op)";
 }
 
 QString SbIBK_UNIX_READ::formatExtensionMask() const
@@ -728,6 +738,11 @@ QString SbIBK_UNIX_READ::formatInstName() const
     return "Sound Blaster Instrument [4OP UNIX]";
 }
 
+QString SbIBK_UNIX_READ::formatInstModuleName() const
+{
+    return "SB UNIX 4-Op instrument";
+}
+
 QString SbIBK_UNIX_READ::formatInstExtensionMask() const
 {
     return "*.sbi";
@@ -756,6 +771,11 @@ QString SbIBK_UNIX2OP_SAVE::formatName() const
     return "SB UNIX 2-op bank [Melodic]";
 }
 
+QString SbIBK_UNIX2OP_SAVE::formatModuleName() const
+{
+    return "SB UNIX 2-Op Melodic bank writer";
+}
+
 QString SbIBK_UNIX2OP_SAVE::formatExtensionMask() const
 {
     return "*.sb";
@@ -781,6 +801,11 @@ int SbIBK_UNIX2OP_DRUMS_SAVE::formatCaps() const
 QString SbIBK_UNIX2OP_DRUMS_SAVE::formatName() const
 {
     return "SB UNIX 2-op bank [Percussion]";
+}
+
+QString SbIBK_UNIX2OP_DRUMS_SAVE::formatModuleName() const
+{
+    return "SB UNIX 2-Op Percussion bank writer";
 }
 
 QString SbIBK_UNIX2OP_DRUMS_SAVE::formatExtensionMask() const
@@ -811,6 +836,11 @@ QString SbIBK_UNIX4OP_SAVE::formatName() const
     return "SB UNIX 4-op bank [Melodic]";
 }
 
+QString SbIBK_UNIX4OP_SAVE::formatModuleName() const
+{
+    return "SB UNIX 4-Op Melodic bank writer";
+}
+
 QString SbIBK_UNIX4OP_SAVE::formatExtensionMask() const
 {
     return "*.o3";
@@ -835,6 +865,11 @@ int SbIBK_UNIX4OP_DRUMS_SAVE::formatCaps() const
 QString SbIBK_UNIX4OP_DRUMS_SAVE::formatName() const
 {
     return "SB UNIX 4-op bank [Percussion]";
+}
+
+QString SbIBK_UNIX4OP_DRUMS_SAVE::formatModuleName() const
+{
+    return "SB UNIX 4-Op Percussion bank writer";
 }
 
 QString SbIBK_UNIX4OP_DRUMS_SAVE::formatExtensionMask() const
