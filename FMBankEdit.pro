@@ -90,6 +90,7 @@ SOURCES += \
     src/FileFormats/format_rad_importer.cpp \
     src/FileFormats/format_sb_ibk.cpp \
     src/FileFormats/format_wohlstand_opl3.cpp \
+    src/formats_sup.cpp \
     src/importer.cpp \
     src/ins_names.cpp \
     src/main.cpp \
@@ -116,6 +117,7 @@ HEADERS += \
     src/FileFormats/format_rad_importer.h \
     src/FileFormats/format_sb_ibk.h \
     src/FileFormats/format_wohlstand_opl3.h \
+    src/formats_sup.h \
     src/importer.h \
     src/ins_names.h \
     src/opl/generator.h \
@@ -125,6 +127,7 @@ HEADERS += \
 
 FORMS += \
     src/bank_editor.ui \
+    src/formats_sup.ui \
     src/importer.ui
 
 RESOURCES += \

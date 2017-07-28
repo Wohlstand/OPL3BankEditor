@@ -150,22 +150,22 @@ FfmtErrCode BisqwitBank::saveFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int BisqwitBank::formatCaps()
+int BisqwitBank::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString BisqwitBank::formatName()
+QString BisqwitBank::formatName() const
 {
     return "Bisqwit's ADLMIDI Raw bank";
 }
 
-QString BisqwitBank::formatExtensionMask()
+QString BisqwitBank::formatExtensionMask() const
 {
     return "*.adlraw";
 }
 
-BankFormats BisqwitBank::formatId()
+BankFormats BisqwitBank::formatId() const
 {
     return BankFormats::FORMAT_BISQWIT;
 }

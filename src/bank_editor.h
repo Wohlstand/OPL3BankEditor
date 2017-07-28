@@ -279,6 +279,10 @@ private slots:
      */
     void on_actionReset_current_instrument_triggered();
 
+    /**
+     * @brief Show all supported formats list
+     */
+    void on_actionFormatsSup_triggered();
 
     /**
      * @brief Show about dialog

@@ -228,22 +228,22 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int DmxOPL2::formatCaps()
+int DmxOPL2::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString DmxOPL2::formatName()
+QString DmxOPL2::formatName() const
 {
     return "DMX OPL-2 bank";
 }
 
-QString DmxOPL2::formatExtensionMask()
+QString DmxOPL2::formatExtensionMask() const
 {
     return "*.op2 *.htc *.hxn";
 }
 
-BankFormats DmxOPL2::formatId()
+BankFormats DmxOPL2::formatId() const
 {
     return BankFormats::FORMAT_DMX_OP2;
 }

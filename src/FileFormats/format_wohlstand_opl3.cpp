@@ -219,22 +219,22 @@ tryAgain:
     return FfmtErrCode::ERR_OK;
 }
 
-int WohlstandOPL3::formatCaps()
+int WohlstandOPL3::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString WohlstandOPL3::formatName()
+QString WohlstandOPL3::formatName() const
 {
     return "Standard OPL3 bank by Wohlstand";
 }
 
-QString WohlstandOPL3::formatExtensionMask()
+QString WohlstandOPL3::formatExtensionMask() const
 {
     return "*.wopl";
 }
 
-BankFormats WohlstandOPL3::formatId()
+BankFormats WohlstandOPL3::formatId() const
 {
     return BankFormats::FORMAT_WOHLSTAND_OPL3;
 }
@@ -287,22 +287,22 @@ FfmtErrCode WohlstandOPL3::saveFileInst(QString filePath, FmBank::Instrument &in
     return FfmtErrCode::ERR_OK;
 }
 
-int WohlstandOPL3::formatInstCaps()
+int WohlstandOPL3::formatInstCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString WohlstandOPL3::formatInstName()
+QString WohlstandOPL3::formatInstName() const
 {
     return "Standard OPL3 instrument by Wohlstand";
 }
 
-QString WohlstandOPL3::formatInstExtensionMask()
+QString WohlstandOPL3::formatInstExtensionMask() const
 {
     return "*.opli";
 }
 
-InstFormats WohlstandOPL3::formatInstId()
+InstFormats WohlstandOPL3::formatInstId() const
 {
     return InstFormats::FORMAT_INST_WOPL3;
 }

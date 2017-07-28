@@ -2177,6 +2177,8 @@ of second voice</string>
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionFormatsSup"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuEdito">
@@ -2318,6 +2320,11 @@ of second voice</string>
   <action name="actionClearBank">
    <property name="text">
     <string>Clear bank</string>
+   </property>
+  </action>
+  <action name="actionFormatsSup">
+   <property name="text">
+    <string>Supported formats...</string>
    </property>
   </action>
  </widget>

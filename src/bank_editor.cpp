@@ -23,6 +23,7 @@
 #include <QMimeData>
 
 #include "importer.h"
+#include "formats_sup.h"
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
 #include "ins_names.h"
@@ -447,6 +448,11 @@ void BankEditor::on_actionReset_current_instrument_triggered()
     }
 }
 
+void BankEditor::on_actionFormatsSup_triggered()
+{
+    formats_sup sup(this);
+    sup.exec();
+}
 
 void BankEditor::on_actionAbout_triggered()
 {
@@ -1021,3 +1027,4 @@ void BankEditor::on_actionDeleteBank_triggered()
             ui->bank_no->setCurrentIndex(curBank);
     }
 }
+

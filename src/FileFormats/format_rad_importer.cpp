@@ -123,22 +123,22 @@ FfmtErrCode RAD_Importer::loadFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int RAD_Importer::formatCaps()
+int RAD_Importer::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_IMPORT;
 }
 
-QString RAD_Importer::formatName()
+QString RAD_Importer::formatName() const
 {
     return "Reality ADlib Tracker Music file";
 }
 
-QString RAD_Importer::formatExtensionMask()
+QString RAD_Importer::formatExtensionMask() const
 {
     return "*.rad";
 }
 
-BankFormats RAD_Importer::formatId()
+BankFormats RAD_Importer::formatId() const
 {
     return BankFormats::FORMAT_RAD_IMPORTER;
 }

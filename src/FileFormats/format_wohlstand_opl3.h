@@ -31,17 +31,17 @@ public:
     bool        detectInst(const QString &filePath, char* magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
-    int         formatCaps() override;
-    QString     formatName() override;
-    QString     formatExtensionMask() override;
-    BankFormats formatId() override;
+    int         formatCaps() const override;
+    QString     formatName() const override;
+    QString     formatExtensionMask() const override;
+    BankFormats formatId() const override;
 
     FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0) override;
     FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false) override;
-    int         formatInstCaps() override;
-    QString     formatInstName() override;
-    QString     formatInstExtensionMask() override;
-    InstFormats formatInstId() override;
+    int         formatInstCaps() const override;
+    QString     formatInstName() const override;
+    QString     formatInstExtensionMask() const override;
+    InstFormats formatInstId() const override;
 };
 
 #endif // FORMAT_WOPL_H

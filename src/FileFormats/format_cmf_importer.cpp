@@ -120,22 +120,22 @@ FfmtErrCode CMF_Importer::loadFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int CMF_Importer::formatCaps()
+int CMF_Importer::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_IMPORT;
 }
 
-QString CMF_Importer::formatName()
+QString CMF_Importer::formatName() const
 {
     return "Creative Music Format";
 }
 
-QString CMF_Importer::formatExtensionMask()
+QString CMF_Importer::formatExtensionMask() const
 {
     return "*.cmf *.ddt";
 }
 
-BankFormats CMF_Importer::formatId()
+BankFormats CMF_Importer::formatId() const
 {
     return BankFormats::FORMAT_CMF_IMPORTER;
 }

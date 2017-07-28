@@ -217,22 +217,22 @@ FfmtErrCode JunleVizion::saveFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int JunleVizion::formatCaps()
+int JunleVizion::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString JunleVizion::formatName()
+QString JunleVizion::formatName() const
 {
     return "JunleVision bank";
 }
 
-QString JunleVizion::formatExtensionMask()
+QString JunleVizion::formatExtensionMask() const
 {
     return "*.op3";
 }
 
-BankFormats JunleVizion::formatId()
+BankFormats JunleVizion::formatId() const
 {
     return BankFormats::FORMAT_JUNGLEVIZION;
 }

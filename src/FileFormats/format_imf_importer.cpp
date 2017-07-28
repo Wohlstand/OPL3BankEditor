@@ -169,22 +169,22 @@ FfmtErrCode IMF_Importer::loadFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int IMF_Importer::formatCaps()
+int IMF_Importer::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_IMPORT;
 }
 
-QString IMF_Importer::formatName()
+QString IMF_Importer::formatName() const
 {
     return "Id-Software Music File";
 }
 
-QString IMF_Importer::formatExtensionMask()
+QString IMF_Importer::formatExtensionMask() const
 {
     return "*.imf";
 }
 
-BankFormats IMF_Importer::formatId()
+BankFormats IMF_Importer::formatId() const
 {
     return BankFormats::FORMAT_IMF_IMPORTER;
 }

@@ -576,22 +576,22 @@ FfmtErrCode AdLibAndHmiBnk_reader::loadFile(QString filePath, FmBank &bank)
     return AdLibBnk_impl::loadBankFile(filePath, bank, m_recentFormat);
 }
 
-int AdLibAndHmiBnk_reader::formatCaps()
+int AdLibAndHmiBnk_reader::formatCaps() const
 {
     return int(FormatCaps::FORMAT_CAPS_OPEN) | int(FormatCaps::FORMAT_CAPS_IMPORT);
 }
 
-QString AdLibAndHmiBnk_reader::formatName()
+QString AdLibAndHmiBnk_reader::formatName() const
 {
     return "AdLib/HMI instrument Bank";
 }
 
-QString AdLibAndHmiBnk_reader::formatExtensionMask()
+QString AdLibAndHmiBnk_reader::formatExtensionMask() const
 {
     return "*.bnk";
 }
 
-BankFormats AdLibAndHmiBnk_reader::formatId()
+BankFormats AdLibAndHmiBnk_reader::formatId() const
 {
     return m_recentFormat;
 }
@@ -751,22 +751,22 @@ FfmtErrCode AdLibAndHmiBnk_reader::saveFileInst(QString filePath, FmBank::Instru
     return FfmtErrCode::ERR_OK;
 }
 
-int AdLibAndHmiBnk_reader::formatInstCaps()
+int AdLibAndHmiBnk_reader::formatInstCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString AdLibAndHmiBnk_reader::formatInstName()
+QString AdLibAndHmiBnk_reader::formatInstName() const
 {
     return "AdLib Instrument";
 }
 
-QString AdLibAndHmiBnk_reader::formatInstExtensionMask()
+QString AdLibAndHmiBnk_reader::formatInstExtensionMask() const
 {
     return "*.ins";
 }
 
-InstFormats AdLibAndHmiBnk_reader::formatInstId()
+InstFormats AdLibAndHmiBnk_reader::formatInstId() const
 {
     return InstFormats::FORMAT_INST_ADLIB_INS;
 }
@@ -780,22 +780,22 @@ FfmtErrCode AdLibBnk_writer::saveFile(QString filePath, FmBank &bank)
     return AdLibBnk_impl::saveBankFile(filePath, bank, AdLibBnk_impl::BNK_ADLIB, false);
 }
 
-int AdLibBnk_writer::formatCaps()
+int AdLibBnk_writer::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_SAVE;
 }
 
-QString AdLibBnk_writer::formatName()
+QString AdLibBnk_writer::formatName() const
 {
     return "AdLib instrument bank";
 }
 
-QString AdLibBnk_writer::formatExtensionMask()
+QString AdLibBnk_writer::formatExtensionMask() const
 {
     return "*.bnk";
 }
 
-BankFormats AdLibBnk_writer::formatId()
+BankFormats AdLibBnk_writer::formatId() const
 {
     return BankFormats::FORMAT_ADLIB_BKN1;
 }
@@ -809,22 +809,22 @@ FfmtErrCode HmiBnk_writer::saveFile(QString filePath, FmBank &bank)
     return AdLibBnk_impl::saveBankFile(filePath, bank, AdLibBnk_impl::BNK_HMI, false);
 }
 
-int HmiBnk_writer::formatCaps()
+int HmiBnk_writer::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_SAVE;
 }
 
-QString HmiBnk_writer::formatName()
+QString HmiBnk_writer::formatName() const
 {
     return "HMI instrument bank [Melodic]";
 }
 
-QString HmiBnk_writer::formatExtensionMask()
+QString HmiBnk_writer::formatExtensionMask() const
 {
     return "*.bnk";
 }
 
-BankFormats HmiBnk_writer::formatId()
+BankFormats HmiBnk_writer::formatId() const
 {
     return BankFormats::FORMAT_ADLIB_BKNHMI;
 }
@@ -836,22 +836,22 @@ FfmtErrCode HmiBnk_Drums_writer::saveFile(QString filePath, FmBank &bank)
     return AdLibBnk_impl::saveBankFile(filePath, bank, AdLibBnk_impl::BNK_HMI, true);
 }
 
-int HmiBnk_Drums_writer::formatCaps()
+int HmiBnk_Drums_writer::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_SAVE;
 }
 
-QString HmiBnk_Drums_writer::formatName()
+QString HmiBnk_Drums_writer::formatName() const
 {
     return "HMI instrument bank [Percussion]";
 }
 
-QString HmiBnk_Drums_writer::formatExtensionMask()
+QString HmiBnk_Drums_writer::formatExtensionMask() const
 {
     return "*.bnk";
 }
 
-BankFormats HmiBnk_Drums_writer::formatId()
+BankFormats HmiBnk_Drums_writer::formatId() const
 {
     return BankFormats::FORMAT_ADLIB_BKNHMI_DRUMS;
 }

@@ -1,5 +1,6 @@
 Version 1.3.2-beta
 - Added support for Windows 9x platform in separated builds with support for testing on real OPL3 chip
+- Added supported formats list dialog (can be found in the "Help" menu)
 
 Version 1.3.1-beta
 - Added writing support for UNIX SB/OP banks (with ability to choose percussion or melodic to export)

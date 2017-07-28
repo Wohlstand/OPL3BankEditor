@@ -16,25 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FORMAT_RAD_IMPORTER_H
-#define FORMAT_RAD_IMPORTER_H
+#ifndef FORMATS_SUP_H
+#define FORMATS_SUP_H
 
-#include "ffmt_base.h"
+#include <QDialog>
 
-/**
- * @brief Import FM instruments from Reality ADlib Tracker Music File format
- */
-class RAD_Importer : public FmBankFormatBase
+namespace Ui {
+class formats_sup;
+}
+
+class formats_sup : public QDialog
 {
+    Q_OBJECT
+
 public:
-    bool        detect(const QString &filePath, char* magic) override;
-    FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
-    int         formatCaps() const override;
-    QString     formatName() const override;
-    QString     formatExtensionMask() const override;
-    BankFormats formatId() const override;
+    explicit formats_sup(QWidget *parent = 0);
+    ~formats_sup();
+
+private:
+    Ui::formats_sup *ui;
 };
 
-
-
-#endif // FORMAT_RAD_IMPORTER_H
+#endif // FORMATS_SUP_H

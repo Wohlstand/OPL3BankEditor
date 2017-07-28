@@ -197,6 +197,16 @@ QString FmBankFormatFactory::getInstSaveFiltersList()
     return formats;
 }
 
+QList<const FmBankFormatBase *> FmBankFormatFactory::allFormats()
+{
+    QList<const FmBankFormatBase *> fullList;
+    for(FmBankFormatBase_uptr &p : g_formats)
+        fullList.push_back(p.get());
+    for(FmBankFormatBase_uptr &p : g_formatsInstr)
+        fullList.push_back(p.get());
+    return fullList;
+}
+
 BankFormats FmBankFormatFactory::getFormatFromFilter(QString filter)
 {
     for(FmBankFormatBase_uptr &p : g_formats)

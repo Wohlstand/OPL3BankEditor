@@ -41,15 +41,15 @@ public:
     virtual FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
     virtual FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false);
 
-    virtual int         formatCaps();
-    virtual QString     formatName();
-    virtual QString     formatExtensionMask();
-    virtual BankFormats formatId();
+    virtual int         formatCaps() const;
+    virtual QString     formatName() const;
+    virtual QString     formatExtensionMask() const;
+    virtual BankFormats formatId() const;
 
-    virtual int         formatInstCaps();
-    virtual QString     formatInstName();
-    virtual QString     formatInstExtensionMask();
-    virtual InstFormats formatInstId();
+    virtual int         formatInstCaps() const;
+    virtual QString     formatInstName() const;
+    virtual QString     formatInstExtensionMask() const;
+    virtual InstFormats formatInstId() const;
 };
 
 #endif // FMBANKFORMATBASE_H

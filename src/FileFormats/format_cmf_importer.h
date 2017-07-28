@@ -29,10 +29,10 @@ class CMF_Importer : public FmBankFormatBase
 public:
     bool        detect(const QString &filePath, char* magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
-    int         formatCaps() override;
-    QString     formatName() override;
-    QString     formatExtensionMask() override;
-    BankFormats formatId() override;
+    int         formatCaps() const override;
+    QString     formatName() const override;
+    QString     formatExtensionMask() const override;
+    BankFormats formatId() const override;
 };
 
 #endif // FORMAT_CMF_IMPORTER_H

@@ -36,10 +36,10 @@ public:
     bool detect(const QString &filePath, char* magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
-    int  formatCaps() override;
-    QString formatName() override;
-    QString formatExtensionMask() override;
-    BankFormats formatId() override;
+    int  formatCaps() const override;
+    QString formatName() const override;
+    QString formatExtensionMask() const override;
+    BankFormats formatId() const override;
 };
 
 #endif // DMXOPL2_H

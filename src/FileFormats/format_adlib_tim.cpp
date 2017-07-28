@@ -198,22 +198,22 @@ FfmtErrCode AdLibTimbre::saveFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int AdLibTimbre::formatCaps()
+int AdLibTimbre::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString AdLibTimbre::formatName()
+QString AdLibTimbre::formatName() const
 {
     return "Legacy AdLib Timbre Bank Format";
 }
 
-QString AdLibTimbre::formatExtensionMask()
+QString AdLibTimbre::formatExtensionMask() const
 {
     return "*.snd *.tim";
 }
 
-BankFormats AdLibTimbre::formatId()
+BankFormats AdLibTimbre::formatId() const
 {
     return BankFormats::FORMAT_ADLIB_TIM;
 }

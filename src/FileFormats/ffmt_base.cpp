@@ -53,42 +53,42 @@ FfmtErrCode FmBankFormatBase::saveFileInst(QString, FmBank::Instrument &, bool)
     return FfmtErrCode::ERR_NOT_IMLEMENTED;
 }
 
-int FmBankFormatBase::formatCaps()
+int FmBankFormatBase::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_NOTHING;
 }
 
-int FmBankFormatBase::formatInstCaps()
+int FmBankFormatBase::formatInstCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_NOTHING;
 }
 
-QString FmBankFormatBase::formatInstName()
+QString FmBankFormatBase::formatInstName() const
 {
     return "Unknown format";
 }
 
-QString FmBankFormatBase::formatInstExtensionMask()
+QString FmBankFormatBase::formatInstExtensionMask() const
 {
     return "*.*";
 }
 
-QString FmBankFormatBase::formatName()
+QString FmBankFormatBase::formatName() const
 {
     return "Unknown format";
 }
 
-QString FmBankFormatBase::formatExtensionMask()
+QString FmBankFormatBase::formatExtensionMask() const
 {
     return "*.*";
 }
 
-BankFormats FmBankFormatBase::formatId()
+BankFormats FmBankFormatBase::formatId() const
 {
     return BankFormats::FORMAT_UNKNOWN;
 }
 
-InstFormats FmBankFormatBase::formatInstId()
+InstFormats FmBankFormatBase::formatInstId() const
 {
     return InstFormats::FORMAT_INST_UNKNOWN;
 }

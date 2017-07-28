@@ -341,22 +341,22 @@ FfmtErrCode AIL_GTL::saveFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int AIL_GTL::formatCaps()
+int AIL_GTL::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString AIL_GTL::formatName()
+QString AIL_GTL::formatName() const
 {
     return "Audio Interface Library (Miles) bank";
 }
 
-QString AIL_GTL::formatExtensionMask()
+QString AIL_GTL::formatExtensionMask() const
 {
     return "*.opl *.ad";
 }
 
-BankFormats AIL_GTL::formatId()
+BankFormats AIL_GTL::formatId() const
 {
     return BankFormats::FORMAT_AIL2;
 }

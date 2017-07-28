@@ -123,22 +123,22 @@ FfmtErrCode ApogeeTMB::saveFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int ApogeeTMB::formatCaps()
+int ApogeeTMB::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString ApogeeTMB::formatName()
+QString ApogeeTMB::formatName() const
 {
     return "Apogee Sound System timbre bank";
 }
 
-QString ApogeeTMB::formatExtensionMask()
+QString ApogeeTMB::formatExtensionMask() const
 {
     return "*.tmb";
 }
 
-BankFormats ApogeeTMB::formatId()
+BankFormats ApogeeTMB::formatId() const
 {
     return BankFormats::FORMAT_APOGEE;
 }
