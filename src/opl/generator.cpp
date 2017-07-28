@@ -185,9 +185,7 @@ Generator::Generator(uint32_t sampleRate,
     #ifdef ENABLE_OPL_PROXY
     QSysInfo::WinVersion wver = QSysInfo::windowsVersion();
     bool m_enableProxy =    (wver == QSysInfo::WV_98) ||
-                            (wver == QSysInfo::WV_95) ||
-                            (wver == QSysInfo::WV_Me) ||
-                            (wver == QSysInfo::WV_32s);
+                            (wver == QSysInfo::WV_Me);
     if(m_enableProxy)
     {
         chip_lib = LoadLibraryA("liboplproxy.dll");
