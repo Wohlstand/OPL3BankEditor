@@ -27,6 +27,12 @@
 
 #define VERSION "1.3.2-beta"
 
-#define COPYRIGHT "© 2016-2017, Vitaly Novichkov \"Wohlstand\""
+#if IS_QT_4
+#define COPYRIGHT_SIGN "(C)"
+#else
+#define COPYRIGHT_SIGN "©"
+#endif
+
+#define COPYRIGHT COPYRIGHT_SIGN " 2016-2017, Vitaly Novichkov \"Wohlstand\""
 
 #endif // VERSION_H
