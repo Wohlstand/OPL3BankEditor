@@ -40,6 +40,9 @@ FfmtErrCode ApogeeTMB::loadFile(QString filePath, FmBank &bank)
 
     bank.reset();
 
+    bank.deep_tremolo = false;
+    bank.deep_vibrato = false;
+
     for(uint16_t i = 0; i < 256; i++)
     {
         FmBank::Instrument &ins = (i < 128) ?

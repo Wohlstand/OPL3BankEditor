@@ -290,6 +290,19 @@ public:
 
     };
 
+    struct MidiBank
+    {
+        //! Custom bank name
+        char name[33];
+        //! MIDI bank MSB index
+        uint8_t msb;
+        //! MIDI bank LSB index
+        uint8_t lsb;
+    };
+
+    bool    deep_vibrato   = false;
+    bool    deep_tremolo   = false;
+
     /**
      * @brief Get empty instrument entry
      * @return null-filled instrument entry
@@ -307,6 +320,10 @@ public:
     QVector<Instrument> Ins_Melodic_box;
     //! Array of percussion instruments
     QVector<Instrument> Ins_Percussion_box;
+    //! Array of melodic MIDI bank meta-data per every index
+    QVector<MidiBank>   Banks_Melodic;
+    //! Array of percussion MIDI bank meta-data per every index
+    QVector<MidiBank>   Banks_Percussion;
 };
 
 class TmpBank

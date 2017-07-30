@@ -133,6 +133,9 @@ FfmtErrCode AIL_GTL::loadFile(QString filePath, FmBank &bank)
 
     bank.reset(max_bank_number + 1, 1);
 
+    bank.deep_tremolo = true;
+    bank.deep_vibrato = true;
+
     uint32_t totalInsts = static_cast<uint32_t>(heads.size());
     for(uint32_t i = 0; i < totalInsts; i++)
     {

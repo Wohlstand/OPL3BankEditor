@@ -650,6 +650,7 @@ void BankEditor::reloadBanks()
 void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
 {
     ui->bank_no->setHidden(checked);
+    ui->bank_lsbmsb->setHidden(checked);
     ui->actionAddBank->setDisabled(checked);
     ui->actionCloneBank->setDisabled(checked);
     ui->actionClearBank->setDisabled(checked);
@@ -667,6 +668,7 @@ void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
 void BankEditor::on_bank_no_currentIndexChanged(int index)
 {
     ui->bank_no->setHidden(ui->actionAdLibBnkMode->isChecked());
+    ui->bank_lsbmsb->setHidden(ui->actionAdLibBnkMode->isChecked());
     QList<QListWidgetItem *> items = ui->instruments->findItems("*", Qt::MatchWildcard);
     for(QListWidgetItem *it : items)
         it->setHidden(!ui->actionAdLibBnkMode->isChecked() && (it->data(INS_BANK_ID) != index));

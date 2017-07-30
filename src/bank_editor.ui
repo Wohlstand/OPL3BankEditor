@@ -55,7 +55,7 @@
      <property name="bottomMargin">
       <number>2</number>
      </property>
-     <item row="1" column="0">
+     <item row="2" column="0">
       <widget class="QRadioButton" name="melodic">
        <property name="text">
         <string>Melodic</string>
@@ -65,14 +65,14 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="2" column="1">
       <widget class="QRadioButton" name="percussion">
        <property name="text">
         <string>Percussion</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0" colspan="2">
+     <item row="3" column="0" colspan="2">
       <widget class="QListWidget" name="instruments">
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
@@ -86,6 +86,61 @@
          <string>Bank 0</string>
         </property>
        </item>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QFrame" name="bank_lsbmsb">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>33</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_10">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_41">
+          <property name="text">
+           <string>MSB:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="bank_msb">
+          <property name="toolTip">
+           <string>MIDI bank MSB index alias. Means which MSB bank index will refer this bank.</string>
+          </property>
+          <property name="maximum">
+           <number>255</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_42">
+          <property name="text">
+           <string>LSB</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QSpinBox" name="bank_lsb">
+          <property name="toolTip">
+           <string>MIDI bank LSB index alias. Means which LSB bank index will refer this bank.</string>
+          </property>
+          <property name="maximum">
+           <number>255</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -2157,7 +2212,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>970</width>
-     <height>18</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

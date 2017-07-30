@@ -41,6 +41,9 @@ FfmtErrCode JunleVizion::loadFile(QString filePath, FmBank &bank)
 
     bank.reset();
 
+    bank.deep_tremolo = true;
+    bank.deep_vibrato = true;
+
     if(file.read(magic, 32) != 32)
         return FfmtErrCode::ERR_BADFORMAT;
 

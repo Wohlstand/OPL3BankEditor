@@ -105,6 +105,9 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
 
     bank.reset();
 
+    bank.deep_tremolo = false;
+    bank.deep_vibrato = false;
+
     if(size < 28)   //File too small!
         return FfmtErrCode::ERR_BADFORMAT;
 

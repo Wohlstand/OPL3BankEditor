@@ -82,6 +82,9 @@ FfmtErrCode AdLibTimbre::loadFile(QString filePath, FmBank &bank)
 
     bank.reset();
 
+    bank.deep_tremolo = false;
+    bank.deep_vibrato = false;
+
     uint8_t head[6];
     uint16_t instruments_count = 0;
     uint16_t instruments_offset = 0;

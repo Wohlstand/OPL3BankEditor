@@ -137,6 +137,9 @@ FfmtErrCode WohlstandOPL3::loadFile(QString filePath, FmBank &bank)
 
     bank.reset(count_melodic_banks, count_percusive_banks);
 
+    bank.deep_vibrato       = ((head[4]>>0) & 0x01);
+    bank.deep_tremolo       = ((head[4]>>1) & 0x01);
+
     uint16_t total = 128 * count_melodic_banks;
     bool readPercussion = false;
 
@@ -178,9 +181,13 @@ FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
     file.write(char_p(wopl3_magic), 11);
     writeLE(file, latest_version);
     uint8_t head[6];
+    memset(head, 0, 6);
     fromUint16BE(count_melodic_banks,   head);
     fromUint16BE(count_percusive_banks, head + 2);
     //5'th byte reserved for Deep-Tremolo and Deep-Vibrato flags
+    head[4] = ((uint8_t(bank.deep_vibrato) << 0) & 0x01) |
+              ((uint8_t(bank.deep_tremolo) << 1) & 0x02);
+
     //6'th byte reserved for ADLMIDI's default volume model
     file.write(char_p(head), 6);
 

@@ -32,9 +32,12 @@ FmBank::FmBank(const FmBank &fb)
     reset();
     Ins_Melodic_box     = fb.Ins_Melodic_box;
     Ins_Percussion_box  = fb.Ins_Percussion_box;
-    //int size = sizeof(Instrument)*128;
-    //memcpy(Ins_Melodic,    fb.Ins_Melodic,    size);
-    //memcpy(Ins_Percussion, fb.Ins_Percussion, size);
+    Ins_Melodic         = Ins_Melodic_box.data();
+    Ins_Percussion      = Ins_Percussion_box.data();
+    Banks_Melodic       = fb.Banks_Melodic;
+    Banks_Percussion    = fb.Banks_Percussion;
+    deep_vibrato        = fb.deep_vibrato;
+    deep_tremolo        = fb.deep_tremolo;
 }
 
 FmBank &FmBank::operator=(const FmBank &fb)
@@ -45,22 +48,34 @@ FmBank &FmBank::operator=(const FmBank &fb)
     reset();
     Ins_Melodic_box     = fb.Ins_Melodic_box;
     Ins_Percussion_box  = fb.Ins_Percussion_box;
-    Ins_Melodic     = Ins_Melodic_box.data();
-    Ins_Percussion  = Ins_Percussion_box.data();
+    Ins_Melodic         = Ins_Melodic_box.data();
+    Ins_Percussion      = Ins_Percussion_box.data();
+    Banks_Melodic       = fb.Banks_Melodic;
+    Banks_Percussion    = fb.Banks_Percussion;
+    deep_vibrato        = fb.deep_vibrato;
+    deep_tremolo        = fb.deep_tremolo;
     return *this;
 }
 
 bool FmBank::operator==(const FmBank &fb)
 {
     bool res = true;
+    res &= (deep_vibrato == fb.deep_vibrato);
+    res &= (deep_tremolo == fb.deep_tremolo);
     res &= (Ins_Melodic_box.size() == fb.Ins_Melodic_box.size());
     res &= (Ins_Percussion_box.size() == fb.Ins_Percussion_box.size());
+    res &= (Banks_Melodic.size() == fb.Banks_Melodic.size());
+    res &= (Banks_Percussion.size() == fb.Banks_Percussion.size());
     if(res)
     {
         int size = Ins_Melodic_box.size() * static_cast<int>(sizeof(Instrument));
         res &= (memcmp(Ins_Melodic,      fb.Ins_Melodic,    static_cast<size_t>(size)) == 0);
         size = Ins_Percussion_box.size() * static_cast<int>(sizeof(Instrument));
         res &= (memcmp(Ins_Percussion,   fb.Ins_Percussion, static_cast<size_t>(size)) == 0);
+        size = Banks_Melodic.size() * static_cast<int>(sizeof(MidiBank));
+        res &= (memcmp(Banks_Melodic.data(),   fb.Banks_Melodic.data(), static_cast<size_t>(size)) == 0);
+        size = Banks_Percussion.size() * static_cast<int>(sizeof(MidiBank));
+        res &= (memcmp(Banks_Percussion.data(),   fb.Banks_Percussion.data(), static_cast<size_t>(size)) == 0);
     }
     return res;
 }
@@ -73,13 +88,21 @@ bool FmBank::operator!=(const FmBank &fb)
 void FmBank::reset()
 {
     size_t insnum = 128;
+    size_t banksnum = insnum / 128;
     size_t size = sizeof(Instrument) * insnum;
     Ins_Melodic_box.resize(static_cast<int>(insnum));
     Ins_Percussion_box.resize(static_cast<int>(insnum));
     Ins_Melodic     = Ins_Melodic_box.data();
     Ins_Percussion  = Ins_Percussion_box.data();
+    Banks_Melodic.resize(static_cast<int>(banksnum));
+    Banks_Percussion.resize(static_cast<int>(banksnum));
     memset(Ins_Melodic,    0, size);
     memset(Ins_Percussion, 0, size);
+    size = sizeof(MidiBank) * banksnum;
+    memset(Banks_Melodic.data(), 0, size);
+    memset(Banks_Percussion.data(), 0, size);
+    deep_vibrato = false;
+    deep_tremolo = false;
 }
 
 void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
@@ -90,8 +113,16 @@ void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
     Ins_Percussion_box.resize(static_cast<int>(insnum * percussion_banks));
     Ins_Melodic     = Ins_Melodic_box.data();
     Ins_Percussion  = Ins_Percussion_box.data();
+    Banks_Melodic.resize(static_cast<int>(melodic_banks));
+    Banks_Percussion.resize(static_cast<int>(percussion_banks));
     memset(Ins_Melodic,    0, size * melodic_banks);
     memset(Ins_Percussion, 0, size * percussion_banks);
+    size = sizeof(MidiBank) * melodic_banks;
+    memset(Banks_Melodic.data(), 0, size);
+    size = sizeof(MidiBank) * percussion_banks;
+    memset(Banks_Percussion.data(), 0, size);
+    deep_vibrato = false;
+    deep_tremolo = false;
 }
 
 FmBank::Instrument FmBank::emptyInst()
