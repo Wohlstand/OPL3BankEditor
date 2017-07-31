@@ -132,6 +132,15 @@ FmBank::Instrument FmBank::emptyInst()
     return inst;
 }
 
+FmBank::MidiBank FmBank::emptyBank(uint16_t index)
+{
+    FmBank::MidiBank bank;
+    memset(&bank, 0, sizeof(FmBank::MidiBank));
+    bank.lsb = ((index >> 0) & 0xFF);
+    bank.msb = ((index >> 8) & 0xFF);
+    return bank;
+}
+
 uint8_t FmBank::Instrument::getAVEKM(int OpID)
 {
     uint8_t out = 0;

@@ -10,11 +10,22 @@ Contacts emails:    admin@wohlnet.ru, nvd339@yandex.ru
 
 ===============================================================================
 Contents:
+    0. Changelog
     1. Single-instrument entry
     2. Instrument file (OPLI)
     3. MIDI playing bank file (WOPL)
 ===============================================================================
 
+===============================================================================
+                        0. Changelog
+===============================================================================
+
+Version | What's new
+-------------------------------------------------------------------------------
+    1   | First version (July, 23, 2017)
+-------------------------------------------------------------------------------
+    2   | Added banks meta-data arrays into bank format (August, 1, 2017)
+-------------------------------------------------------------------------------
 
 ===============================================================================
                         1. Single-instrument entry
@@ -67,7 +78,7 @@ Bytes-Lenght |  Description
     11       |  Magic number "WOPL3-INST\0". Where '\0' is a zero byte which
              |  termiates the string
     2        |  Version. Little endian Unsigned 16-bit integer.
-             |  Latest version is 1
+             |  Latest version is 2 (no difference between 2 and 1)
     1        |  Is this instrument a percussion. 0 - melodic, or 1 - percussion
 ----------------Data---------------------
     62       |  [Single-instrument entry], look at top of this text file
@@ -86,25 +97,35 @@ instruments with a single bank.
 Total data lenght is sum of: 19 + (62*128*MBanks) + (62*128*PBanks) bytes
 
 Bytes-Lenght      |      Description
----------------Header--------------------
+---------------Header-----------------------
 --Header--
     11            | Magic number "WOPL3-BANK\0". Where '\0' is a zero byte
                   |     which termiates the string
     2             |  Version. Little endian Unsigned 16-bit integer.
-                  |  Latest version is 1
+                  |  Latest version is 2
     2             | [MBanks] Unsigned 16-bit integer, count of melodic
                   |     MIDI banks (every bank contains 128 instruments)
     2             | [PBanks] Unsigned 16-bit integer, count of percussion
                   |     MIDI banks (every bank contains 128 instruments)
     1             | Chip global Deep-Tremolo and Deep-Vibrato register
     1             | ADLMIDI's Volume model. Default is 0, "Generic"
------------Melodic Instruments-----------
+--VERSION >= 2---Melodic bank meta-data-----
+(repeat MBanks times)
+    32            | Name of melodic bank null-terminated string
+    1             | LSB index of bank (unsigned char)
+    1             | MSB index of bank (unsigned char)
+--VERSION >= 2---Percussion bank meta-data--
+(repeat PBanks times)
+    32            | Name of melodic bank null-terminated string
+    1             | LSB index of bank (unsigned char)
+    1             | MSB index of bank (unsigned char)
+-----------Melodic Instruments--------------
     62*128*MBanks | 128 [Single-instrument entries] per each bank,
                   |     look at top of this text file
----------Percussion Instruments----------
+---------Percussion Instruments-------------
     62*128*PBanks | 128 [Single-instrument entries] per each bank,
                   |     look at top of this text file
------------------------------------------
+--------------------------------------------
 
 
 

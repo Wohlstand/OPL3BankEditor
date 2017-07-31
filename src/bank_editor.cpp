@@ -668,7 +668,21 @@ void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
 void BankEditor::on_bank_no_currentIndexChanged(int index)
 {
     ui->bank_no->setHidden(ui->actionAdLibBnkMode->isChecked());
-    ui->bank_lsbmsb->setHidden(ui->actionAdLibBnkMode->isChecked());
+    ui->bank_lsbmsb->setHidden(ui->actionAdLibBnkMode->isChecked() || (index < 0));
+    ui->bank_lsbmsb->setDisabled(index <= 0);
+    if(index >= 0)
+    {
+        this->m_lock = true;
+        if(isDrumsMode())
+        {
+            ui->bank_lsb->setValue(m_bank.Banks_Percussion[index].lsb);
+            ui->bank_msb->setValue(m_bank.Banks_Percussion[index].msb);
+        } else {
+            ui->bank_lsb->setValue(m_bank.Banks_Melodic[index].lsb);
+            ui->bank_msb->setValue(m_bank.Banks_Melodic[index].msb);
+        }
+        this->m_lock = false;
+    }
     QList<QListWidgetItem *> items = ui->instruments->findItems("*", Qt::MatchWildcard);
     for(QListWidgetItem *it : items)
         it->setHidden(!ui->actionAdLibBnkMode->isChecked() && (it->data(INS_BANK_ID) != index));
@@ -676,6 +690,35 @@ void BankEditor::on_bank_no_currentIndexChanged(int index)
     if(!selected.isEmpty())
         ui->instruments->scrollToItem(selected.front());
 }
+
+void BankEditor::on_bank_msb_editingFinished()
+{
+    if(m_lock)
+        return;
+    int index = ui->bank_no->currentIndex();
+    if(index > 0)//Allow set only non-default
+    {
+        if(isDrumsMode())
+            m_bank.Banks_Percussion[index].msb = uint8_t(ui->bank_msb->value());
+        else
+            m_bank.Banks_Melodic[index].msb = uint8_t(ui->bank_msb->value());
+    }
+}
+
+void BankEditor::on_bank_lsb_editingFinished()
+{
+    if(m_lock)
+        return;
+    int index = ui->bank_no->currentIndex();
+    if(index > 0)//Allow set only non-default
+    {
+        if(isDrumsMode())
+            m_bank.Banks_Percussion[index].lsb = uint8_t(ui->bank_lsb->value());
+        else
+            m_bank.Banks_Melodic[index].lsb = uint8_t(ui->bank_lsb->value());
+    }
+}
+
 
 void BankEditor::setMelodic()
 {
@@ -775,7 +818,15 @@ void BankEditor::on_actionAddInst_triggered()
     setInstrumentMetaInfo(item, id);
     item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     ui->instruments->addItem(item);
+    int oldCount = ui->bank_no->count();
     reloadBanks();
+    if(oldCount < ui->bank_no->count())
+    {
+        if(isDrumsMode())
+            m_bank.Banks_Percussion.push_back(FmBank::emptyBank(uint16_t(m_bank.Banks_Percussion.count())));
+        else
+            m_bank.Banks_Melodic.push_back(FmBank::emptyBank(uint16_t(m_bank.Banks_Melodic.count())));
+    }
     ui->bank_no->setCurrentIndex(ui->bank_no->count() - 1);
     ui->instruments->scrollToItem(item);
     item->setSelected(true);
@@ -844,7 +895,13 @@ void BankEditor::on_actionDelInst_triggered()
         int oldBank = ui->bank_no->currentIndex();
         reloadBanks();
         if(oldBank >= ui->bank_no->count())
+        {
+            if(isDrumsMode())
+                m_bank.Banks_Percussion.remove(oldBank);
+            else
+                m_bank.Banks_Melodic.remove(oldBank);
             ui->bank_no->setCurrentIndex(ui->bank_no->count() - 1);
+        }
         else
             ui->bank_no->setCurrentIndex(oldBank);
         loadInstrument();
@@ -869,6 +926,7 @@ void BankEditor::on_actionAddBank_triggered()
         size_t size = sizeof(FmBank::Instrument) * addSize;
         m_bank.Ins_Percussion_box.resize(m_bank.Ins_Percussion_box.size() + int(addSize));
         m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
+        m_bank.Banks_Percussion.push_back(FmBank::emptyBank(uint16_t(m_bank.Banks_Percussion.count())));
         memset(m_bank.Ins_Percussion + oldSize, 0, size_t(size));
         setDrums();
     }
@@ -879,6 +937,7 @@ void BankEditor::on_actionAddBank_triggered()
         size_t size = sizeof(FmBank::Instrument) * addSize;
         m_bank.Ins_Melodic_box.resize(m_bank.Ins_Melodic_box.size() + int(addSize));
         m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
+        m_bank.Banks_Melodic.push_back(FmBank::emptyBank(uint16_t(m_bank.Banks_Melodic.count())));
         memset(m_bank.Ins_Melodic + oldSize, 0, size_t(size));
         setMelodic();
     }
@@ -912,6 +971,7 @@ void BankEditor::on_actionCloneBank_triggered()
         memcpy(m_bank.Ins_Percussion + (newBank * 128),
                m_bank.Ins_Percussion + (curBank * 128),
                sizeof(FmBank::Instrument) * 128);
+        m_bank.Banks_Percussion.push_back(FmBank::emptyBank(uint16_t(m_bank.Banks_Percussion.count())));
         setDrums();
     }
     else
@@ -925,6 +985,7 @@ void BankEditor::on_actionCloneBank_triggered()
         memcpy(m_bank.Ins_Melodic + (newBank * 128),
                m_bank.Ins_Melodic + (curBank * 128),
                sizeof(FmBank::Instrument) * 128);
+        m_bank.Banks_Melodic.push_back(FmBank::emptyBank(uint16_t(m_bank.Banks_Melodic.count())));
         setMelodic();
     }
 
@@ -1011,6 +1072,7 @@ void BankEditor::on_actionDeleteBank_triggered()
                 needToShoot_end = m_bank.Ins_Percussion_box.size();
             m_bank.Ins_Percussion_box.remove(needToShoot_begin, needToShoot_end - needToShoot_begin);
             m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
+            m_bank.Banks_Percussion.remove(curBank);
             setDrums();
         }
         else
@@ -1019,6 +1081,7 @@ void BankEditor::on_actionDeleteBank_triggered()
                 needToShoot_end = m_bank.Ins_Melodic_box.size();
             m_bank.Ins_Melodic_box.remove(needToShoot_begin, needToShoot_end - needToShoot_begin);
             m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
+            m_bank.Banks_Melodic.remove(curBank);
             setMelodic();
         }
 

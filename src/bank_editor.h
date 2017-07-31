@@ -296,6 +296,16 @@ private slots:
     void on_bank_no_currentIndexChanged(int index);
 
     /**
+     * @brief Read value from MSB field and write into bank meta-data entry
+     */
+    void on_bank_msb_editingFinished();
+
+    /**
+     * @brief Read value from LSB field and write into bank meta-data entry
+     */
+    void on_bank_lsb_editingFinished();
+
+    /**
      * @brief Add new instrument into end
      */
     void on_actionAddInst_triggered();

@@ -309,6 +309,12 @@ public:
      */
     static Instrument emptyInst();
 
+    /**
+     * @brief Get empty bank meta-data entry
+     * @return null-filled bank entry
+     */
+    static MidiBank emptyBank(uint16_t index = 0);
+
     inline int countMelodic()   { return Ins_Melodic_box.size(); }
     inline int countDrums()     { return Ins_Percussion_box.size(); }
 

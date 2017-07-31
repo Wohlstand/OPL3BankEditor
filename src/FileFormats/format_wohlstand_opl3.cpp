@@ -22,7 +22,7 @@
 static const char       *wopl3_magic = "WOPL3-BANK\0";
 static const char       *wopli_magic = "WOPL3-INST\0";
 
-static const uint16_t   latest_version = 1;
+static const uint16_t   latest_version = 2;
 /*
 Version history:
 V. 1
@@ -140,6 +140,31 @@ FfmtErrCode WohlstandOPL3::loadFile(QString filePath, FmBank &bank)
     bank.deep_vibrato       = ((head[4]>>0) & 0x01);
     bank.deep_tremolo       = ((head[4]>>1) & 0x01);
 
+    if(version >= 2)//Read bank meta-entries
+    {
+        for(int i = 0; i < bank.Banks_Melodic.size(); i++)
+        {
+            FmBank::MidiBank &bankMeta = bank.Banks_Melodic[i];
+            uint8_t bank_meta[34];
+            if(file.read(char_p(bank_meta), 34) != 34)
+                return FfmtErrCode::ERR_BADFORMAT;
+            strncpy(bankMeta.name, char_p(bank_meta), 32);
+            bankMeta.lsb = bank_meta[32];
+            bankMeta.msb = bank_meta[33];
+        }
+
+        for(int i = 0; i < bank.Banks_Percussion.size(); i++)
+        {
+            FmBank::MidiBank &bankMeta = bank.Banks_Percussion[i];
+            uint8_t bank_meta[34];
+            if(file.read(char_p(bank_meta), 34) != 34)
+                return FfmtErrCode::ERR_BADFORMAT;
+            strncpy(bankMeta.name, char_p(bank_meta), 32);
+            bankMeta.lsb = bank_meta[32];
+            bankMeta.msb = bank_meta[33];
+        }
+    }
+
     uint16_t total = 128 * count_melodic_banks;
     bool readPercussion = false;
 
@@ -190,6 +215,32 @@ FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
 
     //6'th byte reserved for ADLMIDI's default volume model
     file.write(char_p(head), 6);
+
+    //For Version 2: BEGIN
+    //Write melodic banks meta-data
+    for(int i = 0; i < bank.Banks_Melodic.size(); i++)
+    {
+        const FmBank::MidiBank &bankMeta = bank.Banks_Melodic[i];
+        uint8_t bank_meta[34];
+        strncpy(char_p(bank_meta), bankMeta.name, 32);
+        bank_meta[32] = bankMeta.lsb;
+        bank_meta[33] = bankMeta.msb;
+        if(file.write(char_p(bank_meta), 34) != 34)
+            return FfmtErrCode::ERR_BADFORMAT;
+    }
+
+    //Write percussion banks meta-data
+    for(int i = 0; i < bank.Banks_Percussion.size(); i++)
+    {
+        const FmBank::MidiBank &bankMeta = bank.Banks_Percussion[i];
+        uint8_t bank_meta[34];
+        strncpy(char_p(bank_meta), bankMeta.name, 32);
+        bank_meta[32] = bankMeta.lsb;
+        bank_meta[33] = bankMeta.msb;
+        if(file.write(char_p(bank_meta), 34) != 34)
+            return FfmtErrCode::ERR_BADFORMAT;
+    }
+    //For Version 2: END
 
     uint16_t total = 128 * count_melodic_banks;
     uint16_t total_insts = uint16_t(bank.Ins_Melodic_box.size());

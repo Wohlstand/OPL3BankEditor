@@ -136,6 +136,18 @@ FfmtErrCode AIL_GTL::loadFile(QString filePath, FmBank &bank)
     bank.deep_tremolo = true;
     bank.deep_vibrato = true;
 
+    {
+        uint8_t bank_lsb_counter = 0;
+        uint8_t bank_msb_counter = 0;
+        for(FmBank::MidiBank &b : bank.Banks_Melodic)
+        {
+            b.lsb = bank_lsb_counter++;
+            b.msb = bank_msb_counter;
+            if(bank_lsb_counter == 0)
+                bank_msb_counter++;
+        }
+    }
+
     uint32_t totalInsts = static_cast<uint32_t>(heads.size());
     for(uint32_t i = 0; i < totalInsts; i++)
     {
