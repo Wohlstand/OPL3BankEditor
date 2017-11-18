@@ -191,6 +191,10 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank)
 
     bank.reset();
 
+    bank.deep_tremolo = false;
+    bank.deep_vibrato = false;
+    bank.volume_model = FmBank::VOLUME_Generic;
+
     if(file.read(magic, 4) != 4)
         return FfmtErrCode::ERR_BADFORMAT;
 

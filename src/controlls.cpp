@@ -36,6 +36,24 @@ void BankEditor::on_insName_editingFinished()
     reloadInstrumentNames();
 }
 
+void BankEditor::on_deepTremolo_clicked(bool checked)
+{
+    if(m_lock) return;
+    m_bank.deep_tremolo = checked;
+}
+
+void BankEditor::on_deepVibrato_clicked(bool checked)
+{
+    if(m_lock) return;
+    m_bank.deep_vibrato = checked;
+}
+
+void BankEditor::on_volumeModel_currentIndexChanged(int index)
+{
+    if(m_lock) return;
+    m_bank.volume_model = (uint8_t)index;
+}
+
 void BankEditor::on_feedback1_valueChanged(int arg1)
 {
     if(m_lock) return;
@@ -61,7 +79,6 @@ void BankEditor::on_fm1_clicked(bool checked)
         m_curInst->connection1 = FmBank::Instrument::FM;
     sendPatch();
 }
-
 
 void BankEditor::on_percMode_currentIndexChanged(int index)
 {

@@ -39,6 +39,7 @@ FfmtErrCode DmxOPL2::loadFile(QString filePath, FmBank &bank)
 
     bank.deep_tremolo = false;
     bank.deep_vibrato = false;
+    bank.volume_model = FmBank::VOLUME_DMX;
 
     if(file.read(magic, 8) != 8)
         return FfmtErrCode::ERR_BADFORMAT;

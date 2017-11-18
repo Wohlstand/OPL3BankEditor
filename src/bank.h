@@ -303,6 +303,16 @@ public:
     bool    deep_vibrato   = false;
     bool    deep_tremolo   = false;
 
+    enum VolumesScale
+    {
+        VOLUME_Generic,
+        VOLUME_CMF,
+        VOLUME_DMX,
+        VOLUME_APOGEE,
+        VOLUME_9X
+    };
+    uint8_t volume_model    = (uint8_t)VOLUME_Generic;
+
     /**
      * @brief Get empty instrument entry
      * @return null-filled instrument entry

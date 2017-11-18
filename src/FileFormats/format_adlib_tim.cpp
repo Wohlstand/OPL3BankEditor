@@ -84,6 +84,7 @@ FfmtErrCode AdLibTimbre::loadFile(QString filePath, FmBank &bank)
 
     bank.deep_tremolo = false;
     bank.deep_vibrato = false;
+    bank.volume_model = FmBank::VOLUME_CMF;
 
     uint8_t head[6];
     uint16_t instruments_count = 0;

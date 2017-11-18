@@ -55,16 +55,6 @@
      <property name="bottomMargin">
       <number>2</number>
      </property>
-     <item row="2" column="0">
-      <widget class="QRadioButton" name="melodic">
-       <property name="text">
-        <string>Melodic</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1">
       <widget class="QRadioButton" name="percussion">
        <property name="text">
@@ -80,12 +70,72 @@
       </widget>
      </item>
      <item row="0" column="0" colspan="2">
-      <widget class="QComboBox" name="bank_no">
-       <item>
-        <property name="text">
-         <string>Bank 0</string>
+      <widget class="QFrame" name="frame_3">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1000">
+        <property name="spacing">
+         <number>0</number>
         </property>
-       </item>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="bankRename">
+          <property name="toolTip">
+           <string>Rename bank</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="resources/resources.qrc">
+            <normaloff>:/pencil_16x16.png</normaloff>:/pencil_16x16.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="bank_no">
+          <item>
+           <property name="text">
+            <string>Bank 0</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QRadioButton" name="melodic">
+       <property name="text">
+        <string>Melodic</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item row="1" column="0" colspan="2">
@@ -1786,7 +1836,7 @@
     <property name="geometry">
      <rect>
       <x>840</x>
-      <y>150</y>
+      <y>180</y>
       <width>121</width>
       <height>351</height>
      </rect>
@@ -2084,9 +2134,9 @@ Available from 0 to 127</string>
     <property name="geometry">
      <rect>
       <x>840</x>
-      <y>500</y>
+      <y>530</y>
       <width>121</width>
-      <height>151</height>
+      <height>121</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -2204,6 +2254,71 @@ of second voice</string>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
     </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>110</y>
+      <width>121</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Declares a volume scale formula that will set physical volume level from a MIDI volume.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic &lt;/span&gt;- linear volume scale&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPL3 Native&lt;/span&gt; - Logariphmic volume scale produced by OPL3 chip natively&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indexed table of volumes that sets OPL volume by MIDI volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogee&lt;/span&gt; - Logariphmic volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Win9x Driver&lt;/span&gt; - A short non-smooth indexed table, shorter in two times than possible OPL3 volume levels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="title">
+     <string>Bank volume model</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_11">
+     <property name="leftMargin">
+      <number>2</number>
+     </property>
+     <property name="topMargin">
+      <number>2</number>
+     </property>
+     <property name="rightMargin">
+      <number>2</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
+     <property name="spacing">
+      <number>2</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QComboBox" name="volumeModel">
+       <item>
+        <property name="text">
+         <string>Generic</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>OPL3 Native</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>DMX</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Apogee</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Win9x Driver</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

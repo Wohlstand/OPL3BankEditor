@@ -17,6 +17,7 @@
  */
 
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QMessageBox>
 #include <QSettings>
 #include <QUrl>
@@ -88,6 +89,9 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
     initAudio();
     loadSettings();
+    m_bank.deep_tremolo = ui->deepTremolo->isChecked();
+    m_bank.deep_vibrato = ui->deepVibrato->isChecked();
+    m_bankBackup = m_bank;
 }
 
 BankEditor::~BankEditor()
@@ -158,6 +162,7 @@ void BankEditor::dropEvent(QDropEvent *e)
 void BankEditor::initFileData(QString &filePath)
 {
     m_recentPath = QFileInfo(filePath).absoluteDir().absolutePath();
+    m_recentBankFilePath = filePath;
 
     if(!ui->instruments->selectedItems().isEmpty())
     {
@@ -184,6 +189,14 @@ void BankEditor::initFileData(QString &filePath)
 
     ui->currentFile->setText(filePath);
     m_bankBackup = m_bank;
+
+    //Set global flags and states
+    m_lock = true;
+    ui->deepTremolo->setChecked(m_bank.deep_tremolo);
+    ui->deepVibrato->setChecked(m_bank.deep_vibrato);
+    ui->volumeModel->setCurrentIndex((int)m_bank.volume_model);
+    m_lock = false;
+
     reloadInstrumentNames();
     setCurrentInstrument(m_recentNum, m_recentPerc);
 }
@@ -192,6 +205,7 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
 {
     ui->currentFile->setText(filePath);
     m_recentPath = QFileInfo(filePath).absoluteDir().absolutePath();
+    m_recentBankFilePath = filePath;
     m_bankBackup = m_bank;
 }
 
@@ -309,7 +323,7 @@ bool BankEditor::saveFileAs()
     QString filters         = FmBankFormatFactory::getSaveFiltersList();
     QString selectedFilter  = FmBankFormatFactory::getFilterFromFormat(m_recentFormat, (int)FormatCaps::FORMAT_CAPS_SAVE);
     QString fileToSave      = QFileDialog::getSaveFileName(this, "Save bank file",
-                                                           m_recentPath, filters, &selectedFilter,
+                                                           m_recentBankFilePath, filters, &selectedFilter,
                                                            FILE_OPEN_DIALOG_OPTIONS);
     if(fileToSave.isEmpty())
         return false;
@@ -639,12 +653,19 @@ void BankEditor::reloadBanks()
 {
     ui->bank_no->clear();
     int countOfBanks = 1;
-    if(isDrumsMode())
+    bool isDrum = isDrumsMode();
+    if(isDrum)
         countOfBanks = ((m_bank.countDrums() - 1) / 128) + 1;
     else
         countOfBanks = ((m_bank.countMelodic() - 1) / 128) + 1;
     for(int i = 0; i < countOfBanks; i++)
-        ui->bank_no->addItem(QString("Bank %1").arg(i), i);
+    {
+        const char *label = isDrum ? m_bank.Banks_Percussion[i].name : m_bank.Banks_Melodic[i].name;
+        if(label[0] == 0)
+            ui->bank_no->addItem(QString("Bank %1").arg(i), i);
+        else
+            ui->bank_no->addItem(QString("%1: %2").arg(i).arg(label), i);
+    }
 }
 
 void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
@@ -662,6 +683,36 @@ void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
         QList<QListWidgetItem *> selected = ui->instruments->selectedItems();
         if(!selected.isEmpty())
             ui->bank_no->setCurrentIndex(selected.front()->data(INS_BANK_ID).toInt());
+    }
+}
+
+void BankEditor::on_bankRename_clicked()
+{
+    int index = ui->bank_no->currentIndex();
+    QString label;
+    if(isDrumsMode())
+        label = QString::fromUtf8(m_bank.Banks_Percussion[index].name);
+    else
+        label = QString::fromUtf8(m_bank.Banks_Melodic[index].name);
+    bool ok = false;
+    label = QInputDialog::getText(this, tr("Change name of bank"), tr("Please type name of current bank (32 characters max):"), QLineEdit::EchoMode::Normal, label, &ok);
+    if(ok)
+    {
+        QByteArray arr = label.toUtf8();
+        if(isDrumsMode())
+        {
+            memset(m_bank.Banks_Percussion[index].name, 0, 32);
+            memcpy(m_bank.Banks_Percussion[index].name, arr.data(), (size_t)arr.size());
+        }
+        else
+        {
+            memset(m_bank.Banks_Melodic[index].name, 0, 32);
+            memcpy(m_bank.Banks_Melodic[index].name, arr.data(), (size_t)arr.size());
+        }
+        if(arr.size() == 0)
+            ui->bank_no->setItemText(index, QString("Bank %1").arg(index));
+        else
+            ui->bank_no->setItemText(index, QString("%1: %2").arg(index).arg(label));
     }
 }
 
@@ -1092,4 +1143,3 @@ void BankEditor::on_actionDeleteBank_triggered()
             ui->bank_no->setCurrentIndex(curBank);
     }
 }
-

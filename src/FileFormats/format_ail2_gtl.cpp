@@ -135,6 +135,7 @@ FfmtErrCode AIL_GTL::loadFile(QString filePath, FmBank &bank)
 
     bank.deep_tremolo = true;
     bank.deep_vibrato = true;
+    bank.volume_model = FmBank::VOLUME_Generic;
 
     {
         uint8_t bank_lsb_counter = 0;

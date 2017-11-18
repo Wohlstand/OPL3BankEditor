@@ -42,6 +42,7 @@ FfmtErrCode ApogeeTMB::loadFile(QString filePath, FmBank &bank)
 
     bank.deep_tremolo = false;
     bank.deep_vibrato = false;
+    bank.volume_model = FmBank::VOLUME_APOGEE;
 
     for(uint16_t i = 0; i < 256; i++)
     {

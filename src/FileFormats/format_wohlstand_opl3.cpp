@@ -139,6 +139,7 @@ FfmtErrCode WohlstandOPL3::loadFile(QString filePath, FmBank &bank)
 
     bank.deep_vibrato       = ((head[4]>>0) & 0x01);
     bank.deep_tremolo       = ((head[4]>>1) & 0x01);
+    bank.volume_model       = head[5];
 
     if(version >= 2)//Read bank meta-entries
     {
@@ -212,8 +213,9 @@ FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
     //5'th byte reserved for Deep-Tremolo and Deep-Vibrato flags
     head[4] = ((uint8_t(bank.deep_vibrato) << 0) & 0x01) |
               ((uint8_t(bank.deep_tremolo) << 1) & 0x02);
-
     //6'th byte reserved for ADLMIDI's default volume model
+    head[5] = bank.volume_model;
+
     file.write(char_p(head), 6);
 
     //For Version 2: BEGIN

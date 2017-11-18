@@ -38,6 +38,10 @@ FfmtErrCode BisqwitBank::loadFile(QString filePath, FmBank &bank)
         return FfmtErrCode::ERR_NOFILE;
     bank.reset();
 
+    bank.deep_tremolo = true;
+    bank.deep_vibrato = true;
+    bank.volume_model = FmBank::VOLUME_Generic;
+
     for(uint16_t i = 0; i < 256; i++)
     {
         bool isDrum = (i >= 128);

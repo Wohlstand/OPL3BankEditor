@@ -26,6 +26,8 @@ Version | What's new
 -------------------------------------------------------------------------------
     2   | Added banks meta-data arrays into bank format (August, 1, 2017)
 -------------------------------------------------------------------------------
+    3   | Added two delay coefficients are needed for ADLMIDI's channel busy
+-------------------------------------------------------------------------------
 
 ===============================================================================
                         1. Single-instrument entry
@@ -103,9 +105,9 @@ Bytes-Lenght      |      Description
                   |     which termiates the string
     2             |  Version. Little endian Unsigned 16-bit integer.
                   |  Latest version is 2
-    2             | [MBanks] Unsigned 16-bit integer, count of melodic
+    2             | [MBanks] Unsigned 16-bit BE integer, count of melodic
                   |     MIDI banks (every bank contains 128 instruments)
-    2             | [PBanks] Unsigned 16-bit integer, count of percussion
+    2             | [PBanks] Unsigned 16-bit BE integer, count of percussion
                   |     MIDI banks (every bank contains 128 instruments)
     1             | Chip global Deep-Tremolo and Deep-Vibrato register
     1             | ADLMIDI's Volume model. Default is 0, "Generic"

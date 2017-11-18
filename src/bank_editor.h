@@ -57,6 +57,8 @@ private:
     Importer           *m_importer;
     //! Path for currently opened file
     QString             m_recentPath;
+    //! Recently opened bank file
+    QString             m_recentBankFilePath;
 
     //! Currently loaded FM bank
     FmBank              m_bank;
@@ -290,6 +292,11 @@ private slots:
     void on_actionAbout_triggered();
 
     /**
+     * @brief Rename current bank
+     */
+    void on_bankRename_clicked();
+
+    /**
      * @brief Reload instruments list for specific bank ID
      * @param index ID of bank
      */
@@ -345,6 +352,10 @@ private slots:
 
     void on_insName_textChanged(const QString &arg1);
     void on_insName_editingFinished();
+
+    void on_deepTremolo_clicked(bool checked);
+    void on_deepVibrato_clicked(bool checked);
+    void on_volumeModel_currentIndexChanged(int index);
 
     void on_feedback1_valueChanged(int arg1);
     void on_am1_clicked(bool checked);

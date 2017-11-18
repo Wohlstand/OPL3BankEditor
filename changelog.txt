@@ -1,3 +1,9 @@
+Version 1.3.3
+- Added ability to change volumes model for ADLMIDI player
+- Deep-Tremolo and Deep-Vibrato now can be restored from the WOPL file or used default by specific format
+- Added ability to set bank names
+- Fixed missing filename while saving bank
+
 Version 1.3.2-beta
 - Added support for Windows 9x platform in separated builds with support for testing on real OPL3 chip
 - Added supported formats list dialog (can be found in the "Help" menu)

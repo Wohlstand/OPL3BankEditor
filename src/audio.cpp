@@ -118,13 +118,10 @@ void BankEditor::pushTimerExpired()
         while(chunks)
         {
             const qint64 len = m_generator->read(m_buffer.data(), m_audioOutput->periodSize());
-
             if(len)
                 m_output->write(m_buffer.data(), len);
-
             if(len != m_audioOutput->periodSize())
                 break;
-
             --chunks;
         }
     }

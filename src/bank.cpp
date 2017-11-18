@@ -138,6 +138,7 @@ FmBank::MidiBank FmBank::emptyBank(uint16_t index)
     memset(&bank, 0, sizeof(FmBank::MidiBank));
     bank.lsb = ((index >> 0) & 0xFF);
     bank.msb = ((index >> 8) & 0xFF);
+    bank.name[0] = '\0';
     return bank;
 }
 
