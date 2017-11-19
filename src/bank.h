@@ -170,7 +170,7 @@ public:
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        uint8_t getAVEKM(int OpID);
+        uint8_t getAVEKM(int OpID) const;
 
         /*!
          * \brief Split AM/VIB/EG/KSR/Multiple bits byte into internal values
@@ -184,7 +184,7 @@ public:
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        uint8_t getKSLL(int OpID);
+        uint8_t getKSLL(int OpID) const;
 
         /*!
          * \brief Split KSL/attenuation settings byte into internal values
@@ -198,7 +198,7 @@ public:
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        uint8_t getKSL(int OpID);
+        uint8_t getKSL(int OpID) const;
         /*!
          * \brief Store KSL value into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
@@ -211,7 +211,7 @@ public:
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        uint8_t getLevel(int OpID);
+        uint8_t getLevel(int OpID) const;
 
         /*!
          * \brief Store attenuation value into internal values
@@ -225,7 +225,7 @@ public:
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        uint8_t getAtDec(int OpID);
+        uint8_t getAtDec(int OpID) const;
         /*!
          * \brief Split Attack/decay rates byte into internal values
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
@@ -238,7 +238,7 @@ public:
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        uint8_t getSusRel(int OpID);
+        uint8_t getSusRel(int OpID) const;
 
         /*!
          * \brief Split Sustain/release rates byte into internal values
@@ -252,7 +252,7 @@ public:
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged byte
          */
-        uint8_t getWaveForm(int OpID);
+        uint8_t getWaveForm(int OpID) const;
 
         /*!
          * \brief Store and clear-up waveform byte into internal values
@@ -265,7 +265,7 @@ public:
          * \brief Merge into Feedback/connection byte
          * \return merged byte
          */
-        uint8_t getFBConn1();
+        uint8_t getFBConn1() const;
 
         /*!
          * \brief Split Feedback/connection byte for first carrier and modulator into internal values
@@ -277,7 +277,7 @@ public:
          * \brief Merge into Feedback/connection byte
          * \return merged byte
          */
-        uint8_t getFBConn2();
+        uint8_t getFBConn2() const;
 
         /*!
          * \brief Split Feedback/connection byte for second carrier and modulator into internal values
@@ -290,7 +290,7 @@ public:
          * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
          * \return merged 4-byte register data
          */
-        uint32_t getDataE862(int OpID);
+        uint32_t getDataE862(int OpID) const;
 
     };
 

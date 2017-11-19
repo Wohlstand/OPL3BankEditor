@@ -142,7 +142,7 @@ FmBank::MidiBank FmBank::emptyBank(uint16_t index)
     return bank;
 }
 
-uint8_t FmBank::Instrument::getAVEKM(int OpID)
+uint8_t FmBank::Instrument::getAVEKM(int OpID) const
 {
     uint8_t out = 0;
     out |= 0x80 & (uint8_t(OP[OpID].am) << 7);
@@ -164,7 +164,7 @@ void FmBank::Instrument::setAVEKM(int OpID, uint8_t in)
 
 
 
-uint8_t FmBank::Instrument::getKSLL(int OpID)
+uint8_t FmBank::Instrument::getKSLL(int OpID) const
 {
     uint8_t out = 0;
     out |= 0xC0 & (uint8_t(OP[OpID].ksl) << 6);
@@ -178,7 +178,7 @@ void FmBank::Instrument::setKSLL(int OpID, uint8_t in)
     OP[OpID].level = 0x3F - (in & 0x3F);
 }
 
-uint8_t FmBank::Instrument::getKSL(int OpID)
+uint8_t FmBank::Instrument::getKSL(int OpID) const
 {
     uint8_t out = 0;
     out |= 0xC0 & (uint8_t(OP[OpID].ksl) << 6);
@@ -190,7 +190,7 @@ void FmBank::Instrument::setKSL(int OpID, uint8_t in)
     OP[OpID].ksl   = (in >> 6) & 0x03;
 }
 
-uint8_t FmBank::Instrument::getLevel(int OpID)
+uint8_t FmBank::Instrument::getLevel(int OpID) const
 {
     uint8_t out = 0;
     out |= 0x3F & uint8_t(0x3F - OP[OpID].level);
@@ -204,7 +204,7 @@ void FmBank::Instrument::setLevel(int OpID, uint8_t in)
 
 
 
-uint8_t FmBank::Instrument::getAtDec(int OpID)
+uint8_t FmBank::Instrument::getAtDec(int OpID) const
 {
     uint8_t out = 0;
     out |= 0xF0 & uint8_t(OP[OpID].attack << 4);
@@ -220,7 +220,7 @@ void FmBank::Instrument::setAtDec(int OpID, uint8_t in)
 
 
 
-uint8_t FmBank::Instrument::getSusRel(int OpID)
+uint8_t FmBank::Instrument::getSusRel(int OpID) const
 {
     uint8_t out = 0;
     out |= 0xF0 & (uint8_t(0x0F - OP[OpID].sustain) << 4);
@@ -235,7 +235,7 @@ void FmBank::Instrument::setSusRel(int OpID, uint8_t in)
 }
 
 
-uint8_t FmBank::Instrument::getWaveForm(int OpID)
+uint8_t FmBank::Instrument::getWaveForm(int OpID) const
 {
     uint8_t out = 0;
     out |= 0x07 & OP[OpID].waveform;
@@ -249,7 +249,7 @@ void FmBank::Instrument::setWaveForm(int OpID, uint8_t in)
 
 
 
-uint8_t FmBank::Instrument::getFBConn1()
+uint8_t FmBank::Instrument::getFBConn1() const
 {
     uint8_t out = 0;
     out |= uint8_t(connection1);
@@ -263,7 +263,7 @@ void FmBank::Instrument::setFBConn1(uint8_t in)
     feedback1   = (in >> 1) & 0x07;
 }
 
-uint8_t FmBank::Instrument::getFBConn2()
+uint8_t FmBank::Instrument::getFBConn2() const
 {
     uint8_t out = 0;
     out |= uint8_t(connection2);
@@ -278,7 +278,7 @@ void FmBank::Instrument::setFBConn2(uint8_t in)
 }
 
 
-uint32_t FmBank::Instrument::getDataE862(int OpID)
+uint32_t FmBank::Instrument::getDataE862(int OpID) const
 {
     return (uint32_t(OP[OpID].waveform) << 24)
            | (uint32_t((0xF0 & (uint8_t(0x0F - OP[OpID].sustain) << 4))
