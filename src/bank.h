@@ -159,9 +159,9 @@ public:
         //! AdLib specific parameter: Drum Number
         uint8_t adlib_drum_number;
         //! Number of milliseconds of produced sound while sustaining
-        uint16_t    ms_sound_kon;
+        uint16_t ms_sound_kon;
         //! Number of milliseconds of produced sound while release
-        uint16_t    ms_sound_koff;
+        uint16_t ms_sound_koff;
 
         /* ******** OPL3 merged values ******** */
 
