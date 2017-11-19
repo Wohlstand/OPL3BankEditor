@@ -27,6 +27,7 @@ Version | What's new
     2   | Added banks meta-data arrays into bank format (August, 1, 2017)
 -------------------------------------------------------------------------------
     3   | Added two delay coefficients are needed for ADLMIDI's channel busy
+        | (November, 19, 2017)
 -------------------------------------------------------------------------------
 
 ===============================================================================
@@ -36,7 +37,10 @@ Version | What's new
     Each instrument file contains a set of data for single
 channel of YMF262 chip to setup the timbre
 
-Lenght of each instrument entry is 62 bytes
+Lenght of each instrument entry is 62 bytes (up to version 2 and in OPLI files)
+
+Since version 3, in WOPL banks each instrument has extra 4 bytes for
+a two extra fields
 
 Bytes-Lenght  | Description
 -------------------------------------------
@@ -64,6 +68,14 @@ Bytes-Lenght  | Description
     1         | Systain and Release register data
     1         | Wave form
 -------------------------------------------
+
+--VERSION >= 3---WOPL-Bank-only, OPLI must don't have those fields---
+    2         | Big-Endian 16-bit signed integer, Millisecond delay of sound
+              | while key is on
+    2         | Big-Endian 16-bit signed integer, Millisecond delay of sound
+              | after key off
+-------------------------------------------
+
 
 
 ===============================================================================
@@ -121,12 +133,17 @@ Bytes-Lenght      |      Description
     32            | Name of melodic bank null-terminated string
     1             | LSB index of bank (unsigned char)
     1             | MSB index of bank (unsigned char)
+
+InsSize:
+    --62 bytes in up to version 2
+    --66 bytes since version 3 and later
+
 -----------Melodic Instruments--------------
-    62*128*MBanks | 128 [Single-instrument entries] per each bank,
-                  |     look at top of this text file
+    InsSize * 128 * MBanks  | 128 [Single-instrument entries] per each bank,
+                            |     look at top of this text file
 ---------Percussion Instruments-------------
-    62*128*PBanks | 128 [Single-instrument entries] per each bank,
-                  |     look at top of this text file
+    InsSize * 128 * PBanks  | 128 [Single-instrument entries] per each bank,
+                            |     look at top of this text file
 --------------------------------------------
 
 

@@ -62,10 +62,17 @@ enum class InstFormats
 
 enum class FormatCaps
 {
+    //! No capabilities, dummy
     FORMAT_CAPS_NOTHING = 0x00,
+    //! Can be opened for editing
     FORMAT_CAPS_OPEN    = 0x01,
+    //! Can be saved
     FORMAT_CAPS_SAVE    = 0x02,
+    //! Can be opened to import data into currently opened bank
     FORMAT_CAPS_IMPORT  = 0x04,
+    //! On every save the delay measures will be generated
+    FORMAT_CAPS_NEEDS_MEASURE = 0x08,
+    //! Open/Save/Import capabilities
     FORMAT_CAPS_EVERYTHING = FORMAT_CAPS_OPEN|FORMAT_CAPS_SAVE|FORMAT_CAPS_IMPORT
 };
 

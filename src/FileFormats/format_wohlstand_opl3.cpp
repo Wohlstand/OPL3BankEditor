@@ -22,7 +22,10 @@
 static const char       *wopl3_magic = "WOPL3-BANK\0";
 static const char       *wopli_magic = "WOPL3-INST\0";
 
-static const uint16_t   latest_version = 2;
+static const uint16_t   latest_version = 3;
+
+#define WOPL_INST_SIZE_V2 62
+#define WOPL_INST_SIZE_V3 66
 /*
 Version history:
 V. 1
@@ -46,11 +49,19 @@ enum WOPL_InstrumentFlags
     Flag_Pseudo4OP  = 0x02,
 };
 
-static bool readInstrument(QFile &file, FmBank::Instrument &ins)
+static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &version, bool hasSoundKoefficients = true)
 {
-    uint8_t idata[62];
-    if(file.read(char_p(idata), 62) != 62)
-        return false;
+    uint8_t idata[WOPL_INST_SIZE_V3];
+    if(version >= 3)
+    {
+        if(file.read(char_p(idata), WOPL_INST_SIZE_V3) != WOPL_INST_SIZE_V3)
+                    return false;
+    }
+    else
+    {
+        if(file.read(char_p(idata), WOPL_INST_SIZE_V2) != WOPL_INST_SIZE_V2)
+            return false;
+    }
     strncpy(ins.name, char_p(idata), 32);
     ins.note_offset1 = toSint16BE(idata + 32);
     ins.note_offset2 = toSint16BE(idata + 34);
@@ -71,13 +82,18 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins)
         ins.setSusRel(op,   idata[off + 3]);
         ins.setWaveForm(op, idata[off + 4]);
     }
+    if(version >= 3 && hasSoundKoefficients)
+    {
+        ins.ms_sound_kon  = toUint16BE(idata + 62);
+        ins.ms_sound_koff = toUint16BE(idata + 64);
+    }
     return true;
 }
 
-static bool writeInstrument(QFile &file, FmBank::Instrument &ins)
+static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundKoefficients = true)
 {
-    uint8_t odata[62];
-    memset(odata, 0, 62);
+    uint8_t odata[WOPL_INST_SIZE_V3];
+    memset(odata, 0, WOPL_INST_SIZE_V3);
     strncpy(char_p(odata), ins.name, 32);       //32
     fromSint16BE(ins.note_offset1, odata + 32); //2
     fromSint16BE(ins.note_offset2, odata + 34); //2
@@ -97,7 +113,12 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins)
         odata[off + 3] = ins.getSusRel(op);
         odata[off + 4] = ins.getWaveForm(op);
     }
-    return (file.write(char_p(odata), 62) == 62);
+    if(hasSoundKoefficients)
+    {
+        fromUint16BE(ins.ms_sound_kon,  odata + 62);
+        fromUint16BE(ins.ms_sound_koff, odata + 64);
+    }
+    return (file.write(char_p(odata), WOPL_INST_SIZE_V3) == WOPL_INST_SIZE_V3);
 }
 
 FfmtErrCode WohlstandOPL3::loadFile(QString filePath, FmBank &bank)
@@ -173,7 +194,7 @@ tryAgain:
     for(uint16_t i = 0; i < total; i++)
     {
         FmBank::Instrument &ins = (readPercussion) ? bank.Ins_Percussion[i] : bank.Ins_Melodic[i];
-        if(!readInstrument(file, ins))
+        if(!readInstrument(file, ins, version))
         {
             bank.reset();
             return FfmtErrCode::ERR_BADFORMAT;
@@ -281,7 +302,7 @@ tryAgain:
 
 int WohlstandOPL3::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING | (int)FormatCaps::FORMAT_CAPS_NEEDS_MEASURE;
 }
 
 QString WohlstandOPL3::formatName() const
@@ -321,7 +342,7 @@ FfmtErrCode WohlstandOPL3::loadFileInst(QString filePath, FmBank::Instrument &in
         return FfmtErrCode::ERR_BADFORMAT;
     if(isDrum)
         *isDrum = bool(isDrumFlag);
-    if(!readInstrument(file, inst))
+    if(!readInstrument(file, inst, version, false))
         return FfmtErrCode::ERR_BADFORMAT;
     file.close();
 
@@ -341,7 +362,7 @@ FfmtErrCode WohlstandOPL3::saveFileInst(QString filePath, FmBank::Instrument &in
         return FfmtErrCode::ERR_BADFORMAT;
     if(file.write(char_p(&isDrumFlag), 1) != 1)
         return FfmtErrCode::ERR_BADFORMAT;
-    if(!writeInstrument(file, inst))
+    if(!writeInstrument(file, inst, false))
         return FfmtErrCode::ERR_BADFORMAT;
     file.close();
     return FfmtErrCode::ERR_OK;
