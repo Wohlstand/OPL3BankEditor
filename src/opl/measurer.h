@@ -29,14 +29,9 @@
 class Measurer : public QObject
 {
     Q_OBJECT
-    QWidget m_parentWindow;
-    QProgressDialog m_progressBox;
-    QQueue<FmBank::Instrument *> m_tasks;
-    int m_totalTasks;
-    int m_tasksCompleted;
-    QFuture<void> m_task;
 
-    void processStuff();
+    QWidget *m_parentWindow;
+    QProgressDialog m_progressBox;
 
 public:
     explicit Measurer(QWidget *parent = NULL);

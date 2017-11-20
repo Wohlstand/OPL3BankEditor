@@ -38,8 +38,9 @@ struct DurationInfo
     uint8_t     padding[7];
 };
 
-static void MeasureDurations(FmBank::Instrument &in)
+static void MeasureDurations(FmBank::Instrument *in_p)
 {
+    FmBank::Instrument &in = *in_p;
     std::vector<int16_t> stereoSampleBuf;
 
     const unsigned rate = 44100;
@@ -242,24 +243,10 @@ static void MeasureDurations(FmBank::Instrument &in)
 }
 
 
-void Measurer::processStuff()
-{
-    while(!m_tasks.isEmpty())
-    {
-        if(m_progressBox.wasCanceled())
-            break;
-        FmBank::Instrument *ins = m_tasks.dequeue();
-        MeasureDurations(*ins);
-        emit updateProgress(++m_tasksCompleted);
-    }
-}
-
 Measurer::Measurer(QWidget *parent) :
     QObject(parent),
     m_parentWindow(parent),
-    m_progressBox(parent),
-    m_totalTasks(0),
-    m_tasksCompleted(0)
+    m_progressBox(parent)
 {
     m_progressBox.setWindowModality(Qt::WindowModal);
     m_progressBox.setWindowTitle(tr("Sounding delay calculaion"));
@@ -275,23 +262,25 @@ void Measurer::doMeasurement(FmBank &bank)
 {
     qApp->processEvents();
 
+    QQueue<FmBank::Instrument *> tasks;
+
     for(FmBank::Instrument &ins : bank.Ins_Melodic_box)
-        m_tasks.enqueue(&ins);
+        tasks.enqueue(&ins);
     for(FmBank::Instrument &ins : bank.Ins_Percussion_box)
-        m_tasks.enqueue(&ins);
+        tasks.enqueue(&ins);
 
-    m_totalTasks = m_tasks.size();
-    m_tasksCompleted = 0;
-    m_progressBox.setMaximum(m_totalTasks);
-    m_progressBox.setValue(0);
-    m_progressBox.show();
+    QFutureWatcher<void> watcher;
 
-    m_task = QtConcurrent::run(this, &Measurer::processStuff);
+    watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
+    watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
+    watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
 
-    while(m_task.isRunning())
-    {
-        qApp->processEvents();
-        //QThread::sleep(1);
-    }
+    watcher.setFuture(QtConcurrent::map(tasks, &MeasureDurations));
+
+    m_progressBox.exec();
+    watcher.waitForFinished();
+
+    tasks.clear();
+
     emit workCompleted();
 }
