@@ -22,7 +22,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui
+QT += core gui concurrent
 greaterThan(QT_MAJOR_VERSION, 4):{
     QT += widgets multimedia
     DEFINES += ENABLE_AUDIO_TESTING
@@ -97,7 +97,8 @@ SOURCES += \
     src/main.cpp \
     src/opl/generator.cpp \
     src/opl/nukedopl3.c \
-    src/piano.cpp
+    src/piano.cpp \
+    src/opl/measurer.cpp
 
 HEADERS += \
     src/bank_editor.h \
@@ -124,7 +125,8 @@ HEADERS += \
     src/opl/generator.h \
     src/opl/nukedopl3.h \
     src/piano.h \
-    src/version.h
+    src/version.h \
+    src/opl/measurer.h
 
 FORMS += \
     src/bank_editor.ui \

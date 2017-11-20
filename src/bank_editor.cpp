@@ -31,6 +31,8 @@
 
 #include "FileFormats/ffmt_factory.h"
 
+#include "opl/measurer.h"
+
 #include "common.h"
 #include "version.h"
 
@@ -247,6 +249,15 @@ bool BankEditor::openFile(QString filePath)
 
 bool BankEditor::saveBankFile(QString filePath, BankFormats format)
 {
+    {
+        /*
+         * TEMPORARY AND EXPERIMENTAL!!!
+         * Move this measurer from here away when finish works on it!!!
+         */
+        Measurer m(this);
+        m.doMeasurement(m_bank);
+    }
+
     FfmtErrCode err = FmBankFormatFactory::SaveBankFile(filePath, m_bank, format);
 
     if(err != FfmtErrCode::ERR_OK)
