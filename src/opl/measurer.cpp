@@ -42,12 +42,12 @@ static void MeasureDurations(FmBank::Instrument &in)
 {
     std::vector<int16_t> stereoSampleBuf;
 
-    const unsigned rate = 22010;
+    const unsigned rate = 44100;
     const unsigned interval             = 150;
     const unsigned samples_per_interval = rate / interval;
     const int notenum =
-        /*in.percNoteNum < 20 ? (44 + in.percNoteNum) : */
-        in.percNoteNum >= 128 ? (44 + 128 - in.percNoteNum) : in.percNoteNum;
+        in.percNoteNum < 20 ? (44 + in.percNoteNum) :
+                            in.percNoteNum >= 128 ? (44 + 128 - in.percNoteNum) : in.percNoteNum;
 
 #define WRITE_REG(key, value) OPL3_WriteReg(&opl, (Bit8u)(key), (Bit8u)(value))
     _opl3_chip opl;
@@ -65,7 +65,7 @@ static void MeasureDurations(FmBank::Instrument &in)
         WRITE_REG(initdata[a], initdata[a + 1]);
 
     const unsigned n_notes = in.en_4op || in.en_pseudo4op ? 2 : 1;
-    unsigned x[2];
+    unsigned x[2] = {0, 0};
     if(n_notes == 2 && !in.en_pseudo4op)
     {
         WRITE_REG(0x105, 1);
@@ -74,28 +74,28 @@ static void MeasureDurations(FmBank::Instrument &in)
 
     uint8_t rawData[2][11];
 
-    rawData[0][0] = in.getAVEKM(CARRIER1);
-    rawData[0][1] = in.getAVEKM(MODULATOR1);
-    rawData[0][2] = in.getAtDec(CARRIER1);
-    rawData[0][3] = in.getAtDec(MODULATOR1);
-    rawData[0][4] = in.getSusRel(CARRIER1);
-    rawData[0][5] = in.getSusRel(MODULATOR1);
-    rawData[0][6] = in.getWaveForm(CARRIER1);
-    rawData[0][7] = in.getWaveForm(MODULATOR1);
-    rawData[0][8] = in.getKSLL(CARRIER1);
-    rawData[0][9] = in.getKSLL(MODULATOR1);
+    rawData[0][0] = in.getAVEKM(MODULATOR1);
+    rawData[0][1] = in.getAVEKM(CARRIER1);
+    rawData[0][2] = in.getAtDec(MODULATOR1);
+    rawData[0][3] = in.getAtDec(CARRIER1);
+    rawData[0][4] = in.getSusRel(MODULATOR1);
+    rawData[0][5] = in.getSusRel(CARRIER1);
+    rawData[0][6] = in.getWaveForm(MODULATOR1);
+    rawData[0][7] = in.getWaveForm(CARRIER1);
+    rawData[0][8] = in.getKSLL(MODULATOR1);
+    rawData[0][9] = in.getKSLL(CARRIER1);
     rawData[0][10] = in.getFBConn1();
 
-    rawData[1][0] = in.getAVEKM(CARRIER2);
-    rawData[1][1] = in.getAVEKM(MODULATOR2);
-    rawData[1][2] = in.getAtDec(CARRIER2);
-    rawData[1][3] = in.getAtDec(MODULATOR2);
-    rawData[1][4] = in.getSusRel(CARRIER2);
-    rawData[1][5] = in.getSusRel(MODULATOR2);
-    rawData[1][6] = in.getWaveForm(CARRIER2);
-    rawData[1][7] = in.getWaveForm(MODULATOR2);
-    rawData[1][8] = in.getKSLL(CARRIER2);
-    rawData[1][9] = in.getKSLL(MODULATOR2);
+    rawData[1][0] = in.getAVEKM(MODULATOR2);
+    rawData[1][1] = in.getAVEKM(CARRIER2);
+    rawData[1][2] = in.getAtDec(MODULATOR2);
+    rawData[1][3] = in.getAtDec(CARRIER2);
+    rawData[1][4] = in.getSusRel(MODULATOR2);
+    rawData[1][5] = in.getSusRel(CARRIER2);
+    rawData[1][6] = in.getWaveForm(MODULATOR2);
+    rawData[1][7] = in.getWaveForm(CARRIER2);
+    rawData[1][8] = in.getKSLL(MODULATOR2);
+    rawData[1][9] = in.getKSLL(CARRIER2);
     rawData[1][10] = in.getFBConn2();
 
     for(unsigned n = 0; n < n_notes; ++n)
@@ -163,7 +163,7 @@ static void MeasureDurations(FmBank::Instrument &in)
 
     // Keyoff the note
     for(unsigned n = 0; n < n_notes; ++n)
-        WRITE_REG(0xB0 + n, (x[n] >> 8) & 0xDF);
+        WRITE_REG(0xB0 + n * 3, (x[n] >> 8) & 0xDF);
 
     // Now, for up to 60 seconds, measure mean amplitude.
     std::vector<double> amplitudecurve_off;
@@ -274,18 +274,11 @@ Measurer::~Measurer()
 void Measurer::doMeasurement(FmBank &bank)
 {
     qApp->processEvents();
-    /*
+
     for(FmBank::Instrument &ins : bank.Ins_Melodic_box)
         m_tasks.enqueue(&ins);
     for(FmBank::Instrument &ins : bank.Ins_Percussion_box)
         m_tasks.enqueue(&ins);
-    */
-
-    m_tasks.enqueue(&bank.Ins_Melodic_box[47]);
-    m_tasks.enqueue(&bank.Ins_Melodic_box[48]);
-    m_tasks.enqueue(&bank.Ins_Melodic_box[49]);
-    m_tasks.enqueue(&bank.Ins_Melodic_box[50]);
-    m_tasks.enqueue(&bank.Ins_Melodic_box[51]);
 
     m_totalTasks = m_tasks.size();
     m_tasksCompleted = 0;
