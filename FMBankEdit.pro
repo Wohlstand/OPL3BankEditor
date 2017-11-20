@@ -22,9 +22,9 @@
 #
 #-------------------------------------------------
 
-QT += core gui concurrent
+QT += core gui
 greaterThan(QT_MAJOR_VERSION, 4):{
-    QT += widgets multimedia
+    QT += widgets multimedia concurrent
     DEFINES += ENABLE_AUDIO_TESTING
     CONFIG += c++11
 } else {

@@ -16,10 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef IS_QT_4
 #include <QtConcurrent/QtConcurrent>
+#include <QFuture>
+#endif
 #include <QQueue>
 #include <QProgressDialog>
-#include <QFuture>
 
 #include <cmath>
 
@@ -283,13 +285,13 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup)
     if(tasks.isEmpty())
         return true;// Nothing to do! :)
 
-    QFutureWatcher<void> watcher;
-
     QProgressDialog m_progressBox(m_parentWindow);
     m_progressBox.setWindowModality(Qt::WindowModal);
     m_progressBox.setWindowTitle(tr("Sounding delay calculaion"));
     m_progressBox.setLabelText(tr("Please wait..."));
 
+    #ifndef IS_QT_4
+    QFutureWatcher<void> watcher;
     watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
     watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
     watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
@@ -301,17 +303,31 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup)
 
     tasks.clear();
     return !watcher.isCanceled();
+
+    #else
+    m_progressBox.setMaximum(tasks.size());
+    m_progressBox.setValue(0);
+    int count = 0;
+    foreach(FmBank::Instrument *ins, tasks)
+    {
+        MeasureDurations(ins);
+        m_progressBox.setValue(++count);
+        if(m_progressBox.wasCanceled())
+            return false;
+    }
+    return true;
+    #endif
 }
 
 bool Measurer::doMeasurement(FmBank::Instrument &instrument)
 {
-    QFutureWatcher<void> watcher;
-
     QProgressDialog m_progressBox(m_parentWindow);
     m_progressBox.setWindowModality(Qt::WindowModal);
     m_progressBox.setWindowTitle(tr("Sounding delay calculaion"));
     m_progressBox.setLabelText(tr("Please wait..."));
 
+    #ifndef IS_QT_4
+    QFutureWatcher<void> watcher;
     watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
     watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
     watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
@@ -322,4 +338,10 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
     watcher.waitForFinished();
 
     return !watcher.isCanceled();
+
+    #else
+    m_progressBox.show();
+    MeasureDurations(&instrument);
+    return true;
+    #endif
 }
