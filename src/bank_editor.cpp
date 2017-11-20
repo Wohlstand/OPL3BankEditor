@@ -88,6 +88,7 @@ BankEditor::BankEditor(QWidget *parent) :
     #endif
     this->setFixedSize(this->window()->width(), this->window()->height());
     m_importer = new Importer(this);
+    m_measurer = new Measurer(this);
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
     initAudio();
     loadSettings();
@@ -104,6 +105,7 @@ BankEditor::~BankEditor()
     m_generator->stop();
     delete m_audioOutput;
     #endif
+    delete m_measurer;
     delete m_generator;
     delete m_importer;
     delete ui;
@@ -249,13 +251,10 @@ bool BankEditor::openFile(QString filePath)
 
 bool BankEditor::saveBankFile(QString filePath, BankFormats format)
 {
+    if(format == BankFormats::FORMAT_WOHLSTAND_OPL3)
     {
-        /*
-         * TEMPORARY AND EXPERIMENTAL!!!
-         * Move this measurer from here away when finish works on it!!!
-         */
-        Measurer m(this);
-        m.doMeasurement(m_bank);
+        if(!m_measurer->doMeasurement(m_bank, m_bankBackup))
+            return false;//Measurement was cancelled
     }
 
     FfmtErrCode err = FmBankFormatFactory::SaveBankFile(filePath, m_bank, format);

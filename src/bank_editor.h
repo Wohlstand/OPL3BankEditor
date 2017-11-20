@@ -28,6 +28,7 @@
 #include <QListWidgetItem>
 #include "bank.h"
 #include "opl/generator.h"
+#include "opl/measurer.h"
 
 #include "FileFormats/ffmt_base.h"
 
@@ -86,6 +87,9 @@ private:
 
     //! OPL chip emulator frontent
     Generator       *m_generator;
+
+    //! Sound length measurer
+    Measurer        *m_measurer;
 
     //! Recent bank file format which was been used
     BankFormats     m_recentFormat;

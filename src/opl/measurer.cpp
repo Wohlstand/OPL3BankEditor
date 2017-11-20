@@ -17,9 +17,13 @@
  */
 
 #include <QtConcurrent/QtConcurrent>
+#include <QQueue>
+#include <QProgressDialog>
+#include <QFuture>
+
+#include <cmath>
 
 #include "measurer.h"
-#include <cmath>
 
 //Measurer is always needs for emulator
 #include "nukedopl3.h"
@@ -245,31 +249,46 @@ static void MeasureDurations(FmBank::Instrument *in_p)
 
 Measurer::Measurer(QWidget *parent) :
     QObject(parent),
-    m_parentWindow(parent),
-    m_progressBox(parent)
-{
-    m_progressBox.setWindowModality(Qt::WindowModal);
-    m_progressBox.setWindowTitle(tr("Sounding delay calculaion"));
-    m_progressBox.setLabelText(tr("Please wait..."));
-    connect(this, SIGNAL(updateProgress(int)), &m_progressBox, SLOT(setValue(int)));
-    connect(this, SIGNAL(workCompleted()), &m_progressBox, SLOT(hide()));
-}
+    m_parentWindow(parent)
+{}
 
 Measurer::~Measurer()
 {}
 
-void Measurer::doMeasurement(FmBank &bank)
+bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup)
 {
-    qApp->processEvents();
-
     QQueue<FmBank::Instrument *> tasks;
 
-    for(FmBank::Instrument &ins : bank.Ins_Melodic_box)
-        tasks.enqueue(&ins);
-    for(FmBank::Instrument &ins : bank.Ins_Percussion_box)
-        tasks.enqueue(&ins);
+    int i = 0;
+    for(i = 0; i < bank.Ins_Melodic_box.size() && i < bankBackup.Ins_Melodic_box.size(); i++)
+    {
+        FmBank::Instrument &ins1 = bank.Ins_Melodic_box[i];
+        FmBank::Instrument &ins2 = bankBackup.Ins_Melodic_box[i];
+        if((ins1.ms_sound_kon == 0) || (memcmp(&ins1, &ins2, sizeof(FmBank::Instrument)) != 0))
+            tasks.enqueue(&ins1);
+    }
+    for(; i < bank.Ins_Melodic_box.size(); i++)
+        tasks.enqueue(&bank.Ins_Melodic_box[i]);
+
+    for(i = 0; i < bank.Ins_Percussion_box.size() && i < bankBackup.Ins_Percussion_box.size(); i++)
+    {
+        FmBank::Instrument &ins1 = bank.Ins_Percussion_box[i];
+        FmBank::Instrument &ins2 = bankBackup.Ins_Percussion_box[i];
+        if((ins1.ms_sound_kon == 0) || (memcmp(&ins1, &ins2, sizeof(FmBank::Instrument)) != 0))
+            tasks.enqueue(&ins1);
+    }
+    for(; i < bank.Ins_Percussion_box.size(); i++)
+        tasks.enqueue(&bank.Ins_Percussion_box[i]);
+
+    if(tasks.isEmpty())
+        return true;// Nothing to do! :)
 
     QFutureWatcher<void> watcher;
+
+    QProgressDialog m_progressBox(m_parentWindow);
+    m_progressBox.setWindowModality(Qt::WindowModal);
+    m_progressBox.setWindowTitle(tr("Sounding delay calculaion"));
+    m_progressBox.setLabelText(tr("Please wait..."));
 
     watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
     watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
@@ -281,6 +300,26 @@ void Measurer::doMeasurement(FmBank &bank)
     watcher.waitForFinished();
 
     tasks.clear();
+    return !watcher.isCanceled();
+}
 
-    emit workCompleted();
+bool Measurer::doMeasurement(FmBank::Instrument &instrument)
+{
+    QFutureWatcher<void> watcher;
+
+    QProgressDialog m_progressBox(m_parentWindow);
+    m_progressBox.setWindowModality(Qt::WindowModal);
+    m_progressBox.setWindowTitle(tr("Sounding delay calculaion"));
+    m_progressBox.setLabelText(tr("Please wait..."));
+
+    watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
+    watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
+    watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
+
+    watcher.setFuture(QtConcurrent::run(&MeasureDurations, &instrument));
+
+    m_progressBox.exec();
+    watcher.waitForFinished();
+
+    return !watcher.isCanceled();
 }

@@ -20,10 +20,7 @@
 #define MEASURER_H
 
 #include <QObject>
-#include <QProgressDialog>
 #include <QWidget>
-#include <QQueue>
-#include <QFuture>
 #include "../bank.h"
 
 class Measurer : public QObject
@@ -31,18 +28,13 @@ class Measurer : public QObject
     Q_OBJECT
 
     QWidget *m_parentWindow;
-    QProgressDialog m_progressBox;
 
 public:
     explicit Measurer(QWidget *parent = NULL);
     ~Measurer();
 
-    void doMeasurement(FmBank &bank);
-
-signals:
-    void updateProgress(int);
-    void workCompleted();
-
+    bool doMeasurement(FmBank &bank, FmBank &bankBackup);
+    bool doMeasurement(FmBank::Instrument &instrument);
 };
 
 
