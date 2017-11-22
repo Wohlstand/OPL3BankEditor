@@ -202,6 +202,7 @@ void BankEditor::initFileData(QString &filePath)
     m_lock = false;
 
     reloadInstrumentNames();
+    reloadBanks();
     setCurrentInstrument(m_recentNum, m_recentPerc);
 }
 
@@ -408,6 +409,7 @@ void BankEditor::on_actionNew_triggered()
     m_bankBackup.reset();
     on_instruments_currentItemChanged(NULL, NULL);
     reloadInstrumentNames();
+    reloadBanks();
 }
 
 void BankEditor::on_actionOpen_triggered()
@@ -1153,3 +1155,4 @@ void BankEditor::on_actionDeleteBank_triggered()
             ui->bank_no->setCurrentIndex(curBank);
     }
 }
+
