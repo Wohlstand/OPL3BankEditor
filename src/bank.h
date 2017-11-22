@@ -329,8 +329,8 @@ public:
      */
     static MidiBank emptyBank(uint16_t index = 0);
 
-    inline int countMelodic()   { return Ins_Melodic_box.size(); }
-    inline int countDrums()     { return Ins_Percussion_box.size(); }
+    inline int countMelodic() const { return Ins_Melodic_box.size(); }
+    inline int countDrums() const   { return Ins_Percussion_box.size(); }
 
     //! Pointer to array of melodic instruments
     Instrument* Ins_Melodic;
