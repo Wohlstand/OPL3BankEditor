@@ -113,12 +113,15 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
         odata[off + 3] = ins.getSusRel(op);
         odata[off + 4] = ins.getWaveForm(op);
     }
+
     if(hasSoundKoefficients)
     {
         fromUint16BE(ins.ms_sound_kon,  odata + 62);
         fromUint16BE(ins.ms_sound_koff, odata + 64);
+        return (file.write(char_p(odata), WOPL_INST_SIZE_V3) == WOPL_INST_SIZE_V3);
     }
-    return (file.write(char_p(odata), WOPL_INST_SIZE_V3) == WOPL_INST_SIZE_V3);
+    else
+        return (file.write(char_p(odata), WOPL_INST_SIZE_V2) == WOPL_INST_SIZE_V2);
 }
 
 FfmtErrCode WohlstandOPL3::loadFile(QString filePath, FmBank &bank)
