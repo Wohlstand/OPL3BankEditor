@@ -125,6 +125,39 @@ void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
     deep_tremolo = false;
 }
 
+void FmBank::autocreateMissingBanks()
+{
+    int melodic_banks = ((countMelodic() - 1) / 128 + 1);
+    int percussion_banks = ((countDrums() - 1) / 128 + 1);
+    size_t size = 0;
+    if(Banks_Melodic.size() < melodic_banks)
+    {
+        size = Banks_Melodic.size();
+        Banks_Melodic.resize(melodic_banks);
+        memset(Banks_Melodic.data() + size, 0, sizeof(MidiBank) * ((size_t)melodic_banks - size));
+        for(int i = (int)size; i < Banks_Melodic.size(); i++)
+        {
+            int lsb = i % 256;
+            int msb = (i >> 8) & 255;
+            Banks_Melodic[i].lsb = lsb;
+            Banks_Melodic[i].msb = msb;
+        }
+    }
+    if(Banks_Percussion.size() < percussion_banks)
+    {
+        size = Banks_Percussion.size();
+        Banks_Percussion.resize(percussion_banks);
+        memset(Banks_Percussion.data() + size, 0, sizeof(MidiBank) * ((size_t)percussion_banks - size));
+        for(int i = (int)size; i < Banks_Percussion.size(); i++)
+        {
+            int lsb = i % 256;
+            int msb = (i >> 8) & 255;
+            Banks_Percussion[i].lsb = lsb;
+            Banks_Percussion[i].msb = msb;
+        }
+    }
+}
+
 FmBank::Instrument FmBank::emptyInst()
 {
     FmBank::Instrument inst;

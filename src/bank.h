@@ -53,6 +53,11 @@ public:
     void reset(uint16_t melodic_banks, uint16_t percussion_banks);
 
     /**
+     * @brief Automatically create bank entries in dependence of count of instruments in the bank
+     */
+    void autocreateMissingBanks();
+
+    /**
      * @brief Operator specs
      */
     struct Operator

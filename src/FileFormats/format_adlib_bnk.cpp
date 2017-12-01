@@ -299,6 +299,9 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
         }
     }
 
+    //Automatically create missing banks
+    bank.autocreateMissingBanks();
+
     return FfmtErrCode::ERR_OK;
 }
 

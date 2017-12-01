@@ -152,6 +152,9 @@ FfmtErrCode AdLibTimbre::loadFile(QString filePath, FmBank &bank)
     }
     file.close();
 
+    //Automatically create missing banks
+    bank.autocreateMissingBanks();
+
     return FfmtErrCode::ERR_OK;
 }
 
