@@ -682,6 +682,8 @@ void BankEditor::reloadBanks()
 
 void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
 {
+    ui->bankListFrame->setHidden(checked);
+    ui->bankRename->setHidden(checked);
     ui->bank_no->setHidden(checked);
     ui->bank_lsbmsb->setHidden(checked);
     ui->actionAddBank->setDisabled(checked);
