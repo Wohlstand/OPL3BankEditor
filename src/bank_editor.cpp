@@ -288,6 +288,8 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format)
     }
     else
     {
+        //Override 'recently-saved' format
+        m_recentFormat = format;
         reInitFileDataAfterSave(filePath);
         return true;
     }
