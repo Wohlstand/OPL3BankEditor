@@ -2461,7 +2461,10 @@ of second voice</string>
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>AdLib BNK mode</string>
+    <string>United view of all banks</string>
+   </property>
+   <property name="iconText">
+    <string>United view of all banks</string>
    </property>
    <property name="toolTip">
     <string>Show all instruments without separating them between of 128-instrument banks</string>
