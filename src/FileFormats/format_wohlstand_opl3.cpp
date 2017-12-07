@@ -52,12 +52,13 @@ enum WOPL_InstrumentFlags
 static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &version, bool hasSoundKoefficients = true)
 {
     uint8_t idata[WOPL_INST_SIZE_V3];
+    memset(idata, 0, WOPL_INST_SIZE_V3);
     if(version >= 3)
     {
         int got = file.read(char_p(idata), WOPL_INST_SIZE_V3);
         if(hasSoundKoefficients && (got != WOPL_INST_SIZE_V3))
             return false;
-        if(!hasSoundKoefficients && (got != WOPL_INST_SIZE_V2))
+        if(!hasSoundKoefficients && (got != WOPL_INST_SIZE_V2) && (got != WOPL_INST_SIZE_V3))
             return false;
     }
     else
