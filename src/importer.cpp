@@ -122,7 +122,7 @@ bool Importer::openFile(QString filePath, bool isBank)
         case FfmtErrCode::ERR_OK:
             break;
         }
-        ErrMessageO(this, errText);
+        ErrMessageO(this, errText, isBank);
         return false;
     }
     if(FmBankFormatFactory::isImportOnly(format))

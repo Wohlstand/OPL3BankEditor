@@ -169,18 +169,20 @@ bool hasExt(const QString &file, const char *ext)
 }
 
 
-void ErrMessageO(QWidget *parent, QString errStr)
+void ErrMessageO(QWidget *parent, QString errStr, bool isBank)
 {
+    QString ftype = isBank ? QObject::tr("bank") : QObject::tr("instrument");
     QMessageBox::warning(parent,
-                         QObject::tr("Can't open bank file!"),
-                         QObject::tr("Can't open bank file because %1.").arg(errStr),
+                         QObject::tr("Can't open %1 file!").arg(ftype),
+                         QObject::tr("Can't open %1 file because %2.").arg(ftype).arg(errStr),
                          QMessageBox::Ok);
 }
 
-void ErrMessageS(QWidget *parent, QString errStr)
+void ErrMessageS(QWidget *parent, QString errStr, bool isBank)
 {
+    QString ftype = isBank ? QObject::tr("bank") : QObject::tr("instrument");
     QMessageBox::warning(parent,
-                         QObject::tr("Can't save bank file!"),
-                         QObject::tr("Can't save bank file because %1.").arg(errStr),
+                         QObject::tr("Can't save %1 file!").arg(ftype),
+                         QObject::tr("Can't save %1 file because %2.").arg(ftype).arg(errStr),
                          QMessageBox::Ok);
 }
