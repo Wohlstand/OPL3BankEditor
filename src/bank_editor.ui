@@ -104,6 +104,12 @@
         </property>
         <item>
          <widget class="QPushButton" name="bankRename">
+          <property name="maximumSize">
+           <size>
+            <width>25</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="toolTip">
            <string>Rename bank</string>
           </property>
@@ -1500,10 +1506,10 @@
         <item row="0" column="7">
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
-           <string>Percussion</string>
+           <string>Percussion type</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
-           <item row="0" column="2">
+           <item row="0" column="1">
             <widget class="QLabel" name="label_27">
              <property name="font">
               <font>
@@ -1514,11 +1520,11 @@
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Note number:</string>
+              <string>N:</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
+           <item row="0" column="2">
             <widget class="QSpinBox" name="perc_noteNum">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1529,19 +1535,9 @@
             </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QLabel" name="label_40">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Drum instrument mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a mode where are percussions are playing in the regular melodic channels without any limits. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Is highly recommended to use&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bass-Drum/Snare/TomTom/Cymbal/Hi-hat&lt;/span&gt;&lt;br/&gt;Enables legacy percussion mode where are five restricted channels. This mode is restricts a playing more than one sound of every type. For example, in this mode is impossible playing multiple snares or multiple bass-drums. &lt;span style=&quot; text-decoration: underline;&quot;&gt;This mode is available only on some special bank formats (for example, IBK, SBI). Other bank formats are supports a generic mode only&lt;/span&gt;!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Mode:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
             <widget class="QComboBox" name="percMode">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Drum instrument mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a mode where are percussions are playing in the regular melodic channels without any limits. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Is highly recommended to use&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bass-Drum/Snare/TomTom/Cymbal/Hi-hat&lt;/span&gt;&lt;br/&gt;Enables legacy percussion mode where are five restricted channels. This mode is restricts a playing more than one sound of every type. For example, in this mode is impossible playing multiple snares or multiple bass-drums. &lt;span style=&quot; text-decoration: underline;&quot;&gt;This mode is available only on some special bank formats (for example, IBK, SBI). Other bank formats are supports a generic mode only&lt;/span&gt;!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Drum instrument mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic (a.k.a. Melodic) mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a mode where are percussions are playing in the regular melodic channels without any limits. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Is highly recommended to use&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bass-Drum/Snare/TomTom/Cymbal/Hi-hat&lt;/span&gt;&lt;br/&gt;Enables legacy percussion mode where are five restricted channels. This mode is restricts a playing more than one sound of every type. For example, in this mode is impossible playing multiple snares or multiple bass-drums. &lt;span style=&quot; text-decoration: underline;&quot;&gt;This mode is available only on some special bank formats (for example, IBK, SBI). Other bank formats are supports a generic mode only&lt;/span&gt;!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <item>
               <property name="text">
@@ -1652,19 +1648,6 @@
           </property>
           <property name="text">
            <string>Enable 4-operator</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4" rowspan="2">
-         <widget class="QLabel" name="label_38">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset second voice to one semi-tone (octave is 12 semi-tones) &lt;br/&gt;(0 is don't offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>Note offset 2</string>
           </property>
          </widget>
         </item>
@@ -1792,6 +1775,19 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="0" column="4" rowspan="2">
+         <widget class="QLabel" name="label_38">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset second voice to one semi-tone (octave is 12 semi-tones) &lt;br/&gt;(0 is don't offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Note offset 2</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -2107,7 +2103,7 @@ Available from 0 to 127</string>
      <rect>
       <x>840</x>
       <y>0</y>
-      <width>111</width>
+      <width>121</width>
       <height>51</height>
      </rect>
     </property>
@@ -2327,7 +2323,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>970</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2355,8 +2351,19 @@ of second voice</string>
     <property name="title">
      <string>Edit</string>
     </property>
+    <widget class="QMenu" name="menuPasteOneVoice">
+     <property name="title">
+      <string>Paste one voice</string>
+     </property>
+     <addaction name="actionPasteVoice11"/>
+     <addaction name="actionPasteVoice12"/>
+     <addaction name="actionPasteVoice21"/>
+     <addaction name="actionPasteVoice22"/>
+    </widget>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
+    <addaction name="menuPasteOneVoice"/>
+    <addaction name="actionSwapVoices"/>
     <addaction name="separator"/>
     <addaction name="actionReset_current_instrument"/>
     <addaction name="separator"/>
@@ -2500,6 +2507,34 @@ of second voice</string>
     <string>Supported formats...</string>
    </property>
   </action>
+  <action name="actionSwapVoices">
+   <property name="text">
+    <string>Swap two voices</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionPasteVoice11">
+   <property name="text">
+    <string>Paste voice 1 as voice 1</string>
+   </property>
+  </action>
+  <action name="actionPasteVoice12">
+   <property name="text">
+    <string>Paste voice 1 as voice 2</string>
+   </property>
+  </action>
+  <action name="actionPasteVoice21">
+   <property name="text">
+    <string>Paste voice 2 as voice 1</string>
+   </property>
+  </action>
+  <action name="actionPasteVoice22">
+   <property name="text">
+    <string>Paste voice 2 as voice 1</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -2521,12 +2556,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>752</x>
-     <y>406</y>
+     <x>839</x>
+     <y>401</y>
     </hint>
     <hint type="destinationlabel">
-     <x>532</x>
-     <y>437</y>
+     <x>508</x>
+     <y>436</y>
     </hint>
    </hints>
   </connection>
@@ -2537,12 +2572,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>780</x>
-     <y>406</y>
+     <x>839</x>
+     <y>401</y>
     </hint>
     <hint type="destinationlabel">
-     <x>347</x>
-     <y>423</y>
+     <x>361</x>
+     <y>418</y>
     </hint>
    </hints>
   </connection>
@@ -2553,12 +2588,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>780</x>
-     <y>406</y>
+     <x>839</x>
+     <y>401</y>
     </hint>
     <hint type="destinationlabel">
      <x>413</x>
-     <y>676</y>
+     <y>668</y>
     </hint>
    </hints>
   </connection>
@@ -2569,12 +2604,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>780</x>
-     <y>406</y>
+     <x>839</x>
+     <y>401</y>
     </hint>
     <hint type="destinationlabel">
-     <x>780</x>
-     <y>676</y>
+     <x>840</x>
+     <y>668</y>
     </hint>
    </hints>
   </connection>
@@ -2585,12 +2620,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>780</x>
-     <y>406</y>
+     <x>839</x>
+     <y>401</y>
     </hint>
     <hint type="destinationlabel">
-     <x>240</x>
-     <y>437</y>
+     <x>241</x>
+     <y>436</y>
     </hint>
    </hints>
   </connection>
@@ -2601,12 +2636,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>637</x>
-     <y>394</y>
+     <x>839</x>
+     <y>401</y>
     </hint>
     <hint type="destinationlabel">
-     <x>612</x>
-     <y>426</y>
+     <x>839</x>
+     <y>434</y>
     </hint>
    </hints>
   </connection>
@@ -2617,12 +2652,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>678</x>
-     <y>431</y>
+     <x>839</x>
+     <y>434</y>
     </hint>
     <hint type="destinationlabel">
-     <x>827</x>
-     <y>577</y>
+     <x>850</x>
+     <y>640</y>
     </hint>
    </hints>
   </connection>
@@ -2637,8 +2672,8 @@ of second voice</string>
      <y>432</y>
     </hint>
     <hint type="destinationlabel">
-     <x>842</x>
-     <y>557</y>
+     <x>850</x>
+     <y>610</y>
     </hint>
    </hints>
   </connection>
@@ -2649,12 +2684,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>641</x>
-     <y>429</y>
+     <x>839</x>
+     <y>434</y>
     </hint>
     <hint type="destinationlabel">
-     <x>829</x>
-     <y>657</y>
+     <x>667</x>
+     <y>418</y>
     </hint>
    </hints>
   </connection>
@@ -2665,12 +2700,28 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>641</x>
-     <y>432</y>
+     <x>839</x>
+     <y>434</y>
     </hint>
     <hint type="destinationlabel">
-     <x>806</x>
-     <y>641</y>
+     <x>599</x>
+     <y>436</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>doubleVoice</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actionSwapVoices</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>759</x>
+     <y>424</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
    </hints>
   </connection>

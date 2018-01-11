@@ -281,6 +281,26 @@ private slots:
      */
     void on_actionPaste_triggered();
     /**
+     * @brief Paste first vocice only as first voice
+     */
+    void on_actionPasteVoice11_triggered();
+    /**
+     * @brief Paste first vocice only as second voice
+     */
+    void on_actionPasteVoice12_triggered();
+    /**
+     * @brief Paste second vocice only as first voice
+     */
+    void on_actionPasteVoice21_triggered();
+    /**
+     * @brief Paste second vocice only as second voice
+     */
+    void on_actionPasteVoice22_triggered();
+    /**
+     * @brief Swap two voices of pseudo-4-operators instrument
+     */
+    void on_actionSwapVoices_triggered();
+    /**
      * @brief Reset current instrument state to initial
      */
     void on_actionReset_current_instrument_triggered();

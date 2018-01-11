@@ -457,6 +457,65 @@ void BankEditor::on_actionPaste_triggered()
     syncInstrumentName();
 }
 
+void BankEditor::on_actionPasteVoice11_triggered()
+{
+    if(!m_curInst) return;
+    size_t buffSize = sizeof(FmBank::Operator) * 2;
+    m_curInst->feedback1 = m_clipboard.feedback1;
+    m_curInst->connection1 = m_clipboard.connection1;
+    m_curInst->note_offset1 = m_clipboard.note_offset1;
+    memcpy(m_curInst->OP, m_clipboard.OP, buffSize);
+    flushInstrument();
+}
+
+void BankEditor::on_actionPasteVoice12_triggered()
+{
+    if(!m_curInst) return;
+    if(!m_curInst) return;
+    size_t buffSize = sizeof(FmBank::Operator) * 2;
+    m_curInst->feedback2 = m_clipboard.feedback1;
+    m_curInst->connection2 = m_clipboard.connection1;
+    m_curInst->note_offset2 = m_clipboard.note_offset1;
+    memcpy(m_curInst->OP + 2, m_clipboard.OP, buffSize);
+    flushInstrument();
+}
+
+void BankEditor::on_actionPasteVoice21_triggered()
+{
+    if(!m_curInst) return;
+    size_t buffSize = sizeof(FmBank::Operator) * 2;
+    m_curInst->feedback1 = m_clipboard.feedback2;
+    m_curInst->connection1 = m_clipboard.connection2;
+    m_curInst->note_offset1 = m_clipboard.note_offset2;
+    memcpy(m_curInst->OP, m_clipboard.OP + 2, buffSize);
+    flushInstrument();
+}
+
+void BankEditor::on_actionPasteVoice22_triggered()
+{
+    if(!m_curInst) return;
+    size_t buffSize = sizeof(FmBank::Operator) * 2;
+    m_curInst->feedback2 = m_clipboard.feedback2;
+    m_curInst->connection2 = m_clipboard.connection2;
+    m_curInst->note_offset2 = m_clipboard.note_offset2;
+    memcpy(m_curInst->OP + 2, m_clipboard.OP + 2, buffSize);
+    flushInstrument();
+}
+
+void BankEditor::on_actionSwapVoices_triggered()
+{
+    if(!m_curInst) return;
+    size_t buffSize = sizeof(FmBank::Operator) * 2;
+    FmBank::Operator buffer[2];
+    std::swap(m_curInst->feedback1, m_curInst->feedback2);
+    std::swap(m_curInst->connection1, m_curInst->connection2);
+    std::swap(m_curInst->note_offset1, m_curInst->note_offset2);
+    memcpy(buffer, m_curInst->OP, buffSize);
+    memcpy(m_curInst->OP, m_curInst->OP + 2, buffSize);
+    memcpy(m_curInst->OP + 2, buffer, buffSize);
+    flushInstrument();
+}
+
 void BankEditor::on_actionReset_current_instrument_triggered()
 {
     if(!m_curInstBackup || !m_curInst)
@@ -1159,4 +1218,5 @@ void BankEditor::on_actionDeleteBank_triggered()
             ui->bank_no->setCurrentIndex(curBank);
     }
 }
+
 
