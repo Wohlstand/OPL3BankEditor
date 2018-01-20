@@ -4,9 +4,9 @@
 A small cross-platform editor of the OPL3 FM banks of different formats
 
 # CI Build status
-Linux | Windows (32-bit) | Windows (32-bit for 9x) | macOS
+Linux | Windows | macOS
 ------------ | ------------- | ------------- | -------------
-[![Build Status](https://travis-ci.org/Wohlstand/OPL3BankEditor.svg?branch=master)](https://travis-ci.org/Wohlstand/OPL3BankEditor) | [![Build status](https://ci.appveyor.com/api/projects/status/llbyd0blk0i7amih?svg=true)](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor) | [![Build status](https://ci.appveyor.com/api/projects/status/dfssdt0ys1elxh3g?svg=true)](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor-mn8v1) | Comming soon!
+[![Build Status](https://travis-ci.org/Wohlstand/OPL3BankEditor.svg?branch=master)](https://travis-ci.org/Wohlstand/OPL3BankEditor) | [![Build status](https://ci.appveyor.com/api/projects/status/llbyd0blk0i7amih?svg=true)](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor) | Comming soon!
 
 ## Currently supported bank formats
 * Own bank format (.WOPL) (Specification in the **WOPL-and-OPLI-Specification.txt** file)
