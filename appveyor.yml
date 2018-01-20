@@ -3,7 +3,7 @@
 #                             created 2016-08-09
 #--------------------------------------------------------------------------------
 
-version: 1.3.2.{build}
+version: 1.3.4.{build}
 
 branches:
   only:  # whitelist
@@ -28,18 +28,37 @@ clone_depth:  3  # clone entire repository history if not defined
 # init:
 # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
+environment:
+  matrix:
+    - PLATFORM: Win32
+      WINXX_ARCH: win32
+      COMPILER: C:\Qt\Tools\mingw530_32\bin
+      QT_DIR: C:\Qt\5.7\mingw53_32\bin # Qt since 5.8 no more supports Windows XP, Keep support for Windows XP yet
+    - PLATFORM: Win9x
+      WINXX_ARCH: win9x
+      COMPILER: C:\MinGW-6-3\bin
+      QT_DIR: C:\Qt\4.4.3\bin
+
 install:
+  - ps: if ($env:PLATFORM -eq "Win9x") { new-item C:\temp-d -itemtype directory }
+  - ps: if ($env:PLATFORM -eq "Win9x") { (new-object net.webclient).DownloadFile('http://wohlsoft.ru/docs/Software/QtBuilts/MinGW-6-3-x86-dw2.zip', 'C:\temp-d\MinGW-6-3-x86-dw2.zip'); }
+  - ps: if ($env:PLATFORM -eq "Win9x") { (new-object net.webclient).DownloadFile('http://wohlsoft.ru/docs/Software/QtBuilts/qt-4.4.3-mingw-6.3-win32-static-mini-release.7z', 'C:\temp-d\qt-4.4.3-mingw-6.3-win32-static-mini-release.7z'); }
+  - ps: |
+      if ($env:PLATFORM -eq "Win9x") {
+      Set-Alias sevenzip "C:\Program Files\7-Zip\7z.exe"
+      sevenzip x C:\temp-d\MinGW-6-3-x86-dw2.zip -oC:\MinGW-6-3;
+      sevenzip x C:\temp-d\qt-4.4.3-mingw-6.3-win32-static-mini-release.7z -oC:\Qt; }
   - git submodule init
   - git submodule update
-  - echo set QtDir=C:\Qt\5.7\mingw53_32\bin>> _paths.bat
-  - echo set MinGW=C:\Qt\Tools\mingw530_32\bin>> _paths.bat
+  - echo set QtDir=%QT_DIR%>> _paths.bat
+  - echo set MinGW=%COMPILER%>> _paths.bat
   - echo set GitDir=C:\Program Files\Git\cmd>> _paths.bat
 
 build_script:
-  - build.bat
+  - build.bat %WINXX_ARCH%
 
 artifacts:
-  - path: opl3-bank-editor\opl3-bank-editor-dev-win32.zip
+  - path: opl3-bank-editor\opl3-bank-editor-dev-$(WINXX_ARCH).zip
 
 deploy:
   - provider: Environment
