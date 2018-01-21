@@ -18,8 +18,7 @@ dist: trusty
 before_install:
  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
  - sudo apt-get update -qq
- - sudo apt-get install qt5-default qtbase5-dev qt5-qmake qttools5-dev-tools libqt5concurrent5 libqt5test5
- - sudo apt-get install qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins
+ - sudo apt-get install qt5-default qtbase5-dev qt5-qmake qttools5-dev-tools libqt5concurrent5 libqt5test5 qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins libasound2-dev
 
 script:
  - qmake CONFIG-=debug CONFIG+=release
