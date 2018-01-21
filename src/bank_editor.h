@@ -19,9 +19,6 @@
 #ifndef BANK_EDITOR_H
 #define BANK_EDITOR_H
 
-#ifdef ENABLE_AUDIO_TESTING
-#include <QAudioOutput>
-#endif
 #include <QTimer>
 #include <QMainWindow>
 #include <QList>
@@ -29,6 +26,7 @@
 #include "bank.h"
 #include "opl/generator.h"
 #include "opl/measurer.h"
+#include "audio/ao_base.h"
 
 #include "FileFormats/ffmt_base.h"
 
@@ -98,32 +96,14 @@ private:
     InstFormats     m_recentInstFormat;
 
     /* ********** Audio output stuff ********** */
-    //! Buffer for audio data transfering
-    QByteArray       m_buffer;
-    //! Timer to push audio data
-    QTimer           m_pushTimer;
-
     #ifdef ENABLE_AUDIO_TESTING
-    //! Audio device spec
-    QAudioDeviceInfo m_device;
-    //! Audio output interface
-    QAudioOutput    *m_audioOutput;
-    //! Pointer to audio output interface
-    QIODevice       *m_output;//not owned
-    //! Audio format preferences
-    QAudioFormat     m_format;
+    AudioOutBase    *m_audioOut = nullptr;
     #endif
 
     /*!
      * \brief Initializes audio subsystem and FM generator
      */
     void initAudio();
-
-private slots:
-    /**
-     * @brief Waveout playing callback
-     */
-    void pushTimerExpired();
 
 public:
     explicit BankEditor(QWidget *parent = 0);

@@ -24,7 +24,7 @@
 
 QT += core gui
 greaterThan(QT_MAJOR_VERSION, 4):{
-    QT += widgets multimedia concurrent
+    QT += widgets concurrent
     DEFINES += ENABLE_AUDIO_TESTING
     CONFIG += c++11
 } else {
@@ -71,6 +71,14 @@ UI_DIR      = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.ui
 win32: RC_FILE = $$PWD/src/resources/res.rc
 macx: ICON = $$PWD/src/resources/opl3.icns
 
+greaterThan(QT_MAJOR_VERSION, 4):{
+    include("src/audio/ao_qtmm.pri")
+}
+linux-*: {
+    DEFINES += ENABLE_AUDIO_TESTING
+    include("src/audio/ao_alsa.pri")
+}
+
 SOURCES += \
     src/audio.cpp \
     src/bank.cpp \
@@ -98,7 +106,8 @@ SOURCES += \
     src/opl/generator.cpp \
     src/opl/nukedopl3.c \
     src/piano.cpp \
-    src/opl/measurer.cpp
+    src/opl/measurer.cpp \
+    src/audio/ao_base.cpp
 
 HEADERS += \
     src/bank_editor.h \
@@ -126,7 +135,8 @@ HEADERS += \
     src/opl/nukedopl3.h \
     src/piano.h \
     src/version.h \
-    src/opl/measurer.h
+    src/opl/measurer.h \
+    src/audio/ao_base.h
 
 FORMS += \
     src/bank_editor.ui \

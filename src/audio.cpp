@@ -22,30 +22,47 @@
 #include "importer.h"
 #include "ui_importer.h"
 
+#include <QtDebug>
+
+#ifdef ENABLE_AUDIO_TESTING
+#   ifdef USE_AUDIO_QTMM
+#       include "audio/ao_qtmm.h"
+#   endif
+#   ifdef USE_AUDIO_ALSA
+#       include "audio/ao_alsa.h"
+#   endif
+#endif
+
 void BankEditor::initAudio()
 {
     /*INIT AUDIO!!!*/
-    #ifdef ENABLE_AUDIO_TESTING
-    m_device = QAudioDeviceInfo::defaultOutputDevice();
-    connect(&m_pushTimer, SIGNAL(timeout()), SLOT(pushTimerExpired()));
-    m_format.setSampleRate(44100);
-    m_format.setChannelCount(2);
-    m_format.setSampleSize(16);
-    m_format.setCodec("audio/pcm");
-    m_format.setByteOrder(QAudioFormat::LittleEndian);
-    m_format.setSampleType(QAudioFormat::SignedInt);
-    QAudioDeviceInfo info(m_device);
+    int rate = 44100;
+    int channels = 2;
 
-    if(!info.isFormatSupported(m_format))
+    #   ifdef USE_AUDIO_ALSA
+    if (!m_audioOut)
     {
-        //qWarning() << "Default format not supported - trying to use nearest";
-        m_format = info.nearestFormat(m_format);
+        m_audioOut = new AudioOutALSA(this);
+        if(!m_audioOut->init(rate, channels))
+        {
+            qWarning() << "Failed to initialize ALSA";
+            delete m_audioOut;
+        }
     }
-    m_audioOutput = new QAudioOutput(m_device, m_format, this);
-    m_audioOutput->setVolume(1.0);
-    m_generator = new Generator(uint32_t(m_format.sampleRate()), this);
-    #else
-    m_generator = new Generator(uint32_t(44100), this);
+    #endif
+
+    #ifdef USE_AUDIO_QTMM
+    if (!m_audioOut)
+    {
+        m_audioOut = new AudioOutQtMM(this);
+        m_audioOut->init(rate, channels);
+    }
+    #endif
+
+    m_generator = new Generator(uint32_t(rate), this);
+    #ifdef ENABLE_AUDIO_TESTING
+    if (m_audioOut)
+        m_audioOut->setAudioSource(m_generator);
     #endif
 
     //Test note
@@ -103,28 +120,8 @@ void BankEditor::initAudio()
     //Start generator!
     m_generator->start();
     #ifdef ENABLE_AUDIO_TESTING
-    m_output = m_audioOutput->start();
-    m_pushTimer.start(4);
-    #endif
-}
-
-void BankEditor::pushTimerExpired()
-{
-    #ifdef ENABLE_AUDIO_TESTING
-    if(m_audioOutput && m_audioOutput->state() != QAudio::StoppedState)
-    {
-        int chunks = m_audioOutput->bytesFree() / m_audioOutput->periodSize();
-
-        while(chunks)
-        {
-            const qint64 len = m_generator->read(m_buffer.data(), m_audioOutput->periodSize());
-            if(len)
-                m_output->write(m_buffer.data(), len);
-            if(len != m_audioOutput->periodSize())
-                break;
-            --chunks;
-        }
-    }
+    if (m_audioOut)
+        m_audioOut->start();
     #endif
 }
 

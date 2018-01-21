@@ -16,23 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSION_H
-#define VERSION_H
+#ifndef AO_BASE_H
+#define AO_BASE_H
 
-#define COMPANY "WohlSoft"
+#include <QIODevice>
 
-#define PGE_URL "wohlsoft.ru"
+class AudioOutBase :
+        public QObject
+{
+    Q_OBJECT
 
-#define PROGRAM_NAME "OPL3 Bank Editor"
+protected:
+    QIODevice *m_audioSource = nullptr;
+public:
+    AudioOutBase(QObject *parent);
+    virtual ~AudioOutBase();;
+    virtual bool init(int sampleRate, int channels) = 0;
+    virtual void setAudioSource(QIODevice *audioSource);
+    virtual void start() = 0;
+    virtual void stop() = 0;
+};
 
-#define VERSION "1.4.0"
-
-#ifdef IS_QT_4
-#define COPYRIGHT_SIGN "(C)"
-#else
-#define COPYRIGHT_SIGN "©"
-#endif
-
-#define COPYRIGHT COPYRIGHT_SIGN " 2016-2017, Vitaly Novichkov \"Wohlstand\""
-
-#endif // VERSION_H
+#endif // AO_BASE_H

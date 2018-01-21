@@ -16,23 +16,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSION_H
-#define VERSION_H
+#ifndef AO_ALSA_H
+#define AO_ALSA_H
 
-#define COMPANY "WohlSoft"
+#include "ao_base.h"
 
-#define PGE_URL "wohlsoft.ru"
+#include <alsa/asoundlib.h>
+#include <pthread.h>
+#include <atomic>
 
-#define PROGRAM_NAME "OPL3 Bank Editor"
+class AudioOutALSA : public AudioOutBase
+{
+    pthread_t m_thread;
+    std::atomic_bool m_playing;
 
-#define VERSION "1.4.0"
+    snd_pcm_t *playback_handle;
 
-#ifdef IS_QT_4
-#define COPYRIGHT_SIGN "(C)"
-#else
-#define COPYRIGHT_SIGN "©"
-#endif
+    snd_pcm_hw_params_t *hw_params;
+    snd_pcm_sw_params_t *sw_params;
+    snd_pcm_sframes_t frames_to_deliver;
+    snd_pcm_uframes_t frames;
+    unsigned int periods;
+    int nfds;
+    int err;
+    struct pollfd *pfds;
+    QByteArray m_buffer;
 
-#define COPYRIGHT COPYRIGHT_SIGN " 2016-2017, Vitaly Novichkov \"Wohlstand\""
+    static void *playSound(void *self);
+public:
+    explicit AudioOutALSA(QObject *parent);
+    ~AudioOutALSA();
 
-#endif // VERSION_H
+    bool init(int sampleRate, int channels);
+    void start();
+    void stop();
+};
+
+#endif // AO_ALSA_H

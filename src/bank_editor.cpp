@@ -77,8 +77,6 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
     loadInstrument();
-    m_buffer.resize(8192);
-    m_buffer.fill(0, 8192);
     #if QT_VERSION >= 0x050000
     this->setWindowFlags(Qt::WindowTitleHint | Qt::WindowSystemMenuHint |
                          Qt::WindowCloseButtonHint |
@@ -100,10 +98,11 @@ BankEditor::BankEditor(QWidget *parent) :
 BankEditor::~BankEditor()
 {
     #ifdef ENABLE_AUDIO_TESTING
-    m_pushTimer.stop();
-    m_audioOutput->stop();
+    if (m_audioOut)
+        m_audioOut->stop();
     m_generator->stop();
-    delete m_audioOutput;
+    delete m_audioOut;
+    m_audioOut = nullptr;
     #endif
     delete m_measurer;
     delete m_generator;
