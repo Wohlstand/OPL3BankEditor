@@ -287,7 +287,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup)
 
     QProgressDialog m_progressBox(m_parentWindow);
     m_progressBox.setWindowModality(Qt::WindowModal);
-    m_progressBox.setWindowTitle(tr("Sounding delay calculaion"));
+    m_progressBox.setWindowTitle(tr("Sounding delay calculation"));
     m_progressBox.setLabelText(tr("Please wait..."));
 
     #ifndef IS_QT_4
@@ -323,7 +323,7 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
 {
     QProgressDialog m_progressBox(m_parentWindow);
     m_progressBox.setWindowModality(Qt::WindowModal);
-    m_progressBox.setWindowTitle(tr("Sounding delay calculaion"));
+    m_progressBox.setWindowTitle(tr("Sounding delay calculation"));
     m_progressBox.setLabelText(tr("Please wait..."));
 
     #ifndef IS_QT_4
