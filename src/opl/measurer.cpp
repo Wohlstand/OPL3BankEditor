@@ -142,6 +142,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
     // For up to 40 seconds, measure mean amplitude.
     std::vector<double> amplitudecurve_on;
     double highest_sofar = 0;
+    short sound_min = 0, sound_max = 0;
     for(unsigned period = 0; period < max_on * interval; ++period)
     {
         stereoSampleBuf.clear();
@@ -150,8 +151,14 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         OPL3_GenerateStream(&opl, stereoSampleBuf.data(), samples_per_interval);
 
         double mean = 0.0;
+
         for(unsigned long c = 0; c < samples_per_interval; ++c)
-            mean += stereoSampleBuf[c * 2];
+        {
+            short s = stereoSampleBuf[c * 2];
+            mean += s;
+            if(sound_min > s) sound_min = s;
+            if(sound_max < s) sound_max = s;
+        }
         mean /= samples_per_interval;
         double std_deviation = 0;
         for(unsigned long c = 0; c < samples_per_interval; ++c)
@@ -183,7 +190,12 @@ static void MeasureDurations(FmBank::Instrument *in_p)
 
         double mean = 0.0;
         for(unsigned long c = 0; c < samples_per_interval; ++c)
-            mean += stereoSampleBuf[c * 2];
+        {
+            short s = stereoSampleBuf[c * 2];
+            mean += s;
+            if(sound_min > s) sound_min = s;
+            if(sound_max < s) sound_max = s;
+        }
         mean /= samples_per_interval;
         double std_deviation = 0;
         for(unsigned long c = 0; c < samples_per_interval; ++c)
@@ -242,7 +254,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
 
     result.ms_sound_kon  = (int64_t)(quarter_amplitude_time * 1000.0 / interval);
     result.ms_sound_koff = (int64_t)(keyoff_out_time        * 1000.0 / interval);
-    result.nosound = (peak_amplitude_value < 0.5);
+    result.nosound = (peak_amplitude_value < 0.5) || ((sound_min >= -1) && (sound_max <= 1));
 
     in.ms_sound_kon = (uint16_t)result.ms_sound_kon;
     in.ms_sound_koff = (uint16_t)result.ms_sound_koff;
@@ -258,9 +270,22 @@ Measurer::Measurer(QWidget *parent) :
 Measurer::~Measurer()
 {}
 
+static void insertOrBlank(FmBank::Instrument &ins, const FmBank::Instrument &blank, QQueue<FmBank::Instrument *> &tasks)
+{
+    if(memcmp(&ins, &blank, sizeof(FmBank::Instrument)) != 0)
+        tasks.enqueue(&ins);
+    else
+    {
+        ins.is_blank = true;
+        ins.ms_sound_kon = 0;
+        ins.ms_sound_koff = 0;
+    }
+}
+
 bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
 {
     QQueue<FmBank::Instrument *> tasks;
+    FmBank::Instrument blank = FmBank::emptyInst();
 
     int i = 0;
     for(i = 0; i < bank.Ins_Melodic_box.size() && i < bankBackup.Ins_Melodic_box.size(); i++)
@@ -268,20 +293,20 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
         FmBank::Instrument &ins1 = bank.Ins_Melodic_box[i];
         FmBank::Instrument &ins2 = bankBackup.Ins_Melodic_box[i];
         if(forceReset || (ins1.ms_sound_kon == 0) || (memcmp(&ins1, &ins2, sizeof(FmBank::Instrument)) != 0))
-            tasks.enqueue(&ins1);
+            insertOrBlank(ins1, blank, tasks);
     }
     for(; i < bank.Ins_Melodic_box.size(); i++)
-        tasks.enqueue(&bank.Ins_Melodic_box[i]);
+        insertOrBlank(bank.Ins_Melodic_box[i], blank, tasks);
 
     for(i = 0; i < bank.Ins_Percussion_box.size() && i < bankBackup.Ins_Percussion_box.size(); i++)
     {
         FmBank::Instrument &ins1 = bank.Ins_Percussion_box[i];
         FmBank::Instrument &ins2 = bankBackup.Ins_Percussion_box[i];
         if(forceReset || (ins1.ms_sound_kon == 0) || (memcmp(&ins1, &ins2, sizeof(FmBank::Instrument)) != 0))
-            tasks.enqueue(&ins1);
+            insertOrBlank(ins1, blank, tasks);
     }
     for(; i < bank.Ins_Percussion_box.size(); i++)
-        tasks.enqueue(&bank.Ins_Percussion_box[i]);
+        insertOrBlank(bank.Ins_Percussion_box[i], blank, tasks);
 
     if(tasks.isEmpty())
         return true;// Nothing to do! :)
@@ -303,6 +328,25 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
     watcher.waitForFinished();
 
     tasks.clear();
+
+    // Apply all calculated values into backup store to don't re-calculate same stuff
+    for(i = 0; i < bank.Ins_Melodic_box.size() && i < bankBackup.Ins_Melodic_box.size(); i++)
+    {
+        FmBank::Instrument &ins1 = bank.Ins_Melodic_box[i];
+        FmBank::Instrument &ins2 = bankBackup.Ins_Melodic_box[i];
+        ins2.ms_sound_kon  = ins1.ms_sound_kon;
+        ins2.ms_sound_koff = ins1.ms_sound_koff;
+        ins2.is_blank = ins1.is_blank;
+    }
+    for(i = 0; i < bank.Ins_Percussion_box.size() && i < bankBackup.Ins_Percussion_box.size(); i++)
+    {
+        FmBank::Instrument &ins1 = bank.Ins_Percussion_box[i];
+        FmBank::Instrument &ins2 = bankBackup.Ins_Percussion_box[i];
+        ins2.ms_sound_kon  = ins1.ms_sound_kon;
+        ins2.ms_sound_koff = ins1.ms_sound_koff;
+        ins2.is_blank = ins1.is_blank;
+    }
+
     return !watcher.isCanceled();
 
     #else
