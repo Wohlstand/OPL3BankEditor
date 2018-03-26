@@ -272,6 +272,7 @@ Measurer::~Measurer()
 
 static void insertOrBlank(FmBank::Instrument &ins, const FmBank::Instrument &blank, QQueue<FmBank::Instrument *> &tasks)
 {
+    ins.is_blank = false;
     if(memcmp(&ins, &blank, sizeof(FmBank::Instrument)) != 0)
         tasks.enqueue(&ins);
     else
