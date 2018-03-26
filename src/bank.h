@@ -167,6 +167,8 @@ public:
         uint16_t ms_sound_kon;
         //! Number of milliseconds of produced sound while release
         uint16_t ms_sound_koff;
+        //! Is instrument blank
+        bool     is_blank;
 
         /* ******** OPL3 merged values ******** */
 

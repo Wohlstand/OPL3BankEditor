@@ -286,6 +286,11 @@ private slots:
     void on_actionReset_current_instrument_triggered();
 
     /**
+     * @brief Re-calculate all sounding delays
+     */
+    void on_actionReMeasure_triggered();
+
+    /**
      * @brief Show all supported formats list
      */
     void on_actionFormatsSup_triggered();

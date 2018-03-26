@@ -2366,6 +2366,7 @@ of second voice</string>
     <addaction name="actionSwapVoices"/>
     <addaction name="separator"/>
     <addaction name="actionReset_current_instrument"/>
+    <addaction name="actionReMeasure"/>
     <addaction name="separator"/>
     <addaction name="actionAddBank"/>
     <addaction name="actionCloneBank"/>
@@ -2533,6 +2534,11 @@ of second voice</string>
   <action name="actionPasteVoice22">
    <property name="text">
     <string>Paste voice 2 as voice 1</string>
+   </property>
+  </action>
+  <action name="actionReMeasure">
+   <property name="text">
+    <string>Re-Calculate all sounding delays</string>
    </property>
   </action>
  </widget>

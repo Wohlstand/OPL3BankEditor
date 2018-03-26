@@ -33,7 +33,7 @@ public:
     explicit Measurer(QWidget *parent = NULL);
     ~Measurer();
 
-    bool doMeasurement(FmBank &bank, FmBank &bankBackup);
+    bool doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset = false);
     bool doMeasurement(FmBank::Instrument &instrument);
 };
 

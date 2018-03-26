@@ -534,6 +534,20 @@ void BankEditor::on_actionReset_current_instrument_triggered()
     }
 }
 
+void BankEditor::on_actionReMeasure_triggered()
+{
+    int reply = QMessageBox::question(this,
+                          tr("Are you sure?"),
+                          tr("All sounding delays measures will be re-calculated. "
+                             "This operation may take a while. Do you want to continue? "
+                             "You may cancel operation in any moment."),
+                          QMessageBox::Yes|QMessageBox::Cancel);
+    if(reply == QMessageBox::Yes)
+    {
+        m_measurer->doMeasurement(m_bank, m_bankBackup, true);
+    }
+}
+
 void BankEditor::on_actionFormatsSup_triggered()
 {
     formats_sup sup(this);

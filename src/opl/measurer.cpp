@@ -246,6 +246,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
 
     in.ms_sound_kon = (uint16_t)result.ms_sound_kon;
     in.ms_sound_koff = (uint16_t)result.ms_sound_koff;
+    in.is_blank = result.nosound;
 }
 
 
@@ -257,7 +258,7 @@ Measurer::Measurer(QWidget *parent) :
 Measurer::~Measurer()
 {}
 
-bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup)
+bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
 {
     QQueue<FmBank::Instrument *> tasks;
 
@@ -266,7 +267,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup)
     {
         FmBank::Instrument &ins1 = bank.Ins_Melodic_box[i];
         FmBank::Instrument &ins2 = bankBackup.Ins_Melodic_box[i];
-        if((ins1.ms_sound_kon == 0) || (memcmp(&ins1, &ins2, sizeof(FmBank::Instrument)) != 0))
+        if(forceReset || (ins1.ms_sound_kon == 0) || (memcmp(&ins1, &ins2, sizeof(FmBank::Instrument)) != 0))
             tasks.enqueue(&ins1);
     }
     for(; i < bank.Ins_Melodic_box.size(); i++)
@@ -276,7 +277,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup)
     {
         FmBank::Instrument &ins1 = bank.Ins_Percussion_box[i];
         FmBank::Instrument &ins2 = bankBackup.Ins_Percussion_box[i];
-        if((ins1.ms_sound_kon == 0) || (memcmp(&ins1, &ins2, sizeof(FmBank::Instrument)) != 0))
+        if(forceReset || (ins1.ms_sound_kon == 0) || (memcmp(&ins1, &ins2, sizeof(FmBank::Instrument)) != 0))
             tasks.enqueue(&ins1);
     }
     for(; i < bank.Ins_Percussion_box.size(); i++)

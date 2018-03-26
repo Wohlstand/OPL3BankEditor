@@ -47,6 +47,7 @@ enum WOPL_InstrumentFlags
     Flags_NONE      = 0,
     Flag_Enable4OP  = 0x01,
     Flag_Pseudo4OP  = 0x02,
+    Flag_NoSound    = 0x04,
 };
 
 static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &version, bool hasSoundKoefficients = true)
@@ -75,6 +76,7 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     uint8_t flags       = idata[39];
     ins.en_4op          = (flags & Flag_Enable4OP) != 0;
     ins.en_pseudo4op    = (flags & Flag_Pseudo4OP) != 0;
+    ins.is_blank        = (flags & Flag_NoSound) != 0;
     ins.setFBConn1(idata[40]);
     ins.setFBConn2(idata[41]);
     for(int op = 0; op < 4; op++)
@@ -105,7 +107,8 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
     odata[37] = uint8_t(ins.fine_tune);       //1
     odata[38] = ins.percNoteNum;              //1
     odata[39] = (ins.en_4op ? Flag_Enable4OP : 0) |
-                (ins.en_pseudo4op ? Flag_Pseudo4OP : 0);
+                (ins.en_pseudo4op ? Flag_Pseudo4OP : 0) |
+                (ins.is_blank ? Flag_NoSound : 0);
     odata[40] = ins.getFBConn1();             //1
     odata[41] = ins.getFBConn2();             //1
     for(int op = 0; op < 4; op++)                  //20
