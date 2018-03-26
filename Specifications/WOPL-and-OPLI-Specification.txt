@@ -27,7 +27,9 @@ Version | What's new
     2   | Added banks meta-data arrays into bank format (August, 1, 2017)
 -------------------------------------------------------------------------------
     3   | Added two delay coefficients are needed for ADLMIDI's channel busy
-        | (November, 19, 2017)
+        | (November 19, 2017)
+        | Change: Added 'blank instrument' flag into existing variable
+        | (March 26, 2018)
 -------------------------------------------------------------------------------
 
 ===============================================================================
@@ -57,6 +59,7 @@ Bytes-Lenght  | Description
               |     0x00 - 2-operator mode
               |     0x01 - 4-operator mode
               |     0x02 - pseudo-4-operator (two 2-operator voices) mode
+              |     0x04 - is 'blank' instrument (instrument which has no sound)
     1         | 8-bit unsigned integer, Feedback / Connection
               | for 1'st and 2'nd operators or first voice
     1         | 8-bit unsigned integer, Feedback / Connection
