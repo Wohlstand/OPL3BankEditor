@@ -222,10 +222,47 @@ tryAgain:
     return FfmtErrCode::ERR_OK;
 }
 
+static void bankFillBack(FmBank &bank, int alignMelodic, int alignDrums)
+{
+    if(alignMelodic != 128)
+    {
+        bank.Ins_Melodic_box.reserve(alignMelodic);
+        while(bank.Ins_Melodic_box.size() % 128 != 0)
+            bank.Ins_Melodic_box.push_back(FmBank::emptyInst());
+        bank.Ins_Melodic = bank.Ins_Melodic_box.data();
+    }
+    if(alignDrums != 128)
+    {
+        bank.Ins_Percussion_box.reserve(alignDrums);
+        while(bank.Ins_Percussion_box.size() % 128 != 0)
+            bank.Ins_Percussion_box.push_back(FmBank::emptyInst());
+        bank.Ins_Percussion = bank.Ins_Percussion_box.data();
+    }
+}
+
+static void bankStripBack(FmBank &bank, int alignMelodic, int alignDrums)
+{
+    if(alignMelodic != 128)
+    {
+        bank.Ins_Melodic_box.erase(bank.Ins_Melodic_box.end() - alignMelodic,
+                                   bank.Ins_Melodic_box.end());
+        bank.Ins_Melodic = bank.Ins_Melodic_box.data();
+    }
+    if(alignDrums != 128)
+    {
+        bank.Ins_Percussion_box.erase(bank.Ins_Percussion_box.end() - alignMelodic,
+                                      bank.Ins_Percussion_box.end());
+        bank.Ins_Percussion = bank.Ins_Percussion_box.data();
+    }
+}
+
 FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
 {
     FmBank::Instrument null;
     memset(&null, 0, sizeof(FmBank::Instrument));
+
+    int alignMelodic = 128 - bank.countMelodic() % 128;
+    int alignDrums   = 128 - bank.countDrums() % 128;
 
     uint16_t count_melodic_banks     = uint16_t(((bank.countMelodic() - 1)/ 128) + 1);
     uint16_t count_percusive_banks = uint16_t(((bank.countDrums() - 1)/ 128) + 1);
@@ -280,6 +317,7 @@ FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
     bool wrtiePercussion = false;
     FmBank::Instrument *insts = bank.Ins_Melodic;
 
+    bankFillBack(bank, alignMelodic, alignDrums);
 tryAgain:
     for(uint16_t i = 0; i < total; i++)
     {
@@ -287,12 +325,18 @@ tryAgain:
         {
             FmBank::Instrument &ins = insts[i];
             if(!writeInstrument(file, ins))
+            {
+                bankStripBack(bank, alignMelodic, alignDrums);
                 return FfmtErrCode::ERR_BADFORMAT;
+            }
         }
         else
         {
             if(!writeInstrument(file, null))
+            {
+                bankStripBack(bank, alignMelodic, alignDrums);
                 return FfmtErrCode::ERR_BADFORMAT;
+            }
         }
     }
 
@@ -304,6 +348,8 @@ tryAgain:
         wrtiePercussion = true;
         goto tryAgain;
     }
+
+    bankStripBack(bank, alignMelodic, alignDrums);
 
     file.close();
 
@@ -396,4 +442,47 @@ QString WohlstandOPL3::formatInstExtensionMask() const
 InstFormats WohlstandOPL3::formatInstId() const
 {
     return InstFormats::FORMAT_INST_WOPL3;
+}
+
+
+
+
+FfmtErrCode WohlstandOPL3_GM::saveFile(QString filePath, FmBank &bank)
+{
+    FmBank gm_bank = bank;
+    gm_bank.Ins_Melodic_box.erase(gm_bank.Ins_Melodic_box.begin() + 128,
+                                  gm_bank.Ins_Melodic_box.end());
+    gm_bank.Ins_Melodic = gm_bank.Ins_Melodic_box.data();
+    gm_bank.Ins_Percussion_box.erase(gm_bank.Ins_Percussion_box.begin() + 128,
+                                     gm_bank.Ins_Percussion_box.end());
+    gm_bank.Ins_Percussion = gm_bank.Ins_Percussion_box.data();
+    gm_bank.Banks_Melodic.resize(1);
+    gm_bank.Banks_Percussion.resize(1);
+    WohlstandOPL3 writer;
+    return writer.saveFile(filePath, gm_bank);
+}
+
+int WohlstandOPL3_GM::formatCaps() const
+{
+    return (int)FormatCaps::FORMAT_CAPS_SAVE | (int)FormatCaps::FORMAT_CAPS_NEEDS_MEASURE;
+}
+
+QString WohlstandOPL3_GM::formatName() const
+{
+    return "Standard OPL3 GM bank by Wohlstand";
+}
+
+QString WohlstandOPL3_GM::formatModuleName() const
+{
+    return "WOPL GeneralMidi Writer";
+}
+
+QString WohlstandOPL3_GM::formatExtensionMask() const
+{
+    return "*.wopl";
+}
+
+BankFormats WohlstandOPL3_GM::formatId() const
+{
+    return BankFormats::FORMAT_WOHLSTAND_OPL3_GM;
 }

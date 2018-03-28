@@ -63,6 +63,8 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new WohlstandOPL3());
     registerInstFormat(new WohlstandOPL3());
 
+    registerBankFormat(new WohlstandOPL3_GM());
+
     //Junglevision
     registerBankFormat(new JunleVizion());
     //DMX

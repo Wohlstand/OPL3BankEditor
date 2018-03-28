@@ -338,6 +338,12 @@ TmpBank::TmpBank(FmBank &bank, int minMelodic, int minPercusive)
             tmpMelodic.push_back(FmBank::emptyInst());
         insMelodic = tmpMelodic.data();
     }
+    if(bank.Ins_Melodic_box.size() > minMelodic)
+    {
+        tmpMelodic = bank.Ins_Melodic_box;
+        tmpMelodic.resize(minMelodic);
+        insMelodic = tmpMelodic.data();
+    }
 
     if(bank.Ins_Percussion_box.size() < minPercusive)
     {
@@ -345,6 +351,12 @@ TmpBank::TmpBank(FmBank &bank, int minMelodic, int minPercusive)
         tmpPercussion.reserve(128 - tmpPercussion.size());
         while(tmpPercussion.size() < 128)
             tmpPercussion.push_back(FmBank::emptyInst());
+        insPercussion = tmpPercussion.data();
+    }
+    if(bank.Ins_Percussion_box.size() > minPercusive)
+    {
+        tmpPercussion = bank.Ins_Percussion_box;
+        tmpPercussion.resize(minPercusive);
         insPercussion = tmpPercussion.data();
     }
 }

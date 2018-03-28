@@ -19,6 +19,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QStatusBar>
 #include <QSettings>
 #include <QUrl>
 #include <QMimeData>
@@ -245,13 +246,30 @@ bool BankEditor::openFile(QString filePath)
     else
     {
         initFileData(filePath);
+        statusBar()->showMessage(tr("Bank '%1' has been loaded!").arg(filePath), 5000);
         return true;
     }
 }
 
 bool BankEditor::saveBankFile(QString filePath, BankFormats format)
 {
-    if(format == BankFormats::FORMAT_WOHLSTAND_OPL3)
+    if(format == BankFormats::FORMAT_WOHLSTAND_OPL3_GM &&
+        ((m_bank.Banks_Melodic.size() > 1) || (m_bank.Banks_Percussion.size() > 1))
+    )
+    {
+        int reply = QMessageBox::question(this,
+                                          tr("Save bank file"),
+                                          tr("Saving into WOPL GeneralMidi format allows to have "
+                                             "one melodic and one percussion banks only. "
+                                             "All extra banks will be ignored while saving into the file.\n\n"
+                                             "Do you want to continue file saving?"),
+                                          QMessageBox::Yes|QMessageBox::Cancel);
+        if(reply != QMessageBox::Yes)
+            return false;
+    }
+
+    if(format == BankFormats::FORMAT_WOHLSTAND_OPL3 ||
+       format == BankFormats::FORMAT_WOHLSTAND_OPL3_GM)
     {
         if(!m_measurer->doMeasurement(m_bank, m_bankBackup))
             return false;//Measurement was cancelled
@@ -290,6 +308,7 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format)
         //Override 'recently-saved' format
         m_recentFormat = format;
         reInitFileDataAfterSave(filePath);
+        statusBar()->showMessage(tr("Bank file '%1' has been saved!").arg(filePath), 5000);
         return true;
     }
 }
@@ -326,6 +345,7 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
     }
     else
     {
+        statusBar()->showMessage(tr("Instrument file '%1' has been saved!").arg(filePath), 5000);
         return true;
     }
 }
@@ -544,7 +564,10 @@ void BankEditor::on_actionReMeasure_triggered()
                           QMessageBox::Yes|QMessageBox::Cancel);
     if(reply == QMessageBox::Yes)
     {
-        m_measurer->doMeasurement(m_bank, m_bankBackup, true);
+        if(m_measurer->doMeasurement(m_bank, m_bankBackup, true))
+            statusBar()->showMessage(tr("Sounding delays calculation has been completed!"), 5000);
+        else
+            statusBar()->showMessage(tr("Sounding delays calculation was canceled!"), 5000);
     }
 }
 

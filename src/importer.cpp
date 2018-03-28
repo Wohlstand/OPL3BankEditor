@@ -26,6 +26,7 @@
 #include <QMimeData>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QStatusBar>
 
 #include "ins_names.h"
 
@@ -546,6 +547,7 @@ void Importer::on_doImport_clicked()
                              m_bank.Ins_Melodic_box[id] :
                              m_bank.Ins_Percussion_box[id], id);
         }
+        m_main->statusBar()->showMessage(tr("%1 instruments has been imported!").arg(selected.size()), 5000);
     }
     else
     {
@@ -558,6 +560,7 @@ void Importer::on_doImport_clicked()
                              ui->melodic->isChecked() ?
                              m_bank.Ins_Melodic_box[id] :
                              m_bank.Ins_Percussion_box[id], m_main->m_recentNum);
+            m_main->statusBar()->showMessage(tr("Instrument #%1 has been imported!").arg(id), 5000);
         }
         else
         {

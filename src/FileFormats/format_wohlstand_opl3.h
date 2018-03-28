@@ -44,4 +44,19 @@ public:
     InstFormats formatInstId() const override;
 };
 
+/**
+ * @brief Writer of WOPL as GM-only (disabled multi-bank support)
+ */
+class WohlstandOPL3_GM final : public FmBankFormatBase
+{
+public:
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int     formatCaps() const override;
+    QString formatName() const override;
+    QString formatModuleName() const override;
+    QString formatExtensionMask() const override;
+    BankFormats formatId() const override;
+};
+
+
 #endif // FORMAT_WOPL_H
