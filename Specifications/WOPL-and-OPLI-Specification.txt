@@ -73,9 +73,9 @@ Bytes-Lenght  | Description
 -------------------------------------------
 
 --VERSION >= 3---WOPL-Bank-only, OPLI must don't have those fields---
-    2         | Big-Endian 16-bit signed integer, Millisecond delay of sound
+    2         | Big-Endian 16-bit unsigned integer, Millisecond delay of sound
               | while key is on
-    2         | Big-Endian 16-bit signed integer, Millisecond delay of sound
+    2         | Big-Endian 16-bit unsigned integer, Millisecond delay of sound
               | after key off
 -------------------------------------------
 
