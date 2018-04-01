@@ -41,6 +41,7 @@ greaterThan(QT_MAJOR_VERSION, 4):{
 TEMPLATE = app
 TARGET = opl3_bank_editor
 INCLUDEPATH += $$PWD/
+INCLUDEPATH += $$PWD/src
 
 android:{
     ARCH=android_arm
@@ -129,7 +130,7 @@ HEADERS += \
     src/FileFormats/format_rad_importer.h \
     src/FileFormats/format_sb_ibk.h \
     src/FileFormats/format_wohlstand_opl3.h \
-    src/FileFomrats/format_flatbuffer_opl3.h \
+    src/FileFormats/format_flatbuffer_opl3.h \
     src/formats_sup.h \
     src/importer.h \
     src/ins_names.h \

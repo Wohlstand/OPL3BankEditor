@@ -42,7 +42,7 @@ FfmtErrCode FlatbufferOpl3::loadFile(QString filePath, FmBank &bank)
     auto banks = opl3Bank->banks();
 
     // count banks types
-    for (int i = 0; i < banks->Length(); i++) {
+    for (uint8_t i = 0; i < banks->Length(); i++) {
         auto bnk = banks->Get(i);
         switch (bnk->type()) {
             case BankType_Melodic:
@@ -87,24 +87,24 @@ FfmtErrCode FlatbufferOpl3::loadFile(QString filePath, FmBank &bank)
 
     uint16_t current_melodic_bank     = 0;
     uint16_t current_percusive_bank   = 0;
-    FmBank::MidiBank &bankMeta;
+    FmBank::MidiBank* bankMeta = NULL;
 
-    for(int i = 0; i < banks->Length(); i++) {
+    for(uint8_t i = 0; i < banks->Length(); i++) {
         auto bnk = banks->Get(i);
         auto bankType = bnk->type();
 
         switch (bankType) {
             case BankType_Melodic:
-                bankMeta = bank.Banks_Melodic[current_melodic_bank];
+                bankMeta = &bank.Banks_Melodic[current_melodic_bank];
                 break;
             case BankType_Percussion:
-                bankMeta = bank.Banks_Percussion[current_percusive_bank];
+                bankMeta = &bank.Banks_Percussion[current_percusive_bank];
                 break;
         }
 
-        bankMeta.lsb = bnk->bankLSB();
-        bankMeta.msb = bnk->bankMSB();
-        strncpy(bankMeta.name, bnk->name()->str(), 32);
+        bankMeta->lsb = bnk->bankLSB();
+        bankMeta->msb = bnk->bankMSB();
+        strncpy(bankMeta->name, bnk->name()->c_str(), 32);
 
         auto instruments = bnk->instruments();
         uint8_t instrumentCount = instruments->Length();
@@ -112,55 +112,55 @@ FfmtErrCode FlatbufferOpl3::loadFile(QString filePath, FmBank &bank)
         for (uint8_t j = 0; j < instrumentCount; j++) {
             auto instrument = instruments->Get(j);
 
-            FmBank::Instrument &ins;
+            FmBank::Instrument* ins = NULL;
             switch (bankType) {
                 case BankType_Melodic:
-                    ins = bank.Ins_Melodic[current_melodic_bank * 128 + instrument->program()];
+                    ins = &bank.Ins_Melodic[current_melodic_bank * 128 + instrument->program()];
                     break;
                 case BankType_Percussion:
-                    ins = bank.Ins_Percussion[current_percusive_bank * 128 + instrument->percussionKey()];
+                    ins = &bank.Ins_Percussion[current_percusive_bank * 128 + instrument->percussionKey()];
                     break;
             }
 
-            ins.fine_tune = instrument->secondVoiceTuning();
+            ins->fine_tune = instrument->secondVoiceTuning();
             int mode = instrument->mode();
-            ins.en_pseudo4op = (mode == Mode_Pseudo);
-            ins.en_4op = (mode == Mode_Pseudo) || (mode == Mode_FourOp);
-            ins.percNoteNum = instrument->percussionKey();
-            ins.note_offset1 = instrument->keyOffset1();
-            ins.note_offset2 = instrument->keyOffset2();
-            ins.velocity_offset = instrument->velocityOffset();
-            ins.is_blank = instrument->blank();
-            ins.ms_sound_kon = instrument->konMs();
-            ins.ms_sound_koff = instrument->koffMs();
-            strncpy(ins.name, instrument->name()->str(), 32);
+            ins->en_pseudo4op = (mode == Mode_Pseudo);
+            ins->en_4op = (mode == Mode_Pseudo) || (mode == Mode_FourOp);
+            ins->percNoteNum = instrument->percussionKey();
+            ins->note_offset1 = instrument->keyOffset1();
+            ins->note_offset2 = instrument->keyOffset2();
+            ins->velocity_offset = instrument->velocityOffset();
+            ins->is_blank = instrument->blank();
+            ins->ms_sound_kon = instrument->konMs();
+            ins->ms_sound_koff = instrument->koffMs();
+            strncpy(ins->name, instrument->name()->c_str(), 32);
 
-            ins.setFBConn1(instrument->fb_conn1());
-            ins.setFBConn2(instrument->fb_conn2());
+            ins->setFBConn1(instrument->fb_conn1());
+            ins->setFBConn2(instrument->fb_conn2());
 
-            ins.setAVEKM(MODULATOR1,    instrument->modulator1()->AVEKM());
-            ins.setAtDec(MODULATOR1,    instrument->modulator1()->AtDec());
-            ins.setSusRel(MODULATOR1,   instrument->modulator1()->SusRel());
-            ins.setWaveForm(MODULATOR1, instrument->modulator1()->WaveForm());
-            ins.setKSLL(MODULATOR1,     instrument->modulator1()->KSLL());
+            ins->setAVEKM(MODULATOR1,    instrument->modulator1()->AVEKM());
+            ins->setAtDec(MODULATOR1,    instrument->modulator1()->AtDec());
+            ins->setSusRel(MODULATOR1,   instrument->modulator1()->SusRel());
+            ins->setWaveForm(MODULATOR1, instrument->modulator1()->WaveForm());
+            ins->setKSLL(MODULATOR1,     instrument->modulator1()->KSLL());
 
-            ins.setAVEKM(CARRIER1,    instrument->carrier1()->AVEKM());
-            ins.setAtDec(CARRIER1,    instrument->carrier1()->AtDec());
-            ins.setSusRel(CARRIER1,   instrument->carrier1()->SusRel());
-            ins.setWaveForm(CARRIER1, instrument->carrier1()->WaveForm());
-            ins.setKSLL(CARRIER1,     instrument->carrier1()->KSLL());
+            ins->setAVEKM(CARRIER1,    instrument->carrier1()->AVEKM());
+            ins->setAtDec(CARRIER1,    instrument->carrier1()->AtDec());
+            ins->setSusRel(CARRIER1,   instrument->carrier1()->SusRel());
+            ins->setWaveForm(CARRIER1, instrument->carrier1()->WaveForm());
+            ins->setKSLL(CARRIER1,     instrument->carrier1()->KSLL());
 
-            ins.setAVEKM(MODULATOR2,    instrument->modulator2()->AVEKM());
-            ins.setAtDec(MODULATOR2,    instrument->modulator2()->AtDec());
-            ins.setSusRel(MODULATOR2,   instrument->modulator2()->SusRel());
-            ins.setWaveForm(MODULATOR2, instrument->modulator2()->WaveForm());
-            ins.setKSLL(MODULATOR2,     instrument->modulator2()->KSLL());
+            ins->setAVEKM(MODULATOR2,    instrument->modulator2()->AVEKM());
+            ins->setAtDec(MODULATOR2,    instrument->modulator2()->AtDec());
+            ins->setSusRel(MODULATOR2,   instrument->modulator2()->SusRel());
+            ins->setWaveForm(MODULATOR2, instrument->modulator2()->WaveForm());
+            ins->setKSLL(MODULATOR2,     instrument->modulator2()->KSLL());
 
-            ins.setAVEKM(CARRIER2,    instrument->carrier2()->AVEKM());
-            ins.setAtDec(CARRIER2,    instrument->carrier2()->AtDec());
-            ins.setSusRel(CARRIER2,   instrument->carrier2()->SusRel());
-            ins.setWaveForm(CARRIER2, instrument->carrier2()->WaveForm());
-            ins.setKSLL(CARRIER2,     instrument->carrier2()->KSLL());
+            ins->setAVEKM(CARRIER2,    instrument->carrier2()->AVEKM());
+            ins->setAtDec(CARRIER2,    instrument->carrier2()->AtDec());
+            ins->setSusRel(CARRIER2,   instrument->carrier2()->SusRel());
+            ins->setWaveForm(CARRIER2, instrument->carrier2()->WaveForm());
+            ins->setKSLL(CARRIER2,     instrument->carrier2()->KSLL());
         }
 
         switch (bankType) {
