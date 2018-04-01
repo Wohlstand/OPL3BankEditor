@@ -1,7 +1,6 @@
 #ifndef FLATBUFFERS_BASE_H_
 #define FLATBUFFERS_BASE_H_
 
-// clang-format off
 #if defined(FLATBUFFERS_MEMORY_LEAK_TRACKING) && \
     defined(_MSC_VER) && defined(_DEBUG)
   #define _CRTDBG_MAP_ALLOC
@@ -119,13 +118,6 @@
   #define FLATBUFFERS_CONSTEXPR constexpr
 #else
   #define FLATBUFFERS_CONSTEXPR
-#endif
-
-#if (defined(__cplusplus) && __cplusplus >= 201402L) || \
-    (defined(__cpp_constexpr) && __cpp_constexpr >= 201304)
-  #define FLATBUFFERS_CONSTEXPR_CPP14 FLATBUFFERS_CONSTEXPR
-#else
-  #define FLATBUFFERS_CONSTEXPR_CPP14
 #endif
 
 #if defined(__GXX_EXPERIMENTAL_CXX0X__) && __GNUC__ * 10 + __GNUC_MINOR__ >= 46 || \
