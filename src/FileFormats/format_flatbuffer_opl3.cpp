@@ -22,7 +22,7 @@
 
 bool FlatbufferOpl3::detect(const QString &filePath, char *magic)
 {
-    return filePath.endsWith(".fbop3");
+    return filePath.endsWith(".fbop3", Qt::CaseInsensitive);
 }
 
 FfmtErrCode FlatbufferOpl3::loadFile(QString filePath, FmBank &bank)
