@@ -60,30 +60,7 @@ FfmtErrCode FlatbufferOpl3::loadFile(QString filePath, FmBank &bank)
 
     bank.deep_vibrato = ((opl3Bank->oplTV() >> 0) & 0x01);
     bank.deep_tremolo = ((opl3Bank->oplTV() >> 1) & 0x01);
-    switch (opl3Bank->volumeModel()) {
-        case VolumeModel_Auto:
-            bank.volume_model = 0;
-            break;
-        case VolumeModel_Generic:
-            bank.volume_model = 1;
-            break;
-        case VolumeModel_Native:
-            bank.volume_model = 2;
-            break;
-        case VolumeModel_DMX:
-            bank.volume_model = 3;
-            break;
-        case VolumeModel_Apogee:
-            bank.volume_model = 4;
-            break;
-        case VolumeModel_Win9x:
-            bank.volume_model = 5;
-            break;
-        default:
-            bank.volume_model = 0;
-            break;        
-    }
-    bank.volume_model = opl3Bank->volumeModel();
+    bank.volume_model = opl3Bank->volumeModel() <= VolumeModel_MAX ? opl3Bank->volumeModel() : 0;
 
     uint16_t current_melodic_bank     = 0;
     uint16_t current_percusive_bank   = 0;
