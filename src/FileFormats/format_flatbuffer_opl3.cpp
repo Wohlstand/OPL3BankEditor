@@ -95,7 +95,7 @@ FfmtErrCode FlatbufferOpl3::loadFile(QString filePath, FmBank &bank)
                     ins = &bank.Ins_Melodic[current_melodic_bank * 128 + instrument->program()];
                     break;
                 case BankType_Percussion:
-                    ins = &bank.Ins_Percussion[current_percusive_bank * 128 + instrument->percussionKey()];
+                    ins = &bank.Ins_Percussion[current_percusive_bank * 128 + instrument->program()];
                     break;
             }
 
