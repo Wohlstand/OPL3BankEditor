@@ -22,8 +22,8 @@ enum Mode {
   Mode_MAX = Mode_Pseudo
 };
 
-inline const Mode (&EnumValuesMode())[3] {
-  static const Mode values[] = {
+inline Mode (&EnumValuesMode())[3] {
+  static Mode values[] = {
     Mode_TwoOp,
     Mode_FourOp,
     Mode_Pseudo
@@ -31,8 +31,8 @@ inline const Mode (&EnumValuesMode())[3] {
   return values;
 }
 
-inline const char * const *EnumNamesMode() {
-  static const char * const names[] = {
+inline const char **EnumNamesMode() {
+  static const char *names[] = {
     "TwoOp",
     "FourOp",
     "Pseudo",
@@ -53,16 +53,16 @@ enum BankType {
   BankType_MAX = BankType_Percussion
 };
 
-inline const BankType (&EnumValuesBankType())[2] {
-  static const BankType values[] = {
+inline BankType (&EnumValuesBankType())[2] {
+  static BankType values[] = {
     BankType_Melodic,
     BankType_Percussion
   };
   return values;
 }
 
-inline const char * const *EnumNamesBankType() {
-  static const char * const names[] = {
+inline const char **EnumNamesBankType() {
+  static const char *names[] = {
     "Melodic",
     "Percussion",
     nullptr
@@ -86,8 +86,8 @@ enum VolumeModel {
   VolumeModel_MAX = VolumeModel_Win9x
 };
 
-inline const VolumeModel (&EnumValuesVolumeModel())[6] {
-  static const VolumeModel values[] = {
+inline VolumeModel (&EnumValuesVolumeModel())[6] {
+  static VolumeModel values[] = {
     VolumeModel_Auto,
     VolumeModel_Generic,
     VolumeModel_Native,
@@ -98,8 +98,8 @@ inline const VolumeModel (&EnumValuesVolumeModel())[6] {
   return values;
 }
 
-inline const char * const *EnumNamesVolumeModel() {
-  static const char * const names[] = {
+inline const char **EnumNamesVolumeModel() {
+  static const char *names[] = {
     "Auto",
     "Generic",
     "Native",
@@ -583,30 +583,24 @@ inline const Opl3Bank *GetOpl3Bank(const void *buf) {
   return flatbuffers::GetRoot<Opl3Bank>(buf);
 }
 
-inline const Opl3Bank *GetSizePrefixedOpl3Bank(const void *buf) {
-  return flatbuffers::GetSizePrefixedRoot<Opl3Bank>(buf);
+inline const char *Opl3BankIdentifier() {
+  return "FOP3";
+}
+
+inline bool Opl3BankBufferHasIdentifier(const void *buf) {
+  return flatbuffers::BufferHasIdentifier(
+      buf, Opl3BankIdentifier());
 }
 
 inline bool VerifyOpl3BankBuffer(
     flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<Opl3Bank>(nullptr);
-}
-
-inline bool VerifySizePrefixedOpl3BankBuffer(
-    flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<Opl3Bank>(nullptr);
+  return verifier.VerifyBuffer<Opl3Bank>(Opl3BankIdentifier());
 }
 
 inline void FinishOpl3BankBuffer(
     flatbuffers::FlatBufferBuilder &fbb,
     flatbuffers::Offset<Opl3Bank> root) {
-  fbb.Finish(root);
-}
-
-inline void FinishSizePrefixedOpl3BankBuffer(
-    flatbuffers::FlatBufferBuilder &fbb,
-    flatbuffers::Offset<Opl3Bank> root) {
-  fbb.FinishSizePrefixed(root);
+  fbb.Finish(root, Opl3BankIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_OPL3BANK_H_

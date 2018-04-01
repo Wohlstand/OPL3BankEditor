@@ -1,3 +1,5 @@
+file_identifier "FOP3";
+
 //Data of operator are stored in raw OPL format, so, there are ready-to-send
 struct Operator {
     //AM/Vib/Env/Ksr/FMult characteristics
