@@ -20,9 +20,16 @@
 #include "../common.h"
 #include "Opl3Bank_generated.h"
 
-bool FlatbufferOpl3::detect(const QString &filePath, char *magic)
+bool FlatbufferOpl3::detect(const QString &filePath, char*)
 {
-    return filePath.endsWith(".fbop3", Qt::CaseInsensitive);
+    QFile file(filePath);
+    if(!file.open(QIODevice::ReadOnly))
+        return false;
+    
+    QByteArray blob = file.readAll();
+    file.close();
+
+    return Opl3BankBufferHasIdentifier(blob.constData());
 }
 
 FfmtErrCode FlatbufferOpl3::loadFile(QString filePath, FmBank &bank)
