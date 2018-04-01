@@ -20,9 +20,9 @@
 #include "../common.h"
 #include "Opl3Bank_generated.h"
 
-bool FlatbufferOpl3::detect(const QString &, char *magic)
+bool FlatbufferOpl3::detect(const QString &filePath, char *magic)
 {
-    return true;
+    return filePath.endsWith(".fbop3");
 }
 
 FfmtErrCode FlatbufferOpl3::loadFile(QString filePath, FmBank &bank)
