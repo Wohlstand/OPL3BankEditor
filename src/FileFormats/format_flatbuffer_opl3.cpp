@@ -73,7 +73,7 @@ FfmtErrCode FlatbufferOpl3::loadFile(QString filePath, FmBank &bank)
 
     uint16_t current_melodic_bank     = 0;
     uint16_t current_percusive_bank   = 0;
-    FmBank::MidiBank* bankMeta = NULL;
+    FmBank::MidiBank* bankMeta = nullptr;
 
     for(uint8_t i = 0; i < banks->Length(); i++) {
         auto bnk = banks->Get(i);
@@ -93,12 +93,12 @@ FfmtErrCode FlatbufferOpl3::loadFile(QString filePath, FmBank &bank)
         strncpy(bankMeta->name, bnk->name()->c_str(), 32);
 
         auto instruments = bnk->instruments();
-        uint8_t instrumentCount = instruments->Length();
+        uint8_t instrumentCount = (uint8_t)instruments->Length();
 
         for (uint8_t j = 0; j < instrumentCount; j++) {
             auto instrument = instruments->Get(j);
 
-            FmBank::Instrument* ins = NULL;
+            FmBank::Instrument* ins = nullptr;
             switch (bankType) {
                 case BankType_Melodic:
                     ins = &bank.Ins_Melodic[current_melodic_bank * 128 + instrument->program()];
@@ -199,8 +199,8 @@ FfmtErrCode FlatbufferOpl3::saveFile(QString filePath, FmBank &bank)
                 
                 if (mode == Mode_TwoOp)
                 {
-                    auto instrument = CreateInstrument(builder, j, instrName, ins.note_offset1, 0, ins.velocity_offset, 0,
-                        ins.percNoteNum, mode, ins.getFBConn1(), 0, &modulator1, &carrier1, 0, 0, ins.ms_sound_kon, ins.ms_sound_koff);
+                    auto instrument = CreateInstrument(builder, (uint8_t)j, instrName, ins.note_offset1, 0, ins.velocity_offset, 0,
+                        ins.percNoteNum, mode, ins.getFBConn1(), 0, &modulator1, &carrier1, nullptr, nullptr, ins.ms_sound_kon, ins.ms_sound_koff);
                     instruments_vector.push_back(instrument);
                 }
                 else
@@ -213,7 +213,7 @@ FfmtErrCode FlatbufferOpl3::saveFile(QString filePath, FmBank &bank)
                         ins.getAVEKM(CARRIER2), ins.getKSLL(CARRIER2),
                         ins.getAtDec(CARRIER2), ins.getSusRel(CARRIER2), ins.getWaveForm(CARRIER2));
                     
-                    auto instrument = CreateInstrument(builder, j, instrName, ins.note_offset1, ins.note_offset2,
+                    auto instrument = CreateInstrument(builder, (uint8_t)j, instrName, ins.note_offset1, ins.note_offset2,
                         ins.velocity_offset, ins.fine_tune,
                         ins.percNoteNum, mode, ins.getFBConn1(), ins.getFBConn2(),
                         &modulator1, &carrier1, &modulator2, &carrier2, ins.ms_sound_kon, ins.ms_sound_koff);
@@ -252,8 +252,8 @@ FfmtErrCode FlatbufferOpl3::saveFile(QString filePath, FmBank &bank)
                 
                 if (mode == Mode_TwoOp)
                 {
-                    auto instrument = CreateInstrument(builder, j, instrName, ins.note_offset1, 0, ins.velocity_offset, 0,
-                        ins.percNoteNum, mode, ins.getFBConn1(), 0, &modulator1, &carrier1, 0, 0, ins.ms_sound_kon, ins.ms_sound_koff);
+                    auto instrument = CreateInstrument(builder, (uint8_t)j, instrName, ins.note_offset1, 0, ins.velocity_offset, 0,
+                        ins.percNoteNum, mode, ins.getFBConn1(), 0, &modulator1, &carrier1, nullptr, nullptr, ins.ms_sound_kon, ins.ms_sound_koff);
                     instruments_vector.push_back(instrument);
                 }
                 else
@@ -266,7 +266,7 @@ FfmtErrCode FlatbufferOpl3::saveFile(QString filePath, FmBank &bank)
                         ins.getAVEKM(CARRIER2), ins.getKSLL(CARRIER2),
                         ins.getAtDec(CARRIER2), ins.getSusRel(CARRIER2), ins.getWaveForm(CARRIER2));
                     
-                    auto instrument = CreateInstrument(builder, j, instrName, ins.note_offset1, ins.note_offset2,
+                    auto instrument = CreateInstrument(builder, (uint8_t)j, instrName, ins.note_offset1, ins.note_offset2,
                         ins.velocity_offset, ins.fine_tune,
                         ins.percNoteNum, mode, ins.getFBConn1(), ins.getFBConn2(),
                         &modulator1, &carrier1, &modulator2, &carrier2, ins.ms_sound_kon, ins.ms_sound_koff);
@@ -287,7 +287,7 @@ FfmtErrCode FlatbufferOpl3::saveFile(QString filePath, FmBank &bank)
     FinishOpl3BankBuffer(builder, opl3Bank);
 
     uint8_t *buf = builder.GetBufferPointer();
-    int size = builder.GetSize();
+    int size = (int)builder.GetSize();
 
     file.write(char_p(buf), size);
     file.close();
