@@ -412,7 +412,7 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
     m_progressBox.setWindowTitle(tr("Sounding delay calculation"));
     m_progressBox.setLabelText(tr("Please wait..."));
 
-    #ifndef IS_QT_4
+#ifndef IS_QT_4
     QFutureWatcher<void> watcher;
     watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
     watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
@@ -425,7 +425,7 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
 
     return !watcher.isCanceled();
 
-    #else
+#else
     m_progressBox.show();
     MeasureDurationsDefault(&instrument);
     return true;

@@ -31,7 +31,7 @@ class Measurer : public QObject
     QWidget *m_parentWindow;
 
 public:
-    explicit Measurer(QWidget *parent = NULL);
+    explicit Measurer(QWidget *parent = nullptr);
     ~Measurer();
 
     bool doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset = false);
