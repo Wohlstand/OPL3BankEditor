@@ -23,7 +23,9 @@
 #include <QQueue>
 #include <QProgressDialog>
 
+#include <chrono>
 #include <cmath>
+#include <memory>
 
 #include "measurer.h"
 
@@ -278,24 +280,25 @@ static void MeasureDurationsDefault(FmBank::Instrument *in_p)
 
 static void MeasureDurationsBenchmark(FmBank::Instrument *in_p, OPLChipBase *chip, QVector<Measurer::BenchmarkResult> *result)
 {
-    QElapsedTimer timer;
+    std::chrono::steady_clock::time_point start, stop;
     Measurer::BenchmarkResult res;
-    timer.start();
+    start = std::chrono::steady_clock::now();
     MeasureDurations(in_p, chip);
-    res.elapsed = timer.elapsed();
+    stop  = std::chrono::steady_clock::now();
+    res.elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
     res.name = QString::fromUtf8(chip->emulatorName());
     result->push_back(res);
 }
 
 static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Measurer::BenchmarkResult> *result)
 {
-    QList<QSharedPointer<OPLChipBase>> emuls =
+    QList<std::shared_ptr<OPLChipBase > > emuls =
     {
-        QSharedPointer<OPLChipBase>(new NukedOPL3),
-        QSharedPointer<OPLChipBase>(new DosBoxOPL3)
+        std::shared_ptr<OPLChipBase>(new NukedOPL3),
+        std::shared_ptr<OPLChipBase>(new DosBoxOPL3)
     };
-    for(QSharedPointer<OPLChipBase> &p : emuls)
-        MeasureDurationsBenchmark(in_p, p.data(), result);
+    for(std::shared_ptr<OPLChipBase> &p : emuls)
+        MeasureDurationsBenchmark(in_p, p.get(), result);
 }
 
 Measurer::Measurer(QWidget *parent) :
