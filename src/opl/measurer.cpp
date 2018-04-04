@@ -427,7 +427,7 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
 
     #else
     m_progressBox.show();
-    MeasureDurations(&instrument);
+    MeasureDurationsDefault(&instrument);
     return true;
 #endif
 }
