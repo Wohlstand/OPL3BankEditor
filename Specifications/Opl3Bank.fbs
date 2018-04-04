@@ -1,0 +1,76 @@
+file_identifier "FOP3";
+
+//Data of operator are stored in raw OPL format, so, there are ready-to-send
+struct Operator {
+    //AM/Vib/Env/Ksr/FMult characteristics
+    AVEKM:ubyte;
+    //Key Scale Level / Total level register data
+    KSLL:ubyte;
+    //Attack / Decay
+    AtDec:ubyte;
+    //Systain and Release register data
+    SusRel:ubyte;
+    //Wave form
+    WaveForm:ubyte;
+}
+
+enum Mode: byte { TwoOp = 0, FourOp, Pseudo }
+
+table Instrument {
+    program:uint8;
+    name:string;
+
+    keyOffset1:int16;
+    keyOffset2:int16;
+
+    velocityOffset:int8;
+    secondVoiceTuning:int8;
+    percussionKey:uint8;
+
+    mode:Mode;
+
+    // Feedback / SynthType for 1'st and 2'nd operators
+    fb_conn1:ubyte;
+    // Feedback / SynthType for 3'rd and 4'th operators
+    fb_conn2:ubyte;
+
+    modulator1:Operator;
+    carrier1:Operator;
+    modulator2:Operator;
+    carrier2:Operator;
+
+    konMs:uint16;
+    koffMs:uint16;
+}
+
+enum BankType: byte { Melodic = 0, Percussion }
+
+table Bank {
+    name:string;
+    type:BankType;
+    bankLSB:ubyte;
+    bankMSB:ubyte;
+    instruments:[Instrument];
+}
+
+enum VolumeModel: uint8 {
+    Auto = 0,
+    Generic,
+    Native,
+    DMX,
+    Apogee,
+    Win9x
+}
+
+table Opl3Bank {
+    //As this thing will be safe, the version field is an informative only to recognize version of editor which have created this file
+    internalVersion:uint16;
+    //Deep tremolo and Deep Vibrato register data (until to use, AND it with 0x03)
+    oplTV:uint8;
+    //Volume scaling model
+    volumeModel:VolumeModel;
+
+    banks:[Bank];
+}
+
+root_type Opl3Bank;

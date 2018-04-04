@@ -35,6 +35,7 @@
 #include "format_rad_importer.h"
 #include "format_sb_ibk.h"
 #include "format_wohlstand_opl3.h"
+#include "format_flatbuffer_opl3.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -102,6 +103,9 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new CMF_Importer());
     registerBankFormat(new IMF_Importer());
     registerBankFormat(new RAD_Importer());
+
+    //Flatbuffer
+    registerBankFormat(new FlatbufferOpl3());
 }
 
 
