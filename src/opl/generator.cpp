@@ -144,7 +144,11 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip,
                      QObject *parent)
     :   QIODevice(parent)
 {
+    #ifdef ENABLE_OPL_EMULATOR
     m_rate = sampleRate;
+    #else
+    Q_UNUSED(sampleRate);
+    #endif
     note = 60;
     m_patch =
     {
@@ -218,8 +222,6 @@ void Generator::initChip()
 
     #ifdef ENABLE_OPL_EMULATOR
     chip->setRate(m_rate);
-    #else
-    Q_UNUSED(m_rate);
     #endif
 
     for(uint32_t a = 0; a < 18; ++a)
