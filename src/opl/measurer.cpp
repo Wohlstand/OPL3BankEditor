@@ -453,7 +453,7 @@ bool Measurer::runBenchmark(FmBank::Instrument &instrument, QVector<Measurer::Be
     watcher.waitForFinished();
 #else
     m_progressBox.show();
-    MeasureDurationsBenchmarkRunner(&instrument, result);
+    MeasureDurationsBenchmarkRunner(&instrument, &result);
 #endif
 
     return true;
