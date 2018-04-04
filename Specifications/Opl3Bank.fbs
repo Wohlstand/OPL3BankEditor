@@ -28,7 +28,6 @@ table Instrument {
     percussionKey:uint8;
 
     mode:Mode;
-    blank:bool;
 
     // Feedback / SynthType for 1'st and 2'nd operators
     fb_conn1:ubyte;

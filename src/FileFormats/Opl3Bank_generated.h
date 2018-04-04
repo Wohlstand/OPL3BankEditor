@@ -22,8 +22,8 @@ enum Mode {
   Mode_MAX = Mode_Pseudo
 };
 
-inline Mode (&EnumValuesMode())[3] {
-  static Mode values[] = {
+inline const Mode (&EnumValuesMode())[3] {
+  static const Mode values[] = {
     Mode_TwoOp,
     Mode_FourOp,
     Mode_Pseudo
@@ -31,8 +31,8 @@ inline Mode (&EnumValuesMode())[3] {
   return values;
 }
 
-inline const char **EnumNamesMode() {
-  static const char *names[] = {
+inline const char * const *EnumNamesMode() {
+  static const char * const names[] = {
     "TwoOp",
     "FourOp",
     "Pseudo",
@@ -53,16 +53,16 @@ enum BankType {
   BankType_MAX = BankType_Percussion
 };
 
-inline BankType (&EnumValuesBankType())[2] {
-  static BankType values[] = {
+inline const BankType (&EnumValuesBankType())[2] {
+  static const BankType values[] = {
     BankType_Melodic,
     BankType_Percussion
   };
   return values;
 }
 
-inline const char **EnumNamesBankType() {
-  static const char *names[] = {
+inline const char * const *EnumNamesBankType() {
+  static const char * const names[] = {
     "Melodic",
     "Percussion",
     nullptr
@@ -86,8 +86,8 @@ enum VolumeModel {
   VolumeModel_MAX = VolumeModel_Win9x
 };
 
-inline VolumeModel (&EnumValuesVolumeModel())[6] {
-  static VolumeModel values[] = {
+inline const VolumeModel (&EnumValuesVolumeModel())[6] {
+  static const VolumeModel values[] = {
     VolumeModel_Auto,
     VolumeModel_Generic,
     VolumeModel_Native,
@@ -98,8 +98,8 @@ inline VolumeModel (&EnumValuesVolumeModel())[6] {
   return values;
 }
 
-inline const char **EnumNamesVolumeModel() {
-  static const char *names[] = {
+inline const char * const *EnumNamesVolumeModel() {
+  static const char * const names[] = {
     "Auto",
     "Generic",
     "Native",
@@ -163,15 +163,14 @@ struct Instrument FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_SECONDVOICETUNING = 14,
     VT_PERCUSSIONKEY = 16,
     VT_MODE = 18,
-    VT_BLANK = 20,
-    VT_FB_CONN1 = 22,
-    VT_FB_CONN2 = 24,
-    VT_MODULATOR1 = 26,
-    VT_CARRIER1 = 28,
-    VT_MODULATOR2 = 30,
-    VT_CARRIER2 = 32,
-    VT_KONMS = 34,
-    VT_KOFFMS = 36
+    VT_FB_CONN1 = 20,
+    VT_FB_CONN2 = 22,
+    VT_MODULATOR1 = 24,
+    VT_CARRIER1 = 26,
+    VT_MODULATOR2 = 28,
+    VT_CARRIER2 = 30,
+    VT_KONMS = 32,
+    VT_KOFFMS = 34
   };
   uint8_t program() const {
     return GetField<uint8_t>(VT_PROGRAM, 0);
@@ -196,9 +195,6 @@ struct Instrument FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   Mode mode() const {
     return static_cast<Mode>(GetField<int8_t>(VT_MODE, 0));
-  }
-  bool blank() const {
-    return GetField<uint8_t>(VT_BLANK, 0) != 0;
   }
   uint8_t fb_conn1() const {
     return GetField<uint8_t>(VT_FB_CONN1, 0);
@@ -235,7 +231,6 @@ struct Instrument FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_SECONDVOICETUNING) &&
            VerifyField<uint8_t>(verifier, VT_PERCUSSIONKEY) &&
            VerifyField<int8_t>(verifier, VT_MODE) &&
-           VerifyField<uint8_t>(verifier, VT_BLANK) &&
            VerifyField<uint8_t>(verifier, VT_FB_CONN1) &&
            VerifyField<uint8_t>(verifier, VT_FB_CONN2) &&
            VerifyField<Operator>(verifier, VT_MODULATOR1) &&
@@ -274,9 +269,6 @@ struct InstrumentBuilder {
   }
   void add_mode(Mode mode) {
     fbb_.AddElement<int8_t>(Instrument::VT_MODE, static_cast<int8_t>(mode), 0);
-  }
-  void add_blank(bool blank) {
-    fbb_.AddElement<uint8_t>(Instrument::VT_BLANK, static_cast<uint8_t>(blank), 0);
   }
   void add_fb_conn1(uint8_t fb_conn1) {
     fbb_.AddElement<uint8_t>(Instrument::VT_FB_CONN1, fb_conn1, 0);
@@ -324,7 +316,6 @@ inline flatbuffers::Offset<Instrument> CreateInstrument(
     int8_t secondVoiceTuning = 0,
     uint8_t percussionKey = 0,
     Mode mode = Mode_TwoOp,
-    bool blank = false,
     uint8_t fb_conn1 = 0,
     uint8_t fb_conn2 = 0,
     const Operator *modulator1 = 0,
@@ -345,7 +336,6 @@ inline flatbuffers::Offset<Instrument> CreateInstrument(
   builder_.add_keyOffset1(keyOffset1);
   builder_.add_fb_conn2(fb_conn2);
   builder_.add_fb_conn1(fb_conn1);
-  builder_.add_blank(blank);
   builder_.add_mode(mode);
   builder_.add_percussionKey(percussionKey);
   builder_.add_secondVoiceTuning(secondVoiceTuning);
@@ -364,7 +354,6 @@ inline flatbuffers::Offset<Instrument> CreateInstrumentDirect(
     int8_t secondVoiceTuning = 0,
     uint8_t percussionKey = 0,
     Mode mode = Mode_TwoOp,
-    bool blank = false,
     uint8_t fb_conn1 = 0,
     uint8_t fb_conn2 = 0,
     const Operator *modulator1 = 0,
@@ -383,7 +372,6 @@ inline flatbuffers::Offset<Instrument> CreateInstrumentDirect(
       secondVoiceTuning,
       percussionKey,
       mode,
-      blank,
       fb_conn1,
       fb_conn2,
       modulator1,
@@ -583,6 +571,10 @@ inline const Opl3Bank *GetOpl3Bank(const void *buf) {
   return flatbuffers::GetRoot<Opl3Bank>(buf);
 }
 
+inline const Opl3Bank *GetSizePrefixedOpl3Bank(const void *buf) {
+  return flatbuffers::GetSizePrefixedRoot<Opl3Bank>(buf);
+}
+
 inline const char *Opl3BankIdentifier() {
   return "FOP3";
 }
@@ -597,10 +589,21 @@ inline bool VerifyOpl3BankBuffer(
   return verifier.VerifyBuffer<Opl3Bank>(Opl3BankIdentifier());
 }
 
+inline bool VerifySizePrefixedOpl3BankBuffer(
+    flatbuffers::Verifier &verifier) {
+  return verifier.VerifySizePrefixedBuffer<Opl3Bank>(Opl3BankIdentifier());
+}
+
 inline void FinishOpl3BankBuffer(
     flatbuffers::FlatBufferBuilder &fbb,
     flatbuffers::Offset<Opl3Bank> root) {
   fbb.Finish(root, Opl3BankIdentifier());
+}
+
+inline void FinishSizePrefixedOpl3BankBuffer(
+    flatbuffers::FlatBufferBuilder &fbb,
+    flatbuffers::Offset<Opl3Bank> root) {
+  fbb.FinishSizePrefixed(root, Opl3BankIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_OPL3BANK_H_
