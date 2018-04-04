@@ -23,6 +23,7 @@
 #include <QQueue>
 #include <QProgressDialog>
 
+#include <vector>
 #include <chrono>
 #include <cmath>
 #include <memory>
@@ -292,7 +293,7 @@ static void MeasureDurationsBenchmark(FmBank::Instrument *in_p, OPLChipBase *chi
 
 static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Measurer::BenchmarkResult> *result)
 {
-    QList<std::shared_ptr<OPLChipBase > > emuls =
+    std::vector<std::shared_ptr<OPLChipBase > > emuls =
     {
         std::shared_ptr<OPLChipBase>(new NukedOPL3),
         std::shared_ptr<OPLChipBase>(new DosBoxOPL3)
