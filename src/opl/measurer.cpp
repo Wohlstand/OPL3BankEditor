@@ -396,7 +396,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
     int count = 0;
     foreach(FmBank::Instrument *ins, tasks)
     {
-        MeasureDurations(ins);
+        MeasureDurationsDefault(ins);
         m_progressBox.setValue(++count);
         if(m_progressBox.wasCanceled())
             return false;
