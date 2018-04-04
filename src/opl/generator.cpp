@@ -239,10 +239,9 @@ void Generator::initChip()
 
 void Generator::switchChip(Generator::OPL_Chips chipId)
 {
+    #ifdef ENABLE_OPL_EMULATOR
     std::lock_guard<std::mutex> g(chip_mutex);
     Q_UNUSED(g);
-
-    #ifdef ENABLE_OPL_EMULATOR
     switch(chipId)
     {
     case CHIP_DosBox:
