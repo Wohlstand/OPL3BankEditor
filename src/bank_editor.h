@@ -58,6 +58,8 @@ private:
     QString             m_recentPath;
     //! Recently opened bank file
     QString             m_recentBankFilePath;
+    //! Currently using chip
+    Generator::OPL_Chips m_currentChip;
 
     //! Currently loaded FM bank
     FmBank              m_bank;
@@ -233,6 +235,11 @@ private slots:
     void on_instruments_currentItemChanged(QListWidgetItem *current, QListWidgetItem *);
 
     /**
+     * @brief Toggle the chip emulator
+     */
+    void toggleEmulator();
+
+    /**
      * @brief Clear all buffers and begin a new bank
      */
     void on_actionNew_triggered();
@@ -289,6 +296,11 @@ private slots:
      * @brief Re-calculate all sounding delays
      */
     void on_actionReMeasure_triggered();
+
+    /**
+     * @brief Run benchmark of all supported emulators basing on current instrument
+     */
+    void on_actionChipsBenchmark_triggered();
 
     /**
      * @brief Show all supported formats list

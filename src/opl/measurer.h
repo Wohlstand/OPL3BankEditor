@@ -21,6 +21,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QVector>
 #include "../bank.h"
 
 class Measurer : public QObject
@@ -35,6 +36,11 @@ public:
 
     bool doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset = false);
     bool doMeasurement(FmBank::Instrument &instrument);
+    struct BenchmarkResult {
+        QString name;
+        qint64  elapsed;
+    };
+    bool runBenchmark(FmBank::Instrument &instrument, QVector<BenchmarkResult> &result);
 };
 
 

@@ -2366,7 +2366,9 @@ of second voice</string>
     <addaction name="actionSwapVoices"/>
     <addaction name="separator"/>
     <addaction name="actionReset_current_instrument"/>
+    <addaction name="separator"/>
     <addaction name="actionReMeasure"/>
+    <addaction name="actionChipsBenchmark"/>
     <addaction name="separator"/>
     <addaction name="actionAddBank"/>
     <addaction name="actionCloneBank"/>
@@ -2379,8 +2381,22 @@ of second voice</string>
     <addaction name="separator"/>
     <addaction name="actionAdLibBnkMode"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <widget class="QMenu" name="menuChoose_chip_emulator">
+     <property name="title">
+      <string>Choose chip emulator</string>
+     </property>
+     <addaction name="actionEmulatorNuked"/>
+     <addaction name="actionEmulatorDosBox"/>
+    </widget>
+    <addaction name="menuChoose_chip_emulator"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdito"/>
+   <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -2540,6 +2556,27 @@ of second voice</string>
   <action name="actionReMeasure">
    <property name="text">
     <string>Re-Calculate all sounding delays</string>
+   </property>
+  </action>
+  <action name="actionEmulatorNuked">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Nuked OPL2</string>
+   </property>
+  </action>
+  <action name="actionEmulatorDosBox">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>DosBox 0.74</string>
+   </property>
+  </action>
+  <action name="actionChipsBenchmark">
+   <property name="text">
+    <string>Run emulators benchmark</string>
    </property>
   </action>
  </widget>

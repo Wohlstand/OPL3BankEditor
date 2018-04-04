@@ -28,7 +28,9 @@
 #include "measurer.h"
 
 //Measurer is always needs for emulator
-#include "nukedopl3.h"
+#include "chips/opl_chip_base.h"
+#include "chips/nuked_opl3.h"
+#include "chips/dosbox_opl3.h"
 
 struct DurationInfo
 {
@@ -44,7 +46,7 @@ struct DurationInfo
     uint8_t     padding[7];
 };
 
-static void MeasureDurations(FmBank::Instrument *in_p)
+static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 {
     FmBank::Instrument &in = *in_p;
     std::vector<int16_t> stereoSampleBuf;
@@ -56,8 +58,8 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         in.percNoteNum < 20 ? (44 + in.percNoteNum) :
                             in.percNoteNum >= 128 ? (44 + 128 - in.percNoteNum) : in.percNoteNum;
 
-#define WRITE_REG(key, value) OPL3_WriteReg(&opl, (Bit8u)(key), (Bit8u)(value))
-    _opl3_chip opl;
+#define WRITE_REG(key, value) opl->writeReg(key, value)
+    OPLChipBase *opl = chip;
 
     static const short initdata[(2 + 3 + 2 + 2) * 2] =
     {
@@ -66,10 +68,10 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         0x001, 32, 0x0BD, 0         // Enable wave & melodic
     };
 
-    OPL3_Reset(&opl, rate);
+    opl->setRate(rate);
 
     for(unsigned a = 0; a < 18; a += 2)
-        WRITE_REG(initdata[a], initdata[a + 1]);
+        WRITE_REG((uint16_t)initdata[a], (uint8_t)initdata[a + 1]);
 
     const unsigned n_notes = in.en_4op || in.en_pseudo4op ? 2 : 1;
     unsigned x[2] = {0, 0};
@@ -136,6 +138,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         WRITE_REG(0xB0 + n * 3, x[n] >> 8);
     }
 
+    const unsigned max_silent = 6;
     const unsigned max_on  = 40;
     const unsigned max_off = 60;
 
@@ -148,7 +151,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         stereoSampleBuf.clear();
         stereoSampleBuf.resize(samples_per_interval * 2, 0);
 
-        OPL3_GenerateStream(&opl, stereoSampleBuf.data(), samples_per_interval);
+        opl->generate(stereoSampleBuf.data(), samples_per_interval);
 
         double mean = 0.0;
 
@@ -171,7 +174,10 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         if(std_deviation > highest_sofar)
             highest_sofar = std_deviation;
 
-        if(period > 6 * interval && std_deviation < highest_sofar * 0.2)
+        if((period > max_silent * interval) &&
+            ((std_deviation < highest_sofar * 0.2)||
+             (sound_min >= -1 && sound_max <= 1))
+        )
             break;
     }
 
@@ -186,7 +192,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         stereoSampleBuf.clear();
         stereoSampleBuf.resize(samples_per_interval * 2);
 
-        OPL3_GenerateStream(&opl, stereoSampleBuf.data(), samples_per_interval);
+        opl->generate(stereoSampleBuf.data(), samples_per_interval);
 
         double mean = 0.0;
         for(unsigned long c = 0; c < samples_per_interval; ++c)
@@ -207,6 +213,9 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         amplitudecurve_off.push_back(std_deviation);
 
         if(std_deviation < highest_sofar * 0.2)
+            break;
+
+        if((period > max_silent * interval) && (sound_min >= -1 && sound_max <= 1))
             break;
     }
 
@@ -261,6 +270,33 @@ static void MeasureDurations(FmBank::Instrument *in_p)
     in.is_blank = result.nosound;
 }
 
+static void MeasureDurationsDefault(FmBank::Instrument *in_p)
+{
+    NukedOPL3 chip;
+    MeasureDurations(in_p, &chip);
+}
+
+static void MeasureDurationsBenchmark(FmBank::Instrument *in_p, OPLChipBase *chip, QVector<Measurer::BenchmarkResult> *result)
+{
+    QElapsedTimer timer;
+    Measurer::BenchmarkResult res;
+    timer.start();
+    MeasureDurations(in_p, chip);
+    res.elapsed = timer.elapsed();
+    res.name = QString::fromUtf8(chip->emulatorName());
+    result->push_back(res);
+}
+
+static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Measurer::BenchmarkResult> *result)
+{
+    QList<QSharedPointer<OPLChipBase>> emuls =
+    {
+        QSharedPointer<OPLChipBase>(new NukedOPL3),
+        QSharedPointer<OPLChipBase>(new DosBoxOPL3)
+    };
+    for(QSharedPointer<OPLChipBase> &p : emuls)
+        MeasureDurationsBenchmark(in_p, p.data(), result);
+}
 
 Measurer::Measurer(QWidget *parent) :
     QObject(parent),
@@ -323,7 +359,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
     watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
     watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
 
-    watcher.setFuture(QtConcurrent::map(tasks, &MeasureDurations));
+    watcher.setFuture(QtConcurrent::map(tasks, &MeasureDurationsDefault));
 
     m_progressBox.exec();
     watcher.waitForFinished();
@@ -378,7 +414,7 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
     watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
     watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
 
-    watcher.setFuture(QtConcurrent::run(&MeasureDurations, &instrument));
+    watcher.setFuture(QtConcurrent::run(&MeasureDurationsDefault, &instrument));
 
     m_progressBox.exec();
     watcher.waitForFinished();
@@ -389,5 +425,32 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
     m_progressBox.show();
     MeasureDurations(&instrument);
     return true;
-    #endif
+#endif
+}
+
+bool Measurer::runBenchmark(FmBank::Instrument &instrument, QVector<Measurer::BenchmarkResult> &result)
+{
+    QProgressDialog m_progressBox(m_parentWindow);
+    m_progressBox.setWindowModality(Qt::WindowModal);
+    m_progressBox.setWindowTitle(tr("Benchmarking emulators"));
+    m_progressBox.setLabelText(tr("Please wait..."));
+    m_progressBox.setCancelButton(nullptr);
+
+
+#ifndef IS_QT_4
+    QFutureWatcher<void> watcher;
+    watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
+    watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
+    watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
+    watcher.connect(&watcher, SIGNAL(finished()), &m_progressBox, SLOT(accept()));
+
+    watcher.setFuture(QtConcurrent::run(MeasureDurationsBenchmarkRunner, &instrument, &result));
+    m_progressBox.exec();
+    watcher.waitForFinished();
+#else
+    m_progressBox.show();
+    MeasureDurationsBenchmarkRunner(&instrument, result);
+#endif
+
+    return true;
 }

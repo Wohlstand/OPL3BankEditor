@@ -1,3 +1,9 @@
+Version 1.4.0.1
+- Added ability to re-calculate sounding delays for entire instruments set
+- Added status bar notifications
+- Added DosBox emulator
+- Added ability to toggle emulation cores
+
 Version 1.3.3
 - Added ability to change volumes model for ADLMIDI player
 - Deep-Tremolo and Deep-Vibrato now can be restored from the WOPL file or used default by specific format

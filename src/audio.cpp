@@ -59,7 +59,7 @@ void BankEditor::initAudio()
     }
     #endif
 
-    m_generator = new Generator(uint32_t(rate), this);
+    m_generator = new Generator(uint32_t(rate), m_currentChip, this);
     #ifdef ENABLE_AUDIO_TESTING
     if (m_audioOut)
         m_audioOut->setAudioSource(m_generator);

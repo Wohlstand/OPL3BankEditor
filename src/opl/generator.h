@@ -19,6 +19,8 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
+#include "chips/opl_chip_base.h"
+
 #if defined(IS_QT_4) && defined(_WIN32)
 #define ENABLE_OPL_PROXY
 #endif//QT<5 and WIN32
@@ -28,6 +30,8 @@
 #endif//HasAudio
 
 #include <stdint.h>
+#include <memory>
+#include <mutex>
 
 #ifdef ENABLE_OPL_EMULATOR
 #include "nukedopl3.h"
@@ -77,8 +81,16 @@ class Generator : public QIODevice
     Q_OBJECT
 
 public:
-    Generator(uint32_t sampleRate, QObject *parent);
+    enum OPL_Chips
+    {
+        CHIP_Nuked = 0,
+        CHIP_DosBox
+    };
+    Generator(uint32_t sampleRate, OPL_Chips initialChip, QObject *parent);
     ~Generator();
+
+    void initChip();
+    void switchChip(OPL_Chips chipId);
 
     void start();
     void stop();
@@ -95,7 +107,7 @@ public:
     void Pan(uint32_t c, uint32_t value);
     void PlayNoteF(int noteID);
     void PlayDrum(uint8_t drum, int noteID);
-    void switch4op(bool enabled);
+    void switch4op(bool enabled, bool patchCleanUp = true);
 
 public slots:
     void Silence();
@@ -120,12 +132,15 @@ signals:
 private:
     void WriteReg(uint16_t address, uint8_t byte);
     int32_t     note;
+    bool        m_4op_last_state;
     uint8_t     DeepTremoloMode;
     uint8_t     DeepVibratoMode;
     uint8_t     AdLibPercussionMode;
     uint8_t     testDrum;
     #ifdef ENABLE_OPL_EMULATOR
-    _opl3_chip  m_chip;
+    uint32_t    m_rate = 44100;
+    std::unique_ptr<OPLChipBase> chip;
+    std::mutex                   chip_mutex;
     #endif
     OPL_PatchSetup m_patch;
 

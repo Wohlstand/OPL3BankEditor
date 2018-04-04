@@ -64,8 +64,8 @@ BankEditor::BankEditor(QWidget *parent) :
 {
     FmBankFormatFactory::registerAllFormats();
     memset(&m_clipboard, 0, sizeof(FmBank::Instrument));
-    m_curInst = NULL;
-    m_curInstBackup = NULL;
+    m_curInst = nullptr;
+    m_curInstBackup = nullptr;
     m_lock = false;
     m_recentFormat = BankFormats::FORMATS_DEFAULT_FORMAT;
     m_recentNum     = -1;
@@ -89,11 +89,15 @@ BankEditor::BankEditor(QWidget *parent) :
     m_importer = new Importer(this);
     m_measurer = new Measurer(this);
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
-    initAudio();
+    connect(ui->actionEmulatorNuked, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorDosBox, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+
     loadSettings();
     m_bank.deep_tremolo = ui->deepTremolo->isChecked();
     m_bank.deep_vibrato = ui->deepVibrato->isChecked();
     m_bankBackup = m_bank;
+
+    initAudio();
 }
 
 BankEditor::~BankEditor()
@@ -120,6 +124,20 @@ void BankEditor::loadSettings()
     ui->deepTremolo->setChecked(setup.value("deep-tremolo", false).toBool());
     ui->deepVibrato->setChecked(setup.value("deep-vibrato", false).toBool());
     m_recentPath = setup.value("recent-path").toString();
+    m_currentChip = (Generator::OPL_Chips)setup.value("chip-emulator", 0).toInt();
+
+    ui->actionEmulatorNuked->setChecked(false);
+    ui->actionEmulatorDosBox->setChecked(false);
+
+    switch(m_currentChip)
+    {
+    case Generator::CHIP_Nuked:
+        ui->actionEmulatorNuked->setChecked(true);
+        break;
+    case Generator::CHIP_DosBox:
+        ui->actionEmulatorDosBox->setChecked(true);
+        break;
+    }
 }
 
 void BankEditor::saveSettings()
@@ -128,6 +146,7 @@ void BankEditor::saveSettings()
     setup.setValue("deep-tremolo", ui->deepTremolo->isChecked());
     setup.setValue("deep-vibrato", ui->deepVibrato->isChecked());
     setup.setValue("recent-path", m_recentPath);
+    setup.setValue("chip-emulator", (int)m_currentChip);
 }
 
 
@@ -571,6 +590,30 @@ void BankEditor::on_actionReMeasure_triggered()
     }
 }
 
+void BankEditor::on_actionChipsBenchmark_triggered()
+{
+    if(m_curInst)
+    {
+        QVector<Measurer::BenchmarkResult> res;
+        m_measurer->runBenchmark(*m_curInst, res);
+        QString resStr;
+        for(Measurer::BenchmarkResult &r : res)
+            resStr += QString("%1 passed in %2 milliseconds.\n").arg(r.name).arg(r.elapsed);
+        QMessageBox::information(this,
+                                 tr("Benchmark result"),
+                                 tr("Result of emulators benchmark based on '%1' instrument:\n\n%2")
+                                 .arg(m_curInst->name)
+                                 .arg(resStr)
+                                 );
+    }
+    else
+    {
+        QMessageBox::information(this,
+                                 tr("Instrument is not selected"),
+                                 tr("Please select any instrument to begin the benchmark of emulators!"));
+    }
+}
+
 void BankEditor::on_actionFormatsSup_triggered()
 {
     formats_sup sup(this);
@@ -607,6 +650,26 @@ void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QLi
     }
 
     flushInstrument();
+}
+
+void BankEditor::toggleEmulator()
+{
+    QObject *menuItem = sender();
+    ui->actionEmulatorNuked->setChecked(false);
+    ui->actionEmulatorDosBox->setChecked(false);
+    if(menuItem == ui->actionEmulatorNuked)
+    {
+        ui->actionEmulatorNuked->setChecked(true);
+        m_currentChip = Generator::CHIP_Nuked;
+        m_generator->switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorDosBox)
+    {
+        ui->actionEmulatorDosBox->setChecked(true);
+        m_currentChip = Generator::CHIP_DosBox;
+        m_generator->switchChip(m_currentChip);
+    }
 }
 
 

@@ -19,6 +19,10 @@
 #include "generator.h"
 #include <qendian.h>
 #include <cmath>
+
+#include "chips/nuked_opl3.h"
+#include "chips/dosbox_opl3.h"
+
 #ifdef ENABLE_OPL_PROXY
 #include <QSysInfo>
 #include <QMessageBox>
@@ -136,10 +140,11 @@ static const uint16_t channels1_4op[USED_CHANNELS_4OP] = {0,  1,  2,  9,  10, 11
 //! 4-operator channels map 1
 static const uint16_t channels2_4op[USED_CHANNELS_4OP] = {3,  4,  5,  12, 13, 14};
 
-Generator::Generator(uint32_t sampleRate,
+Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip,
                      QObject *parent)
     :   QIODevice(parent)
 {
+    m_rate = sampleRate;
     note = 60;
     m_patch =
     {
@@ -163,18 +168,27 @@ Generator::Generator(uint32_t sampleRate,
     memset(m_ins, 0, sizeof(uint16_t)*NUM_OF_CHANNELS);
     memset(m_pit, 0, sizeof(uint8_t)*NUM_OF_CHANNELS);
     memset(m_four_op_category, 0, NUM_OF_CHANNELS * 2);
-    uint32_t p = 0;
 
+    uint32_t p = 0;
     for(uint32_t b = 0; b < 18; ++b)
         m_four_op_category[p++] = 0;
-
     for(uint32_t b = 0; b < 5; ++b)
         m_four_op_category[p++] = 8;
 
+    m_4op_last_state = true;
     DeepTremoloMode   = 0;
     DeepVibratoMode   = 0;
     AdLibPercussionMode = 0;
     testDrum = 0;//Note ON/OFF of one of legacy percussion channels
+
+    switchChip(initialChip);
+}
+
+Generator::~Generator()
+{}
+
+void Generator::initChip()
+{
     static const uint16_t data[] =
     {
         0x004, 96, 0x004, 128,          // Pulse timer
@@ -186,7 +200,7 @@ Generator::Generator(uint32_t sampleRate,
     QSysInfo::WinVersion wver = QSysInfo::windowsVersion();
     bool m_enableProxy =    (wver == QSysInfo::WV_98) ||
                             (wver == QSysInfo::WV_Me);
-    if(m_enableProxy)
+    if(m_enableProxy && !chip_lib)
     {
         chip_lib = LoadLibraryA("liboplproxy.dll");
         if(!chip_lib)
@@ -203,10 +217,9 @@ Generator::Generator(uint32_t sampleRate,
     #endif
 
     #ifdef ENABLE_OPL_EMULATOR
-    memset(&m_chip, 0, sizeof(_opl3_chip));
-    OPL3_Reset(&m_chip, sampleRate);
+    chip->setRate(m_rate);
     #else
-    Q_UNUSED(sampleRate);
+    Q_UNUSED(m_rate);
     #endif
 
     for(uint32_t a = 0; a < 18; ++a)
@@ -218,12 +231,31 @@ Generator::Generator(uint32_t sampleRate,
     WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
                                + DeepVibratoMode * 0x40
                                + AdLibPercussionMode * 0x20));
-    switch4op(true);
+    switch4op(m_4op_last_state, false);
     Silence();
 }
 
-Generator::~Generator()
-{}
+void Generator::switchChip(Generator::OPL_Chips chipId)
+{
+    std::lock_guard<std::mutex> g(chip_mutex);
+    Q_UNUSED(g);
+
+    #ifdef ENABLE_OPL_EMULATOR
+    switch(chipId)
+    {
+    case CHIP_DosBox:
+        chip.reset(new DosBoxOPL3());
+        break;
+    case CHIP_Nuked:
+        chip.reset(new NukedOPL3());
+        break;
+    }
+    #else
+    Q_UNUSED(chipId);
+    #endif
+
+    initChip();
+}
 
 void Generator::WriteReg(uint16_t address, uint8_t byte)
 {
@@ -233,7 +265,7 @@ void Generator::WriteReg(uint16_t address, uint8_t byte)
     #endif
 
     #ifdef ENABLE_OPL_EMULATOR
-    OPL3_WriteReg(&m_chip, address, byte);
+    chip->writeReg(address, byte);
     #endif
 
     #if !defined(ENABLE_OPL_EMULATOR) && !defined(ENABLE_OPL_PROXY)
@@ -372,10 +404,8 @@ void Generator::Patch(uint32_t c, uint32_t i)
     {
         WriteReg(data[a] + o1, x & 0xFF);
         x >>= 8;
-
         if(o2 != 0xFFF)
             WriteReg(data[a] + o2, y & 0xFF);
-
         y >>= 8;
     }
 }
@@ -512,8 +542,9 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     NoteOn(adlchannel, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
 }
 
-void Generator::switch4op(bool enabled)
+void Generator::switch4op(bool enabled, bool patchCleanUp)
 {
+    m_4op_last_state = enabled;
     //Shut up currently playing stuff
     for(uint32_t b = 0; b < NUM_OF_CHANNELS; ++b)
     {
@@ -544,7 +575,7 @@ void Generator::switch4op(bool enabled)
 
         for(uint32_t a = 0; a < fours; ++a)
         {
-            m_four_op_category[nextfour  ] = 1;
+            m_four_op_category[nextfour    ] = 1;
             m_four_op_category[nextfour + 3] = 2;
 
             switch(a % 6)
@@ -574,12 +605,15 @@ void Generator::switch4op(bool enabled)
             m_four_op_category[a] = 0;
     }
 
-    //Reset patch settings
-    memset(&m_patch, 0, sizeof(OPL_PatchSetup));
-    m_patch.OPS[0].modulator_40   = 0x3F;
-    m_patch.OPS[0].modulator_E862 = 0x00FFFF00;
-    m_patch.OPS[1].carrier_40     = 0x3F;
-    m_patch.OPS[1].carrier_E862   = 0x00FFFF00;
+    if(patchCleanUp)
+    {
+        //Reset patch settings
+        memset(&m_patch, 0, sizeof(OPL_PatchSetup));
+        m_patch.OPS[0].modulator_40   = 0x3F;
+        m_patch.OPS[0].modulator_E862 = 0x00FFFF00;
+        m_patch.OPS[1].carrier_40     = 0x3F;
+        m_patch.OPS[1].carrier_E862   = 0x00FFFF00;
+    }
 
     //Clear all operator registers from crap from previous patches
     for(uint32_t b = 0; b < NUM_OF_CHANNELS; ++b)
@@ -825,10 +859,12 @@ void Generator::stop()
 qint64 Generator::readData(char *data, qint64 len)
 {
     #ifdef ENABLE_OPL_EMULATOR
+    std::lock_guard<std::mutex> g(chip_mutex);
+    Q_UNUSED(g);
     int16_t *_out = reinterpret_cast<int16_t *>(data);
     len -= len % 4; //must be multiple 4!
     uint32_t lenS = (static_cast<uint32_t>(len) / 4);
-    OPL3_GenerateStream(&m_chip, _out, lenS);
+    chip->generate(_out, lenS);
     #else
     memset(data, 0, size_t(len));
     #endif

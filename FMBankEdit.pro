@@ -104,10 +104,14 @@ SOURCES += \
     src/ins_names.cpp \
     src/main.cpp \
     src/opl/generator.cpp \
-    src/opl/nukedopl3.c \
     src/piano.cpp \
     src/opl/measurer.cpp \
-    src/audio/ao_base.cpp
+    src/audio/ao_base.cpp \
+    src/opl/chips/dosbox_opl3.cpp \
+    src/opl/chips/nuked_opl3.cpp \
+    src/opl/chips/opl_chip_base.cpp \
+    src/opl/chips/nuked/nukedopl3.c \
+    src/opl/chips/dosbox/dbopl.cpp
 
 HEADERS += \
     src/bank_editor.h \
@@ -136,7 +140,12 @@ HEADERS += \
     src/piano.h \
     src/version.h \
     src/opl/measurer.h \
-    src/audio/ao_base.h
+    src/audio/ao_base.h \
+    src/opl/chips/dosbox_opl3.h \
+    src/opl/chips/nuked_opl3.h \
+    src/opl/chips/opl_chip_base.h \
+    src/opl/chips/nuked/nukedopl3.h \
+    src/opl/chips/dosbox/dbopl.h
 
 FORMS += \
     src/bank_editor.ui \
