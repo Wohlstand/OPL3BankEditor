@@ -442,12 +442,9 @@ void Generator::PlayNoteF(int noteID)
 
     if(m_patch.tone)
     {
-        if(m_patch.tone < 20)
-            tone += m_patch.tone;
-        else if(m_patch.tone < 128)
-            tone = m_patch.tone;
-        else
-            tone -= m_patch.tone - 128;
+        tone = m_patch.tone;
+        if(tone > 128)
+            tone -= tone - 128;
     }
 
     uint16_t i[2] = { 0, 1 };
@@ -525,12 +522,9 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
 
     if(m_patch.tone)
     {
-        if(m_patch.tone < 20)
-            tone += m_patch.tone;
-        else if(m_patch.tone < 128)
-            tone = m_patch.tone;
-        else
-            tone -= m_patch.tone - 128;
+        tone = m_patch.tone;
+        if(tone > 128)
+            tone -= tone - 128;
     }
 
     uint32_t adlchannel = 18 + drum;
@@ -771,17 +765,18 @@ void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
 
         if(isDrum)
         {
-            if(instrument.percNoteNum && instrument.percNoteNum < 20)
-            {
-                uint8_t nnum = instrument.percNoteNum;
+            m_patch.tone = instrument.percNoteNum;
+            //if(instrument.percNoteNum && instrument.percNoteNum < 20)
+            //{
+            //    uint8_t nnum = instrument.percNoteNum;
 
-                while(nnum && nnum < 20)
-                {
-                    nnum += 12;
-                    m_patch.OPS[0].finetune -= 12;
-                    m_patch.OPS[1].finetune -= 12;
-                }
-            }
+            //    while(nnum && nnum < 20)
+            //    {
+            //        nnum += 12;
+            //        m_patch.OPS[0].finetune -= 12;
+            //        m_patch.OPS[1].finetune -= 12;
+            //    }
+            //}
         }
 
         if(instrument.en_4op && instrument.en_pseudo4op)

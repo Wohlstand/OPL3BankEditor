@@ -57,9 +57,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     const unsigned rate = 44100;
     const unsigned interval             = 150;
     const unsigned samples_per_interval = rate / interval;
-    const int notenum =
-        in.percNoteNum < 20 ? (44 + in.percNoteNum) :
-                            in.percNoteNum >= 128 ? (44 + 128 - in.percNoteNum) : in.percNoteNum;
+    const int notenum = in.percNoteNum >= 128 ? (128 - in.percNoteNum) : in.percNoteNum;
 
 #define WRITE_REG(key, value) opl->writeReg(key, value)
     OPLChipBase *opl = chip;
