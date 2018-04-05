@@ -234,7 +234,7 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
 
 int DmxOPL2::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING_GM;
 }
 
 QString DmxOPL2::formatName() const

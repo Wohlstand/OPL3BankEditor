@@ -464,7 +464,9 @@ FfmtErrCode WohlstandOPL3_GM::saveFile(QString filePath, FmBank &bank)
 
 int WohlstandOPL3_GM::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_SAVE | (int)FormatCaps::FORMAT_CAPS_NEEDS_MEASURE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE |
+           (int)FormatCaps::FORMAT_CAPS_NEEDS_MEASURE |
+           (int)FormatCaps::FORMAT_CAPS_GM_BANK;
 }
 
 QString WohlstandOPL3_GM::formatName() const

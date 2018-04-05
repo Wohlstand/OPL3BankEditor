@@ -156,7 +156,7 @@ FfmtErrCode BisqwitBank::saveFile(QString filePath, FmBank &bank)
 
 int BisqwitBank::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING_GM;
 }
 
 QString BisqwitBank::formatName() const

@@ -129,7 +129,7 @@ FfmtErrCode ApogeeTMB::saveFile(QString filePath, FmBank &bank)
 
 int ApogeeTMB::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING_GM;
 }
 
 QString ApogeeTMB::formatName() const

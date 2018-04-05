@@ -74,8 +74,17 @@ enum class FormatCaps
     FORMAT_CAPS_IMPORT  = 0x04,
     //! On every save the delay measures will be generated
     FORMAT_CAPS_NEEDS_MEASURE = 0x08,
+    //! Format is able to keep only one bank only
+    FORMAT_CAPS_GM_BANK = 0x10,
+    //! Format allows to save melodic only
+    FORMAT_CAPS_MELODIC_ONLY = 0x20,
+    //! Format allows to save percussion only
+    FORMAT_CAPS_PERCUSSION_ONLY = 0x40,
+
     //! Open/Save/Import capabilities
-    FORMAT_CAPS_EVERYTHING = FORMAT_CAPS_OPEN|FORMAT_CAPS_SAVE|FORMAT_CAPS_IMPORT
+    FORMAT_CAPS_EVERYTHING = FORMAT_CAPS_OPEN|FORMAT_CAPS_SAVE|FORMAT_CAPS_IMPORT,
+    //! Open/Save/Import capabilities
+    FORMAT_CAPS_EVERYTHING_GM = FORMAT_CAPS_OPEN|FORMAT_CAPS_SAVE|FORMAT_CAPS_IMPORT|FORMAT_CAPS_GM_BANK
 };
 
 /**

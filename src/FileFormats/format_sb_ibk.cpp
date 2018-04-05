@@ -530,7 +530,7 @@ FfmtErrCode SbIBK_DOS::saveFile(QString filePath, FmBank &bank)
 
 int SbIBK_DOS::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING_GM;
 }
 
 QString SbIBK_DOS::formatName() const
@@ -565,7 +565,7 @@ FfmtErrCode SbIBK_DOS::saveFileInst(QString filePath, FmBank::Instrument &inst, 
 
 int SbIBK_DOS::formatInstCaps() const
 {
-    return int(FormatCaps::FORMAT_CAPS_EVERYTHING);
+    return int(FormatCaps::FORMAT_CAPS_EVERYTHING_GM);
 }
 
 QString SbIBK_DOS::formatInstName() const
@@ -767,7 +767,9 @@ FfmtErrCode SbIBK_UNIX2OP_SAVE::saveFile(QString filePath, FmBank &bank)
 
 int SbIBK_UNIX2OP_SAVE::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE|
+           (int)FormatCaps::FORMAT_CAPS_GM_BANK|
+           (int)FormatCaps::FORMAT_CAPS_MELODIC_ONLY;
 }
 
 QString SbIBK_UNIX2OP_SAVE::formatName() const
@@ -799,7 +801,9 @@ FfmtErrCode SbIBK_UNIX2OP_DRUMS_SAVE::saveFile(QString filePath, FmBank &bank)
 
 int SbIBK_UNIX2OP_DRUMS_SAVE::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE|
+           (int)FormatCaps::FORMAT_CAPS_GM_BANK|
+           (int)FormatCaps::FORMAT_CAPS_PERCUSSION_ONLY;
 }
 
 QString SbIBK_UNIX2OP_DRUMS_SAVE::formatName() const
@@ -832,7 +836,9 @@ FfmtErrCode SbIBK_UNIX4OP_SAVE::saveFile(QString filePath, FmBank &bank)
 
 int SbIBK_UNIX4OP_SAVE::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE|
+           (int)FormatCaps::FORMAT_CAPS_GM_BANK|
+           (int)FormatCaps::FORMAT_CAPS_MELODIC_ONLY;
 }
 
 QString SbIBK_UNIX4OP_SAVE::formatName() const
@@ -863,7 +869,9 @@ FfmtErrCode SbIBK_UNIX4OP_DRUMS_SAVE::saveFile(QString filePath, FmBank &bank)
 
 int SbIBK_UNIX4OP_DRUMS_SAVE::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE|
+           (int)FormatCaps::FORMAT_CAPS_GM_BANK|
+           (int)FormatCaps::FORMAT_CAPS_PERCUSSION_ONLY;
 }
 
 QString SbIBK_UNIX4OP_DRUMS_SAVE::formatName() const

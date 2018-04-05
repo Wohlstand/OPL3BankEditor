@@ -49,8 +49,9 @@ public:
      */
     static bool isImportOnly(BankFormats format);
     static bool hasCaps(BankFormats format, int capsQuery);
-    static FfmtErrCode OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent=0);
-    static FfmtErrCode ImportBankFile(QString filePath, FmBank &bank, BankFormats *recent=0);
+    static QString formatName(BankFormats format);
+    static FfmtErrCode OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent = nullptr);
+    static FfmtErrCode ImportBankFile(QString filePath, FmBank &bank, BankFormats *recent = nullptr);
     static FfmtErrCode SaveBankFile(QString filePath, FmBank &bank, BankFormats dest);
     static FfmtErrCode OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats *recent=0, bool *isDrum = 0, bool import = false);
     static FfmtErrCode SaveInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats format, bool isDrum);

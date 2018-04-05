@@ -833,7 +833,9 @@ FfmtErrCode HmiBnk_writer::saveFile(QString filePath, FmBank &bank)
 
 int HmiBnk_writer::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE|
+           (int)FormatCaps::FORMAT_CAPS_GM_BANK|
+           (int)FormatCaps::FORMAT_CAPS_MELODIC_ONLY;
 }
 
 QString HmiBnk_writer::formatName() const
@@ -865,7 +867,9 @@ FfmtErrCode HmiBnk_Drums_writer::saveFile(QString filePath, FmBank &bank)
 
 int HmiBnk_Drums_writer::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE|
+           (int)FormatCaps::FORMAT_CAPS_GM_BANK|
+           (int)FormatCaps::FORMAT_CAPS_PERCUSSION_ONLY;
 }
 
 QString HmiBnk_Drums_writer::formatName() const
