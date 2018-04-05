@@ -297,7 +297,7 @@ FfmtErrCode FlatbufferOpl3::saveFile(QString filePath, FmBank &bank)
 
 int FlatbufferOpl3::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING|(int)FormatCaps::FORMAT_CAPS_NEEDS_MEASURE;
 }
 
 QString FlatbufferOpl3::formatName() const
