@@ -48,7 +48,7 @@ public:
      * @return true if this format is instrument import only
      */
     static bool isImportOnly(BankFormats format);
-
+    static bool hasCaps(BankFormats format, int capsQuery);
     static FfmtErrCode OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent=0);
     static FfmtErrCode ImportBankFile(QString filePath, FmBank &bank, BankFormats *recent=0);
     static FfmtErrCode SaveBankFile(QString filePath, FmBank &bank, BankFormats dest);

@@ -280,6 +280,17 @@ bool FmBankFormatFactory::isImportOnly(BankFormats format)
     return false;
 }
 
+bool FmBankFormatFactory::hasCaps(BankFormats format, int capsQuery)
+{
+    for(FmBankFormatBase_uptr &p : g_formats)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if(p->formatId() == format)
+            return ((p->formatCaps() & capsQuery) != 0);
+    }
+    return false;
+}
+
 
 
 FfmtErrCode FmBankFormatFactory::OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent)

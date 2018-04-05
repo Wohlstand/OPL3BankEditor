@@ -31,6 +31,7 @@
 #include "ins_names.h"
 
 #include "FileFormats/ffmt_factory.h"
+#include "FileFormats/ffmt_enums.h"
 
 #include "opl/measurer.h"
 
@@ -287,8 +288,7 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format)
             return false;
     }
 
-    if(format == BankFormats::FORMAT_WOHLSTAND_OPL3 ||
-       format == BankFormats::FORMAT_WOHLSTAND_OPL3_GM)
+    if(FmBankFormatFactory::hasCaps(format, (int)FormatCaps::FORMAT_CAPS_NEEDS_MEASURE))
     {
         if(!m_measurer->doMeasurement(m_bank, m_bankBackup))
             return false;//Measurement was cancelled
