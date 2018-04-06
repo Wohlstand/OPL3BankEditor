@@ -621,18 +621,42 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
 
 void Generator::Silence()
 {
+    //bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
+    bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
     //Shutup!
-    for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
+    if(natural_4op)
     {
-        NoteOff(c);
-        Touch_Real(c, 0);
+        for(uint32_t c = 0; c < USED_CHANNELS_4OP; ++c)
+        {
+            NoteOff(channels1_4op[c]);
+            Touch_Real(channels1_4op[c], 0);
+            Touch_Real(channels2_4op[c], 0);
+        }
+    }
+    else
+    {
+        for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
+        {
+            NoteOff(channels[c]);
+            Touch_Real(channels[c], 0);
+        }
     }
 }
 
 void Generator::NoteOffAllChans()
 {
-    for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
-        NoteOff(c);
+    //bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
+    bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
+    if(natural_4op)
+    {
+        for(uint32_t c = 0; c < USED_CHANNELS_4OP; ++c)
+            NoteOff(channels1_4op[c]);
+    }
+    else
+    {
+        for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
+            NoteOff(channels[c]);
+    }
 }
 
 
