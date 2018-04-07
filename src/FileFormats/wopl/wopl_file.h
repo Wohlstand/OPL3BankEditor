@@ -109,15 +109,15 @@ typedef struct
 {
     /* Title of the instrument */
     char    inst_name[34];
-    /* Note offset 1 */
+    /* MIDI note key (half-tone) offset for an instrument (or a first voice in pseudo-4-op mode) */
     int16_t note_offset1;
-    /* Note offset 2 */
+    /* MIDI note key (half-tone) offset for a second voice in pseudo-4-op mode */
     int16_t note_offset2;
-    /* Velocity offset (taken from Apogee TMB format) */
+    /* MIDI note velocity offset (taken from Apogee TMB format) */
     int8_t  midi_velocity_offset;
-    /* Second voice detune (taken from DMX OP2) */
+    /* Second voice detune level (taken from DMX OP2) */
     int8_t  second_voice_detune;
-    /* Percussion note number to play this instrument */
+    /* Percussion MIDI base tone number at which this drum will be played */
     uint8_t percussion_key_number;
     /* Enum WOPL_InstrumentFlags */
     uint8_t inst_flags;
