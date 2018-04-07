@@ -77,7 +77,7 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     ins.percNoteNum     = idata[38];
     uint8_t flags       = idata[39];
     ins.en_4op          = (flags & WOPL_Ins_4op) != 0;
-    ins.en_pseudo4op    = (flags & WOPL_Ins_Pseudi4op) != 0;
+    ins.en_pseudo4op    = (flags & WOPL_Ins_Pseudo4op) != 0;
     ins.is_blank        = (flags & WOPL_Ins_IsBlank) != 0;
     ins.setFBConn1(idata[40]);
     ins.setFBConn2(idata[41]);
@@ -107,7 +107,7 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
     out.fine_tune = in.second_voice_detune;
     out.percNoteNum = in.percussion_key_number;
     out.en_4op          = (in.inst_flags & WOPL_Ins_4op) != 0;
-    out.en_pseudo4op    = (in.inst_flags & WOPL_Ins_Pseudi4op) != 0;
+    out.en_pseudo4op    = (in.inst_flags & WOPL_Ins_Pseudo4op) != 0;
     out.is_blank        = (in.inst_flags & WOPL_Ins_IsBlank) != 0;
     out.setFBConn1(in.fb_conn1_04D5H);
     out.setFBConn2(in.fb_conn2_04D5H);
@@ -132,7 +132,7 @@ static void cvt_FMIns_to_WOPLI(FmBank::Instrument &in, WOPLInstrument &out)
     out.second_voice_detune = in.fine_tune;
     out.percussion_key_number = in.percNoteNum;
     out.inst_flags = (in.en_4op ? WOPL_Ins_4op : 0) |
-                     (in.en_pseudo4op ? WOPL_Ins_Pseudi4op : 0) |
+                     (in.en_pseudo4op ? WOPL_Ins_Pseudo4op : 0) |
                      (in.is_blank ? WOPL_Ins_IsBlank : 0);
     out.fb_conn1_04D5H = in.getFBConn1();
     out.fb_conn2_04D5H = in.getFBConn2();
@@ -159,7 +159,7 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
     odata[37] = uint8_t(ins.fine_tune);       //1
     odata[38] = ins.percNoteNum;              //1
     odata[39] = (ins.en_4op ? WOPL_Ins_4op : 0) |
-                (ins.en_pseudo4op ? WOPL_Ins_Pseudi4op : 0) |
+                (ins.en_pseudo4op ? WOPL_Ins_Pseudo4op : 0) |
                 (ins.is_blank ? WOPL_Ins_IsBlank : 0);
     odata[40] = ins.getFBConn1();             //1
     odata[41] = ins.getFBConn2();             //1

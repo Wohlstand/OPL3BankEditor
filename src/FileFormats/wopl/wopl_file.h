@@ -58,7 +58,7 @@ typedef enum
     /* Is true four-operator instrument */
     WOPL_Ins_4op        = 0x01,
     /* Is pseudo four-operator (two 2-operator voices) instrument */
-    WOPL_Ins_Pseudi4op  = 0x02,
+    WOPL_Ins_Pseudo4op  = 0x02,
     /* Is a blank instrument entry */
     WOPL_Ins_IsBlank    = 0x04,
     /* Mask of the flags range */
