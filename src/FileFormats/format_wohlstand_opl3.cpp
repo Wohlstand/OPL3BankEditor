@@ -32,6 +32,10 @@ static const uint16_t   latest_version = 3;
 Version history:
 V. 1
     * first release
+V. 2
+    * Added bank meta-data (title, LSB and MSB MIDI keys)
+V. 3
+    * Added sounding delay fields into every isntrument for ADLMIDI's channel manager
 */
 
 bool WohlstandOPL3::detect(const QString &, char *magic)
@@ -43,14 +47,6 @@ bool WohlstandOPL3::detectInst(const QString &, char *magic)
 {
     return (strncmp(magic, wopli_magic, 11) == 0);
 }
-
-//enum WOPL_InstrumentFlags
-//{
-//    Flags_NONE      = 0,
-//    Flag_Enable4OP  = 0x01,
-//    Flag_Pseudo4OP  = 0x02,
-//    Flag_NoSound    = 0x04,
-//};
 
 static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &version, bool hasSoundKoefficients = true)
 {
@@ -241,131 +237,6 @@ FfmtErrCode WohlstandOPL3::loadFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-FfmtErrCode WohlstandOPL3::loadFileOLD(QString filePath, FmBank &bank)
-{
-    uint16_t version = 0;
-    uint16_t count_melodic_banks     = 1;
-    uint16_t count_percusive_banks   = 1;
-
-    char magic[32];
-    memset(magic, 0, 32);
-
-    QFile file(filePath);
-    if(!file.open(QIODevice::ReadOnly))
-        return FfmtErrCode::ERR_NOFILE;
-
-    bank.reset();
-    if(file.read(magic, 11) != 11)
-        return FfmtErrCode::ERR_BADFORMAT;
-    if(strncmp(magic, wopl3_magic, 11) != 0)
-        return FfmtErrCode::ERR_BADFORMAT;
-
-    if(readLE(file, version) != 2)
-        return FfmtErrCode::ERR_BADFORMAT;
-    if(version > latest_version)
-        return FfmtErrCode::ERR_UNSUPPORTED_FORMAT;
-
-    uint8_t head[6];
-    memset(head, 0, 6);
-    if(file.read(char_p(head), 6) != 6)
-        return FfmtErrCode::ERR_BADFORMAT;
-    count_melodic_banks     = toUint16BE(head);
-    count_percusive_banks   = toUint16BE(head + 2);
-    //5'th byte reserved for Deep-Tremolo and Deep-Vibrato flags
-    //6'th byte reserved for ADLMIDI's default volume model
-    if((count_melodic_banks < 1) || (count_percusive_banks < 1))
-        return FfmtErrCode::ERR_BADFORMAT;
-
-    bank.reset(count_melodic_banks, count_percusive_banks);
-
-    bank.deep_vibrato       = ((head[4]>>0) & 0x01);
-    bank.deep_tremolo       = ((head[4]>>1) & 0x01);
-    bank.volume_model       = head[5];
-
-    if(version >= 2)//Read bank meta-entries
-    {
-        for(int i = 0; i < bank.Banks_Melodic.size(); i++)
-        {
-            FmBank::MidiBank &bankMeta = bank.Banks_Melodic[i];
-            uint8_t bank_meta[34];
-            if(file.read(char_p(bank_meta), 34) != 34)
-                return FfmtErrCode::ERR_BADFORMAT;
-            strncpy(bankMeta.name, char_p(bank_meta), 32);
-            bankMeta.lsb = bank_meta[32];
-            bankMeta.msb = bank_meta[33];
-        }
-
-        for(int i = 0; i < bank.Banks_Percussion.size(); i++)
-        {
-            FmBank::MidiBank &bankMeta = bank.Banks_Percussion[i];
-            uint8_t bank_meta[34];
-            if(file.read(char_p(bank_meta), 34) != 34)
-                return FfmtErrCode::ERR_BADFORMAT;
-            strncpy(bankMeta.name, char_p(bank_meta), 32);
-            bankMeta.lsb = bank_meta[32];
-            bankMeta.msb = bank_meta[33];
-        }
-    }
-
-    uint16_t total = 128 * count_melodic_banks;
-    bool readPercussion = false;
-
-tryAgain:
-    for(uint16_t i = 0; i < total; i++)
-    {
-        FmBank::Instrument &ins = (readPercussion) ? bank.Ins_Percussion[i] : bank.Ins_Melodic[i];
-        if(!readInstrument(file, ins, version))
-        {
-            bank.reset();
-            return FfmtErrCode::ERR_BADFORMAT;
-        }
-    }
-
-    if(!readPercussion)
-    {
-        total = 128 * count_percusive_banks;
-        readPercussion = true;
-        goto tryAgain;
-    }
-    file.close();
-
-    return FfmtErrCode::ERR_OK;
-}
-
-static void bankFillBack(FmBank &bank, int alignMelodic, int alignDrums)
-{
-    if(alignMelodic != 128)
-    {
-        bank.Ins_Melodic_box.reserve(alignMelodic);
-        while(bank.Ins_Melodic_box.size() % 128 != 0)
-            bank.Ins_Melodic_box.push_back(FmBank::emptyInst());
-        bank.Ins_Melodic = bank.Ins_Melodic_box.data();
-    }
-    if(alignDrums != 128)
-    {
-        bank.Ins_Percussion_box.reserve(alignDrums);
-        while(bank.Ins_Percussion_box.size() % 128 != 0)
-            bank.Ins_Percussion_box.push_back(FmBank::emptyInst());
-        bank.Ins_Percussion = bank.Ins_Percussion_box.data();
-    }
-}
-
-static void bankStripBack(FmBank &bank, int alignMelodic, int alignDrums)
-{
-    if(alignMelodic != 128)
-    {
-        bank.Ins_Melodic_box.erase(bank.Ins_Melodic_box.end() - alignMelodic,
-                                   bank.Ins_Melodic_box.end());
-        bank.Ins_Melodic = bank.Ins_Melodic_box.data();
-    }
-    if(alignDrums != 128)
-    {
-        bank.Ins_Percussion_box.erase(bank.Ins_Percussion_box.end() - alignMelodic,
-                                      bank.Ins_Percussion_box.end());
-        bank.Ins_Percussion = bank.Ins_Percussion_box.data();
-    }
-}
-
 FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
 {
     FmBank::Instrument null;
@@ -421,106 +292,6 @@ FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
         return FfmtErrCode::ERR_NOFILE;
 
     file.write(outFile);
-    file.close();
-
-    return FfmtErrCode::ERR_OK;
-}
-
-FfmtErrCode WohlstandOPL3::saveFileOLD(QString filePath, FmBank &bank)
-{
-    FmBank::Instrument null;
-    memset(&null, 0, sizeof(FmBank::Instrument));
-
-    int alignMelodic = 128 - bank.countMelodic() % 128;
-    int alignDrums   = 128 - bank.countDrums() % 128;
-
-    uint16_t count_melodic_banks   = uint16_t(((bank.countMelodic() - 1)/ 128) + 1);
-    uint16_t count_percusive_banks = uint16_t(((bank.countDrums() - 1)/ 128) + 1);
-
-    QFile file(filePath);
-    if(!file.open(QIODevice::WriteOnly))
-        return FfmtErrCode::ERR_NOFILE;
-
-    //Write header
-    file.write(char_p(wopl3_magic), 11);
-    writeLE(file, latest_version);
-    uint8_t head[6];
-    memset(head, 0, 6);
-    fromUint16BE(count_melodic_banks,   head);
-    fromUint16BE(count_percusive_banks, head + 2);
-    //5'th byte reserved for Deep-Tremolo and Deep-Vibrato flags
-    head[4] = ((uint8_t(bank.deep_vibrato) << 0) & 0x01) |
-              ((uint8_t(bank.deep_tremolo) << 1) & 0x02);
-    //6'th byte reserved for ADLMIDI's default volume model
-    head[5] = bank.volume_model;
-
-    file.write(char_p(head), 6);
-
-    //For Version 2: BEGIN
-    //Write melodic banks meta-data
-    for(int i = 0; i < bank.Banks_Melodic.size(); i++)
-    {
-        const FmBank::MidiBank &bankMeta = bank.Banks_Melodic[i];
-        uint8_t bank_meta[34];
-        strncpy(char_p(bank_meta), bankMeta.name, 32);
-        bank_meta[32] = bankMeta.lsb;
-        bank_meta[33] = bankMeta.msb;
-        if(file.write(char_p(bank_meta), 34) != 34)
-            return FfmtErrCode::ERR_BADFORMAT;
-    }
-
-    //Write percussion banks meta-data
-    for(int i = 0; i < bank.Banks_Percussion.size(); i++)
-    {
-        const FmBank::MidiBank &bankMeta = bank.Banks_Percussion[i];
-        uint8_t bank_meta[34];
-        strncpy(char_p(bank_meta), bankMeta.name, 32);
-        bank_meta[32] = bankMeta.lsb;
-        bank_meta[33] = bankMeta.msb;
-        if(file.write(char_p(bank_meta), 34) != 34)
-            return FfmtErrCode::ERR_BADFORMAT;
-    }
-    //For Version 2: END
-
-    uint16_t total = 128 * count_melodic_banks;
-    uint16_t total_insts = uint16_t(bank.Ins_Melodic_box.size());
-    bool wrtiePercussion = false;
-    FmBank::Instrument *insts = bank.Ins_Melodic;
-
-    bankFillBack(bank, alignMelodic, alignDrums);
-tryAgain:
-    for(uint16_t i = 0; i < total; i++)
-    {
-        if(i < total_insts)
-        {
-            FmBank::Instrument &ins = insts[i];
-            if(!writeInstrument(file, ins))
-            {
-                bankStripBack(bank, alignMelodic, alignDrums);
-                return FfmtErrCode::ERR_BADFORMAT;
-            }
-        }
-        else
-        {
-            if(!writeInstrument(file, null))
-            {
-                bankStripBack(bank, alignMelodic, alignDrums);
-                return FfmtErrCode::ERR_BADFORMAT;
-            }
-        }
-    }
-
-    if(!wrtiePercussion)
-    {
-        total = 128 * count_percusive_banks;
-        insts = bank.Ins_Percussion;
-        total_insts = uint16_t(bank.Ins_Percussion_box.size());
-        wrtiePercussion = true;
-        goto tryAgain;
-    }
-
-    bankStripBack(bank, alignMelodic, alignDrums);
-
     file.close();
 
     return FfmtErrCode::ERR_OK;

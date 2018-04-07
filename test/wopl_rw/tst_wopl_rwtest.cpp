@@ -96,20 +96,8 @@ public:
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
-    void loadBankOld()
-    {
-        WohlstandOPL3 format;
-        QFile getMagic(bankPath);
-        char magic[32];
-        QVERIFY2(getMagic.open(QIODevice::ReadOnly), "open Get Magic");
-        QVERIFY2(getMagic.read(magic, 32) == 32, "read 32 bytes");
-        getMagic.close();
-        QVERIFY2(format.detect(bankPath, magic), "Detect WOPL");
-        QBENCHMARK {
-            QVERIFY2(format.loadFileOLD(bankPath, bank1) == FfmtErrCode::ERR_OK, "Load bank data by old parser");
-        }
-    }
-    void loadBankNew()
+
+    void loadBank()
     {
         WohlstandOPL3 format;
         QFile getMagic(bankPath);
@@ -130,35 +118,14 @@ private Q_SLOTS:
     void saveFileTest()
     {
         WohlstandOPL3 format;
-        QVERIFY2(format.saveFileOLD("crap1-old.wopl", bank1) == FfmtErrCode::ERR_OK, "Saving by old algo");
-        QVERIFY2(format.saveFileOLD("crap2-old.wopl", bank2) == FfmtErrCode::ERR_OK, "Saving by old algo");
-        QVERIFY2(format.saveFile("crap1-new.wopl", bank1) == FfmtErrCode::ERR_OK, "Saving by new algo");
-        QVERIFY2(format.saveFile("crap2-new.wopl", bank2) == FfmtErrCode::ERR_OK, "Saving by new algo");
-        QByteArray etaloneData = dumpFile(bankPath, true);
-        QByteArray crap1old = dumpFile("crap1-old.wopl");
-        QByteArray crap2old = dumpFile("crap2-old.wopl");
-        QByteArray crap1new = dumpFile("crap1-new.wopl");
-        QByteArray crap2new = dumpFile("crap2-new.wopl");
-        QVERIFY2(etaloneData.size() == crap1old.size(), "Size difference 1 old");
-        QVERIFY2(etaloneData.size() == crap2old.size(), "Size difference 2 old");
-        QVERIFY2(etaloneData.size() == crap1new.size(), "Size difference 1 new");
-        QVERIFY2(etaloneData.size() == crap2new.size(), "Size difference 2 new");
-        QVERIFY2(etaloneData == crap1old, "Data difference 1 old");
-        QVERIFY2(etaloneData == crap2old, "Data difference 2 old");
-        QVERIFY2(etaloneData == crap1new, "Data difference 1 new");
-        QVERIFY2(etaloneData == crap2new, "Data difference 2 new");
+        QVERIFY2(format.saveFile("temp-generated.wopl", bank1) == FfmtErrCode::ERR_OK, "Saving test failed");
+        QByteArray originalData = dumpFile(bankPath, true);
+        QByteArray generatedData = dumpFile("temp-generated.wopl");
+        QVERIFY2(originalData.size() == generatedData.size(), "Size difference between of original and generated file");
+        QVERIFY2(originalData == generatedData, "Data difference between of original and generated file");
     }
 
-    void benchmarkOldWrite()
-    {
-        WohlstandOPL3 format;
-        QBENCHMARK {
-            QVERIFY2(format.saveFileOLD("crap1-old.wopl", bank1) == FfmtErrCode::ERR_OK, "Saving by old algo");
-        }
-        QFile("crap1-old.wopl").remove();
-    }
-
-    void benchmarkNewWrite()
+    void benchmarkWrite()
     {
         WohlstandOPL3 format;
         QBENCHMARK {
