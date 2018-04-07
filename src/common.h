@@ -159,7 +159,7 @@ void getMagic(QString filePath, char* bytes, int count);
  */
 bool hasExt(const QString &file, const char*ext);
 
-#ifdef QT_WIDGETS_LIB
+#if defined(IS_QT_4) || defined(QT_GUI_LIB)
 void ErrMessageO(QWidget *parent, QString errStr, bool isBank = true);
 
 void ErrMessageS(QWidget *parent, QString errStr, bool isBank = true);

@@ -18,7 +18,7 @@
 
 #include "common.h"
 
-#ifdef QT_WIDGETS_LIB
+#if defined(IS_QT_4) || defined(QT_GUI_LIB)
 #include <QMessageBox>
 #endif
 
@@ -170,7 +170,7 @@ bool hasExt(const QString &file, const char *ext)
     return file.endsWith(ext, Qt::CaseInsensitive);
 }
 
-#ifdef QT_WIDGETS_LIB
+#if defined(IS_QT_4) || defined(QT_GUI_LIB)
 void ErrMessageO(QWidget *parent, QString errStr, bool isBank)
 {
     QString ftype = isBank ? QObject::tr("bank") : QObject::tr("instrument");
