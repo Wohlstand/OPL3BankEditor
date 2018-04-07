@@ -139,8 +139,8 @@ static void WOPL_parseInstrument(WOPLInstrument *ins, uint8_t *cursor, uint16_t 
     ins->second_voice_detune = (int8_t)cursor[37];
     ins->percussion_key_number = cursor[38];
     ins->inst_flags = cursor[39];
-    ins->fb_conn1_04D5H = cursor[40];
-    ins->fb_conn2_04D5H = cursor[41];
+    ins->fb_conn1_C0 = cursor[40];
+    ins->fb_conn2_C0 = cursor[41];
     for(l = 0; l < 4; l++)
     {
         size_t off = 42 + (size_t)(l) * 5;
@@ -167,8 +167,8 @@ static void WOPL_writeInstrument(WOPLInstrument *ins, uint8_t *cursor, uint16_t 
     cursor[37] = (uint8_t)ins->second_voice_detune;
     cursor[38] = ins->percussion_key_number;
     cursor[39] = ins->inst_flags;
-    cursor[40] = ins->fb_conn1_04D5H;
-    cursor[41] = ins->fb_conn2_04D5H;
+    cursor[40] = ins->fb_conn1_C0;
+    cursor[41] = ins->fb_conn2_C0;
     for(l = 0; l < 4; l++)
     {
         size_t off = 42 + (size_t)(l) * 5;

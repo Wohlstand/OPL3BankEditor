@@ -122,9 +122,9 @@ typedef struct
     /* Enum WOPL_InstrumentFlags */
     uint8_t inst_flags;
     /* Feedback&Connection register for first and second operators */
-    uint8_t fb_conn1_04D5H;
+    uint8_t fb_conn1_C0;
     /* Feedback&Connection register for third and fourth operators */
-    uint8_t fb_conn2_04D5H;
+    uint8_t fb_conn2_C0;
     /* Operators register data */
     WOPLOperator operators[4];
     /* Millisecond delay of sounding while key is on */

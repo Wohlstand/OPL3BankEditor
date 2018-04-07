@@ -109,8 +109,8 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
     out.en_4op          = (in.inst_flags & WOPL_Ins_4op) != 0;
     out.en_pseudo4op    = (in.inst_flags & WOPL_Ins_Pseudo4op) != 0;
     out.is_blank        = (in.inst_flags & WOPL_Ins_IsBlank) != 0;
-    out.setFBConn1(in.fb_conn1_04D5H);
-    out.setFBConn2(in.fb_conn2_04D5H);
+    out.setFBConn1(in.fb_conn1_C0);
+    out.setFBConn2(in.fb_conn2_C0);
     out.ms_sound_kon = in.delay_on_ms;
     out.ms_sound_koff = in.delay_off_ms;
     for(int k = 0; k < 4; k++)
@@ -134,8 +134,8 @@ static void cvt_FMIns_to_WOPLI(FmBank::Instrument &in, WOPLInstrument &out)
     out.inst_flags = (in.en_4op ? WOPL_Ins_4op : 0) |
                      (in.en_pseudo4op ? WOPL_Ins_Pseudo4op : 0) |
                      (in.is_blank ? WOPL_Ins_IsBlank : 0);
-    out.fb_conn1_04D5H = in.getFBConn1();
-    out.fb_conn2_04D5H = in.getFBConn2();
+    out.fb_conn1_C0 = in.getFBConn1();
+    out.fb_conn2_C0 = in.getFBConn2();
     out.delay_on_ms = in.ms_sound_kon;
     out.delay_off_ms = in.ms_sound_koff;
     for(int k = 0; k < 4; k++)
