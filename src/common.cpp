@@ -18,7 +18,9 @@
 
 #include "common.h"
 
+#ifdef QT_WIDGETS_LIB
 #include <QMessageBox>
+#endif
 
 qint64 readLE(QFile &file, uint16_t &out)
 {
@@ -168,7 +170,7 @@ bool hasExt(const QString &file, const char *ext)
     return file.endsWith(ext, Qt::CaseInsensitive);
 }
 
-
+#ifdef QT_WIDGETS_LIB
 void ErrMessageO(QWidget *parent, QString errStr, bool isBank)
 {
     QString ftype = isBank ? QObject::tr("bank") : QObject::tr("instrument");
@@ -186,3 +188,4 @@ void ErrMessageS(QWidget *parent, QString errStr, bool isBank)
                          QObject::tr("Can't save %1 file because %2.").arg(ftype).arg(errStr),
                          QMessageBox::Ok);
 }
+#endif

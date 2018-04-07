@@ -132,28 +132,28 @@ void FmBank::autocreateMissingBanks()
     size_t size = 0;
     if(Banks_Melodic.size() < melodic_banks)
     {
-        size = Banks_Melodic.size();
+        size = (size_t)Banks_Melodic.size();
         Banks_Melodic.resize(melodic_banks);
         memset(Banks_Melodic.data() + size, 0, sizeof(MidiBank) * ((size_t)melodic_banks - size));
         for(int i = (int)size; i < Banks_Melodic.size(); i++)
         {
             int lsb = i % 256;
             int msb = (i >> 8) & 255;
-            Banks_Melodic[i].lsb = lsb;
-            Banks_Melodic[i].msb = msb;
+            Banks_Melodic[i].lsb = (uint8_t)lsb;
+            Banks_Melodic[i].msb = (uint8_t)msb;
         }
     }
     if(Banks_Percussion.size() < percussion_banks)
     {
-        size = Banks_Percussion.size();
+        size = (size_t)Banks_Percussion.size();
         Banks_Percussion.resize(percussion_banks);
         memset(Banks_Percussion.data() + size, 0, sizeof(MidiBank) * ((size_t)percussion_banks - size));
         for(int i = (int)size; i < Banks_Percussion.size(); i++)
         {
             int lsb = i % 256;
             int msb = (i >> 8) & 255;
-            Banks_Percussion[i].lsb = lsb;
-            Banks_Percussion[i].msb = msb;
+            Banks_Percussion[i].lsb = (uint8_t)lsb;
+            Banks_Percussion[i].msb = (uint8_t)msb;
         }
     }
 }

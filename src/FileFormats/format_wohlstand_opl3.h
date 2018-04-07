@@ -30,7 +30,9 @@ public:
     bool        detect(const QString &filePath, char* magic) override;
     bool        detectInst(const QString &filePath, char* magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
+    FfmtErrCode loadFileOLD(QString filePath, FmBank &bank);
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    FfmtErrCode saveFileOLD(QString filePath, FmBank &bank);
     int         formatCaps() const override;
     QString     formatName() const override;
     QString     formatExtensionMask() const override;

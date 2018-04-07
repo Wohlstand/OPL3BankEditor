@@ -19,6 +19,8 @@
 #include "format_wohlstand_opl3.h"
 #include "../common.h"
 
+#include "wopl/wopl_file.h"
+
 static const char       *wopl3_magic = "WOPL3-BANK\0";
 static const char       *wopli_magic = "WOPL3-INST\0";
 
@@ -42,13 +44,13 @@ bool WohlstandOPL3::detectInst(const QString &, char *magic)
     return (strncmp(magic, wopli_magic, 11) == 0);
 }
 
-enum WOPL_InstrumentFlags
-{
-    Flags_NONE      = 0,
-    Flag_Enable4OP  = 0x01,
-    Flag_Pseudo4OP  = 0x02,
-    Flag_NoSound    = 0x04,
-};
+//enum WOPL_InstrumentFlags
+//{
+//    Flags_NONE      = 0,
+//    Flag_Enable4OP  = 0x01,
+//    Flag_Pseudo4OP  = 0x02,
+//    Flag_NoSound    = 0x04,
+//};
 
 static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &version, bool hasSoundKoefficients = true)
 {
@@ -56,7 +58,7 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     memset(idata, 0, WOPL_INST_SIZE_V3);
     if(version >= 3)
     {
-        int got = file.read(char_p(idata), WOPL_INST_SIZE_V3);
+        qint64 got = file.read(char_p(idata), WOPL_INST_SIZE_V3);
         if(hasSoundKoefficients && (got != WOPL_INST_SIZE_V3))
             return false;
         if(!hasSoundKoefficients && (got != WOPL_INST_SIZE_V2) && (got != WOPL_INST_SIZE_V3))
@@ -74,9 +76,9 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     ins.fine_tune       = int8_t(idata[37]);
     ins.percNoteNum     = idata[38];
     uint8_t flags       = idata[39];
-    ins.en_4op          = (flags & Flag_Enable4OP) != 0;
-    ins.en_pseudo4op    = (flags & Flag_Pseudo4OP) != 0;
-    ins.is_blank        = (flags & Flag_NoSound) != 0;
+    ins.en_4op          = (flags & WOPL_Ins_4op) != 0;
+    ins.en_pseudo4op    = (flags & WOPL_Ins_Pseudi4op) != 0;
+    ins.is_blank        = (flags & WOPL_Ins_IsBlank) != 0;
     ins.setFBConn1(idata[40]);
     ins.setFBConn2(idata[41]);
     for(int op = 0; op < 4; op++)
@@ -96,6 +98,56 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     return true;
 }
 
+static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
+{
+    strncpy(out.name, in.inst_name, 32);
+    out.note_offset1 = in.note_offset1;
+    out.note_offset2 = in.note_offset2;
+    out.velocity_offset = in.midi_velocity_offset;
+    out.fine_tune = in.second_voice_detune;
+    out.percNoteNum = in.percussion_key_number;
+    out.en_4op          = (in.inst_flags & WOPL_Ins_4op) != 0;
+    out.en_pseudo4op    = (in.inst_flags & WOPL_Ins_Pseudi4op) != 0;
+    out.is_blank        = (in.inst_flags & WOPL_Ins_IsBlank) != 0;
+    out.setFBConn1(in.fb_conn1_04D5H);
+    out.setFBConn2(in.fb_conn2_04D5H);
+    out.ms_sound_kon = in.delay_on_ms;
+    out.ms_sound_koff = in.delay_off_ms;
+    for(int k = 0; k < 4; k++)
+    {
+        out.setAVEKM(k, in.operators[k].avekf_20);
+        out.setKSLL(k, in.operators[k].ksl_l_40);
+        out.setAtDec(k, in.operators[k].atdec_60);
+        out.setSusRel(k, in.operators[k].susrel_80);
+        out.setWaveForm(k, in.operators[k].waveform_E0);
+    }
+}
+
+static void cvt_FMIns_to_WOPLI(FmBank::Instrument &in, WOPLInstrument &out)
+{
+    strncpy(out.inst_name, in.name, 32);
+    out.note_offset1 = in.note_offset1;
+    out.note_offset2 = in.note_offset2;
+    out.midi_velocity_offset = in.velocity_offset;
+    out.second_voice_detune = in.fine_tune;
+    out.percussion_key_number = in.percNoteNum;
+    out.inst_flags = (in.en_4op ? WOPL_Ins_4op : 0) |
+                     (in.en_pseudo4op ? WOPL_Ins_Pseudi4op : 0) |
+                     (in.is_blank ? WOPL_Ins_IsBlank : 0);
+    out.fb_conn1_04D5H = in.getFBConn1();
+    out.fb_conn2_04D5H = in.getFBConn2();
+    out.delay_on_ms = in.ms_sound_kon;
+    out.delay_off_ms = in.ms_sound_koff;
+    for(int k = 0; k < 4; k++)
+    {
+        out.operators[k].avekf_20 = in.getAVEKM(k);
+        out.operators[k].ksl_l_40 = in.getKSLL(k);
+        out.operators[k].atdec_60 = in.getAtDec(k);
+        out.operators[k].susrel_80 = in.getSusRel(k);
+        out.operators[k].waveform_E0 = in.getWaveForm(k);
+    }
+}
+
 static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundKoefficients = true)
 {
     uint8_t odata[WOPL_INST_SIZE_V3];
@@ -106,9 +158,9 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
     odata[36] = uint8_t(ins.velocity_offset); //1
     odata[37] = uint8_t(ins.fine_tune);       //1
     odata[38] = ins.percNoteNum;              //1
-    odata[39] = (ins.en_4op ? Flag_Enable4OP : 0) |
-                (ins.en_pseudo4op ? Flag_Pseudo4OP : 0) |
-                (ins.is_blank ? Flag_NoSound : 0);
+    odata[39] = (ins.en_4op ? WOPL_Ins_4op : 0) |
+                (ins.en_pseudo4op ? WOPL_Ins_Pseudi4op : 0) |
+                (ins.is_blank ? WOPL_Ins_IsBlank : 0);
     odata[40] = ins.getFBConn1();             //1
     odata[41] = ins.getFBConn2();             //1
     for(int op = 0; op < 4; op++)                  //20
@@ -132,6 +184,64 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
 }
 
 FfmtErrCode WohlstandOPL3::loadFile(QString filePath, FmBank &bank)
+{
+    int err = 0;
+    WOPLFile *wopl = nullptr;
+    QFile file(filePath);
+    if(!file.open(QIODevice::ReadOnly))
+        return FfmtErrCode::ERR_NOFILE;
+    QByteArray fileData = file.readAll();
+    file.close();
+
+    wopl = WOPL_LoadBankFromMem((void*)fileData.data(), (size_t)fileData.size(), &err);
+    if(!wopl)
+    {
+        switch(err)
+        {
+        case WOPL_ERR_BAD_MAGIC:
+        case WOPL_ERR_UNEXPECTED_ENDING:
+        case WOPL_ERR_INVALID_BANKS_COUNT:
+            return FfmtErrCode::ERR_BADFORMAT;
+        case WOPL_ERR_NEWER_VERSION:
+            return FfmtErrCode::ERR_UNSUPPORTED_FORMAT;
+        case WOPL_ERR_OUT_OF_MEMORY:
+            return FfmtErrCode::ERR_UNKNOWN;
+        default:
+            return FfmtErrCode::ERR_UNKNOWN;
+        }
+    }
+
+    bank.reset(wopl->banks_count_melodic, wopl->banks_count_percussion);
+    bank.deep_tremolo = (wopl->opl_flags & WOPL_FLAG_DEEP_VIBRATO) != 0;
+    bank.deep_vibrato = (wopl->opl_flags & WOPL_FLAG_DEEP_TREMOLO) != 0;
+    bank.volume_model = wopl->volume_model;
+
+    FmBank::Instrument *slots_ins[2] = {bank.Ins_Melodic, bank.Ins_Percussion};
+    FmBank::MidiBank * slots_banks[2] =  {bank.Banks_Melodic.data(), bank.Banks_Percussion.data()};
+    uint16_t slots_counts[2] = {wopl->banks_count_melodic, wopl->banks_count_percussion};
+    WOPLBank *slots_src_ins[2] = { wopl->banks_melodic, wopl->banks_percussive };
+
+    for(int ss = 0; ss < 2; ss++)
+    {
+        for(int i = 0; i < slots_counts[ss]; i++)
+        {
+            strncpy(slots_banks[ss][i].name, slots_src_ins[ss][i].bank_name, 32);
+            slots_banks[ss][i].lsb = slots_src_ins[ss][i].bank_midi_lsb;
+            slots_banks[ss][i].msb = slots_src_ins[ss][i].bank_midi_msb;
+            for(int j = 0; j < 128; j++)
+            {
+                FmBank::Instrument &ins = slots_ins[ss][(size_t(i) * 128) + size_t(j)];
+                WOPLInstrument &inIns = slots_src_ins[ss][i].ins[j];
+                cvt_WOPLI_to_FMIns(ins, inIns);
+            }
+        }
+    }
+    WOPL_Free(wopl);
+
+    return FfmtErrCode::ERR_OK;
+}
+
+FfmtErrCode WohlstandOPL3::loadFileOLD(QString filePath, FmBank &bank)
 {
     uint16_t version = 0;
     uint16_t count_melodic_banks     = 1;
@@ -261,10 +371,70 @@ FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
     FmBank::Instrument null;
     memset(&null, 0, sizeof(FmBank::Instrument));
 
+    uint16_t count_melodic_banks   = uint16_t(((bank.countMelodic() - 1)/ 128) + 1);
+    uint16_t count_percusive_banks = uint16_t(((bank.countDrums() - 1)/ 128) + 1);
+
+    WOPLFile *wopl = WOPL_Init(count_melodic_banks, count_percusive_banks);
+    if(!wopl)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    wopl->opl_flags = ((uint8_t(bank.deep_vibrato) << 0) & 0x01) |
+                      ((uint8_t(bank.deep_tremolo) << 1) & 0x02);
+    wopl->volume_model = bank.volume_model;
+
+    FmBank::Instrument *slots_src_ins[2] = {bank.Ins_Melodic, bank.Ins_Percussion};
+    size_t slots_src_ins_counts[2] = {(size_t)bank.countMelodic(), (size_t)bank.countDrums()};
+    FmBank::MidiBank * slots_src_banks[2] =  {bank.Banks_Melodic.data(), bank.Banks_Percussion.data()};
+    uint16_t slots_counts[2] = {wopl->banks_count_melodic, wopl->banks_count_percussion};
+    WOPLBank *slots_dst_ins[2] = { wopl->banks_melodic, wopl->banks_percussive };
+
+    for(int ss = 0; ss < 2; ss++)
+    {
+        for(int i = 0; i < slots_counts[ss]; i++)
+        {
+            strncpy(slots_dst_ins[ss][i].bank_name, slots_src_banks[ss][i].name, 32);
+            slots_dst_ins[ss][i].bank_midi_lsb = slots_src_banks[ss][i].lsb;
+            slots_dst_ins[ss][i].bank_midi_msb = slots_src_banks[ss][i].msb;
+            for(int j = 0; j < 128; j++)
+            {
+                size_t ins_index = (size_t(i) * 128) + size_t(j);
+                if(slots_src_ins_counts[ss] < ins_index)
+                    break;
+                FmBank::Instrument &ins = slots_src_ins[ss][ins_index];
+                WOPLInstrument &inIns = slots_dst_ins[ss][i].ins[j];
+                cvt_FMIns_to_WOPLI(ins, inIns);
+            }
+        }
+    }
+    size_t fileSize = WOPL_CalculateBankFileSize(wopl, 0);
+    QByteArray outFile;
+    outFile.resize((int)fileSize);
+    if(WOPL_SaveBankToMem(wopl, outFile.data(), fileSize, 0, 0) != WOPL_ERR_OK)
+    {
+        WOPL_Free(wopl);
+        return FfmtErrCode::ERR_BADFORMAT;
+    }
+    WOPL_Free(wopl);
+
+    QFile file(filePath);
+    if(!file.open(QIODevice::WriteOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    file.write(outFile);
+    file.close();
+
+    return FfmtErrCode::ERR_OK;
+}
+
+FfmtErrCode WohlstandOPL3::saveFileOLD(QString filePath, FmBank &bank)
+{
+    FmBank::Instrument null;
+    memset(&null, 0, sizeof(FmBank::Instrument));
+
     int alignMelodic = 128 - bank.countMelodic() % 128;
     int alignDrums   = 128 - bank.countDrums() % 128;
 
-    uint16_t count_melodic_banks     = uint16_t(((bank.countMelodic() - 1)/ 128) + 1);
+    uint16_t count_melodic_banks   = uint16_t(((bank.countMelodic() - 1)/ 128) + 1);
     uint16_t count_percusive_banks = uint16_t(((bank.countDrums() - 1)/ 128) + 1);
 
     QFile file(filePath);
