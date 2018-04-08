@@ -84,10 +84,10 @@ typedef enum
 } WOPL_ErrorCodes;
 
 /* Operator indeces inside of Instrument Entry */
-#define WOPL_OP_MODULATOR1  0
-#define WOPL_OP_CARRIER1    1
-#define WOPL_OP_MODULATOR2  2
-#define WOPL_OP_CARRIER2    3
+#define WOPL_OP_CARRIER1    0
+#define WOPL_OP_MODULATOR1  1
+#define WOPL_OP_CARRIER2    2
+#define WOPL_OP_MODULATOR2  3
 
 /* OPL3 Oerators data  */
 typedef struct
