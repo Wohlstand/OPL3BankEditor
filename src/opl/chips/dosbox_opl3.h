@@ -5,7 +5,7 @@
 
 class DosBoxOPL3 final : public OPLChipBase
 {
-    void *chip;
+    void *m_chip;
 public:
     DosBoxOPL3();
     DosBoxOPL3(const DosBoxOPL3 &c);

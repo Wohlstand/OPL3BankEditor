@@ -5,7 +5,7 @@
 
 class NukedOPL3 final : public OPLChipBase
 {
-    void *chip;
+    void *m_chip;
 public:
     NukedOPL3();
     NukedOPL3(const NukedOPL3 &c);

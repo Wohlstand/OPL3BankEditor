@@ -5,21 +5,21 @@
 
 DosBoxOPL3::DosBoxOPL3() :
     OPLChipBase(),
-    chip(nullptr)
+    m_chip(nullptr)
 {
     reset();
 }
 
 DosBoxOPL3::DosBoxOPL3(const DosBoxOPL3 &c) :
     OPLChipBase(c),
-    chip(nullptr)
+    m_chip(nullptr)
 {
     setRate(c.m_rate);
 }
 
 DosBoxOPL3::~DosBoxOPL3()
 {
-    DBOPL::Handler *chip_r = reinterpret_cast<DBOPL::Handler*>(chip);
+    DBOPL::Handler *chip_r = reinterpret_cast<DBOPL::Handler*>(m_chip);
     delete chip_r;
 }
 
@@ -31,11 +31,11 @@ void DosBoxOPL3::setRate(uint32_t rate)
 
 void DosBoxOPL3::reset()
 {
-    DBOPL::Handler *chip_r = reinterpret_cast<DBOPL::Handler*>(chip);
-    if(chip && chip_r)
+    DBOPL::Handler *chip_r = reinterpret_cast<DBOPL::Handler*>(m_chip);
+    if(m_chip && chip_r)
         delete chip_r;
-    chip = new DBOPL::Handler;
-    chip_r = reinterpret_cast<DBOPL::Handler*>(chip);
+    m_chip = new DBOPL::Handler;
+    chip_r = reinterpret_cast<DBOPL::Handler*>(m_chip);
     chip_r->Init(m_rate);
 }
 
@@ -46,13 +46,13 @@ void DosBoxOPL3::reset(uint32_t rate)
 
 void DosBoxOPL3::writeReg(uint16_t addr, uint8_t data)
 {
-    DBOPL::Handler *chip_r = reinterpret_cast<DBOPL::Handler*>(chip);
+    DBOPL::Handler *chip_r = reinterpret_cast<DBOPL::Handler*>(m_chip);
     chip_r->WriteReg(static_cast<Bit32u>(addr), data);
 }
 
 int DosBoxOPL3::generate(int16_t *output, size_t frames)
 {
-    DBOPL::Handler *chip_r = reinterpret_cast<DBOPL::Handler*>(chip);
+    DBOPL::Handler *chip_r = reinterpret_cast<DBOPL::Handler*>(m_chip);
     ssize_t left = (ssize_t)frames;
     while(left > 0)
     {
@@ -66,7 +66,7 @@ int DosBoxOPL3::generate(int16_t *output, size_t frames)
 
 int DosBoxOPL3::generateAndMix(int16_t *output, size_t frames)
 {
-    DBOPL::Handler *chip_r = reinterpret_cast<DBOPL::Handler*>(chip);
+    DBOPL::Handler *chip_r = reinterpret_cast<DBOPL::Handler*>(m_chip);
     ssize_t left = (ssize_t)frames;
     while(left > 0)
     {

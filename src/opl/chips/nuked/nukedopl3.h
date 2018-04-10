@@ -1,19 +1,16 @@
 /*
- * Copyright (C) 2013-2016 Alexey Khokholov (Nuke.YKT)
+ * Copyright (C) 2013-2018 Alexey Khokholov (Nuke.YKT)
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  *  Nuked OPL3 emulator.
  *  Thanks:
@@ -23,10 +20,11 @@
  *          Tremolo and phase generator calculation information.
  *      OPLx decapsulated(Matthew Gambrell, Olli Niemitalo):
  *          OPL2 ROMs.
+ *      siliconpr0n.org(John McMaster, digshadow):
+ *          YMF262 and VRC VII decaps and die shots.
  *
  * version: 1.8
  */
-
 
 #ifndef OPL_OPL3_H
 #define OPL_OPL3_H
@@ -60,7 +58,6 @@ struct _opl3_slot {
     opl3_chip *chip;
     Bit16s out;
     Bit16s fbmod;
-    Bit8u __padding1[4];
     Bit16s *mod;
     Bit16s prout;
     Bit16s eg_rout;
@@ -69,7 +66,6 @@ struct _opl3_slot {
     Bit8u eg_gen;
     Bit8u eg_rate;
     Bit8u eg_ksl;
-    Bit8u __padding2[6];
     Bit8u *trem;
     Bit8u reg_vib;
     Bit8u reg_type;
@@ -87,38 +83,33 @@ struct _opl3_slot {
     Bit32u pg_phase;
     Bit16u pg_phase_out;
     Bit8u slot_num;
-    Bit8u __padding3[1];
 };
 
 struct _opl3_channel {
-    opl3_slot *xslots[2];
+    opl3_slot *slots[2];
     opl3_channel *pair;
     opl3_chip *chip;
     Bit16s *out[4];
     Bit8u chtype;
-    Bit8u __padding1[1];
     Bit16u f_num;
     Bit8u block;
     Bit8u fb;
     Bit8u con;
     Bit8u alg;
     Bit8u ksv;
-    Bit8u __padding2[1];
     Bit16u cha, chb;
     Bit8u ch_num;
-    Bit8u __padding3[1];
 };
 
 typedef struct _opl3_writebuf {
     Bit64u time;
     Bit16u reg;
     Bit8u data;
-    Bit8u __padding1[5];
 } opl3_writebuf;
 
 struct _opl3_chip {
     opl3_channel channel[18];
-    opl3_slot xslot[36];/* must NOT be 'slot' to avoid conflict with Qt applications are using 'slot' macro */
+    opl3_slot slot[36];
     Bit16u timer;
     Bit64u eg_timer;
     Bit8u eg_timerrem;
@@ -141,7 +132,7 @@ struct _opl3_chip {
     Bit8u rm_hh_bit8;
     Bit8u rm_tc_bit3;
     Bit8u rm_tc_bit5;
-    //OPL3L
+    /* OPL3L */
     Bit32s rateratio;
     Bit32s samplecnt;
     Bit16s oldsamples[2];
