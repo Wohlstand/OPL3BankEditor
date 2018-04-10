@@ -2563,7 +2563,7 @@ of second voice</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Nuked OPL2</string>
+    <string>Nuked OPL3</string>
    </property>
   </action>
   <action name="actionEmulatorDosBox">
