@@ -114,7 +114,9 @@ SOURCES += \
     src/opl/chips/opl_chip_base.cpp \
     src/opl/chips/nuked/nukedopl3.c \
     src/opl/chips/dosbox/dbopl.cpp \
-    src/FileFormats/wopl/wopl_file.c
+    src/FileFormats/wopl/wopl_file.c \
+    src/opl/chips/nuked_opl3_v174.cpp \
+    src/opl/chips/nuked/nukedopl3_174.c
 
 HEADERS += \
     src/bank_editor.h \
@@ -150,7 +152,9 @@ HEADERS += \
     src/opl/chips/opl_chip_base.h \
     src/opl/chips/nuked/nukedopl3.h \
     src/opl/chips/dosbox/dbopl.h \
-    src/FileFormats/wopl/wopl_file.h
+    src/FileFormats/wopl/wopl_file.h \
+    src/opl/chips/nuked_opl3_v174.h \
+    src/opl/chips/nuked/nukedopl3_174.h
 
 FORMS += \
     src/bank_editor.ui \

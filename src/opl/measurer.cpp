@@ -33,6 +33,7 @@
 //Measurer is always needs for emulator
 #include "chips/opl_chip_base.h"
 #include "chips/nuked_opl3.h"
+#include "chips/nuked_opl3_v174.h"
 #include "chips/dosbox_opl3.h"
 
 struct DurationInfo
@@ -293,6 +294,7 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
 {
     std::vector<std::shared_ptr<OPLChipBase > > emuls =
     {
+        std::shared_ptr<OPLChipBase>(new NukedOPL3v174),
         std::shared_ptr<OPLChipBase>(new NukedOPL3),
         std::shared_ptr<OPLChipBase>(new DosBoxOPL3)
     };
