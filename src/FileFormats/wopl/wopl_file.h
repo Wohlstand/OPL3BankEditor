@@ -61,9 +61,27 @@ typedef enum
     WOPL_Ins_Pseudo4op  = 0x02,
     /* Is a blank instrument entry */
     WOPL_Ins_IsBlank    = 0x04,
+
+    /* RythmMode flags mask */
+    WOPL_RythmModeMask  = 0x38,
+
     /* Mask of the flags range */
     WOPL_Ins_ALL_MASK   = 0x07
 } WOPL_InstrumentFlags;
+
+typedef enum
+{
+    /* RythmMode: BassDrum */
+    WOPL_RM_BassDrum  = 0x08,
+    /* RythmMode: Snare */
+    WOPL_RM_Snare     = 0x10,
+    /* RythmMode: TomTom */
+    WOPL_RM_TomTom    = 0x18,
+    /* RythmMode: Cymbell */
+    WOPL_RM_Cymball   = 0x20,
+    /* RythmMode: HiHat */
+    WOPL_RM_HiHat     = 0x28,
+} WOPL_RythmMode;
 
 /* Error codes */
 typedef enum

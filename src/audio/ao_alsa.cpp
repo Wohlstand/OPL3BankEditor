@@ -39,7 +39,7 @@ AudioOutALSA::~AudioOutALSA()
 bool AudioOutALSA::init(int sampleRate, int channels)
 {
     unsigned int sr = (unsigned int)sampleRate;
-    frames = 512;
+    frames = 1024;
     periods = 2;
 
     qDebug() << "Initializing ALSA...";

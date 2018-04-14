@@ -75,6 +75,29 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     ins.en_4op          = (flags & WOPL_Ins_4op) != 0;
     ins.en_pseudo4op    = (flags & WOPL_Ins_Pseudo4op) != 0;
     ins.is_blank        = (flags & WOPL_Ins_IsBlank) != 0;
+    ins.adlib_drum_number = 0;
+    if((flags & WOPL_RythmModeMask) != 0)
+    {
+        uint8_t rm = flags & WOPL_RythmModeMask;
+        switch(rm)
+        {
+        case WOPL_RM_BassDrum:
+            ins.adlib_drum_number = 6;
+            break;
+        case WOPL_RM_Snare:
+            ins.adlib_drum_number = 7;
+            break;
+        case WOPL_RM_TomTom:
+            ins.adlib_drum_number = 8;
+            break;
+        case WOPL_RM_Cymball:
+            ins.adlib_drum_number = 9;
+            break;
+        case WOPL_RM_HiHat:
+            ins.adlib_drum_number = 10;
+            break;
+        }
+    }
     ins.setFBConn1(idata[40]);
     ins.setFBConn2(idata[41]);
     for(int op = 0; op < 4; op++)
@@ -105,6 +128,7 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
     out.en_4op          = (in.inst_flags & WOPL_Ins_4op) != 0;
     out.en_pseudo4op    = (in.inst_flags & WOPL_Ins_Pseudo4op) != 0;
     out.is_blank        = (in.inst_flags & WOPL_Ins_IsBlank) != 0;
+    out.adlib_drum_number = 0;
     out.setFBConn1(in.fb_conn1_C0);
     out.setFBConn2(in.fb_conn2_C0);
     out.ms_sound_kon = in.delay_on_ms;
@@ -116,6 +140,30 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
         out.setAtDec(k, in.operators[k].atdec_60);
         out.setSusRel(k, in.operators[k].susrel_80);
         out.setWaveForm(k, in.operators[k].waveform_E0);
+    }
+
+    //Set rythm mode flag
+    if((in.inst_flags & WOPL_RythmModeMask) != 0)
+    {
+        uint8_t rm = in.inst_flags & WOPL_RythmModeMask;
+        switch(rm)
+        {
+        case WOPL_RM_BassDrum:
+            out.adlib_drum_number = 6;
+            break;
+        case WOPL_RM_Snare:
+            out.adlib_drum_number = 7;
+            break;
+        case WOPL_RM_TomTom:
+            out.adlib_drum_number = 8;
+            break;
+        case WOPL_RM_Cymball:
+            out.adlib_drum_number = 9;
+            break;
+        case WOPL_RM_HiHat:
+            out.adlib_drum_number = 10;
+            break;
+        }
     }
 }
 
@@ -130,6 +178,28 @@ static void cvt_FMIns_to_WOPLI(FmBank::Instrument &in, WOPLInstrument &out)
     out.inst_flags = (in.en_4op ? WOPL_Ins_4op : 0) |
                      (in.en_pseudo4op ? WOPL_Ins_Pseudo4op : 0) |
                      (in.is_blank ? WOPL_Ins_IsBlank : 0);
+    if(in.adlib_drum_number != 0)
+    {
+        switch (in.adlib_drum_number)
+        {
+        case 6:
+            out.inst_flags |= WOPL_RM_BassDrum;
+            break;
+        case 7:
+            out.inst_flags |= WOPL_RM_Snare;
+            break;
+        case 8:
+            out.inst_flags |= WOPL_RM_TomTom;
+            break;
+        case 9:
+            out.inst_flags |= WOPL_RM_Cymball;
+            break;
+        case 10:
+            out.inst_flags |= WOPL_RM_HiHat;
+            break;
+        }
+    }
+
     out.fb_conn1_C0 = in.getFBConn1();
     out.fb_conn2_C0 = in.getFBConn2();
     out.delay_on_ms = in.ms_sound_kon;
@@ -157,6 +227,27 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
     odata[39] = (ins.en_4op ? WOPL_Ins_4op : 0) |
                 (ins.en_pseudo4op ? WOPL_Ins_Pseudo4op : 0) |
                 (ins.is_blank ? WOPL_Ins_IsBlank : 0);
+    if(ins.adlib_drum_number != 0)
+    {
+        switch (ins.adlib_drum_number)
+        {
+        case 6:
+            odata[39] |= WOPL_RM_BassDrum;
+            break;
+        case 7:
+            odata[39] |= WOPL_RM_Snare;
+            break;
+        case 8:
+            odata[39] |= WOPL_RM_TomTom;
+            break;
+        case 9:
+            odata[39] |= WOPL_RM_Cymball;
+            break;
+        case 10:
+            odata[39] |= WOPL_RM_HiHat;
+            break;
+        }
+    }
     odata[40] = ins.getFBConn1();             //1
     odata[41] = ins.getFBConn2();             //1
     for(int op = 0; op < 4; op++)                  //20

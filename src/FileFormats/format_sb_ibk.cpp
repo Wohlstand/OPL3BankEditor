@@ -34,7 +34,7 @@ public:
     // IBK/SBI for DOS
     static FfmtErrCode loadFileIBK(QString filePath, FmBank &bank);
     static FfmtErrCode saveFileIBK(QString filePath, FmBank &bank);
-    static FfmtErrCode loadFileSBI(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
+    static FfmtErrCode loadFileSBI(QString filePath, FmBank::Instrument &inst, bool *isDrum = nullptr);
     static FfmtErrCode saveFileSBI(QString filePath, FmBank::Instrument &inst, bool isDrum = false);
     // SB/O3 for UNIX
     static FfmtErrCode loadFileSBOP(QString filePath, FmBank &bank, BankFormats &format);
@@ -130,9 +130,9 @@ static void raw2sbi(FmBank::Instrument &ins, uint8_t *idata, bool fourOp = false
     else
         ins.setFBConn1(idata[10]);//46  //57
 
-    //            BYTE percvoc;   /* Percussion voice number                    : JWO */
     if(!fourOp)
     {
+        //        BYTE percvoc;   /* Percussion voice number                    : JWO */
         ins.adlib_drum_number  = idata[11];//47 //58
 
         //        char transpos;  /* Number of notes to transpose timbre, signed: JWO */

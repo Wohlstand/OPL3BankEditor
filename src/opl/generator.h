@@ -126,6 +126,7 @@ public slots:
     void changeDeepTremolo(bool enabled);
     void changeDeepVibrato(bool enabled);
     void changeAdLibPercussion(bool enabled);
+    void updateRegBD();
 signals:
     void debugInfo(QString);
 
@@ -133,9 +134,9 @@ private:
     void WriteReg(uint16_t address, uint8_t byte);
     int32_t     note;
     bool        m_4op_last_state;
-    uint8_t     DeepTremoloMode;
-    uint8_t     DeepVibratoMode;
-    uint8_t     AdLibPercussionMode;
+    uint8_t     deepTremoloMode;
+    uint8_t     deepVibratoMode;
+    uint8_t     rythmModePercussionMode;
     uint8_t     testDrum;
     #ifdef ENABLE_OPL_EMULATOR
     uint32_t    m_rate = 44100;
