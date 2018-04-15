@@ -97,8 +97,11 @@ static const uint16_t Channels[NUM_OF_CHANNELS] =
 {
     0x000, 0x001, 0x002, 0x003, 0x004, 0x005, 0x006, 0x007, 0x008, // 0..8
     0x100, 0x101, 0x102, 0x103, 0x104, 0x105, 0x106, 0x107, 0x108, // 9..17 (secondary set)
-    0x006, 0x007, 0x008, 0xFFF, 0xFFF
-}; // <- hw percussions, 0xFFF = no support for pitch/pan
+    0x006, 0x007, 0x008, 0x008, 0x008
+};
+// <- hw percussions, <s>0xFFF = no support for pitch/pan</s>,
+//      From AdLib MIDI manual: Hi-Hat and Cymbal are taking pitch value from
+//          last pitch value set to the TomTom
 
 /*
     In OPL3 mode:
@@ -319,11 +322,8 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
     if(cc >= 18)
         x &= ~0x2000u;
 
-    if(chn != 0xFFF)
-    {
-        WriteReg(0xA0 + chn, x & 0xFF);
-        WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(x >> 8));
-    }
+    WriteReg(0xA0 + chn, x & 0xFF);
+    WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(x >> 8));
 
     if(cc >= 18)
     {
@@ -539,23 +539,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
         if(tone > 128)
             tone -= 128;
     }
-    uint32_t drumChan = 0;
-    //bassdrum = op(0): 0xBD bit 0x10, operators 12 (0x10) and 15 (0x13)
-    switch(drum)
-    {
-    case 4:
-    //hihat    = op(2): 0xBD bit 0x01, operators 13
-    case 1:
-    //snare    = op(3): 0xBD bit 0x08, operators 16 (0x14)
-        drumChan = 1;
-        break;
-    case 2:
-    //tomtom   = op(4): 0xBD bit 0x04, operators 14 (0x12)
-    case 3:
-    //cym      = op(5): 0xBD bit 0x02, operators 17 (0x17)
-        drumChan = 2;
-        break;
-    }
+
     uint32_t adlchannel = 18 + drum;
     Patch(adlchannel, 0);
     Pan(adlchannel, 0x30);
