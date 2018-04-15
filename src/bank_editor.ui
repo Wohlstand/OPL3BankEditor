@@ -847,7 +847,7 @@
         <bool>false</bool>
        </property>
        <property name="title">
-        <string>Modulator 2 (Operator 2)</string>
+        <string>Modulator 2 (Operator 3)</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0,80,0,80" columnminimumwidth="0,0,0,50,0,50">
         <item row="1" column="5">
