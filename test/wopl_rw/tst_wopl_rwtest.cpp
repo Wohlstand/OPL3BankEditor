@@ -106,6 +106,7 @@ private Q_SLOTS:
         QVERIFY2(getMagic.read(magic, 32) == 32, "read 32 bytes");
         getMagic.close();
         QVERIFY2(format.detect(bankPath, magic), "Detect WOPL");
+        QVERIFY2(format.loadFile(bankPath, bank1) == FfmtErrCode::ERR_OK, "Load bank data by new parser");
         QBENCHMARK {
             QVERIFY2(format.loadFile(bankPath, bank2) == FfmtErrCode::ERR_OK, "Load bank data by new parser");
         }

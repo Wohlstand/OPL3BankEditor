@@ -38,7 +38,7 @@ typedef enum
     /* Enable Deep-Tremolo flag */
     WOPL_FLAG_DEEP_TREMOLO = 0x01,
     /* Enable Deep-Vibrato flag */
-    WOPL_FLAG_DEEP_VIBRATO = 0x02,
+    WOPL_FLAG_DEEP_VIBRATO = 0x02
 } WOPLFileFlags;
 
 /* Volume scaling model implemented in the libADLMIDI */
@@ -80,7 +80,7 @@ typedef enum
     /* RythmMode: Cymbell */
     WOPL_RM_Cymball   = 0x20,
     /* RythmMode: HiHat */
-    WOPL_RM_HiHat     = 0x28,
+    WOPL_RM_HiHat     = 0x28
 } WOPL_RythmMode;
 
 /* Error codes */
@@ -279,4 +279,4 @@ extern int WOPL_SaveInstToMem(WOPIFile *file, void *dest_mem, size_t length, uin
 }
 #endif
 
-#endif //WOPL_FILE_H
+#endif /* WOPL_FILE_H */

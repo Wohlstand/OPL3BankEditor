@@ -194,6 +194,9 @@ WOPLFile *WOPL_LoadBankFromMem(void *mem, size_t length, int *error)
     uint16_t count_percusive_banks   = 1;
     uint8_t *cursor = (uint8_t *)mem;
 
+    WOPLBank *bankslots[2];
+    uint16_t  bankslots_sizes[2];
+
 #define SET_ERROR(err) \
 {\
     WOPL_Free(outFile);\
@@ -264,10 +267,13 @@ WOPLFile *WOPL_LoadBankFromMem(void *mem, size_t length, int *error)
         outFile->volume_model   = head[5];
     }    
 
+    bankslots_sizes[0] = count_melodic_banks;
+    bankslots[0] = outFile->banks_melodic;
+    bankslots_sizes[1] = count_percusive_banks;
+    bankslots[1] = outFile->banks_percussive;
+
     if(version >= 2) /* Bank names and LSB/MSB titles */
     {
-        WOPLBank *bankslots[2] = { outFile->banks_melodic, outFile->banks_percussive };
-        uint16_t  bankslots_sizes[2] = { count_melodic_banks, count_percusive_banks };
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < bankslots_sizes[i]; j++)
@@ -286,8 +292,6 @@ WOPLFile *WOPL_LoadBankFromMem(void *mem, size_t length, int *error)
     }
 
     {/* Read instruments data */
-        WOPLBank *bankslots[2] = { outFile->banks_melodic, outFile->banks_percussive };
-        uint16_t  bankslots_sizes[2] = { count_melodic_banks, count_percusive_banks };
         uint16_t insSize = 0;
         if(version > 2)
             insSize = WOPL_INST_SIZE_V3;
@@ -445,6 +449,9 @@ int WOPL_SaveBankToMem(WOPLFile *file, void *dest_mem, size_t length, uint16_t v
     uint16_t banks_melodic = force_gm ? 1 : file->banks_count_melodic;
     uint16_t banks_percusive = force_gm ? 1 : file->banks_count_percussion;
 
+    WOPLBank *bankslots[2];
+    uint16_t  bankslots_sizes[2];
+
     if(version == 0)
         version = wopl_latest_version;
 
@@ -476,11 +483,13 @@ int WOPL_SaveBankToMem(WOPLFile *file, void *dest_mem, size_t length, uint16_t v
     cursor[1] = file->volume_model;
     GO_FORWARD(2);
 
+    bankslots[0]        = file->banks_melodic;
+    bankslots_sizes[0]  = banks_melodic;
+    bankslots[1]        = file->banks_percussive;
+    bankslots_sizes[1]  = banks_percusive;
+
     if(version >= 2)
     {
-        WOPLBank *bankslots[2] = { file->banks_melodic, file->banks_percussive };
-        uint16_t  bankslots_sizes[2] = { banks_melodic, banks_percusive };
-
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < bankslots_sizes[i]; j++)
@@ -496,8 +505,6 @@ int WOPL_SaveBankToMem(WOPLFile *file, void *dest_mem, size_t length, uint16_t v
     }
 
     {/* Write instruments data */
-        WOPLBank *bankslots[2] = { file->banks_melodic, file->banks_percussive };
-        uint16_t  bankslots_sizes[2] = { banks_melodic, banks_percusive };
         if(version >= 3)
             ins_size = WOPL_INST_SIZE_V3;
         else
