@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     BankEditor w;
+    w.adjustSize();
     w.show();
 
     QStringList args = a.arguments();
