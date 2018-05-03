@@ -37,9 +37,7 @@ class AudioOutALSA : public AudioOutBase
     snd_pcm_sframes_t frames_to_deliver;
     snd_pcm_uframes_t frames;
     unsigned int periods;
-    int nfds;
     int err;
-    struct pollfd *pfds;
     QByteArray m_buffer;
 
     static void *playSound(void *self);
