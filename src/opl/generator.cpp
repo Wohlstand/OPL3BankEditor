@@ -648,7 +648,7 @@ void Generator::Silence()
     }
     else
     {
-        for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
+        for(uint32_t c = 0; c < USED_CHANNELS_2OP; ++c)
         {
             NoteOff(channels[c]);
             Touch_Real(channels[c], 0);
