@@ -24,7 +24,9 @@
 
 AudioOutALSA::AudioOutALSA(QObject *parent) :
     AudioOutBase(parent),
-    m_thread(0)
+    m_thread(0),
+    hw_params(NULL),
+    sw_params(NULL)
 {
     m_playing = false;
 }
@@ -34,6 +36,10 @@ AudioOutALSA::~AudioOutALSA()
     stop();
     if(playback_handle)
         snd_pcm_close(playback_handle);
+    if(hw_params)
+        snd_pcm_hw_params_free(hw_params);
+    if(sw_params)
+        snd_pcm_sw_params_free(sw_params);
 }
 
 bool AudioOutALSA::init(int sampleRate, int channels)
@@ -48,6 +54,12 @@ bool AudioOutALSA::init(int sampleRate, int channels)
     {
         fprintf(stderr, "cannot open audio device %s (%s)\n", PCM_DEVICE, snd_strerror(err));
         return false;
+    }
+
+    if(hw_params)
+    {
+        snd_pcm_hw_params_free(hw_params);
+        hw_params = NULL;
     }
 
     if((err = snd_pcm_hw_params_malloc(&hw_params)) < 0)
@@ -106,12 +118,16 @@ bool AudioOutALSA::init(int sampleRate, int channels)
         return false;
     }
 
-    snd_pcm_hw_params_free(hw_params);
-
     /* tell ALSA to wake us up whenever 4096 or more frames
        of playback data can be delivered. Also, tell
        ALSA that we'll start the device ourselves.
     */
+
+    if(sw_params)
+    {
+        snd_pcm_sw_params_free(sw_params);
+        sw_params = NULL;
+    }
 
     if((err = snd_pcm_sw_params_malloc(&sw_params)) < 0)
     {
