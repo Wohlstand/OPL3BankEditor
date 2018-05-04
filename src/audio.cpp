@@ -342,3 +342,28 @@ void BankEditor::keyReleaseEvent(QKeyEvent *event)
 
     QMainWindow::keyReleaseEvent(event);
 }
+
+#ifdef ENABLE_MIDI
+void BankEditor::onMidiDataReceived(const unsigned char *data, size_t length)
+{
+    if(length == 3)
+    {
+        unsigned msg = data[0] >> 4;
+        unsigned note = data[1] & 0x7f;
+        unsigned vel = data[2] & 0x7f;
+
+        if(msg == 0x9 && vel == 0)
+            msg = 0x8;
+
+        switch(msg) {
+            case 0x8:
+                m_generator->NoteOffAllChans();
+                break;
+            case 0x9:
+                m_generator->changeNote(note);
+                m_generator->PlayNote();
+                break;
+        }
+    }
+}
+#endif

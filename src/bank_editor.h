@@ -27,6 +27,7 @@
 #include "opl/generator.h"
 #include "opl/measurer.h"
 #include "audio/ao_base.h"
+#include "midi/midi_rtmidi.h"
 
 #include "FileFormats/ffmt_base.h"
 
@@ -102,10 +103,23 @@ private:
     AudioOutBase    *m_audioOut = nullptr;
     #endif
 
+    /* ********** MIDI input stuff ********** */
+    #ifdef ENABLE_MIDI
+    MidiInRt        *m_midiIn = nullptr;
+    QAction         *m_midiInAction = nullptr;
+    #endif
+
     /*!
      * \brief Initializes audio subsystem and FM generator
      */
     void initAudio();
+
+    #ifdef ENABLE_MIDI
+    /*!
+     * \brief Updates the available choices of MIDI inputs
+     */
+    void updateMidiInMenu();
+    #endif
 
 public:
     explicit BankEditor(QWidget *parent = 0);
@@ -455,6 +469,12 @@ private slots:
      * @brief Adjusts the size of the window after it has been shown
      */
     void onBankEditorShown();
+
+    #ifdef ENABLE_MIDI
+    void on_midiIn_triggered(QAction *);
+    void onMidiPortTriggered();
+    void onMidiDataReceived(const unsigned char *data, size_t length);
+    #endif
 
 protected:
     void closeEvent(QCloseEvent *event);
