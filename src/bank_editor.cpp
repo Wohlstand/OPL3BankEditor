@@ -23,6 +23,7 @@
 #include <QSettings>
 #include <QUrl>
 #include <QMimeData>
+#include <QtDebug>
 
 #include "importer.h"
 #include "formats_sup.h"
@@ -98,6 +99,18 @@ BankEditor::BankEditor(QWidget *parent) :
     m_bankBackup = m_bank;
 
     initAudio();
+#ifdef ENABLE_MIDI
+    MidiInRt *midiIn = m_midiIn = new MidiInRt(this);
+    QAction *midiInAction = m_midiInAction = new QAction("MIDI In", this);
+    ui->midiIn->setDefaultAction(midiInAction);
+    QMenu *midiInMenu = new QMenu(this);
+    midiInAction->setMenu(midiInMenu);
+    connect(midiIn, SIGNAL(midiDataReceived(const unsigned char *, size_t)),
+            this, SLOT(onMidiDataReceived(const unsigned char *, size_t)),
+            Qt::BlockingQueuedConnection);
+#else
+    ui->midiIn_zone->hide();
+#endif
 }
 
 BankEditor::~BankEditor()
@@ -108,6 +121,10 @@ BankEditor::~BankEditor()
     m_generator->stop();
     delete m_audioOut;
     m_audioOut = nullptr;
+    #endif
+    #ifdef ENABLE_MIDI
+    delete m_midiIn;
+    m_midiIn = nullptr;
     #endif
     delete m_measurer;
     delete m_generator;
@@ -1356,4 +1373,67 @@ void BankEditor::on_actionDeleteBank_triggered()
     }
 }
 
+#ifdef ENABLE_MIDI
+void BankEditor::updateMidiInMenu()
+{
+    QAction *midiInAction = m_midiInAction;
+    QMenu *menu = midiInAction->menu();
+    menu->clear();
 
+    MidiInRt *midiin = m_midiIn;
+    QVector<QString> ports = midiin->getPortList();
+
+    if(midiin->canOpenVirtual())
+    {
+        QAction *act = new QAction("Virtual port", menu);
+        menu->addAction(act);
+        act->setData((unsigned)-1);
+        if(!ports.isEmpty())
+            menu->addSeparator();
+        connect(act, SIGNAL(triggered()),
+                this, SLOT(onMidiPortTriggered()));
+    }
+
+    for(unsigned i = 0, n = ports.size(); i < n; ++i)
+    {
+        QAction *act = new QAction(ports[i], menu);
+        menu->addAction(act);
+        act->setData(i);
+        connect(act, SIGNAL(triggered()),
+                this, SLOT(onMidiPortTriggered()));
+    }
+}
+
+void BankEditor::on_midiIn_triggered(QAction *)
+{
+    updateMidiInMenu();
+    QAction *midiInAction = m_midiInAction;
+    QMenu *menu = midiInAction->menu();
+    menu->exec(ui->midiIn->mapToGlobal(QPoint(0, ui->midiIn->height())));
+}
+
+void BankEditor::onMidiPortTriggered()
+{
+    MidiInRt *midiin = m_midiIn;
+    QAction *act = qobject_cast<QAction *>(sender());
+    unsigned port = act->data().toUInt();
+
+    if(port == (unsigned)-1)
+    {
+        midiin->openVirtual();
+    }
+    else
+    {
+        midiin->open(port);
+    }
+
+    {
+        QWidget *button = ui->midiIn;
+        QPalette pal = button->palette();
+        pal.setColor(QPalette::Button, Qt::red);
+        button->setAutoFillBackground(true);
+        button->setPalette(pal);
+        button->update();
+    }
+}
+#endif

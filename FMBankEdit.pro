@@ -37,6 +37,7 @@ greaterThan(QT_MAJOR_VERSION, 4):{
         DEFINES += NO_NATIVE_OPEN_DIALOGS
     }
 }
+CONFIG += rtmidi
 
 TEMPLATE = app
 TARGET = opl3_bank_editor
@@ -78,6 +79,11 @@ greaterThan(QT_MAJOR_VERSION, 4):{
 linux-*: {
     DEFINES += ENABLE_AUDIO_TESTING
     include("src/audio/ao_alsa.pri")
+}
+
+rtmidi {
+    DEFINES += ENABLE_MIDI
+    include("src/midi/midi_rtmidi.pri")
 }
 
 SOURCES += \
