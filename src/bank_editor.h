@@ -451,12 +451,18 @@ private slots:
 
     void on_velocityOffset_valueChanged(int arg1);
 
+    /**
+     * @brief Adjusts the size of the window after it has been shown
+     */
+    void onBankEditorShown();
+
 protected:
     void closeEvent(QCloseEvent *event);
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void keyReleaseEvent(QKeyEvent *event);
+    void showEvent(QShowEvent *event);
 
 private:
     Ui::BankEditor *ui;
