@@ -3541,5 +3541,21 @@ of second voice</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>doubleVoice</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actionSwapVoices</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>759</x>
+     <y>424</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>
