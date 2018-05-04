@@ -25,7 +25,7 @@
 
 #define PROGRAM_NAME "OPL3 Bank Editor"
 
-#define VERSION "1.4.0.1"
+#define VERSION "1.4.0.2"
 
 #ifdef IS_QT_4
 #define COPYRIGHT_SIGN "(C)"
