@@ -22,7 +22,7 @@
 
 #include <QObject>
 #include <QVector>
-class RtMidiIn;
+#include <RtMidi.h>
 
 class MidiInRt :
     public QObject
@@ -33,18 +33,27 @@ public:
     explicit MidiInRt(QObject *parent = nullptr);
     ~MidiInRt();
     void close();
-    void open(unsigned port);
-    void openVirtual();
+    bool open(unsigned port);
+    bool openVirtual();
     bool canOpenVirtual();
-    QVector<QString> getPortList();
+    bool getPortList(QVector<QString> &ports);
+
+    const QString &getErrorText() const
+    {
+        return m_errorText;
+    }
 
 Q_SIGNALS:
     void midiDataReceived(const unsigned char *data, size_t length);
 
 private:
     RtMidiIn *m_midiin = nullptr;
+    bool m_errorSignaled = false;
+    RtMidiError::Type m_errorCode = RtMidiError::UNSPECIFIED;
+    QString m_errorText;
     RtMidiIn *lazyInstance();
     static void onReceive(double timeStamp, std::vector<unsigned char> *message, void *userData);
+    static void onError(RtMidiError::Type type, const std::string &errorText, void *userData);
 };
 
 #endif

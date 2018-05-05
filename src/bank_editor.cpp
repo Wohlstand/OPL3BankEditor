@@ -1382,7 +1382,9 @@ void BankEditor::updateMidiInMenu()
     menu->clear();
 
     MidiInRt *midiin = m_midiIn;
-    QVector<QString> ports = midiin->getPortList();
+    QVector<QString> ports;
+    if(!midiin->getPortList(ports))
+        qWarning() << midiin->getErrorText();
 
     if(midiin->canOpenVirtual())
     {
@@ -1427,6 +1429,7 @@ void BankEditor::onMidiPortTriggered()
     unsigned port = act->data().toUInt();
 
     bool portOpen;
+    bool portError = false;
     if(port == (unsigned)-2)
     {
         midiin->close();
@@ -1434,14 +1437,19 @@ void BankEditor::onMidiPortTriggered()
     }
     else if(port == (unsigned)-1)
     {
-        midiin->openVirtual();
-        portOpen = true;
+        portOpen = midiin->openVirtual();
+        portError = !portOpen;
     }
     else
     {
-        midiin->open(port);
-        portOpen = true;
+        portOpen = midiin->open(port);
+        portError = !portOpen;
     }
+
+    if(portError)
+        QMessageBox::warning(
+            this, tr("Error"),
+            tr("Cannot open the MIDI port.") + '\n' + midiin->getErrorText());
 
     QWidget *button = ui->midiIn;
     QPalette pal = button->palette();
