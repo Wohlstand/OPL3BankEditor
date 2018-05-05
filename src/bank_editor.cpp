@@ -101,7 +101,8 @@ BankEditor::BankEditor(QWidget *parent) :
     initAudio();
 #ifdef ENABLE_MIDI
     MidiInRt *midiIn = m_midiIn = new MidiInRt(this);
-    QAction *midiInAction = m_midiInAction = new QAction("MIDI In", this);
+    QAction *midiInAction = m_midiInAction = new QAction(
+        ui->midiIn->icon(), ui->midiIn->text(), this);
     ui->midiIn->setDefaultAction(midiInAction);
     QMenu *midiInMenu = new QMenu(this);
     midiInAction->setMenu(midiInMenu);
@@ -1381,7 +1382,9 @@ void BankEditor::updateMidiInMenu()
     menu->clear();
 
     MidiInRt *midiin = m_midiIn;
-    QVector<QString> ports = midiin->getPortList();
+    QVector<QString> ports;
+    if(!midiin->getPortList(ports))
+        qWarning() << midiin->getErrorText();
 
     if(midiin->canOpenVirtual())
     {
@@ -1402,6 +1405,13 @@ void BankEditor::updateMidiInMenu()
         connect(act, SIGNAL(triggered()),
                 this, SLOT(onMidiPortTriggered()));
     }
+
+    menu->addSeparator();
+    QAction *act = new QAction("Disable", menu);
+    menu->addAction(act);
+    act->setData((unsigned)-2);
+    connect(act, SIGNAL(triggered()),
+            this, SLOT(onMidiPortTriggered()));
 }
 
 void BankEditor::on_midiIn_triggered(QAction *)
@@ -1418,22 +1428,35 @@ void BankEditor::onMidiPortTriggered()
     QAction *act = qobject_cast<QAction *>(sender());
     unsigned port = act->data().toUInt();
 
-    if(port == (unsigned)-1)
+    bool portOpen;
+    bool portError = false;
+    if(port == (unsigned)-2)
     {
-        midiin->openVirtual();
+        midiin->close();
+        portOpen = false;
+    }
+    else if(port == (unsigned)-1)
+    {
+        portOpen = midiin->openVirtual();
+        portError = !portOpen;
     }
     else
     {
-        midiin->open(port);
+        portOpen = midiin->open(port);
+        portError = !portOpen;
     }
 
-    {
-        QWidget *button = ui->midiIn;
-        QPalette pal = button->palette();
+    if(portError)
+        QMessageBox::warning(
+            this, tr("Error"),
+            tr("Cannot open the MIDI port.") + '\n' + midiin->getErrorText());
+
+    QWidget *button = ui->midiIn;
+    QPalette pal = button->palette();
+    if(portOpen)
         pal.setColor(QPalette::Button, Qt::red);
-        button->setAutoFillBackground(true);
-        button->setPalette(pal);
-        button->update();
-    }
+    else
+        pal.setColor(QPalette::Button, qApp->style()->standardPalette().color(QPalette::Button));
+    button->setPalette(pal);
 }
 #endif

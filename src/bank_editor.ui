@@ -2728,28 +2728,28 @@
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="midiIn_zone">
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+           <widget class="QGroupBox" name="midiIn_zone">
+            <property name="title">
+             <string>MIDI input</string>
             </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_18">
+            <layout class="QHBoxLayout" name="horizontalLayout_19">
              <property name="leftMargin">
-              <number>2</number>
+              <number>1</number>
              </property>
              <property name="topMargin">
-              <number>4</number>
+              <number>0</number>
              </property>
              <property name="rightMargin">
-              <number>2</number>
+              <number>1</number>
              </property>
              <property name="bottomMargin">
-              <number>4</number>
+              <number>0</number>
              </property>
              <item>
-              <spacer name="horizontalSpacer_10">
+              <spacer name="horizontalSpacer_11">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -2760,6 +2760,13 @@
                 </size>
                </property>
               </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_40">
+               <property name="text">
+                <string>Select port:</string>
+               </property>
+              </widget>
              </item>
              <item>
               <widget class="QToolButton" name="midiIn">
@@ -2775,10 +2782,14 @@
                <property name="text">
                 <string>MIDI In</string>
                </property>
+               <property name="icon">
+                <iconset resource="resources/resources.qrc">
+                 <normaloff>:/mporto.png</normaloff>:/mporto.png</iconset>
+               </property>
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_11">
+              <spacer name="horizontalSpacer_10">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>

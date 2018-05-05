@@ -18,7 +18,6 @@
 
 #include "midi_rtmidi.h"
 #include <QCoreApplication>
-#include <RtMidi.h>
 
 MidiInRt::MidiInRt(QObject *parent)
     : QObject(parent)
@@ -37,18 +36,22 @@ void MidiInRt::close()
         m_midiin->closePort();
 }
 
-void MidiInRt::open(unsigned port)
+bool MidiInRt::open(unsigned port)
 {
     RtMidiIn *midiin = lazyInstance();
-    close();
+    m_midiin->closePort();
+    m_errorSignaled = false;
     midiin->openPort(port, "MIDI input");
+    return !m_errorSignaled;
 }
 
-void MidiInRt::openVirtual()
+bool MidiInRt::openVirtual()
 {
     RtMidiIn *midiin = lazyInstance();
-    close();
+    m_midiin->closePort();
+    m_errorSignaled = false;
     midiin->openVirtualPort("MIDI input");
+    return !m_errorSignaled;
 }
 
 bool MidiInRt::canOpenVirtual()
@@ -64,14 +67,25 @@ bool MidiInRt::canOpenVirtual()
     }
 }
 
-QVector<QString> MidiInRt::getPortList()
+bool MidiInRt::getPortList(QVector<QString> &ports)
 {
     RtMidiIn *midiin = lazyInstance();
+
+    m_errorSignaled = false;
     unsigned count = midiin->getPortCount();
-    QVector<QString> ports(count);
+    if(m_errorSignaled)
+        return false;
+
+    ports.resize(count);
     for(unsigned i = 0; i < count; ++i)
-        ports[i] = QString::fromStdString(midiin->getPortName(i));
-    return ports;
+    {
+        m_errorSignaled = false;
+        std::string name = midiin->getPortName(i);
+        if(m_errorSignaled)
+            return false;
+        ports[i] = QString::fromStdString(name);
+    }
+    return true;
 }
 
 RtMidiIn *MidiInRt::lazyInstance()
@@ -82,6 +96,7 @@ RtMidiIn *MidiInRt::lazyInstance()
         unsigned bufferSize = 1024;
         midiin = m_midiin = new RtMidiIn(RtMidi::UNSPECIFIED, name.toStdString(), bufferSize);
         midiin->setCallback(&onReceive, this);
+        midiin->setErrorCallback(&onError, this);
     }
     return midiin;
 }
@@ -92,4 +107,13 @@ void MidiInRt::onReceive(double timeStamp, std::vector<unsigned char> *message, 
     (void)timeStamp;
 
     Q_EMIT self->midiDataReceived(message->data(), message->size());
+}
+
+void MidiInRt::onError(RtMidiError::Type type, const std::string &errorText, void *userData)
+{
+    MidiInRt *self = static_cast<MidiInRt *>(userData);
+
+    self->m_errorSignaled = true;
+    self->m_errorCode = type;
+    self->m_errorText = QString::fromStdString(errorText);
 }
