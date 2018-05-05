@@ -41,7 +41,7 @@ bool MidiInRt::open(unsigned port)
     RtMidiIn *midiin = lazyInstance();
     m_midiin->closePort();
     m_errorSignaled = false;
-    midiin->openPort(port, "MIDI input");
+    midiin->openPort(port, defaultPortName().toStdString());
     return !m_errorSignaled;
 }
 
@@ -50,7 +50,7 @@ bool MidiInRt::openVirtual()
     RtMidiIn *midiin = lazyInstance();
     m_midiin->closePort();
     m_errorSignaled = false;
-    midiin->openVirtualPort("MIDI input");
+    midiin->openVirtualPort(defaultPortName().toStdString());
     return !m_errorSignaled;
 }
 
@@ -88,13 +88,22 @@ bool MidiInRt::getPortList(QVector<QString> &ports)
     return true;
 }
 
+QString MidiInRt::defaultClientName()
+{
+    return QCoreApplication::applicationName();
+}
+QString MidiInRt::defaultPortName()
+{
+    return QCoreApplication::applicationName() + " MIDI input";
+}
+
 RtMidiIn *MidiInRt::lazyInstance()
 {
     RtMidiIn *midiin = m_midiin;
     if(!midiin) {
-        const QString &name = QCoreApplication::applicationName();
         unsigned bufferSize = 1024;
-        midiin = m_midiin = new RtMidiIn(RtMidi::UNSPECIFIED, name.toStdString(), bufferSize);
+        midiin = m_midiin = new RtMidiIn(
+            RtMidi::UNSPECIFIED, defaultClientName().toStdString(), bufferSize);
         midiin->setCallback(&onReceive, this);
         midiin->setErrorCallback(&onError, this);
     }

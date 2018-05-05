@@ -38,6 +38,9 @@ public:
     bool canOpenVirtual();
     bool getPortList(QVector<QString> &ports);
 
+    static QString defaultClientName();
+    static QString defaultPortName();
+
     const QString &getErrorText() const
     {
         return m_errorText;
