@@ -106,6 +106,7 @@ public:
     void Patch(uint32_t c, uint32_t i);
     void Pan(uint32_t c, uint32_t value);
     void PlayNoteF(int noteID);
+    void StopNoteF(int noteID);
     void PlayDrum(uint8_t drum, int noteID);
     void switch4op(bool enabled, bool patchCleanUp = true);
 
@@ -120,6 +121,7 @@ public slots:
     void PlayDiminishedChord();
     void PlayMajor7Chord();
     void PlayMinor7Chord();
+    void StopNote();
 
     void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
     void changeNote(int newnote);
@@ -132,6 +134,29 @@ signals:
 
 private:
     void WriteReg(uint16_t address, uint8_t byte);
+
+    class NotesManager
+    {
+        struct Note
+        {
+            //! Currently pressed key. -1 means channel is free
+            int note    = -1;
+            //! Age in count of noteOn requests
+            int age = 0;
+        };
+        //! Channels range, contains entries count equal to chip channels
+        QVector<Note> channels;
+        //! Round-Robin cycler. Looks for any free channel that is not busy. Otherwise, oldest busy note will be replaced
+        uint8_t cycle = 0;
+    public:
+        NotesManager();
+        ~NotesManager();
+        void allocateChannels(int count);
+        uint8_t noteOn(int note);
+        int8_t  noteOff(int note);
+        void clearNotes();
+    } m_noteManager;
+
     int32_t     note;
     bool        m_4op_last_state;
     uint8_t     deepTremoloMode;

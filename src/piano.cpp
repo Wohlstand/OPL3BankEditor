@@ -84,7 +84,8 @@ void Piano::mousePressEvent(QMouseEvent *evt)
 void Piano::mouseReleaseEvent(QMouseEvent *)
 {
     m_highlightNotes[m_recentNote] = false;
-    emit released();
+    emit    gotNote(m_recentNote);
+    emit    released();
     repaint();
 }
 

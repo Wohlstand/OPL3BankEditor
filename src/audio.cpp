@@ -104,7 +104,7 @@ void BankEditor::initAudio()
     #if QT_VERSION >= 0x050000
     connect(ui->piano, &Piano::gotNote,     ui->noteToTest, &QSpinBox::setValue);
     connect(ui->piano, &Piano::pressed,     m_generator,    &Generator::PlayNote);
-    connect(ui->piano, &Piano::released,    m_generator,    &Generator::NoteOffAllChans);
+    connect(ui->piano, &Piano::released,    m_generator,    &Generator::StopNote);
     #else
     connect(ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
     connect(ui->piano, SIGNAL(pressed()),   m_generator,    SLOT(PlayNote()));
@@ -113,16 +113,150 @@ void BankEditor::initAudio()
     //Piano on the importer dialog pressed
     m_importer->connect(m_importer->ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
     m_importer->connect(m_importer->ui->piano, SIGNAL(pressed()),    m_generator, SLOT(PlayNote()));
-    m_importer->connect(m_importer->ui->piano, SIGNAL(released()),   m_generator, SLOT(NoteOffAllChans()));
+    m_importer->connect(m_importer->ui->piano, SIGNAL(released()),   m_generator, SLOT(StopNote()));
     //Test note button on the importer dialog box
     m_importer->connect(m_importer->ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(PlayNote()));
-    m_importer->connect(m_importer->ui->testNote,  SIGNAL(released()), m_generator,  SLOT(NoteOffAllChans()));
+    m_importer->connect(m_importer->ui->testNote,  SIGNAL(released()), m_generator,  SLOT(StopNote()));
     //Start generator!
     m_generator->start();
     #ifdef ENABLE_AUDIO_TESTING
     if (m_audioOut)
         m_audioOut->start();
     #endif
+}
+
+static bool keyToNote(int k, Generator *generator)
+{
+    bool pn = false;
+
+    switch(k)
+    {
+    case Qt::Key_Z:
+        generator->changeNote(48);
+        pn = true;
+        break;
+    case Qt::Key_S:
+        generator->changeNote(49);
+        pn = true;
+        break;
+    case Qt::Key_X:
+        generator->changeNote(50);
+        pn = true;
+        break;
+    case Qt::Key_D:
+        generator->changeNote(51);
+        pn = true;
+        break;
+    case Qt::Key_C:
+        generator->changeNote(52);
+        pn = true;
+        break;
+    case Qt::Key_V:
+        generator->changeNote(53);
+        pn = true;
+        break;
+    case Qt::Key_G:
+        generator->changeNote(54);
+        pn = true;
+        break;
+    case Qt::Key_B:
+        generator->changeNote(55);
+        pn = true;
+        break;
+    case Qt::Key_H:
+        generator->changeNote(56);
+        pn = true;
+        break;
+    case Qt::Key_N:
+        generator->changeNote(57);
+        pn = true;
+        break;
+    case Qt::Key_J:
+        generator->changeNote(58);
+        pn = true;
+        break;
+    case Qt::Key_M:
+        generator->changeNote(59);
+        pn = true;
+        break;
+    case Qt::Key_Q:
+    case Qt::Key_Comma:
+        generator->changeNote(60);
+        pn = true;
+        break;
+    case Qt::Key_2:
+    case Qt::Key_L:
+        generator->changeNote(61);
+        pn = true;
+        break;
+    case Qt::Key_W:
+    case Qt::Key_Period:
+        generator->changeNote(62);
+        pn = true;
+        break;
+    case Qt::Key_3:
+    case Qt::Key_Semicolon:
+        generator->changeNote(63);
+        pn = true;
+        break;
+    case Qt::Key_E:
+    case Qt::Key_Slash:
+        generator->changeNote(64);
+        pn = true;
+        break;
+    case Qt::Key_R:
+        generator->changeNote(65);
+        pn = true;
+        break;
+    case Qt::Key_5:
+        generator->changeNote(66);
+        pn = true;
+        break;
+    case Qt::Key_T:
+        generator->changeNote(67);
+        pn = true;
+        break;
+    case Qt::Key_6:
+        generator->changeNote(68);
+        pn = true;
+        break;
+    case Qt::Key_Y:
+        generator->changeNote(69);
+        pn = true;
+        break;
+    case Qt::Key_7:
+        generator->changeNote(70);
+        pn = true;
+        break;
+    case Qt::Key_U:
+        generator->changeNote(71);
+        pn = true;
+        break;
+    case Qt::Key_I:
+        generator->changeNote(72);
+        pn = true;
+        break;
+    case Qt::Key_9:
+        generator->changeNote(73);
+        pn = true;
+        break;
+    case Qt::Key_O:
+        generator->changeNote(74);
+        pn = true;
+        break;
+    case Qt::Key_0:
+        generator->changeNote(75);
+        pn = true;
+        break;
+    case Qt::Key_P:
+        generator->changeNote(76);
+        pn = true;
+        break;
+    default:
+        break;
+    }
+
+    return pn;
 }
 
 void BankEditor::keyPressEvent(QKeyEvent *event)
@@ -132,136 +266,7 @@ void BankEditor::keyPressEvent(QKeyEvent *event)
 
     if(ui->melodic->isChecked())
     {
-        bool pn = false;
-
-        switch(event->key())
-        {
-        case Qt::Key_Z:
-            m_generator->changeNote(48);
-            pn = true;
-            break;
-        case Qt::Key_S:
-            m_generator->changeNote(49);
-            pn = true;
-            break;
-        case Qt::Key_X:
-            m_generator->changeNote(50);
-            pn = true;
-            break;
-        case Qt::Key_D:
-            m_generator->changeNote(51);
-            pn = true;
-            break;
-        case Qt::Key_C:
-            m_generator->changeNote(52);
-            pn = true;
-            break;
-        case Qt::Key_V:
-            m_generator->changeNote(53);
-            pn = true;
-            break;
-        case Qt::Key_G:
-            m_generator->changeNote(54);
-            pn = true;
-            break;
-        case Qt::Key_B:
-            m_generator->changeNote(55);
-            pn = true;
-            break;
-        case Qt::Key_H:
-            m_generator->changeNote(56);
-            pn = true;
-            break;
-        case Qt::Key_N:
-            m_generator->changeNote(57);
-            pn = true;
-            break;
-        case Qt::Key_J:
-            m_generator->changeNote(58);
-            pn = true;
-            break;
-        case Qt::Key_M:
-            m_generator->changeNote(59);
-            pn = true;
-            break;
-        case Qt::Key_Q:
-        case Qt::Key_Comma:
-            m_generator->changeNote(60);
-            pn = true;
-            break;
-        case Qt::Key_2:
-        case Qt::Key_L:
-            m_generator->changeNote(61);
-            pn = true;
-            break;
-        case Qt::Key_W:
-        case Qt::Key_Period:
-            m_generator->changeNote(62);
-            pn = true;
-            break;
-        case Qt::Key_3:
-        case Qt::Key_Semicolon:
-            m_generator->changeNote(63);
-            pn = true;
-            break;
-        case Qt::Key_E:
-        case Qt::Key_Slash:
-            m_generator->changeNote(64);
-            pn = true;
-            break;
-        case Qt::Key_R:
-            m_generator->changeNote(65);
-            pn = true;
-            break;
-        case Qt::Key_5:
-            m_generator->changeNote(66);
-            pn = true;
-            break;
-        case Qt::Key_T:
-            m_generator->changeNote(67);
-            pn = true;
-            break;
-        case Qt::Key_6:
-            m_generator->changeNote(68);
-            pn = true;
-            break;
-        case Qt::Key_Y:
-            m_generator->changeNote(69);
-            pn = true;
-            break;
-        case Qt::Key_7:
-            m_generator->changeNote(70);
-            pn = true;
-            break;
-        case Qt::Key_U:
-            m_generator->changeNote(71);
-            pn = true;
-            break;
-        case Qt::Key_I:
-            m_generator->changeNote(72);
-            pn = true;
-            break;
-        case Qt::Key_9:
-            m_generator->changeNote(73);
-            pn = true;
-            break;
-        case Qt::Key_O:
-            m_generator->changeNote(74);
-            pn = true;
-            break;
-        case Qt::Key_0:
-            m_generator->changeNote(75);
-            pn = true;
-            break;
-        case Qt::Key_P:
-            m_generator->changeNote(76);
-            pn = true;
-            break;
-        default:
-            break;
-        }
-
-        if(pn)
+        if(keyToNote(event->key(), m_generator))
             m_generator->PlayNote();
     }
     else
@@ -286,47 +291,8 @@ void BankEditor::keyReleaseEvent(QKeyEvent *event)
 
     if(ui->melodic->isChecked())
     {
-        switch(event->key())
-        {
-        case Qt::Key_Z:
-        case Qt::Key_S:
-        case Qt::Key_X:
-        case Qt::Key_D:
-        case Qt::Key_C:
-        case Qt::Key_V:
-        case Qt::Key_G:
-        case Qt::Key_B:
-        case Qt::Key_H:
-        case Qt::Key_N:
-        case Qt::Key_J:
-        case Qt::Key_M:
-        case Qt::Key_Q:
-        case Qt::Key_Comma:
-        case Qt::Key_2:
-        case Qt::Key_L:
-        case Qt::Key_W:
-        case Qt::Key_Period:
-        case Qt::Key_3:
-        case Qt::Key_Semicolon:
-        case Qt::Key_E:
-        case Qt::Key_Slash:
-        case Qt::Key_R:
-        case Qt::Key_5:
-        case Qt::Key_T:
-        case Qt::Key_6:
-        case Qt::Key_Y:
-        case Qt::Key_7:
-        case Qt::Key_U:
-        case Qt::Key_I:
-        case Qt::Key_9:
-        case Qt::Key_O:
-        case Qt::Key_0:
-        case Qt::Key_P:
-            m_generator->NoteOffAllChans();
-            break;
-        default:
-            break;
-        }
+        if(keyToNote(event->key(), m_generator))
+            m_generator->StopNote();
     }
     else
     {
@@ -357,10 +323,11 @@ void BankEditor::onMidiDataReceived(const unsigned char *data, size_t length)
 
         switch(msg) {
             case 0x8:
-                m_generator->NoteOffAllChans();
+                m_generator->changeNote((int)note);
+                m_generator->StopNote();
                 break;
             case 0x9:
-                m_generator->changeNote(note);
+                m_generator->changeNote((int)note);
                 m_generator->PlayNote();
                 break;
         }

@@ -433,9 +433,6 @@ void Generator::Pan(uint32_t c, uint32_t value)
 
 void Generator::PlayNoteF(int noteID)
 {
-    static int chan2op   = 0;
-    static int chanPs4op = 0;
-    static int chan4op = 0;
     static struct DebugInfo
     {
         int chan2op;
@@ -465,38 +462,27 @@ void Generator::PlayNoteF(int noteID)
     bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
     uint16_t  adlchannel[2] = { 0, 0 };
 
+    int ch = m_noteManager.noteOn(noteID);
     if(!natural_4op || pseudo_4op)
     {
         if(pseudo_4op)
         {
-            adlchannel[0] = channels1[chanPs4op];
-            adlchannel[1] = channels2[chanPs4op];
-            /* Rotating channels to have nicer poliphony on key spam */
-            _debug.chanPs4op = chanPs4op++;
-
-            if(chanPs4op > (USED_CHANNELS_2OP_PS4 - 1))
-                chanPs4op = 0;
+            adlchannel[0] = channels1[ch];
+            adlchannel[1] = channels2[ch];
+            _debug.chanPs4op = ch;
         }
         else
         {
-            adlchannel[0] = channels[chan2op];
-            adlchannel[1] = channels[chan2op];
-            /* Rotating channels to have nicer poliphony on key spam */
-            _debug.chan2op = chan2op++;
-
-            if(chan2op > (USED_CHANNELS_2OP - 1))
-                chan2op = 0;
+            adlchannel[0] = channels[ch];
+            adlchannel[1] = channels[ch];
+            _debug.chan2op = ch;
         }
     }
     else if(natural_4op)
     {
-        adlchannel[0] = channels1_4op[chan4op];
-        adlchannel[1] = channels2_4op[chan4op];
-        /* Rotating channels to have nicer poliphony on key spam */
-        _debug.chan4op = chan4op++;
-
-        if(chan4op > (USED_CHANNELS_4OP - 1))
-            chan4op = 0;
+        adlchannel[0] = channels1_4op[ch];
+        adlchannel[1] = channels2_4op[ch];
+        _debug.chan4op = ch;
     }
 
     emit debugInfo(_debug.toStr());
@@ -526,6 +512,35 @@ void Generator::PlayNoteF(int noteID)
     {
         bend  = 0.0 + m_patch.OPS[i[1]].finetune + m_patch.voice2_fine_tune;
         NoteOn(adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+    }
+}
+
+void Generator::StopNoteF(int noteID)
+{
+    if(rythmModePercussionMode)
+    {
+        //TODO: Turn each working RythmMode drum individually!
+        //updateRegBD();
+        return;
+    }
+
+    int ch = m_noteManager.noteOff(noteID);
+
+    bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
+    bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
+    if(natural_4op)
+    {
+        NoteOff(channels1_4op[ch]);
+    }
+    else
+    {
+        if(pseudo_4op)
+        {
+            NoteOff(channels1[ch]);
+            NoteOff(channels2[ch]);
+        }
+        else
+            NoteOff(channels[ch]);
     }
 }
 
@@ -654,6 +669,8 @@ void Generator::Silence()
             Touch_Real(channels[c], 0);
         }
     }
+
+    m_noteManager.clearNotes();
 }
 
 void Generator::NoteOffAllChans()
@@ -676,6 +693,8 @@ void Generator::NoteOffAllChans()
         for(uint32_t c = 0; c < USED_CHANNELS_2OP; ++c)
             NoteOff(channels[c]);
     }
+
+    m_noteManager.clearNotes();
 }
 
 
@@ -736,6 +755,14 @@ void Generator::PlayMinor7Chord()
     PlayNoteF(note);
     PlayNoteF(note + 3);
     PlayNoteF(note - 5);
+}
+
+void Generator::StopNote()
+{
+    if(rythmModePercussionMode)
+        NoteOffAllChans();
+    else
+        StopNoteF(note);
 }
 
 
@@ -836,6 +863,13 @@ void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
             else
                 m_patch.flags |= OPL_PatchSetup::Flag_True4op;
         }
+
+        if(instrument.en_4op && instrument.en_pseudo4op)
+            m_noteManager.allocateChannels(USED_CHANNELS_2OP_PS4);
+        else if(instrument.en_4op)
+            m_noteManager.allocateChannels(USED_CHANNELS_4OP);
+        else
+            m_noteManager.allocateChannels(USED_CHANNELS_2OP);
     }
 }
 
@@ -909,4 +943,90 @@ qint64 Generator::writeData(const char *data, qint64 len)
 qint64 Generator::bytesAvailable() const
 {
     return MAX_OPLGEN_BUFFER_SIZE;
+}
+
+
+Generator::NotesManager::NotesManager()
+{}
+
+Generator::NotesManager::~NotesManager()
+{}
+
+void Generator::NotesManager::allocateChannels(int count)
+{
+    channels.clear();
+    channels.resize(count);
+    cycle = 0;
+}
+
+uint8_t Generator::NotesManager::noteOn(int note)
+{
+    uint8_t beganAt = cycle;
+    uint8_t chan = 0;
+
+    // Increase age of all working notes;
+    for(Note &ch : channels)
+    {
+        if(note >= 0)
+            ch.age++;
+    }
+
+    do
+    {
+        chan = cycle++;
+        // Rotate cycles
+        if(cycle == channels.size())
+            cycle = 0;
+
+        if(channels[chan].note == -1)
+        {
+            channels[chan].note = note;
+            channels[chan].age = 0;
+            break;
+        }
+
+        if (cycle == beganAt) // If no free channels found
+        {
+            int age = -1;
+            int oldest = -1;
+            // Find oldest note
+            for(uint8_t c = 0; c < channels.size(); c++)
+            {
+                if((channels[c].note >= 0) && ((age == -1) || (channels[c].age > age)))
+                {
+                    oldest = c;
+                    age = channels[c].age;
+                }
+            }
+
+            if(age >= 0)
+            {
+                chan = (uint8_t)oldest;
+                channels[chan].note = note;
+                channels[chan].age = 0;
+            }
+            break;
+        }
+    } while(1);
+
+    return chan;
+}
+
+int8_t Generator::NotesManager::noteOff(int note)
+{
+    for(uint8_t chan = 0; chan < channels.size(); chan++)
+    {
+        if(channels[chan].note == note)
+        {
+            channels[chan].note = -1;
+            return (int8_t)chan;
+        }
+    }
+    return -1;
+}
+
+void Generator::NotesManager::clearNotes()
+{
+    for(uint8_t chan = 0; chan < channels.size(); chan++)
+        channels[chan].note = -1;
 }
