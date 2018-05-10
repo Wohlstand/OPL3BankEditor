@@ -35,9 +35,12 @@ greaterThan(QT_MAJOR_VERSION, 4):{
         QMAKE_LFLAGS += -static-libgcc -static-libstdc++ -static
         #DEFINES += snprintf=_snprintf
         DEFINES += NO_NATIVE_OPEN_DIALOGS
+        INCLUDEPATH += $$PWD/src/audio/for-mingw-9x
     }
 }
+
 CONFIG += rtmidi
+CONFIG += rtaudio
 
 TEMPLATE = app
 TARGET = opl3_bank_editor
@@ -73,17 +76,15 @@ UI_DIR      = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.ui
 win32: RC_FILE = $$PWD/src/resources/res.rc
 macx: ICON = $$PWD/src/resources/opl3.icns
 
-greaterThan(QT_MAJOR_VERSION, 4):{
-    include("src/audio/ao_qtmm.pri")
+rtaudio {
+    include("src/audio/ao_rtaudio.pri")
 }
-linux-*: {
-    DEFINES += ENABLE_AUDIO_TESTING
-    include("src/audio/ao_alsa.pri")
-}
-
 rtmidi {
     DEFINES += ENABLE_MIDI
     include("src/midi/midi_rtmidi.pri")
+}
+greaterThan(QT_MAJOR_VERSION, 4):{
+    DEFINES += ENABLE_AUDIO_TESTING
 }
 
 SOURCES += \
@@ -112,9 +113,10 @@ SOURCES += \
     src/ins_names.cpp \
     src/main.cpp \
     src/opl/generator.cpp \
+    src/opl/generator_realtime.cpp \
+    src/opl/realtime/ring_buffer.cpp \
     src/piano.cpp \
     src/opl/measurer.cpp \
-    src/audio/ao_base.cpp \
     src/opl/chips/dosbox_opl3.cpp \
     src/opl/chips/nuked_opl3.cpp \
     src/opl/chips/opl_chip_base.cpp \
@@ -148,11 +150,13 @@ HEADERS += \
     src/importer.h \
     src/ins_names.h \
     src/opl/generator.h \
+    src/opl/generator_realtime.h \
     src/opl/nukedopl3.h \
+    src/opl/realtime/ring_buffer.h \
+    src/opl/realtime/ring_buffer.tcc \
     src/piano.h \
     src/version.h \
     src/opl/measurer.h \
-    src/audio/ao_base.h \
     src/opl/chips/dosbox_opl3.h \
     src/opl/chips/nuked_opl3.h \
     src/opl/chips/opl_chip_base.h \

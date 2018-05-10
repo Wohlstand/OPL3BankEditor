@@ -12,34 +12,16 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang)$")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
-set(USE_ALSA "" CACHE STRING "Use ALSA")
-set(USE_QTMM "" CACHE STRING "Use QtMultimedia")
 set(USE_RTMIDI "ON" CACHE STRING "Use RtMidi")
-
-if(USE_ALSA STREQUAL "")
-  find_package(ALSA)
-  set(USE_ALSA "${ALSA_FOUND}" CACHE STRING "Use ALSA" FORCE)
-endif()
-if(USE_QTMM STREQUAL "")
-  find_package(Qt5Multimedia)
-  set(USE_QTMM "${Qt5Multimedia_FOUND}" CACHE STRING "Use QtMultimedia" FORCE)
-endif()
-
-if(USE_ALSA)
-  find_package(ALSA REQUIRED)
-  find_package(Threads REQUIRED)
-endif()
-if(USE_QTMM)
-  find_package(Qt5Multimedia REQUIRED)
-endif()
+set(USE_RTAUDIO "ON" CACHE STRING "Use RtAudio")
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
+find_package(Threads REQUIRED)
 
 message("!! Optional feature summary:")
-message("!!   ALSA: ${USE_ALSA}")
-message("!!   QtMultimedia: ${USE_QTMM}")
 message("!!   RtMidi: ${USE_RTMIDI}")
+message("!!   RtAudio: ${USE_RTAUDIO}")
 
 include_directories("src")
 
@@ -69,9 +51,10 @@ set(SOURCES
   "src/ins_names.cpp"
   "src/main.cpp"
   "src/opl/generator.cpp"
+  "src/opl/generator_realtime.cpp"
+  "src/opl/realtime/ring_buffer.cpp"
   "src/piano.cpp"
   "src/opl/measurer.cpp"
-  "src/audio/ao_base.cpp"
   "src/opl/chips/dosbox_opl3.cpp"
   "src/opl/chips/nuked_opl3.cpp"
   "src/opl/chips/opl_chip_base.cpp"
@@ -90,7 +73,7 @@ qt5_add_resources(RESOURCES
   "src/resources/resources.qrc")
 
 add_executable(OPL3BankEditor WIN32 MACOSX_BUNDLE ${SOURCES} ${FORMS} ${RESOURCES})
-target_link_libraries(OPL3BankEditor PRIVATE Qt5::Widgets Qt5::Concurrent)
+target_link_libraries(OPL3BankEditor PRIVATE Qt5::Widgets Qt5::Concurrent ${CMAKE_THREAD_LIBS_INIT})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(ICON "${CMAKE_SOURCE_DIR}/src/resources/res.rc")
@@ -100,19 +83,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   set(ICON "${CMAKE_SOURCE_DIR}/src/resources/opl3.icns")
   set_source_files_properties("${ICON}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
   target_sources(OPL3BankEditor PRIVATE "${ICON}")
-endif()
-
-if(USE_ALSA)
-  target_sources(OPL3BankEditor PRIVATE "${CMAKE_SOURCE_DIR}/src/audio/ao_alsa.cpp")
-  target_compile_definitions(OPL3BankEditor PRIVATE "ENABLE_AUDIO_TESTING" "USE_AUDIO_ALSA")
-  target_include_directories(OPL3BankEditor PRIVATE ${ALSA_INCLUDE_DIRS})
-  target_link_libraries(OPL3BankEditor PRIVATE ${ALSA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-endif()
-
-if(USE_QTMM)
-  target_sources(OPL3BankEditor PRIVATE "${CMAKE_SOURCE_DIR}/src/audio/ao_qtmm.cpp")
-  target_compile_definitions(OPL3BankEditor PRIVATE "ENABLE_AUDIO_TESTING" "USE_AUDIO_QTMM")
-  target_link_libraries(OPL3BankEditor PRIVATE Qt5::Multimedia)
 endif()
 
 if(USE_RTMIDI)
@@ -132,4 +102,23 @@ if(USE_RTMIDI)
   target_sources(OPL3BankEditor PRIVATE "src/midi/midi_rtmidi.cpp")
   target_compile_definitions(OPL3BankEditor PRIVATE "ENABLE_MIDI")
   target_link_libraries(OPL3BankEditor PRIVATE RtMidi)
+endif()
+
+if(USE_RTAUDIO)
+  add_library(RtAudio STATIC "src/audio/external/rtaudio/RtAudio.cpp")
+  target_include_directories(RtAudio PUBLIC "src/audio/external/rtaudio")
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_compile_definitions(RtAudio PUBLIC "__LINUX_ALSA__")
+    target_link_libraries(RtAudio PUBLIC "asound")
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_compile_definitions(RtAudio PUBLIC "__WINDOWS_DS__")
+    target_link_libraries(RtAudio PUBLIC "dsound" "ole32")
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    target_compile_definitions(RtAudio PUBLIC "__MACOSX_CORE__")
+    find_library(COREAUDIO_LIBRARY "CoreAudio")
+    target_link_libraries(RtAudio PUBLIC "${COREAUDIO_LIBRARY}")
+  endif()
+  target_sources(OPL3BankEditor PRIVATE "src/audio/ao_rtaudio.cpp")
+  target_compile_definitions(OPL3BankEditor PRIVATE "ENABLE_AUDIO_TESTING")
+  target_link_libraries(OPL3BankEditor PRIVATE RtAudio)
 endif()

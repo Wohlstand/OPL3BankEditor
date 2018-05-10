@@ -155,9 +155,17 @@ static const uint16_t channels1_4op[USED_CHANNELS_4OP] = {0,  1,  2,  9,  10, 11
 //! 4-operator channels map 1
 static const uint16_t channels2_4op[USED_CHANNELS_4OP] = {3,  4,  5,  12, 13, 14};
 
-Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip,
-                     QObject *parent)
-    :   QIODevice(parent)
+QString GeneratorDebugInfo::toStr()
+{
+    return QString("Channels:\n"
+                   "2-op: %1, Ps-4op: %2\n"
+                   "4-op: %3")
+        .arg(this->chan2op)
+        .arg(this->chanPs4op)
+        .arg(this->chan4op);
+}
+
+Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
 {
     #ifdef ENABLE_OPL_EMULATOR
     m_rate = sampleRate;
@@ -253,8 +261,6 @@ void Generator::initChip()
 void Generator::switchChip(Generator::OPL_Chips chipId)
 {
     #ifdef ENABLE_OPL_EMULATOR
-    std::lock_guard<std::mutex> g(chip_mutex);
-    Q_UNUSED(g);
     switch(chipId)
     {
     case CHIP_DosBox:
@@ -433,21 +439,6 @@ void Generator::Pan(uint32_t c, uint32_t value)
 
 void Generator::PlayNoteF(int noteID)
 {
-    static struct DebugInfo
-    {
-        int chan2op;
-        int chanPs4op;
-        int chan4op;
-        QString toStr()
-        {
-            return QString("Channels:\n"
-                           "2-op: %1, Ps-4op: %2\n"
-                           "4-op: %3")
-                   .arg(this->chan2op)
-                   .arg(this->chanPs4op)
-                   .arg(this->chan4op);
-        }
-    } _debug { -1, -1, -1};
     int tone = noteID;
 
     if(m_patch.tone)
@@ -469,23 +460,22 @@ void Generator::PlayNoteF(int noteID)
         {
             adlchannel[0] = channels1[ch];
             adlchannel[1] = channels2[ch];
-            _debug.chanPs4op = ch;
+            m_debug.chanPs4op = ch;
         }
         else
         {
             adlchannel[0] = channels[ch];
             adlchannel[1] = channels[ch];
-            _debug.chan2op = ch;
+            m_debug.chan2op = ch;
         }
     }
     else if(natural_4op)
     {
         adlchannel[0] = channels1_4op[ch];
         adlchannel[1] = channels2_4op[ch];
-        _debug.chan4op = ch;
+        m_debug.chan4op = ch;
     }
 
-    emit debugInfo(_debug.toStr());
     m_ins[adlchannel[0]] = i[0];
     m_ins[adlchannel[1]] = i[1];
     double bend = 0.0;
@@ -767,7 +757,7 @@ void Generator::StopNote()
 
 
 
-void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
+void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
     //Shutup everything
     Silence();
@@ -906,7 +896,6 @@ void Generator::updateRegBD()
 
 void Generator::start()
 {
-    open(QIODevice::ReadOnly);
 }
 
 void Generator::stop()
@@ -915,39 +904,21 @@ void Generator::stop()
     if(chip_oplUninit)
         chip_oplUninit();
     #endif
-    close();
 }
 
-qint64 Generator::readData(char *data, qint64 len)
+void Generator::generate(int16_t *frames, unsigned nframes)
 {
     #ifdef ENABLE_OPL_EMULATOR
-    std::lock_guard<std::mutex> g(chip_mutex);
-    Q_UNUSED(g);
-    int16_t *_out = reinterpret_cast<int16_t *>(data);
-    len -= len % 4; //must be multiple 4!
-    uint32_t lenS = (static_cast<uint32_t>(len) / 4);
-    chip->generate(_out, lenS);
+    chip->generate(frames, nframes);
     #else
-    memset(data, 0, size_t(len));
+    memset(frames, 0, 2 * nframes * sizeof(*frames));
     #endif
-    return len;
 }
-
-qint64 Generator::writeData(const char *data, qint64 len)
-{
-    Q_UNUSED(data);
-    Q_UNUSED(len);
-    return 0;
-}
-
-qint64 Generator::bytesAvailable() const
-{
-    return MAX_OPLGEN_BUFFER_SIZE;
-}
-
 
 Generator::NotesManager::NotesManager()
-{}
+{
+    channels.reserve(USED_CHANNELS_2OP);
+}
 
 Generator::NotesManager::~NotesManager()
 {}

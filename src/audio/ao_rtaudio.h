@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2018 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2018 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,38 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef AO_ALSA_H
-#define AO_ALSA_H
+#include <QObject>
+#include <RtAudio.h>
+#include <memory>
 
-#include "ao_base.h"
+class IRealtimeProcess;
 
-#include <alsa/asoundlib.h>
-#include <pthread.h>
-#include <atomic>
-
-class AudioOutALSA : public AudioOutBase
+class AudioOutRt : public QObject
 {
-    pthread_t m_thread;
-    std::atomic_bool m_playing;
-
-    snd_pcm_t *playback_handle;
-
-    snd_pcm_hw_params_t *hw_params;
-    snd_pcm_sw_params_t *sw_params;
-    snd_pcm_sframes_t frames_to_deliver;
-    snd_pcm_uframes_t frames;
-    unsigned int periods;
-    int err;
-    QByteArray m_buffer;
-
-    static void *playSound(void *self);
 public:
-    explicit AudioOutALSA(QObject *parent);
-    ~AudioOutALSA();
-
-    bool init(int sampleRate, int channels);
-    void start();
+    explicit AudioOutRt(QObject *parent = nullptr, double latency = 20e-3);
+    unsigned sampleRate() const;
+    void start(IRealtimeProcess &rt);
     void stop();
+private:
+    static int process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
+    IRealtimeProcess *m_rt = nullptr;
+    std::unique_ptr<RtAudio> m_audioOut;
 };
-
-#endif // AO_ALSA_H
