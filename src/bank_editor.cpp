@@ -94,6 +94,8 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorNuked, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorDosBox, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
+    ui->instruments->installEventFilter(this);
+
     loadSettings();
     m_bank.deep_tremolo = ui->deepTremolo->isChecked();
     m_bank.deep_vibrato = ui->deepVibrato->isChecked();
@@ -199,6 +201,32 @@ void BankEditor::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
     QTimer::singleShot(0, this, SLOT(onBankEditorShown()));
+}
+
+bool BankEditor::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == ui->instruments)
+    {
+        /* Take arrow and page key events, reserve others for piano. */
+        QEvent::Type type = event->type();
+        if (type == QEvent::KeyPress || type == QEvent::KeyRelease)
+        {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            int key = keyEvent->key();
+            bool accepted =
+                key == Qt::Key_Up || key == Qt::Key_Down ||
+                key == Qt::Key_Left || key == Qt::Key_Right ||
+                key == Qt::Key_PageUp || key == Qt::Key_PageDown;
+            if (!accepted) {
+                if (type == QEvent::KeyPress)
+                    pianoKeyPress(keyEvent);
+                else if (type == QEvent::KeyRelease)
+                    pianoKeyRelease(keyEvent);
+                return true;
+            }
+        }
+    }
+    return QMainWindow::eventFilter(watched, event);
 }
 
 void BankEditor::onBankEditorShown()

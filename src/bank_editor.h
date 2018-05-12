@@ -490,12 +490,17 @@ private slots:
     #endif
 
 protected:
+    virtual void pianoKeyPress(QKeyEvent *event);
+    virtual void pianoKeyRelease(QKeyEvent *event);
+
+protected:
     void closeEvent(QCloseEvent *event);
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void keyReleaseEvent(QKeyEvent *event);
     void showEvent(QShowEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event);
 
 private:
     Ui::BankEditor *ui;
