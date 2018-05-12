@@ -240,7 +240,7 @@ void Importer::keyPressEvent(QKeyEvent *event)
     if(event->isAutoRepeat())
         return;
 
-    Generator *m_generator = m_main->m_generator;
+    IRealtimeControl *m_generator = m_main->m_generator;
     if(ui->melodic->isChecked())
     {
         bool pn = false;
@@ -373,14 +373,14 @@ void Importer::keyPressEvent(QKeyEvent *event)
         }
 
         if(pn)
-            m_generator->PlayNote();
+            m_generator->ctl_playNote();
     }
     else
     {
         switch(event->key())
         {
         case Qt::Key_Space:
-            m_generator->PlayNote();
+            m_generator->ctl_playNote();
             break;
 
         default:
@@ -395,7 +395,7 @@ void Importer::keyReleaseEvent(QKeyEvent *event)
     if(event->isAutoRepeat())
         return;
 
-    Generator *m_generator = m_main->m_generator;
+    IRealtimeControl *m_generator = m_main->m_generator;
 
     if(ui->melodic->isChecked())
     {
@@ -435,7 +435,7 @@ void Importer::keyReleaseEvent(QKeyEvent *event)
         case Qt::Key_O:
         case Qt::Key_0:
         case Qt::Key_P:
-            m_generator->NoteOffAllChans();
+            m_generator->ctl_noteOffAllChans();
             break;
         default:
             break;
@@ -446,7 +446,7 @@ void Importer::keyReleaseEvent(QKeyEvent *event)
         switch(event->key())
         {
         case Qt::Key_Space:
-            m_generator->NoteOffAllChans();
+            m_generator->ctl_noteOffAllChans();
             break;
         default:
             break;

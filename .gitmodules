@@ -1,3 +1,6 @@
 [submodule "src/midi/external/rtmidi"]
 	path = src/midi/external/rtmidi
 	url = https://github.com/thestk/rtmidi.git
+[submodule "src/audio/external/rtaudio"]
+	path = src/audio/external/rtaudio
+	url = https://github.com/thestk/rtaudio.git

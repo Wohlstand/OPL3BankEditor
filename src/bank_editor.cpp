@@ -101,15 +101,11 @@ BankEditor::BankEditor(QWidget *parent) :
 
     initAudio();
 #ifdef ENABLE_MIDI
-    MidiInRt *midiIn = m_midiIn = new MidiInRt(this);
     QAction *midiInAction = m_midiInAction = new QAction(
         ui->midiIn->icon(), ui->midiIn->text(), this);
     ui->midiIn->setDefaultAction(midiInAction);
     QMenu *midiInMenu = new QMenu(this);
     midiInAction->setMenu(midiInMenu);
-    connect(midiIn, SIGNAL(midiDataReceived(const unsigned char *, size_t)),
-            this, SLOT(onMidiDataReceived(const unsigned char *, size_t)),
-            Qt::BlockingQueuedConnection);
 #else
     ui->midiIn_zone->hide();
 #endif
@@ -120,7 +116,6 @@ BankEditor::~BankEditor()
     #ifdef ENABLE_AUDIO_TESTING
     if (m_audioOut)
         m_audioOut->stop();
-    m_generator->stop();
     delete m_audioOut;
     m_audioOut = nullptr;
     #endif
@@ -754,14 +749,14 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorNuked->setChecked(true);
         m_currentChip = Generator::CHIP_Nuked;
-        m_generator->switchChip(m_currentChip);
+        m_generator->ctl_switchChip(m_currentChip);
     }
     else
     if(menuItem == ui->actionEmulatorDosBox)
     {
         ui->actionEmulatorDosBox->setChecked(true);
         m_currentChip = Generator::CHIP_DosBox;
-        m_generator->switchChip(m_currentChip);
+        m_generator->ctl_switchChip(m_currentChip);
     }
 }
 
@@ -886,7 +881,7 @@ void BankEditor::sendPatch()
 {
     if(!m_curInst) return;
     if(!m_generator) return;
-    m_generator->changePatch(*m_curInst, ui->percussion->isChecked());
+    m_generator->ctl_changePatch(*m_curInst, ui->percussion->isChecked());
 }
 
 void BankEditor::setDrumMode(bool dmode)

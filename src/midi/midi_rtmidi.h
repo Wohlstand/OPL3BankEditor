@@ -24,13 +24,12 @@
 #include <QVector>
 #include <RtMidi.h>
 
-class MidiInRt :
-    public QObject
-{
-    Q_OBJECT
+class IRealtimeMIDI;
 
+class MidiInRt : public QObject
+{
 public:
-    explicit MidiInRt(QObject *parent = nullptr);
+    explicit MidiInRt(IRealtimeMIDI &rt, QObject *parent = nullptr);
     ~MidiInRt();
     void close();
     bool open(unsigned port);
@@ -46,10 +45,8 @@ public:
         return m_errorText;
     }
 
-Q_SIGNALS:
-    void midiDataReceived(const unsigned char *data, size_t length);
-
 private:
+    IRealtimeMIDI &m_rt;
     RtMidiIn *m_midiin = nullptr;
     bool m_errorSignaled = false;
     RtMidiError::Type m_errorCode = RtMidiError::UNSPECIFIED;

@@ -17,10 +17,11 @@
  */
 
 #include "midi_rtmidi.h"
+#include "../opl/generator_realtime.h"
 #include <QCoreApplication>
 
-MidiInRt::MidiInRt(QObject *parent)
-    : QObject(parent)
+MidiInRt::MidiInRt(IRealtimeMIDI &rt, QObject *parent)
+    : QObject(parent), m_rt(rt)
 {
 }
 
@@ -114,8 +115,7 @@ void MidiInRt::onReceive(double timeStamp, std::vector<unsigned char> *message, 
 {
     MidiInRt *self = static_cast<MidiInRt *>(userData);
     (void)timeStamp;
-
-    Q_EMIT self->midiDataReceived(message->data(), message->size());
+    self->m_rt.midi_event(message->data(), message->size());
 }
 
 void MidiInRt::onError(RtMidiError::Type type, const std::string &errorText, void *userData)

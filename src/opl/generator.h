@@ -31,7 +31,6 @@
 
 #include <stdint.h>
 #include <memory>
-#include <mutex>
 
 #ifdef ENABLE_OPL_EMULATOR
 #include "nukedopl3.h"
@@ -76,17 +75,23 @@ struct OPL_PatchSetup
     double         voice2_fine_tune;
 };
 
-class Generator : public QIODevice
+struct GeneratorDebugInfo
 {
-    Q_OBJECT
+    int chan2op = -1;
+    int chanPs4op = -1;
+    int chan4op = -1;
+    QString toStr();
+};
 
+class Generator
+{
 public:
     enum OPL_Chips
     {
         CHIP_Nuked = 0,
         CHIP_DosBox
     };
-    Generator(uint32_t sampleRate, OPL_Chips initialChip, QObject *parent);
+    Generator(uint32_t sampleRate, OPL_Chips initialChip);
     ~Generator();
 
     void initChip();
@@ -95,9 +100,7 @@ public:
     void start();
     void stop();
 
-    qint64 readData(char *data, qint64 maxlen);
-    qint64 writeData(const char *data, qint64 len);
-    qint64 bytesAvailable() const;
+    void generate(int16_t *frames, unsigned nframes);
 
     void NoteOn(uint32_t c, double hertz);
     void NoteOff(uint32_t c);
@@ -110,7 +113,7 @@ public:
     void PlayDrum(uint8_t drum, int noteID);
     void switch4op(bool enabled, bool patchCleanUp = true);
 
-public slots:
+public:
     void Silence();
     void NoteOffAllChans();
 
@@ -123,14 +126,18 @@ public slots:
     void PlayMinor7Chord();
     void StopNote();
 
-    void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
+    void changePatch(const FmBank::Instrument &instrument, bool isDrum = false);
     void changeNote(int newnote);
     void changeDeepTremolo(bool enabled);
     void changeDeepVibrato(bool enabled);
     void changeAdLibPercussion(bool enabled);
     void updateRegBD();
-signals:
-    void debugInfo(QString);
+
+    const GeneratorDebugInfo &debugInfo() const
+        { return m_debug; }
+
+private:
+    GeneratorDebugInfo m_debug;
 
 private:
     void WriteReg(uint16_t address, uint8_t byte);
@@ -166,7 +173,6 @@ private:
     #ifdef ENABLE_OPL_EMULATOR
     uint32_t    m_rate = 44100;
     std::unique_ptr<OPLChipBase> chip;
-    std::mutex                   chip_mutex;
     #endif
     OPL_PatchSetup m_patch;
 
