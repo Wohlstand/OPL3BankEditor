@@ -16,21 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QObject>
-#include <RtAudio.h>
-#include <memory>
+#ifndef LATENCY_H
+#define LATENCY_H
 
-class IRealtimeProcess;
+#include <QDialog>
+class QSlider;
+class QLineEdit;
 
-class AudioOutRt : public QObject
+class LatencyDialog : public QDialog
 {
+    Q_OBJECT
+
 public:
-    explicit AudioOutRt(double latency, QObject *parent = nullptr);
-    unsigned sampleRate() const;
-    void start(IRealtimeProcess &rt);
-    void stop();
+    LatencyDialog(QWidget *parent = nullptr);
+    ~LatencyDialog();
+
+    double latency() const;
+    void setLatency(double lat);
+
 private:
-    static int process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
-    IRealtimeProcess *m_rt = nullptr;
-    std::unique_ptr<RtAudio> m_audioOut;
+    void setupUi();
+    QSlider *m_ctlLatency;
+    QLineEdit *m_ctlLatencyEdit;
+
+private slots:
+    void onSliderValueChanged(int value);
+    void onTextEditingFinished();
 };
+
+#endif // LATENCY_H

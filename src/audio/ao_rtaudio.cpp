@@ -23,7 +23,7 @@
 #include "ao_rtaudio.h"
 #include "../opl/generator_realtime.h"
 
-AudioOutRt::AudioOutRt(QObject *parent, double latency)
+AudioOutRt::AudioOutRt(double latency, QObject *parent)
     : QObject(parent)
 {
     RtAudio *audioOut = new RtAudio(RtAudio::Api::UNSPECIFIED);

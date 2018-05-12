@@ -48,6 +48,7 @@ set(SOURCES
   "src/FileFormats/format_flatbuffer_opl3.cpp"
   "src/formats_sup.cpp"
   "src/importer.cpp"
+  "src/latency.cpp"
   "src/ins_names.cpp"
   "src/main.cpp"
   "src/opl/generator.cpp"
