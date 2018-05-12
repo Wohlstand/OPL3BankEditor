@@ -29,6 +29,8 @@ AudioOutRt::AudioOutRt(double latency, QObject *parent)
     RtAudio *audioOut = new RtAudio(RtAudio::Api::UNSPECIFIED);
     m_audioOut.reset(audioOut);
 
+    fprintf(stderr, "Using RtAudio API %d\n", audioOut->getCurrentApi());
+
     unsigned num_audio_devices = audioOut->getDeviceCount();
     if (num_audio_devices == 0) {
         QMessageBox::warning(
