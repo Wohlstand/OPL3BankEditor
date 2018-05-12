@@ -55,7 +55,7 @@ AudioOutRt::AudioOutRt(double latency, QObject *parent)
 
     audioOut->openStream(
         &streamParam, nullptr, RTAUDIO_SINT16, sampleRate, &bufferSize,
-        &process, this, &streamOpts);
+        &process, this, &streamOpts, &errorCallback);
 }
 
 unsigned AudioOutRt::sampleRate() const
@@ -80,4 +80,10 @@ int AudioOutRt::process(void *outputbuffer, void *, unsigned nframes, double, Rt
     IRealtimeProcess &rt = *self->m_rt;
     rt.rt_generate((int16_t *)outputbuffer, nframes);
     return 0;
+}
+
+void AudioOutRt::errorCallback(RtAudioError::Type type, const std::string &errorText)
+{
+    fprintf(stderr, "Audio error: %s\n", errorText.c_str());
+    throw RtAudioError(errorText, type);
 }
