@@ -525,6 +525,8 @@ void Generator::StopNoteF(int noteID)
     }
 
     int ch = m_noteManager.noteOff(noteID);
+    if(ch == -1)
+        return;
 
     bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
     bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
