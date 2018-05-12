@@ -24,7 +24,7 @@
 #include "chips/nuked_opl3.h"
 #include "chips/dosbox_opl3.h"
 
-#ifdef ENABLE_OPL_PROXY
+#ifdef ENABLE_WIN9X_OPL_PROXY
 #include "chips/win9x_opl_proxy.h"
 #endif
 
