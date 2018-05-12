@@ -202,6 +202,7 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
     for(uint32_t b = 0; b < 5; ++b)
         m_four_op_category[p++] = 8;
 
+    m_isInstrumentLoaded = false;
     m_4op_last_state = true;
     deepTremoloMode   = 0;
     deepVibratoMode   = 0;
@@ -439,6 +440,9 @@ void Generator::Pan(uint32_t c, uint32_t value)
 
 void Generator::PlayNoteF(int noteID)
 {
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
     int tone = noteID;
 
     if(m_patch.tone)
@@ -507,6 +511,9 @@ void Generator::PlayNoteF(int noteID)
 
 void Generator::StopNoteF(int noteID)
 {
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
     if(rythmModePercussionMode)
     {
         //TODO: Turn each working RythmMode drum individually!
@@ -536,6 +543,9 @@ void Generator::StopNoteF(int noteID)
 
 void Generator::PlayDrum(uint8_t drum, int noteID)
 {
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
     int tone = noteID;
 
     if(m_patch.tone)
@@ -861,6 +871,8 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
         else
             m_noteManager.allocateChannels(USED_CHANNELS_2OP);
     }
+
+    m_isInstrumentLoaded = true;//Mark instrument as loaded
 }
 
 void Generator::changeNote(int newnote)

@@ -165,6 +165,7 @@ private:
     } m_noteManager;
 
     int32_t     note;
+    bool        m_isInstrumentLoaded = false;
     bool        m_4op_last_state;
     uint8_t     deepTremoloMode;
     uint8_t     deepVibratoMode;
