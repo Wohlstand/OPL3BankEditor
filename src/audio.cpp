@@ -227,7 +227,7 @@ static bool keyToNote(int k, IRealtimeControl *ctl)
     return pn;
 }
 
-void BankEditor::keyPressEvent(QKeyEvent *event)
+void BankEditor::pianoKeyPress(QKeyEvent *event)
 {
     if(event->isAutoRepeat())
         return;
@@ -248,11 +248,9 @@ void BankEditor::keyPressEvent(QKeyEvent *event)
             break;
         }
     }
-
-    QMainWindow::keyPressEvent(event);
 }
 
-void BankEditor::keyReleaseEvent(QKeyEvent *event)
+void BankEditor::pianoKeyRelease(QKeyEvent *event)
 {
     if(event->isAutoRepeat())
         return;
@@ -273,6 +271,16 @@ void BankEditor::keyReleaseEvent(QKeyEvent *event)
             break;
         }
     }
+}
 
+void BankEditor::keyPressEvent(QKeyEvent *event)
+{
+    pianoKeyPress(event);
+    QMainWindow::keyPressEvent(event);
+}
+
+void BankEditor::keyReleaseEvent(QKeyEvent *event)
+{
+    pianoKeyRelease(event);
     QMainWindow::keyReleaseEvent(event);
 }

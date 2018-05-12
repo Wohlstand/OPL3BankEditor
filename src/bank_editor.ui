@@ -277,9 +277,6 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="focusPolicy">
-                <enum>Qt::NoFocus</enum>
-               </property>
               </widget>
              </item>
             </layout>
