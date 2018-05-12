@@ -19,18 +19,13 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include "chips/opl_chip_base.h"
-
-#if defined(IS_QT_4) && defined(_WIN32)
-#define ENABLE_WIN9X_OPL_PROXY
-#endif//QT<5 and WIN32
-
 #include <stdint.h>
 #include <memory>
-
-#include "../bank.h"
 #include <QIODevice>
 #include <QObject>
+
+#include "chips/opl_chip_base.h"
+#include "../bank.h"
 
 #define NUM_OF_CHANNELS         23
 #define MAX_OPLGEN_BUFFER_SIZE  4096
