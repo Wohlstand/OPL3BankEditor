@@ -22,21 +22,11 @@
 #include "chips/opl_chip_base.h"
 
 #if defined(IS_QT_4) && defined(_WIN32)
-#define ENABLE_OPL_PROXY
+#define ENABLE_WIN9X_OPL_PROXY
 #endif//QT<5 and WIN32
-
-#ifdef ENABLE_AUDIO_TESTING
-#define ENABLE_OPL_EMULATOR
-#endif//HasAudio
 
 #include <stdint.h>
 #include <memory>
-
-#ifdef ENABLE_OPL_EMULATOR
-#include "nukedopl3.h"
-#else
-typedef uint8_t Bit8u;
-#endif
 
 #include "../bank.h"
 #include <QIODevice>
@@ -89,16 +79,14 @@ public:
     enum OPL_Chips
     {
         CHIP_Nuked = 0,
-        CHIP_DosBox
+        CHIP_DosBox,
+        CHIP_Win9xProxy
     };
     Generator(uint32_t sampleRate, OPL_Chips initialChip);
     ~Generator();
 
     void initChip();
     void switchChip(OPL_Chips chipId);
-
-    void start();
-    void stop();
 
     void generate(int16_t *frames, unsigned nframes);
 
@@ -171,12 +159,10 @@ private:
     uint8_t     deepVibratoMode;
     uint8_t     rythmModePercussionMode;
     uint8_t     testDrum;
-    #ifdef ENABLE_OPL_EMULATOR
     uint32_t    m_rate = 44100;
     std::unique_ptr<OPLChipBase> chip;
-    #endif
-    OPL_PatchSetup m_patch;
 
+    OPL_PatchSetup m_patch;
     uint8_t     m_regBD;
 
     int8_t      m_four_op_category[NUM_OF_CHANNELS * 2];

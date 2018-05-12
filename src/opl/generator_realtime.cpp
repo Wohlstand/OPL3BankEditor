@@ -99,9 +99,7 @@ RealtimeGenerator::RealtimeGenerator(const std::shared_ptr<Generator> &gen, QObj
 }
 
 RealtimeGenerator::~RealtimeGenerator()
-{
-    m_gen->stop();
-}
+{}
 
 /* Control */
 void RealtimeGenerator::ctl_switchChip(int chipId)

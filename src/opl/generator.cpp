@@ -25,35 +25,7 @@
 #include "chips/dosbox_opl3.h"
 
 #ifdef ENABLE_OPL_PROXY
-#include <QSysInfo>
-#include <QMessageBox>
-extern "C"
-{
-    typedef void (_stdcall *opl_poke)(uint16_t index, uint16_t value);
-    typedef void (_stdcall *opl_init)(void);
-    typedef void (_stdcall *opl_unInit)(void);
-}
-static opl_poke     chip_oplPoke = NULL;
-static opl_init     chip_oplInit = NULL;
-static opl_unInit   chip_oplUninit = NULL;
-static HINSTANCE    chip_lib = NULL;
-
-template<class FunkPtr>
-void initOplFunction(FunkPtr &ptr, const char *procName)
-{
-    ptr = (FunkPtr)GetProcAddress(chip_lib, procName);
-    if(!ptr)
-    {
-        QMessageBox::warning(NULL,
-                             "liboplproxy.dll error",
-                             QString("Oops... I have failed to load %1 function:\n"
-                                     "Error %2\n"
-                                     "Continuing without FM sound.")
-                                    .arg(procName)
-                                    .arg(GetLastError()));
-    }
-}
-
+#include "chips/win9x_opl_proxy.h"
 #endif
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
@@ -167,11 +139,7 @@ QString GeneratorDebugInfo::toStr()
 
 Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
 {
-    #ifdef ENABLE_OPL_EMULATOR
     m_rate = sampleRate;
-    #else
-    Q_UNUSED(sampleRate);
-    #endif
     note = 60;
     m_patch =
     {
@@ -227,29 +195,7 @@ void Generator::initChip()
         0x001, 32, 0x105, 1             // Enable wave, OPL3 extensions
     };
 
-    #ifdef ENABLE_OPL_PROXY
-    QSysInfo::WinVersion wver = QSysInfo::windowsVersion();
-    bool m_enableProxy =    (wver == QSysInfo::WV_98) ||
-                            (wver == QSysInfo::WV_Me);
-    if(m_enableProxy && !chip_lib)
-    {
-        chip_lib = LoadLibraryA("liboplproxy.dll");
-        if(!chip_lib)
-            QMessageBox::warning(NULL, "liboplproxy.dll error", "Can't load liboplproxy.dll library");
-        else
-        {
-            initOplFunction(chip_oplInit,   "_chipInit@0");
-            initOplFunction(chip_oplPoke,   "_chipPoke@8");
-            initOplFunction(chip_oplUninit, "_chipUnInit@0");
-            if(chip_oplInit)
-                chip_oplInit();
-        }
-    }
-    #endif
-
-    #ifdef ENABLE_OPL_EMULATOR
     chip->setRate(m_rate);
-    #endif
 
     for(uint32_t a = 0; a < 18; ++a)
         WriteReg(0xB0 + Channels[a], 0x00);
@@ -264,9 +210,13 @@ void Generator::initChip()
 
 void Generator::switchChip(Generator::OPL_Chips chipId)
 {
-    #ifdef ENABLE_OPL_EMULATOR
     switch(chipId)
     {
+    case CHIP_Win9xProxy:
+#ifdef ENABLE_WIN9X_OPL_PROXY
+        chip.reset(new Win9x_OPL_Proxy());
+#endif
+        break;
     case CHIP_DosBox:
         chip.reset(new DosBoxOPL3());
         break;
@@ -274,28 +224,13 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
         chip.reset(new NukedOPL3());
         break;
     }
-    #else
-    Q_UNUSED(chipId);
-    #endif
 
     initChip();
 }
 
 void Generator::WriteReg(uint16_t address, uint8_t byte)
 {
-    #ifdef ENABLE_OPL_PROXY
-    if(chip_oplPoke)
-        chip_oplPoke(address, byte);
-    #endif
-
-    #ifdef ENABLE_OPL_EMULATOR
     chip->writeReg(address, byte);
-    #endif
-
-    #if !defined(ENABLE_OPL_EMULATOR) && !defined(ENABLE_OPL_PROXY)
-    Q_UNUSED(address);
-    Q_UNUSED(byte);
-    #endif
 }
 
 void Generator::NoteOff(uint32_t c)
@@ -394,10 +329,10 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     };
     do_modulator = do_ops[ mode ][ 0 ];
     do_carrier   = do_ops[ mode ][ 1 ];
-    WriteReg(0x40 + o1, static_cast<Bit8u>(do_modulator ? (x | 63) - volume + volume * (x & 63) / 63 : x));
+    WriteReg(0x40 + o1, static_cast<uint8_t>(do_modulator ? (x | 63) - volume + volume * (x & 63) / 63 : x));
 
     if(o2 != 0xFFF)
-        WriteReg(0x40 + o2, static_cast<Bit8u>(do_carrier   ? (y | 63) - volume + volume * (y & 63) / 63 : y));
+        WriteReg(0x40 + o2, static_cast<uint8_t>(do_carrier   ? (y | 63) - volume + volume * (y & 63) / 63 : y));
 
     // Correct formula (ST3, AdPlug):
     //   63-((63-(instrvol))/63)*chanvol
@@ -909,27 +844,9 @@ void Generator::updateRegBD()
     WriteReg(0x0BD, m_regBD);
 }
 
-
-
-void Generator::start()
-{
-}
-
-void Generator::stop()
-{
-    #ifdef ENABLE_OPL_PROXY
-    if(chip_oplUninit)
-        chip_oplUninit();
-    #endif
-}
-
 void Generator::generate(int16_t *frames, unsigned nframes)
 {
-    #ifdef ENABLE_OPL_EMULATOR
     chip->generate(frames, nframes);
-    #else
-    memset(frames, 0, 2 * nframes * sizeof(*frames));
-    #endif
 }
 
 Generator::NotesManager::NotesManager()

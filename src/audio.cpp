@@ -56,27 +56,27 @@ void BankEditor::initAudio()
     //Shut up that annoying noice!
     connect(ui->shutUp, SIGNAL(clicked()), m_generator, SLOT(ctl_silence()));
     //Note to test
-    #if QT_VERSION >= 0x050000
+#if QT_VERSION >= 0x050000
     connect(ui->noteToTest, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), m_generator, &IRealtimeControl::changeNote);
-    #else
+#else
     connect(ui->noteToTest, SIGNAL(valueChanged(int)), m_generator, SLOT(changeNote(int)));
-    #endif
-    m_generator->changeNote(ui->noteToTest->value());
+#endif
+    m_generator->changeNote((unsigned)ui->noteToTest->value());
     //Deep tremolo and vibrato
     connect(ui->deepVibrato,  SIGNAL(toggled(bool)), m_generator,  SLOT(ctl_changeDeepVibrato(bool)));
     connect(ui->deepTremolo,  SIGNAL(toggled(bool)), m_generator,  SLOT(ctl_changeDeepTremolo(bool)));
     //Generator's debug info
     connect(m_generator, SIGNAL(debugInfo(QString)), ui->debugBox, SLOT(setText(QString)));
     //Key pressed on piano bar
-    #if QT_VERSION >= 0x050000
+#if QT_VERSION >= 0x050000
     connect(ui->piano, &Piano::gotNote,     ui->noteToTest, &QSpinBox::setValue);
     connect(ui->piano, &Piano::pressed,     m_generator,    &IRealtimeControl::ctl_playNote);
     connect(ui->piano, &Piano::released,    m_generator,    &IRealtimeControl::ctl_stopNote);
-    #else
+#else
     connect(ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
     connect(ui->piano, SIGNAL(pressed()),   m_generator,    SLOT(ctl_playNote()));
     connect(ui->piano, SIGNAL(released()),  m_generator,    SLOT(ctl_noteOffAllChans()));
-    #endif
+#endif
     //Piano on the importer dialog pressed
     m_importer->connect(m_importer->ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
     m_importer->connect(m_importer->ui->piano, SIGNAL(pressed()),    m_generator, SLOT(ctl_playNote()));
@@ -84,13 +84,13 @@ void BankEditor::initAudio()
     //Test note button on the importer dialog box
     m_importer->connect(m_importer->ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(ctl_playNote()));
     m_importer->connect(m_importer->ui->testNote,  SIGNAL(released()), m_generator,  SLOT(ctl_stopNote()));
+
     //Start generator!
-    generator->start();
     m_audioOut->start(*rtgenerator);
 
-    #ifdef ENABLE_MIDI
+#ifdef ENABLE_MIDI
     m_midiIn = new MidiInRt(*rtgenerator, this);
-    #endif
+#endif
 }
 
 static bool keyToNote(int k, IRealtimeControl *ctl)

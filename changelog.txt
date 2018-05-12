@@ -3,6 +3,7 @@ Version 1.5
 - Voice management has been improved
 - Reworked audio output support
 - Added support of a quick save for some of formats
+- Windows 9x build now allowed to use emulators together with the real chip emulator
 
 Version 1.4.0.1
 - Added ability to re-calculate sounding delays for entire instruments set

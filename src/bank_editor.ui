@@ -3346,6 +3346,7 @@ of second voice</string>
      </property>
      <addaction name="actionEmulatorNuked"/>
      <addaction name="actionEmulatorDosBox"/>
+     <addaction name="actionWin9xOPLProxy"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
    </widget>
@@ -3537,6 +3538,14 @@ of second voice</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionWin9xOPLProxy">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Proxy to the real OPL3 chip</string>
    </property>
   </action>
  </widget>

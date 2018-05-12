@@ -24,6 +24,9 @@
 #include <QUrl>
 #include <QMimeData>
 #include <QtDebug>
+#ifdef ENABLE_WIN9X_OPL_PROXY
+#include <QSysInfo>
+#endif
 
 #include "importer.h"
 #include "formats_sup.h"
@@ -81,18 +84,28 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
     loadInstrument();
-    #if QT_VERSION >= 0x050000
+#if QT_VERSION >= 0x050000
     this->setWindowFlags(Qt::WindowTitleHint | Qt::WindowSystemMenuHint |
                          Qt::WindowCloseButtonHint |
                          Qt::WindowMinimizeButtonHint);
-    #else
+#else
     this->setWindowFlags(this->windowFlags() & ~Qt::WindowMaximizeButtonHint);
-    #endif
+#endif
     m_importer = new Importer(this);
     m_measurer = new Measurer(this);
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
     connect(ui->actionEmulatorNuked, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorDosBox, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+
+#ifdef ENABLE_WIN9X_OPL_PROXY
+    QSysInfo::WinVersion wver = QSysInfo::windowsVersion();
+    bool enableOpl3Proxy =  (wver == QSysInfo::WV_98) ||
+                            (wver == QSysInfo::WV_Me);
+    ui->actionWin9xOPLProxy->setVisible(enableOpl3Proxy);
+#else
+    ui->actionWin9xOPLProxy->setVisible(false);
+#endif
 
     ui->instruments->installEventFilter(this);
 
@@ -115,16 +128,15 @@ BankEditor::BankEditor(QWidget *parent) :
 
 BankEditor::~BankEditor()
 {
-    #ifdef ENABLE_AUDIO_TESTING
     if (m_audioOut)
         m_audioOut->stop();
     delete m_audioOut;
     m_audioOut = nullptr;
-    #endif
-    #ifdef ENABLE_MIDI
+
+#ifdef ENABLE_MIDI
     delete m_midiIn;
     m_midiIn = nullptr;
-    #endif
+#endif
     delete m_measurer;
     delete m_generator;
     delete m_importer;
@@ -136,14 +148,21 @@ void BankEditor::loadSettings()
     QApplication::setOrganizationName(COMPANY);
     QApplication::setOrganizationDomain(PGE_URL);
     QApplication::setApplicationName("OPL FM Banks Editor");
+
+    int defaultChip = Generator::CHIP_Nuked;
+    #ifdef ENABLE_WIN9X_OPL_PROXY
+        defaultChip = Generator::CHIP_Win9xProxy;
+    #endif
+
     QSettings setup;
     ui->deepTremolo->setChecked(setup.value("deep-tremolo", false).toBool());
     ui->deepVibrato->setChecked(setup.value("deep-vibrato", false).toBool());
     m_recentPath = setup.value("recent-path").toString();
-    m_currentChip = (Generator::OPL_Chips)setup.value("chip-emulator", 0).toInt();
+    m_currentChip = (Generator::OPL_Chips)setup.value("chip-emulator", defaultChip).toInt();
 
     ui->actionEmulatorNuked->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
+    ui->actionWin9xOPLProxy->setChecked(false);
 
     switch(m_currentChip)
     {
@@ -153,6 +172,8 @@ void BankEditor::loadSettings()
     case Generator::CHIP_DosBox:
         ui->actionEmulatorDosBox->setChecked(true);
         break;
+    case Generator::CHIP_Win9xProxy:
+        ui->actionWin9xOPLProxy->setChecked(true);
     }
 }
 
@@ -773,6 +794,8 @@ void BankEditor::toggleEmulator()
     QObject *menuItem = sender();
     ui->actionEmulatorNuked->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
+    ui->actionWin9xOPLProxy->setChecked(false);
+
     if(menuItem == ui->actionEmulatorNuked)
     {
         ui->actionEmulatorNuked->setChecked(true);
@@ -784,6 +807,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorDosBox->setChecked(true);
         m_currentChip = Generator::CHIP_DosBox;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionWin9xOPLProxy)
+    {
+        ui->actionWin9xOPLProxy->setChecked(true);
+        m_currentChip = Generator::CHIP_Win9xProxy;
         m_generator->ctl_switchChip(m_currentChip);
     }
 }

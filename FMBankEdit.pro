@@ -83,8 +83,9 @@ rtmidi {
     DEFINES += ENABLE_MIDI
     include("src/midi/midi_rtmidi.pri")
 }
-greaterThan(QT_MAJOR_VERSION, 4):{
-    DEFINES += ENABLE_AUDIO_TESTING
+win32: lessThan(QT_MAJOR_VERSION, 5):{
+    include("src/opl/chips/win9x_opl_proxy.pri")
+    DEFINES += ENABLE_WIN9X_OPL_PROXY
 }
 
 SOURCES += \
