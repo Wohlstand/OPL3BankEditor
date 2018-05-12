@@ -3289,6 +3289,7 @@ of second voice</string>
     <addaction name="actionImport"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
     <addaction name="actionSaveInstrument"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -3362,12 +3363,9 @@ of second voice</string>
     <string notr="true">Ctrl+O</string>
    </property>
   </action>
-  <action name="actionSave">
+  <action name="actionSaveAs">
    <property name="text">
     <string>Save bank as...</string>
-   </property>
-   <property name="shortcut">
-    <string notr="true">Ctrl+S</string>
    </property>
   </action>
   <action name="actionExit">
@@ -3531,6 +3529,14 @@ of second voice</string>
   <action name="actionChipsBenchmark">
    <property name="text">
     <string>Run emulators benchmark</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save bank...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
