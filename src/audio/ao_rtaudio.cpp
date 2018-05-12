@@ -87,5 +87,6 @@ int AudioOutRt::process(void *outputbuffer, void *, unsigned nframes, double, Rt
 void AudioOutRt::errorCallback(RtAudioError::Type type, const std::string &errorText)
 {
     fprintf(stderr, "Audio error: %s\n", errorText.c_str());
-    throw RtAudioError(errorText, type);
+    if (type != RtAudioError::WARNING && type != RtAudioError::DEBUG_WARNING)
+        throw RtAudioError(errorText, type);
 }
