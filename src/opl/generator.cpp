@@ -210,6 +210,9 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
     testDrum = 0;//Note ON/OFF of one of legacy percussion channels
 
     switchChip(initialChip);
+
+    FmBank::Instrument insNull = {};
+    changePatch(insNull, false);
 }
 
 Generator::~Generator()
