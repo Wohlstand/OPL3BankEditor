@@ -165,16 +165,17 @@ public:
     bool saveBankFile(QString filePath, BankFormats format);
     /*!
      * \brief Save current instrument file
-     * \param filePath absolute path where save a file
+     * \param filePath absolute path where to save a file
      * \param format Target format to save a file
      * \return true if file successfully saved, false if failed
      */
     bool saveInstrumentFile(QString filePath, InstFormats format);
     /*!
-     * \brief Open Save-As dialog box
+     * \brief Saves current bank file, asking for file path if necessary
+     * \param optionalFilePath absolute path where to save a file, or empty string
      * \return true if file successfuly saved, false on rejecting or on fail
      */
-    bool saveFileAs();
+    bool saveFileAs(const QString &optionalFilePath = QString());
     /*!
      * \brief Open Save-As dialog box for single instrument
      * \return true if file successfuly saved, false on rejecting or on fail
@@ -223,6 +224,16 @@ public:
 
     void reloadBanks();
 
+private:
+    /**
+     * Path of the file which is currently edited
+     */
+    QString m_currentFilePath;
+    /**
+     * Format of the file which is currently edited
+     */
+    BankFormats m_currentFileFormat;
+
 public slots:
     /**
      * @brief Toggle melodic mode and fill instruments list with melodic instruments names
@@ -262,9 +273,13 @@ private slots:
      */
     void on_actionOpen_triggered();
     /**
-     * @brief Save current bank state into the file
+     * @brief Save current bank state into the current file
      */
     void on_actionSave_triggered();
+    /**
+     * @brief Save current bank state into a selected file
+     */
+    void on_actionSaveAs_triggered();
     /**
      * @brief Save current instrument into the file
      */

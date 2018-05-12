@@ -70,6 +70,7 @@ BankEditor::BankEditor(QWidget *parent) :
     m_curInstBackup = nullptr;
     m_lock = false;
     m_recentFormat = BankFormats::FORMATS_DEFAULT_FORMAT;
+    m_currentFileFormat = BankFormats::FORMAT_UNKNOWN;
     m_recentNum     = -1;
     m_recentPerc    = false;
     ui->setupUi(this);
@@ -239,6 +240,7 @@ void BankEditor::initFileData(QString &filePath)
         on_instruments_currentItemChanged(NULL, NULL);
 
     ui->currentFile->setText(filePath);
+    m_currentFilePath = filePath;
     m_bankBackup = m_bank;
 
     //Set global flags and states
@@ -256,6 +258,7 @@ void BankEditor::initFileData(QString &filePath)
 void BankEditor::reInitFileDataAfterSave(QString &filePath)
 {
     ui->currentFile->setText(filePath);
+    m_currentFilePath = filePath;
     m_recentPath = QFileInfo(filePath).absoluteDir().absolutePath();
     m_recentBankFilePath = filePath;
     m_bankBackup = m_bank;
@@ -263,7 +266,9 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
 
 bool BankEditor::openFile(QString filePath)
 {
-    FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &m_recentFormat);
+    BankFormats format;
+    FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &format);
+    m_recentFormat = format;
     if(err != FfmtErrCode::ERR_OK)
     {
         QString errText;
@@ -292,6 +297,7 @@ bool BankEditor::openFile(QString filePath)
     }
     else
     {
+        m_currentFileFormat = format;
         initFileData(filePath);
         statusBar()->showMessage(tr("Bank '%1' has been loaded!").arg(filePath), 5000);
         return true;
@@ -425,16 +431,40 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
     }
 }
 
-bool BankEditor::saveFileAs()
+bool BankEditor::saveFileAs(const QString &optionalFilePath)
 {
-    QString filters         = FmBankFormatFactory::getSaveFiltersList();
-    QString selectedFilter  = FmBankFormatFactory::getFilterFromFormat(m_recentFormat, (int)FormatCaps::FORMAT_CAPS_SAVE);
-    QString fileToSave      = QFileDialog::getSaveFileName(this, "Save bank file",
-                                                           m_recentBankFilePath, filters, &selectedFilter,
-                                                           FILE_OPEN_DIALOG_OPTIONS);
+    QString fileToSave;
+    bool canSaveDirectly = false;
+    BankFormats saveFormat;
+
+    if(!optionalFilePath.isEmpty())
+    {
+        saveFormat = m_currentFileFormat;
+        canSaveDirectly =
+            saveFormat != BankFormats::FORMAT_UNKNOWN &&
+            !FmBankFormatFactory::hasCaps(saveFormat, (int)FormatCaps::FORMAT_CAPS_MELODIC_ONLY) &&
+            !FmBankFormatFactory::hasCaps(saveFormat, (int)FormatCaps::FORMAT_CAPS_PERCUSSION_ONLY) &&
+            !FmBankFormatFactory::hasCaps(saveFormat, (int)FormatCaps::FORMAT_CAPS_GM_BANK);
+    }
+
+    if(canSaveDirectly)
+        fileToSave = optionalFilePath;
+    else
+    {
+        QString filters         = FmBankFormatFactory::getSaveFiltersList();
+        QString selectedFilter  = FmBankFormatFactory::getFilterFromFormat(m_recentFormat, (int)FormatCaps::FORMAT_CAPS_SAVE);
+        fileToSave      = QFileDialog::getSaveFileName(this, "Save bank file",
+                                                       m_recentBankFilePath, filters, &selectedFilter,
+                                                       FILE_OPEN_DIALOG_OPTIONS);
+        saveFormat = FmBankFormatFactory::getFormatFromFilter(selectedFilter);
+    }
     if(fileToSave.isEmpty())
         return false;
-    return saveBankFile(fileToSave, FmBankFormatFactory::getFormatFromFilter(selectedFilter));
+
+    if(!saveBankFile(fileToSave, saveFormat))
+       return false;
+    m_currentFileFormat = saveFormat;
+    return true;
 }
 
 bool BankEditor::saveInstFileAs()
@@ -500,6 +530,8 @@ void BankEditor::on_actionNew_triggered()
         return;
     m_recentFormat = BankFormats::FORMATS_DEFAULT_FORMAT;
     ui->currentFile->setText(tr("<Untitled>"));
+    m_currentFilePath.clear();
+    m_currentFileFormat = BankFormats::FORMAT_UNKNOWN;
     ui->instruments->clearSelection();
     m_bank.reset();
     m_bankBackup.reset();
@@ -523,6 +555,11 @@ void BankEditor::on_actionOpen_triggered()
 }
 
 void BankEditor::on_actionSave_triggered()
+{
+    saveFileAs(m_currentFilePath);
+}
+
+void BankEditor::on_actionSaveAs_triggered()
 {
     saveFileAs();
 }
