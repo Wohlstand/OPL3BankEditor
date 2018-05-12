@@ -62,7 +62,19 @@ private:
     QString             m_recentBankFilePath;
     //! Currently using chip
     Generator::OPL_Chips m_currentChip;
+    //! Audio latency (ms)
+    double m_audioLatency;
 
+public:
+    //! Audio latency constants (ms)
+    enum
+    {
+        audioMinimumLatency = 1,
+        audioDefaultLatency = 20,
+        audioMaximumLatency = 100,
+    };
+
+private:
     //! Currently loaded FM bank
     FmBank              m_bank;
     //! Backup of currently loaded FM bank
@@ -395,6 +407,10 @@ private slots:
      * @param checked AdLib BNK mode is turned on
      */
     void on_actionAdLibBnkMode_triggered(bool checked);
+    /**
+     * @brief Opens the latency setting dialog
+     */
+    void on_actionLatency_triggered();
 
 
     /* ***************** Instrument Parameters editing ***************** */

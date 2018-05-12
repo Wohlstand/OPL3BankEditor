@@ -26,7 +26,7 @@
 
 void BankEditor::initAudio()
 {
-    m_audioOut = new AudioOutRt(this);
+    m_audioOut = new AudioOutRt(m_audioLatency * 1e-3, this);
     std::shared_ptr<Generator> generator(
         new Generator(uint32_t(m_audioOut->sampleRate()), m_currentChip));
     RealtimeGenerator *rtgenerator = new RealtimeGenerator(generator, this);

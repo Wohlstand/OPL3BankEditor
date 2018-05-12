@@ -111,6 +111,7 @@ SOURCES += \
     src/FileFormats/format_flatbuffer_opl3.cpp \
     src/formats_sup.cpp \
     src/importer.cpp \
+    src/latency.cpp \
     src/ins_names.cpp \
     src/main.cpp \
     src/opl/generator.cpp \
@@ -149,6 +150,7 @@ HEADERS += \
     src/FileFormats/format_flatbuffer_opl3.h \
     src/formats_sup.h \
     src/importer.h \
+    src/latency.h \
     src/ins_names.h \
     src/opl/generator.h \
     src/opl/generator_realtime.h \

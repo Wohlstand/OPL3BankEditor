@@ -32,6 +32,7 @@
 #include "formats_sup.h"
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
+#include "latency.h"
 #include "ins_names.h"
 
 #include "FileFormats/ffmt_factory.h"
@@ -159,6 +160,12 @@ void BankEditor::loadSettings()
     ui->deepVibrato->setChecked(setup.value("deep-vibrato", false).toBool());
     m_recentPath = setup.value("recent-path").toString();
     m_currentChip = (Generator::OPL_Chips)setup.value("chip-emulator", defaultChip).toInt();
+    m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
+
+    if (m_audioLatency < audioMinimumLatency)
+        m_audioLatency = audioMinimumLatency;
+    else if (m_audioLatency > audioMaximumLatency)
+        m_audioLatency = audioMaximumLatency;
 
     ui->actionEmulatorNuked->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
@@ -184,6 +191,7 @@ void BankEditor::saveSettings()
     setup.setValue("deep-vibrato", ui->deepVibrato->isChecked());
     setup.setValue("recent-path", m_recentPath);
     setup.setValue("chip-emulator", (int)m_currentChip);
+    setup.setValue("audio-latency", m_audioLatency);
 }
 
 
@@ -1004,6 +1012,15 @@ void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
         if(!selected.isEmpty())
             ui->bank_no->setCurrentIndex(selected.front()->data(INS_BANK_ID).toInt());
     }
+}
+
+void BankEditor::on_actionLatency_triggered()
+{
+    LatencyDialog *dlg = new LatencyDialog(this);
+    dlg->setLatency(m_audioLatency);
+    dlg->exec();
+    m_audioLatency = dlg->latency();
+    delete dlg;
 }
 
 void BankEditor::on_bankRename_clicked()
