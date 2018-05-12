@@ -31,6 +31,7 @@ public:
     void stop();
 private:
     static int process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
+    static void errorCallback(RtAudioError::Type type, const std::string &errorText);
     IRealtimeProcess *m_rt = nullptr;
     std::unique_ptr<RtAudio> m_audioOut;
 };

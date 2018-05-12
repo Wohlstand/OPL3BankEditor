@@ -29,6 +29,8 @@ AudioOutRt::AudioOutRt(double latency, QObject *parent)
     RtAudio *audioOut = new RtAudio(RtAudio::Api::UNSPECIFIED);
     m_audioOut.reset(audioOut);
 
+    fprintf(stderr, "Using RtAudio API %d\n", audioOut->getCurrentApi());
+
     unsigned num_audio_devices = audioOut->getDeviceCount();
     if (num_audio_devices == 0) {
         QMessageBox::warning(
@@ -55,7 +57,7 @@ AudioOutRt::AudioOutRt(double latency, QObject *parent)
 
     audioOut->openStream(
         &streamParam, nullptr, RTAUDIO_SINT16, sampleRate, &bufferSize,
-        &process, this, &streamOpts);
+        &process, this, &streamOpts, &errorCallback);
 }
 
 unsigned AudioOutRt::sampleRate() const
@@ -80,4 +82,11 @@ int AudioOutRt::process(void *outputbuffer, void *, unsigned nframes, double, Rt
     IRealtimeProcess &rt = *self->m_rt;
     rt.rt_generate((int16_t *)outputbuffer, nframes);
     return 0;
+}
+
+void AudioOutRt::errorCallback(RtAudioError::Type type, const std::string &errorText)
+{
+    fprintf(stderr, "Audio error: %s\n", errorText.c_str());
+    if (type != RtAudioError::WARNING && type != RtAudioError::DEBUG_WARNING)
+        throw RtAudioError(errorText, type);
 }
