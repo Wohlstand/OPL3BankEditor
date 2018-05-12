@@ -202,7 +202,6 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
     for(uint32_t b = 0; b < 5; ++b)
         m_four_op_category[p++] = 8;
 
-    m_isInstrumentLoaded = false;
     m_4op_last_state = true;
     deepTremoloMode   = 0;
     deepVibratoMode   = 0;
@@ -211,8 +210,9 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
 
     switchChip(initialChip);
 
-    FmBank::Instrument insNull = {};
-    changePatch(insNull, false);
+    //Send the null patch to initialize the OPL stuff
+    changePatch(FmBank::emptyInst(), false);
+    m_isInstrumentLoaded = false;//Reset the flag to false as no instruments loaded
 }
 
 Generator::~Generator()
