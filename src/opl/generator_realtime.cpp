@@ -243,12 +243,7 @@ void RealtimeGenerator::rt_generate(int16_t *frames, unsigned nframes)
         rt_message_process(header.tag, m_body.get(), header.size);
     }
 
-#ifdef ENABLE_AUDIO_TESTING
-    /* generate frames */
     m_gen->generate(frames, nframes);
-#else
-    memset(frames, 0, 2 * nframes * sizeof(*frames));
-#endif
 }
 
 void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigned len)
