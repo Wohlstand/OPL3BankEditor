@@ -111,7 +111,7 @@ void RealtimeGenerator::ctl_switchChip(int chipId)
 
 void RealtimeGenerator::ctl_silence()
 {
-    Ring_Buffer &rb = *m_rb_midi;
+    Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlSilence, 0};
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
@@ -119,7 +119,7 @@ void RealtimeGenerator::ctl_silence()
 
 void RealtimeGenerator::ctl_noteOffAllChans()
 {
-    Ring_Buffer &rb = *m_rb_midi;
+    Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlNoteOffAllChans, 0};
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
@@ -127,7 +127,7 @@ void RealtimeGenerator::ctl_noteOffAllChans()
 
 void RealtimeGenerator::ctl_playNote()
 {
-    Ring_Buffer &rb = *m_rb_midi;
+    Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlPlayNote, sizeof(uint)};
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
@@ -136,7 +136,7 @@ void RealtimeGenerator::ctl_playNote()
 
 void RealtimeGenerator::ctl_stopNote()
 {
-    Ring_Buffer &rb = *m_rb_midi;
+    Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlStopNote, sizeof(uint)};
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
@@ -145,7 +145,7 @@ void RealtimeGenerator::ctl_stopNote()
 
 void RealtimeGenerator::ctl_playChord(int chord)
 {
-    Ring_Buffer &rb = *m_rb_midi;
+    Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlPlayChord, sizeof(ChordMessage)};
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
@@ -170,7 +170,7 @@ void IRealtimeControl::ctl_playMinor7Chord()
 
 void RealtimeGenerator::ctl_changePatch(FmBank::Instrument &instrument, bool isDrum)
 {
-    Ring_Buffer &rb = *m_rb_midi;
+    Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlPatchChange, sizeof(PatchChangeMessage)};
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
@@ -182,7 +182,7 @@ void RealtimeGenerator::ctl_changePatch(FmBank::Instrument &instrument, bool isD
 
 void RealtimeGenerator::ctl_changeDeepVibrato(bool enabled)
 {
-    Ring_Buffer &rb = *m_rb_midi;
+    Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlDeepVibrato, sizeof(bool)};
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
@@ -191,7 +191,7 @@ void RealtimeGenerator::ctl_changeDeepVibrato(bool enabled)
 
 void RealtimeGenerator::ctl_changeDeepTremolo(bool enabled)
 {
-    Ring_Buffer &rb = *m_rb_midi;
+    Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlDeepTremolo, sizeof(bool)};
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
