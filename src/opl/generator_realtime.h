@@ -26,6 +26,7 @@
 #include <thread>
 #include <memory>
 #include <mutex>
+#include <QMutex>
 #include <system_error>
 #include <stdint.h>
 #if defined(_WIN32)
@@ -140,7 +141,22 @@ private:
     std::unique_ptr<Ring_Buffer> m_rb_midi;
     std::unique_ptr<uint8_t[]> m_body;
 
-#if !defined(_WIN32)
+#if defined(ENABLE_WIN9X_OPL_PROXY)
+    class QStdMutex
+    {
+    public:
+        QStdMutex()
+        {}
+        ~QStdMutex() {}
+        void lock() { m.lock(); }
+        void unlock() { m.unlock(); }
+        bool try_lock() { return m.tryLock(); }
+    private:
+        QMutex m;
+    };
+    QStdMutex m_generator_mutex;
+    typedef QStdMutex mutex_type;
+#elif !defined(_WIN32)
     std::mutex m_generator_mutex;
     typedef std::mutex mutex_type;
 #else
