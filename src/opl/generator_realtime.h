@@ -44,10 +44,11 @@ class IRealtimeControl : public QObject
 public:
     IRealtimeControl(QObject *parent = nullptr);
     virtual ~IRealtimeControl() {}
-    void changeNote(unsigned note) { m_note = note; }
     virtual void ctl_switchChip(int chipId) = 0;
 
 public slots:
+    void changeNote(int note) { m_note = note; }
+
     virtual void ctl_silence() = 0;
     virtual void ctl_noteOffAllChans() = 0;
     virtual void ctl_playNote() = 0;
