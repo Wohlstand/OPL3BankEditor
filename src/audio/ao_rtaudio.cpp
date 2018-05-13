@@ -42,6 +42,11 @@ AudioOutRt::AudioOutRt(double latency, QObject *parent)
     unsigned outputDeviceId = audioOut->getDefaultOutputDevice();
     RtAudio::DeviceInfo deviceInfo = audioOut->getDeviceInfo(outputDeviceId);
     unsigned sampleRate = deviceInfo.preferredSampleRate;
+    if(sampleRate == 0)
+    {
+        qWarning() << "Returned zero sample rate. Using 44100...";
+        sampleRate = 44100;
+    }
 
     RtAudio::StreamParameters streamParam;
     streamParam.deviceId = outputDeviceId;
@@ -67,14 +72,18 @@ unsigned AudioOutRt::sampleRate() const
 
 void AudioOutRt::start(IRealtimeProcess &rt)
 {
+    qDebug() << "Trying to start stream...";
     m_rt = &rt;
     m_audioOut->startStream();
+    qDebug() << "Stream started!";
 }
 
 void AudioOutRt::stop()
 {
     m_audioOut->stopStream();
+    qDebug() << "Stream stopped!";
 }
+
 
 int AudioOutRt::process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata)
 {
@@ -86,7 +95,8 @@ int AudioOutRt::process(void *outputbuffer, void *, unsigned nframes, double, Rt
 
 void AudioOutRt::errorCallback(RtAudioError::Type type, const std::string &errorText)
 {
-    fprintf(stderr, "Audio error: %s\n", errorText.c_str());
+    qWarning() << "Audio error: " << errorText.c_str();
+    //fprintf(stderr, "Audio error: %s\n", errorText.c_str());
     if (type != RtAudioError::WARNING && type != RtAudioError::DEBUG_WARNING)
         throw RtAudioError(errorText, type);
 }

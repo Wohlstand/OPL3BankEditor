@@ -26,12 +26,17 @@
 
 void BankEditor::initAudio()
 {
+    qDebug() << "Init audioOut...";
     m_audioOut = new AudioOutRt(m_audioLatency * 1e-3, this);
+    qDebug() << "Init Generator...";
     std::shared_ptr<Generator> generator(
         new Generator(uint32_t(m_audioOut->sampleRate()), m_currentChip));
+    qDebug() << "Init Rt-Generator...";
     RealtimeGenerator *rtgenerator = new RealtimeGenerator(generator, this);
+    qDebug() << "Seting pointer of RT Generator...";
     m_generator = rtgenerator;
 
+    qDebug() << "Init signals and slots of keys...";
     //Test note
     connect(ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(ctl_playNote()));
     connect(ui->testNote,  SIGNAL(released()), m_generator,  SLOT(ctl_noteOffAllChans()));
@@ -85,10 +90,12 @@ void BankEditor::initAudio()
     m_importer->connect(m_importer->ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(ctl_playNote()));
     m_importer->connect(m_importer->ui->testNote,  SIGNAL(released()), m_generator,  SLOT(ctl_stopNote()));
 
+    qDebug() << "Trying to start audio... (with dereferencing of RtGenerator!)";
     //Start generator!
     m_audioOut->start(*rtgenerator);
 
 #ifdef ENABLE_MIDI
+    qDebug() << "Trying to init MIDI-IN...";
     m_midiIn = new MidiInRt(*rtgenerator, this);
 #endif
 }
