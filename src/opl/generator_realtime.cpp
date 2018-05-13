@@ -317,6 +317,12 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
             gen.changeNote((int)note);
             gen.PlayNote();
             break;
+        case 0xb:
+            if (note == 120)  // all sound off
+                gen.Silence();
+            if (note == 123)  // all notes off
+                gen.NoteOffAllChans();
+            break;
         }
     }
 }
