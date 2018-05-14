@@ -4,6 +4,11 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#if !defined(_MSC_VER) && (__cplusplus <= 199711L)
+#define final
+#define override
+#endif
+
 class OPLChipBase
 {
 protected:
