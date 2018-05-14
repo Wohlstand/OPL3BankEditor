@@ -339,7 +339,7 @@ bool BankEditor::openFile(QString filePath)
             errText = tr("unsupported file format");
             break;
         case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occouped");
+            errText = tr("unknown error occurred");
             break;
         case FfmtErrCode::ERR_OK:
             break;
@@ -428,7 +428,7 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format)
             errText = tr("unsupported file format, please define file name extension to choice target file format");
             break;
         case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occouped");
+            errText = tr("unknown error occurred");
             break;
         case FfmtErrCode::ERR_OK:
             break;
@@ -468,7 +468,7 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
             errText = tr("unsupported file format, please define file name extension to choice target file format");
             break;
         case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occouped");
+            errText = tr("unknown error occurred");
             break;
         case FfmtErrCode::ERR_OK:
             break;
@@ -707,9 +707,9 @@ void BankEditor::on_actionReset_current_instrument_triggered()
         return; //Nothing to do
     if(QMessageBox::Yes == QMessageBox::question(this,
             tr("Reset instrument to initial state"),
-            tr("This instrument will be reseted to initial state "
-               "(sice this file loaded or saved).\n"
-               "Are you wish to continue?"),
+            tr("This instrument will be reset to initial state "
+               "(since this file was loaded or saved).\n"
+               "Do you wish to continue?"),
             QMessageBox::Yes | QMessageBox::No))
     {
         memcpy(m_curInst, m_curInstBackup, sizeof(FmBank::Instrument));
@@ -743,7 +743,7 @@ void BankEditor::on_actionChipsBenchmark_triggered()
         m_measurer->runBenchmark(*m_curInst, res);
         QString resStr;
         for(Measurer::BenchmarkResult &r : res)
-            resStr += QString("%1 passed in %2 milliseconds.\n").arg(r.name).arg(r.elapsed);
+            resStr += tr("%1 passed in %2 milliseconds.\n").arg(r.name).arg(r.elapsed);
         QMessageBox::information(this,
                                  tr("Benchmark result"),
                                  tr("Result of emulators benchmark based on '%1' instrument:\n\n%2")
@@ -1392,9 +1392,9 @@ void BankEditor::on_actionClearBank_triggered()
         return;
     }
     int reply = QMessageBox::question(this,
-                                      tr("128-instrument bank clearing"),
+                                      tr("128-instrument bank erasure"),
                                       tr("All instruments in this bank will be cleared. "
-                                         "Do you want continue deletion?"), QMessageBox::Yes | QMessageBox::No);
+                                         "Do you want continue erasure?"), QMessageBox::Yes | QMessageBox::No);
 
     if(reply == QMessageBox::Yes)
     {
@@ -1495,7 +1495,7 @@ void BankEditor::updateMidiInMenu()
 
     if(midiin->canOpenVirtual())
     {
-        QAction *act = new QAction("Virtual port", menu);
+        QAction *act = new QAction(tr("Virtual port"), menu);
         menu->addAction(act);
         act->setData((unsigned)-1);
         if(!ports.isEmpty())
@@ -1514,7 +1514,7 @@ void BankEditor::updateMidiInMenu()
     }
 
     menu->addSeparator();
-    QAction *act = new QAction("Disable", menu);
+    QAction *act = new QAction(tr("Disable"), menu);
     menu->addAction(act);
     act->setData((unsigned)-2);
     connect(act, SIGNAL(triggered()),

@@ -34,7 +34,7 @@ AudioOutRt::AudioOutRt(double latency, QObject *parent)
     unsigned num_audio_devices = audioOut->getDeviceCount();
     if (num_audio_devices == 0) {
         QMessageBox::warning(
-            nullptr, tr("Error"), tr("No audio devices are present for output.\n"));
+            nullptr, tr("Error"), tr("No audio devices are present for output."));
         qApp->exit(1);
         return;
     }
