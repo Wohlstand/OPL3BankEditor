@@ -176,3 +176,6 @@ FORMS += \
 
 RESOURCES += \
     src/resources/resources.qrc
+
+TRANSLATIONS += \
+    src/translations/fr_FR.ts
