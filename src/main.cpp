@@ -18,11 +18,24 @@
 
 #include "bank_editor.h"
 #include <QApplication>
+#include <QTranslator>
+#include <QLibraryInfo>
 #include <QStringList>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(),
+                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    a.installTranslator(&qtTranslator);
+
+    QTranslator myappTranslator;
+    myappTranslator.load(":/translations/" + QLocale::system().name());
+    a.installTranslator(&myappTranslator);
+
     BankEditor w;
     w.show();
 

@@ -707,9 +707,9 @@ void BankEditor::on_actionReset_current_instrument_triggered()
         return; //Nothing to do
     if(QMessageBox::Yes == QMessageBox::question(this,
             tr("Reset instrument to initial state"),
-            tr("This instrument will be reseted to initial state "
-               "(sice this file loaded or saved).\n"
-               "Are you wish to continue?"),
+            tr("This instrument will be reset to initial state "
+               "(since this file was loaded or saved).\n"
+               "Do you wish to continue?"),
             QMessageBox::Yes | QMessageBox::No))
     {
         memcpy(m_curInst, m_curInstBackup, sizeof(FmBank::Instrument));

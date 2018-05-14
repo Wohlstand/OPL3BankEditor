@@ -175,4 +175,8 @@ FORMS += \
     src/importer.ui
 
 RESOURCES += \
-    src/resources/resources.qrc
+    src/resources/resources.qrc \
+    src/translations/translations.qrc
+
+TRANSLATIONS += \
+    src/translations/fr_FR.ts
