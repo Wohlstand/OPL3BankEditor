@@ -54,7 +54,7 @@ AudioOutRt::AudioOutRt(double latency, QObject *parent)
 
     RtAudio::StreamOptions streamOpts;
     streamOpts.flags = RTAUDIO_ALSA_USE_DEFAULT;
-    streamOpts.streamName = "ADLrt";
+    streamOpts.streamName = QCoreApplication::applicationName().toStdString();
 
     unsigned bufferSize = std::ceil(latency * sampleRate);
     qDebug() << "Desired latency" << latency;
