@@ -30,11 +30,13 @@ clone_depth:  3  # clone entire repository history if not defined
 
 environment:
   matrix:
-    - PLATFORM: Win32
+    - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2013"
+      PLATFORM: Win32
       WINXX_ARCH: win32
       COMPILER: C:\Qt\Tools\mingw530_32\bin
       QT_DIR: C:\Qt\5.7\mingw53_32\bin # Qt since 5.8 no more supports Windows XP, Keep support for Windows XP yet
-    - PLATFORM: Win9x
+    - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2015"
+      PLATFORM: Win9x
       WINXX_ARCH: win9x
       COMPILER: C:\MinGW-6-3\bin
       QT_DIR: C:\Qt\4.4.3\bin
