@@ -299,8 +299,8 @@ FfmtErrCode WohlstandOPL3::loadFile(QString filePath, FmBank &bank)
     }
 
     bank.reset(wopl->banks_count_melodic, wopl->banks_count_percussion);
-    bank.deep_tremolo = (wopl->opl_flags & WOPL_FLAG_DEEP_VIBRATO) != 0;
-    bank.deep_vibrato = (wopl->opl_flags & WOPL_FLAG_DEEP_TREMOLO) != 0;
+    bank.deep_tremolo = (wopl->opl_flags & WOPL_FLAG_DEEP_TREMOLO) != 0;
+    bank.deep_vibrato = (wopl->opl_flags & WOPL_FLAG_DEEP_VIBRATO) != 0;
     bank.volume_model = wopl->volume_model;
 
     FmBank::Instrument *slots_ins[2] = {bank.Ins_Melodic, bank.Ins_Percussion};
@@ -340,8 +340,8 @@ FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
     if(!wopl)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    wopl->opl_flags = ((uint8_t(bank.deep_vibrato) << 0) & 0x01) |
-                      ((uint8_t(bank.deep_tremolo) << 1) & 0x02);
+    wopl->opl_flags = ((uint8_t(bank.deep_tremolo) << 0) & WOPL_FLAG_DEEP_TREMOLO) |
+                      ((uint8_t(bank.deep_vibrato) << 1) & WOPL_FLAG_DEEP_VIBRATO);
     wopl->volume_model = bank.volume_model;
 
     FmBank::Instrument *slots_src_ins[2] = {bank.Ins_Melodic, bank.Ins_Percussion};
