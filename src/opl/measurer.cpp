@@ -80,7 +80,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     if(n_notes == 2 && !in.en_pseudo4op)
     {
         WRITE_REG(0x105, 1);
-        WRITE_REG(0x104, 1);
+        WRITE_REG(0x104, 0xFF);
     }
 
     uint8_t rawData[2][11];
