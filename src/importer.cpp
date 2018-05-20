@@ -531,7 +531,7 @@ void Importer::on_doImport_clicked()
 
     if(selected.isEmpty())
     {
-        QMessageBox::warning(this, tr("Nothing to import"), tr("You have no selected instruments to import!\nPlease select something filrst!"));
+        QMessageBox::warning(this, tr("Nothing to import"), tr("You have no selected instruments to import!\nPlease select something first!"));
         return;
     }
 
