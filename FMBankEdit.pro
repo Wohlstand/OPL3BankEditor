@@ -179,4 +179,5 @@ RESOURCES += \
     src/resources/resources.qrc
 
 TRANSLATIONS += \
-    src/translations/opl3bankeditor_fr_FR.ts
+    src/translations/opl3bankeditor_fr_FR.ts \
+    src/translations/opl3bankeditor_ru_RU.ts
