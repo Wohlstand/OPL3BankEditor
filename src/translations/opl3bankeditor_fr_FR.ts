@@ -366,7 +366,7 @@
     </message>
     <message>
         <location filename="../bank_editor.ui" line="765"/>
-        <location filename="../bank_editor.cpp" line="596"/>
+        <location filename="../bank_editor.cpp" line="598"/>
         <source>&lt;Untitled&gt;</source>
         <translation>&lt;Sans titre&gt;</translation>
     </message>
@@ -958,39 +958,39 @@ de la deuxième voix</translation>
         <translation>Par défaut du système</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="342"/>
-        <location filename="../bank_editor.cpp" line="431"/>
-        <location filename="../bank_editor.cpp" line="471"/>
+        <location filename="../bank_editor.cpp" line="344"/>
+        <location filename="../bank_editor.cpp" line="433"/>
+        <location filename="../bank_editor.cpp" line="473"/>
         <source>bad file format</source>
         <translation>mauvais format de fichier</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="345"/>
+        <location filename="../bank_editor.cpp" line="347"/>
         <source>can&apos;t open file</source>
         <translation>impossible d&apos;ouvrir le fichier</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="348"/>
+        <location filename="../bank_editor.cpp" line="350"/>
         <source>reading of this format is not implemented yet</source>
         <translation>la lecture de ce format n&apos;est pas encore implémentée</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="351"/>
+        <location filename="../bank_editor.cpp" line="353"/>
         <source>unsupported file format</source>
         <translation>format de fichier non géré</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="366"/>
+        <location filename="../bank_editor.cpp" line="368"/>
         <source>Bank &apos;%1&apos; has been loaded!</source>
         <translation>La banque &apos;%1&apos; a été chargée !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="376"/>
+        <location filename="../bank_editor.cpp" line="378"/>
         <source>Save melodic-only bank file</source>
         <translation>Enregistrement de banque mélodique uniquement</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="377"/>
+        <location filename="../bank_editor.cpp" line="379"/>
         <source>Saving into &apos;%1&apos; format allows to save one melodic only bank. All other banks include percussion will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
@@ -999,12 +999,12 @@ Do you want to continue file saving?</source>
 Voulez vous poursuivre l&apos;enregistrement ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="390"/>
+        <location filename="../bank_editor.cpp" line="392"/>
         <source>Save percussion-only bank file</source>
         <translation>Enregistrement de banque à percussions uniquement</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="391"/>
+        <location filename="../bank_editor.cpp" line="393"/>
         <source>Saving into &apos;%1&apos; format allows to save one percussion only bank. All other banks include melodic will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
@@ -1013,12 +1013,12 @@ Do you want to continue file saving?</source>
 Voulez vous poursuivre l&apos;enregistrement ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="406"/>
+        <location filename="../bank_editor.cpp" line="408"/>
         <source>Save GeneralMIDI bank file</source>
         <translation>Enregistrement de banque GeneralMIDI</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="407"/>
+        <location filename="../bank_editor.cpp" line="409"/>
         <source>Saving into &apos;%1&apos; format allows you to have one melodic and one percussion banks only. All extra banks will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
@@ -1027,116 +1027,116 @@ Do you want to continue file saving?</source>
 Voulez vous poursuivre l&apos;enregistrement ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="434"/>
-        <location filename="../bank_editor.cpp" line="474"/>
+        <location filename="../bank_editor.cpp" line="436"/>
+        <location filename="../bank_editor.cpp" line="476"/>
         <source>can&apos;t open file for write</source>
         <translation>impossible d&apos;ouvrir le fichier en écriture</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="437"/>
-        <location filename="../bank_editor.cpp" line="477"/>
+        <location filename="../bank_editor.cpp" line="439"/>
+        <location filename="../bank_editor.cpp" line="479"/>
         <source>writing into this format is not implemented yet</source>
         <translation>l&apos;écriture de ce format n&apos;est pas encore implémentée</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="440"/>
-        <location filename="../bank_editor.cpp" line="480"/>
+        <location filename="../bank_editor.cpp" line="442"/>
+        <location filename="../bank_editor.cpp" line="482"/>
         <source>unsupported file format, please define file name extension to choice target file format</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="456"/>
+        <location filename="../bank_editor.cpp" line="458"/>
         <source>Bank file &apos;%1&apos; has been saved!</source>
         <translation>Le fichier banque &apos;%1&apos; a été enregistré !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="493"/>
+        <location filename="../bank_editor.cpp" line="495"/>
         <source>Instrument file &apos;%1&apos; has been saved!</source>
         <translation>Le fichier instrument &apos;%1&apos; a été enregistré !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="539"/>
+        <location filename="../bank_editor.cpp" line="541"/>
         <source>Nothing to save</source>
         <translation>Rien à engistrer</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="540"/>
+        <location filename="../bank_editor.cpp" line="542"/>
         <source>No selected instrument to save. Please select an instrument first!</source>
         <translation>Aucun instrument à enregistrer n&apos;est sélectionner. Veuillez d&apos;abord sélectionner un instrument !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="557"/>
+        <location filename="../bank_editor.cpp" line="559"/>
         <source>File is not saved</source>
         <translation>Fichier non enregistré</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="557"/>
+        <location filename="../bank_editor.cpp" line="559"/>
         <source>File is modified and not saved. Do you want to save it?</source>
         <translation>Le fichier a des modifications non enregistrées. Voulez vous sauvegarder ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="721"/>
+        <location filename="../bank_editor.cpp" line="723"/>
         <source>Reset instrument to initial state</source>
         <translation>Remise à zéro de l&apos;instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="722"/>
+        <location filename="../bank_editor.cpp" line="724"/>
         <source>This instrument will be reset to initial state (since this file was loaded or saved).
 Do you wish to continue?</source>
         <translation>Cet instrument sera remis à l&apos;état initial (tel qu&apos;au dernier chargement ou enregistrement du fichier).
 Voulez-vous continuer ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="758"/>
+        <location filename="../bank_editor.cpp" line="760"/>
         <source>%1 passed in %2 milliseconds.
 </source>
         <translation>%1 effectué en %2 millisecondes.
 </translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1414"/>
+        <location filename="../bank_editor.cpp" line="1456"/>
         <source>128-instrument bank erasure</source>
         <translation>Effacement de banque à 128 instruments</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1415"/>
+        <location filename="../bank_editor.cpp" line="1457"/>
         <source>All instruments in this bank will be cleared. Do you want continue erasure?</source>
         <translation>Tous les instruments de cette banque seront effacés. Confirmer la suppression ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="736"/>
+        <location filename="../bank_editor.cpp" line="738"/>
         <source>Are you sure?</source>
         <translation>Êtes-vous sûr ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="354"/>
-        <location filename="../bank_editor.cpp" line="443"/>
-        <location filename="../bank_editor.cpp" line="483"/>
+        <location filename="../bank_editor.cpp" line="356"/>
+        <location filename="../bank_editor.cpp" line="445"/>
+        <location filename="../bank_editor.cpp" line="485"/>
         <source>unknown error occurred</source>
         <translation>une erreur inconnue s&apos;est produite</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="737"/>
+        <location filename="../bank_editor.cpp" line="739"/>
         <source>All sounding delays measures will be re-calculated. This operation may take a while. Do you want to continue? You may cancel operation in any moment.</source>
         <translation>Toutes les mesures de délais sonores seront recalculées. Cette opération peut prendre du temps. Voulez-vous continuer ? Cette opération peut être interrompue à tout moment.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="744"/>
+        <location filename="../bank_editor.cpp" line="746"/>
         <source>Sounding delays calculation has been completed!</source>
         <translation>Le calcul des délais sonores est terminé !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="746"/>
+        <location filename="../bank_editor.cpp" line="748"/>
         <source>Sounding delays calculation was canceled!</source>
         <translation>Le calcul des délais sonores a été annulé !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="760"/>
+        <location filename="../bank_editor.cpp" line="762"/>
         <source>Benchmark result</source>
         <translation>Compte rendu de la performance</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="761"/>
+        <location filename="../bank_editor.cpp" line="763"/>
         <source>Result of emulators benchmark based on &apos;%1&apos; instrument:
 
 %2</source>
@@ -1145,24 +1145,24 @@ Voulez-vous continuer ?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="769"/>
-        <location filename="../bank_editor.cpp" line="1249"/>
-        <location filename="../bank_editor.cpp" line="1265"/>
+        <location filename="../bank_editor.cpp" line="771"/>
+        <location filename="../bank_editor.cpp" line="1291"/>
+        <location filename="../bank_editor.cpp" line="1307"/>
         <source>Instrument is not selected</source>
         <translation>Aucun instrument n&apos;est sélectionné</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="770"/>
+        <location filename="../bank_editor.cpp" line="772"/>
         <source>Please select any instrument to begin the benchmark of emulators!</source>
         <translation>Veuillez selectionner un instrument pour évaluer la performance des émulateurs !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="783"/>
+        <location filename="../bank_editor.cpp" line="785"/>
         <source>About bank editor</source>
         <translation>À propos de l&apos;éditeur de banques</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="784"/>
+        <location filename="../bank_editor.cpp" line="786"/>
         <source>FM Bank Editor for Yamaha OPL3/OPL2 chip, Version %1
 
 %2
@@ -1181,106 +1181,106 @@ Source code disponible sur GitHub :
 %3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1003"/>
-        <location filename="../bank_editor.cpp" line="1069"/>
+        <location filename="../bank_editor.cpp" line="1005"/>
+        <location filename="../bank_editor.cpp" line="1111"/>
         <source>Bank %1</source>
         <translation>Banque %1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1054"/>
+        <location filename="../bank_editor.cpp" line="1096"/>
         <source>Change name of bank</source>
         <translation>Renommer la banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1054"/>
+        <location filename="../bank_editor.cpp" line="1096"/>
         <source>Please type name of current bank (32 characters max):</source>
         <translation>Veuillez saisir le nom de la banque actuelle (32 caractères maxi) :</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1250"/>
+        <location filename="../bank_editor.cpp" line="1292"/>
         <source>Select instrument to clear please</source>
         <translation>Veuillez sélectionner l&apos;instrument à effacer</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1266"/>
+        <location filename="../bank_editor.cpp" line="1308"/>
         <source>Select instrument to remove please</source>
         <translation>Veuillez sélectionner l&apos;instrument à supprimer</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1271"/>
+        <location filename="../bank_editor.cpp" line="1313"/>
         <source>Single instrument deletion</source>
         <translation>Suppression d&apos;un seul instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1272"/>
+        <location filename="../bank_editor.cpp" line="1314"/>
         <source>Deletion of instrument will cause offset of all next instrument indexes. Suggested to use &apos;Clear instrument&apos; action instead. Do you want continue deletion?</source>
         <translation>Supprimer cet instrument causera un décalage des indices d&apos;instruments suivants. Il est plutôt conseillé d&apos;&quot;Effacer l&apos;instrument&quot;. Supprimer malgré tout ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1323"/>
+        <location filename="../bank_editor.cpp" line="1365"/>
         <source>Add bank error</source>
         <translation>Erreur d&apos;ajout de banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1324"/>
-        <location filename="../bank_editor.cpp" line="1362"/>
-        <location filename="../bank_editor.cpp" line="1451"/>
+        <location filename="../bank_editor.cpp" line="1366"/>
+        <location filename="../bank_editor.cpp" line="1404"/>
+        <location filename="../bank_editor.cpp" line="1493"/>
         <source>AdLib bank mode is turned on. Disable it to be able add or remove banks.</source>
         <translation>Le mode AdLib est activé. Désactivez le pour pouvoir ajouter ou supprimer des banques.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1361"/>
+        <location filename="../bank_editor.cpp" line="1403"/>
         <source>Clone bank error</source>
         <translation>Erreur de clonage de banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1408"/>
+        <location filename="../bank_editor.cpp" line="1450"/>
         <source>Clear bank error</source>
         <translation>Erreur d&apos;effacement de banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1409"/>
+        <location filename="../bank_editor.cpp" line="1451"/>
         <source>AdLib bank mode is turned on. Disable it to be able clear banks.</source>
         <translation>Le mode AdLib est activé. Désactivez le pour pouvoir effacer des banques.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1450"/>
-        <location filename="../bank_editor.cpp" line="1459"/>
+        <location filename="../bank_editor.cpp" line="1492"/>
+        <location filename="../bank_editor.cpp" line="1501"/>
         <source>Delete bank error</source>
         <translation>Erreur de suppression de banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1460"/>
+        <location filename="../bank_editor.cpp" line="1502"/>
         <source>Removing of last bank is not allowed!</source>
         <translation>Impossible de supprimer la dernière banque !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1465"/>
+        <location filename="../bank_editor.cpp" line="1507"/>
         <source>128-instrument bank deletion</source>
         <translation>Suppression d&apos;une banque à 128 instruments</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1466"/>
+        <location filename="../bank_editor.cpp" line="1508"/>
         <source>Deletion of bank will cause offset of all next bank indexes. Suggested to use &apos;Clear bank&apos; action instead. Do you want continue deletion?</source>
         <translation>Supprimer cette banque causera un décalage des indices de banques suivantes. Il est plutôt conseillé d&apos;&quot;Effacer la banque&quot;. Supprimer malgré tout ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1517"/>
+        <location filename="../bank_editor.cpp" line="1559"/>
         <source>Virtual port</source>
         <translation>Port virtuel</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1536"/>
+        <location filename="../bank_editor.cpp" line="1578"/>
         <source>Disable</source>
         <translation>Désactiver</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1577"/>
+        <location filename="../bank_editor.cpp" line="1619"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1578"/>
+        <location filename="../bank_editor.cpp" line="1620"/>
         <source>Cannot open the MIDI port.</source>
         <translation>Impossible d&apos;ouvrir le port MIDI.</translation>
     </message>
