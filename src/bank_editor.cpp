@@ -110,7 +110,6 @@ BankEditor::BankEditor(QWidget *parent) :
 
     ui->instruments->installEventFilter(this);
 
-    connect(Application::instance(), SIGNAL(languageChanged()), this, SLOT(onLanguageChanged()));
     connect(ui->actionLanguageDefault, SIGNAL(triggered()), this, SLOT(onActionLanguageTriggered()));
 
     loadSettings();
@@ -130,7 +129,8 @@ BankEditor::BankEditor(QWidget *parent) :
 #endif
 
     createLanguageChoices();
-    onLanguageChanged();
+
+    Application::instance()->translate();
 }
 
 BankEditor::~BankEditor()
@@ -236,6 +236,13 @@ void BankEditor::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
     QTimer::singleShot(0, this, SLOT(onBankEditorShown()));
+}
+
+void BankEditor::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange)
+        onLanguageChanged();
+    QMainWindow::changeEvent(event);
 }
 
 bool BankEditor::eventFilter(QObject *watched, QEvent *event)

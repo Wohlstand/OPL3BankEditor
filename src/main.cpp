@@ -25,7 +25,6 @@
 int main(int argc, char *argv[])
 {
     Application a(argc, argv);
-    a.translate(QLocale::system().name());
 
     BankEditor w;
     w.show();
@@ -50,7 +49,6 @@ void Application::translate(const QString &language)
         return translate(QLocale::system().name());
     m_qtTranslator.load("qt_" + language, getQtTranslationDir());
     m_appTranslator.load("opl3bankeditor_" + language, getAppTranslationDir());
-    emit languageChanged();
 }
 
 QString Application::getQtTranslationDir() const

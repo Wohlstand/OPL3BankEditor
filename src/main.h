@@ -33,10 +33,7 @@ public:
     QString getAppTranslationDir() const;
 
 public slots:
-    void translate(const QString &language);
-
-signals:
-    void languageChanged();
+    void translate(const QString &language = QString());
 
 private:
     QTranslator m_qtTranslator;

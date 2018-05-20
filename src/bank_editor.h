@@ -508,15 +508,16 @@ private slots:
      */
     void onBankEditorShown();
 
-    /**
-     * @brief Updates the text to display after a language change
-     */
-    void onLanguageChanged();
-
     #ifdef ENABLE_MIDI
     void on_midiIn_triggered(QAction *);
     void onMidiPortTriggered();
     #endif
+
+private:
+    /**
+     * @brief Updates the text to display after a language change
+     */
+    void onLanguageChanged();
 
 protected:
     virtual void pianoKeyPress(QKeyEvent *event);
@@ -529,6 +530,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void keyReleaseEvent(QKeyEvent *event);
     void showEvent(QShowEvent *event);
+    void changeEvent(QEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
 
 private:

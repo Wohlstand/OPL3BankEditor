@@ -62,6 +62,13 @@ protected:
     void dropEvent(QDropEvent *e);
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void keyReleaseEvent(QKeyEvent *event);
+    void changeEvent(QEvent *event);
+
+private:
+    /**
+     * @brief Updates the text to display after a language change
+     */
+    void onLanguageChanged();
 
 private:
     //! Currently selected instrument
