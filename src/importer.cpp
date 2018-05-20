@@ -575,3 +575,21 @@ void Importer::on_doImport_clicked()
     m_main->reloadInstrumentNames();
     m_main->loadInstrument();
 }
+
+void Importer::onLanguageChanged()
+{
+    ui->retranslateUi(this);
+
+    const QString &filePath = m_recentPath;
+    if (!filePath.isEmpty())
+        ui->openedBank->setText(filePath);
+    else
+        ui->openedBank->setText(tr("<No opened files>"));
+}
+
+void Importer::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange)
+        onLanguageChanged();
+    QDialog::changeEvent(event);
+}
