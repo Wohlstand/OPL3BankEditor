@@ -81,10 +81,16 @@ bool MidiInRt::getPortList(QVector<QString> &ports)
     for(unsigned i = 0; i < count; ++i)
     {
         m_errorSignaled = false;
+#if (QT_VERSION < 0x050000) && defined(_WIN32)
+        MIDIINCAPSA deviceCaps;
+        midiInGetDevCapsA(i, &deviceCaps, sizeof(MIDIINCAPSA));
+        ports[i] = QString::fromLocal8Bit(deviceCaps.szPname);
+#else
         std::string name = midiin->getPortName(i);
         if(m_errorSignaled)
             return false;
-        ports[i] = QString::fromStdString(name);
+        ports[i] = QString::fromStdString(name.c_str());
+#endif
     }
     return true;
 }
