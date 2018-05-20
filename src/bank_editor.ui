@@ -3298,7 +3298,15 @@ of second voice</string>
     <property name="title">
      <string>Help</string>
     </property>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <addaction name="actionLanguageDefault"/>
+     <addaction name="separator"/>
+    </widget>
     <addaction name="actionFormatsSup"/>
+    <addaction name="menuLanguage"/>
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
@@ -3552,6 +3560,11 @@ of second voice</string>
   <action name="actionLatency">
    <property name="text">
     <string>Audio &amp;latency...</string>
+   </property>
+  </action>
+  <action name="actionLanguageDefault">
+   <property name="text">
+    <string>System default</string>
    </property>
   </action>
  </widget>
