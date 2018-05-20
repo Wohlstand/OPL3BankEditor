@@ -235,6 +235,11 @@ public:
 
     void reloadBanks();
 
+    /**
+     * @brief Creates the list of available languages
+     */
+    void createLanguageChoices();
+
 private:
     /**
      * Path of the file which is currently edited
@@ -411,7 +416,10 @@ private slots:
      * @brief Opens the latency setting dialog
      */
     void on_actionLatency_triggered();
-
+    /**
+     * @brief Changes the current language
+     */
+    void onActionLanguageTriggered();
 
     /* ***************** Instrument Parameters editing ***************** */
 
@@ -499,6 +507,11 @@ private slots:
      * @brief Adjusts the size of the window after it has been shown
      */
     void onBankEditorShown();
+
+    /**
+     * @brief Updates the text to display after a language change
+     */
+    void onLanguageChanged();
 
     #ifdef ENABLE_MIDI
     void on_midiIn_triggered(QAction *);

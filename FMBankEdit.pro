@@ -152,6 +152,7 @@ HEADERS += \
     src/importer.h \
     src/latency.h \
     src/ins_names.h \
+    src/main.h \
     src/opl/generator.h \
     src/opl/generator_realtime.h \
     src/opl/nukedopl3.h \
@@ -178,4 +179,4 @@ RESOURCES += \
     src/resources/resources.qrc
 
 TRANSLATIONS += \
-    src/translations/fr_FR.ts
+    src/translations/opl3bankeditor_fr_FR.ts

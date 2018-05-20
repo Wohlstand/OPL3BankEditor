@@ -34,6 +34,7 @@
 #include "ui_bank_editor.h"
 #include "latency.h"
 #include "ins_names.h"
+#include "main.h"
 
 #include "FileFormats/ffmt_factory.h"
 #include "FileFormats/ffmt_enums.h"
@@ -52,7 +53,7 @@ static void setInstrumentMetaInfo(QListWidgetItem *item, int index)
     item->setData(INS_INDEX, index);
     item->setData(INS_BANK_ID, index / 128);
     item->setData(INS_INS_ID, index % 128);
-    item->setToolTip(QString("Bank %1, ID: %2").arg(index / 128).arg(index % 128));
+    item->setToolTip(QObject::tr("Bank %1, ID: %2").arg(index / 128).arg(index % 128));
 }
 
 static QIcon makeWindowIcon()
@@ -79,7 +80,6 @@ BankEditor::BankEditor(QWidget *parent) :
     m_recentPerc    = false;
     ui->setupUi(this);
     this->setWindowIcon(makeWindowIcon());
-    ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     m_recentMelodicNote = ui->noteToTest->value();
     setMelodic();
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
@@ -110,6 +110,9 @@ BankEditor::BankEditor(QWidget *parent) :
 
     ui->instruments->installEventFilter(this);
 
+    connect(Application::instance(), SIGNAL(languageChanged()), this, SLOT(onLanguageChanged()));
+    connect(ui->actionLanguageDefault, SIGNAL(triggered()), this, SLOT(onActionLanguageTriggered()));
+
     loadSettings();
     m_bank.deep_tremolo = ui->deepTremolo->isChecked();
     m_bank.deep_vibrato = ui->deepVibrato->isChecked();
@@ -125,6 +128,9 @@ BankEditor::BankEditor(QWidget *parent) :
 #else
     ui->midiIn_zone->hide();
 #endif
+
+    createLanguageChoices();
+    onLanguageChanged();
 }
 
 BankEditor::~BankEditor()
@@ -261,6 +267,14 @@ bool BankEditor::eventFilter(QObject *watched, QEvent *event)
 void BankEditor::onBankEditorShown()
 {
     adjustSize();
+}
+
+void BankEditor::onLanguageChanged()
+{
+    ui->retranslateUi(this);
+    ui->currentFile->setText(m_currentFilePath);
+    ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
+    reloadBanks();
 }
 
 void BankEditor::initFileData(QString &filePath)
@@ -988,9 +1002,49 @@ void BankEditor::reloadBanks()
     {
         const char *label = isDrum ? m_bank.Banks_Percussion[i].name : m_bank.Banks_Melodic[i].name;
         if(label[0] == 0)
-            ui->bank_no->addItem(QString("Bank %1").arg(i), i);
+            ui->bank_no->addItem(tr("Bank %1").arg(i), i);
         else
             ui->bank_no->addItem(QString("%1: %2").arg(i).arg(label), i);
+    }
+}
+
+void BankEditor::createLanguageChoices()
+{
+    QDir dir(Application::instance()->getAppTranslationDir());
+
+    const QString prefix = "opl3bankeditor_";
+    const QString suffix = ".qm";
+
+#if defined(Q_OS_WIN)
+    const Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+#else
+    const Qt::CaseSensitivity cs = Qt::CaseSensitive;
+#endif
+
+    QStringList languages;
+    languages.push_back("en_US");
+    foreach (const QString &entry, dir.entryList()) {
+        if (entry.startsWith(prefix, cs) && entry.endsWith(suffix, cs)) {
+            QString lang = entry.mid(
+                prefix.size(), entry.size() - prefix.size() - suffix.size());
+            languages << lang;
+        }
+    }
+
+    QMenu *menuLanguage = ui->menuLanguage;
+
+    foreach (const QString &lang, languages) {
+        QLocale loc(lang);
+        QString name = QLocale::languageToString(loc.language());
+
+        QString languageCode = loc.name();
+        languageCode = languageCode.left(languageCode.indexOf('_'));
+
+        QAction *act = new QAction(name, menuLanguage);
+        menuLanguage->addAction(act);
+        act->setData(lang);
+        act->setIcon(QIcon(":/languages/" + languageCode + ".png"));
+        connect(act, SIGNAL(triggered()), this, SLOT(onActionLanguageTriggered()));
     }
 }
 
@@ -1023,6 +1077,13 @@ void BankEditor::on_actionLatency_triggered()
     delete dlg;
 }
 
+void BankEditor::onActionLanguageTriggered()
+{
+    QAction *act = static_cast<QAction *>(sender());
+    QString language = act->data().toString();
+    Application::instance()->translate(language);
+}
+
 void BankEditor::on_bankRename_clicked()
 {
     int index = ui->bank_no->currentIndex();
@@ -1047,7 +1108,7 @@ void BankEditor::on_bankRename_clicked()
             memcpy(m_bank.Banks_Melodic[index].name, arr.data(), (size_t)arr.size());
         }
         if(arr.size() == 0)
-            ui->bank_no->setItemText(index, QString("Bank %1").arg(index));
+            ui->bank_no->setItemText(index, tr("Bank %1").arg(index));
         else
             ui->bank_no->setItemText(index, QString("%1: %2").arg(index).arg(label));
     }
