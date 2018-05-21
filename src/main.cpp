@@ -16,13 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "main.h"
 #include "bank_editor.h"
-#include <QApplication>
+#include <QLibraryInfo>
 #include <QStringList>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    Application a(argc, argv);
+
     BankEditor w;
     w.show();
 
@@ -31,4 +34,40 @@ int main(int argc, char *argv[])
         w.openFile(args[1]);
 
     return a.exec();
+}
+
+Application::Application(int &argc, char **argv)
+    : QApplication(argc, argv)
+{
+    installTranslator(&m_qtTranslator);
+    installTranslator(&m_appTranslator);
+}
+
+void Application::translate(const QString &language)
+{
+    if (language.isEmpty())
+        return translate(QLocale::system().name());
+    m_qtTranslator.load("qt_" + language, getQtTranslationDir());
+    m_appTranslator.load("opl3bankeditor_" + language, getAppTranslationDir());
+}
+
+QString Application::getQtTranslationDir() const
+{
+#if defined(Q_OS_WIN)
+    return QCoreApplication::applicationDirPath() + "/translations";
+#elif defined(Q_OS_DARWIN)
+    return QCoreApplication::applicationDirPath() + "/../Resources/translations";
+#else
+    return QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+#endif
+}
+
+QString Application::getAppTranslationDir() const
+{
+#if defined(Q_OS_WIN) || defined(Q_OS_DARWIN)
+    return getQtTranslationDir();
+#else
+    QString qtTranslationDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    return QCoreApplication::applicationDirPath() + "/../share/opl3_bank_editor/translations";
+#endif
 }

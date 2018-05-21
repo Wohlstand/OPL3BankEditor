@@ -13,6 +13,9 @@
         <file>waves/wave5.png</file>
         <file>waves/wave6.png</file>
         <file>waves/wave7.png</file>
+        <file>languages/en.png</file>
+        <file>languages/fr.png</file>
+        <file>languages/ru.png</file>
         <file>pencil_16x16.png</file>
         <file>mporto.png</file>
     </qresource>

@@ -19,6 +19,7 @@ include(FindPkgConfig)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
+find_package(Qt5LinguistTools REQUIRED)
 find_package(Threads REQUIRED)
 
 message("!! Optional feature summary:")
@@ -84,8 +85,19 @@ qt5_wrap_ui(FORMS
 qt5_add_resources(RESOURCES
   "src/resources/resources.qrc")
 
-add_executable(OPL3BankEditor WIN32 MACOSX_BUNDLE ${SOURCES} ${FORMS} ${RESOURCES})
+qt5_add_translation(TRANSLATIONS
+  "src/translations/opl3bankeditor_fr_FR.ts")
+add_custom_target(OPL3BankEditor_translations ALL
+  DEPENDS ${TRANSLATIONS})
+install(FILES ${TRANSLATIONS}
+  DESTINATION "share/opl3_bank_editor/translations")
+
+add_executable(OPL3BankEditor WIN32 MACOSX_BUNDLE
+  ${SOURCES} ${FORMS} ${RESOURCES})
+set_target_properties(OPL3BankEditor PROPERTIES
+  OUTPUT_NAME "opl3_bank_editor")
 target_link_libraries(OPL3BankEditor PRIVATE Qt5::Widgets Qt5::Concurrent ${CMAKE_THREAD_LIBS_INIT})
+install(TARGETS OPL3BankEditor DESTINATION "bin" RENAME "opl3_bank_editor")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(ICON "${CMAKE_SOURCE_DIR}/src/resources/res.rc")
