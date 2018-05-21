@@ -180,4 +180,4 @@ RESOURCES += \
 
 TRANSLATIONS += \
     src/translations/opl3bankeditor_fr_FR.ts \
-    src/translations/opl3bankeditor_ru_RU.ts \
+    src/translations/opl3bankeditor_ru_RU.ts
