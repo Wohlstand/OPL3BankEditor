@@ -97,7 +97,7 @@ bool MidiInRt::getPortList(QVector<QString> &ports)
             std::string name = midiin->getPortName(i);
             if(m_errorSignaled)
                 return false;
-            ports[i] = QString::fromStdString(name.c_str());
+            ports[i] = QString::fromStdString(name);
         }
     }
     return true;
