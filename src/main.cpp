@@ -21,6 +21,8 @@
 #include <QLibraryInfo>
 #include <QStringList>
 #include <QDebug>
+#include <QDir>
+#include <QFile>
 
 int main(int argc, char *argv[])
 {
@@ -67,7 +69,11 @@ QString Application::getAppTranslationDir() const
 #if defined(Q_OS_WIN) || defined(Q_OS_DARWIN)
     return getQtTranslationDir();
 #else
-    QString qtTranslationDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-    return QCoreApplication::applicationDirPath() + "/../share/opl3_bank_editor/translations";
+    //QString qtTranslationDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    QDir dir(QCoreApplication::applicationDirPath() + "/../share/opl3_bank_editor/");
+    if(dir.exists())
+        return QCoreApplication::applicationDirPath() + "/../share/opl3_bank_editor/translations";
+    else //For debug purposes, use In-Source translations :-P
+        return QCoreApplication::applicationDirPath() + "/../src/translations";
 #endif
 }
