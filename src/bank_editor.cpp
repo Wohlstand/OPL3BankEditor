@@ -1370,7 +1370,7 @@ void BankEditor::on_actionAddBank_triggered()
     {
         QMessageBox::information(this,
                                  tr("Add bank error"),
-                                 tr("AdLib bank mode is turned on. "
+                                 tr("United bank mode is turned on. "
                                     "Disable it to be able add or remove banks."));
         return;
     }
@@ -1408,7 +1408,7 @@ void BankEditor::on_actionCloneBank_triggered()
     {
         QMessageBox::information(this,
                                  tr("Clone bank error"),
-                                 tr("AdLib bank mode is turned on. "
+                                 tr("United bank mode is turned on. "
                                     "Disable it to be able add or remove banks."));
         return;
     }
@@ -1455,7 +1455,7 @@ void BankEditor::on_actionClearBank_triggered()
     {
         QMessageBox::information(this,
                                  tr("Clear bank error"),
-                                 tr("AdLib bank mode is turned on. "
+                                 tr("United bank mode is turned on. "
                                     "Disable it to be able clear banks."));
         return;
     }
@@ -1497,7 +1497,7 @@ void BankEditor::on_actionDeleteBank_triggered()
     {
         QMessageBox::information(this,
                                  tr("Delete bank error"),
-                                 tr("AdLib bank mode is turned on. "
+                                 tr("United bank mode is turned on. "
                                     "Disable it to be able add or remove banks."));
         return;
     }
