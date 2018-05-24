@@ -60,6 +60,8 @@ private:
     QString             m_recentPath;
     //! Recently opened bank file
     QString             m_recentBankFilePath;
+    //! Choosen UI language
+    QString             m_language;
     //! Currently using chip
     Generator::OPL_Chips m_currentChip;
     //! Audio latency (ms)

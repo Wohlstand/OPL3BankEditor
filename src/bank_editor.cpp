@@ -130,7 +130,7 @@ BankEditor::BankEditor(QWidget *parent) :
 
     createLanguageChoices();
 
-    Application::instance()->translate();
+    Application::instance()->translate(m_language);
 }
 
 BankEditor::~BankEditor()
@@ -166,6 +166,7 @@ void BankEditor::loadSettings()
     ui->deepVibrato->setChecked(setup.value("deep-vibrato", false).toBool());
     m_recentPath = setup.value("recent-path").toString();
     m_currentChip = (Generator::OPL_Chips)setup.value("chip-emulator", defaultChip).toInt();
+    m_language = setup.value("language").toString();
     m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
 
     if (m_audioLatency < audioMinimumLatency)
@@ -197,6 +198,7 @@ void BankEditor::saveSettings()
     setup.setValue("deep-vibrato", ui->deepVibrato->isChecked());
     setup.setValue("recent-path", m_recentPath);
     setup.setValue("chip-emulator", (int)m_currentChip);
+    setup.setValue("language", m_language);
     setup.setValue("audio-latency", m_audioLatency);
 }
 
@@ -1088,6 +1090,7 @@ void BankEditor::onActionLanguageTriggered()
 {
     QAction *act = static_cast<QAction *>(sender());
     QString language = act->data().toString();
+    m_language = language;
     Application::instance()->translate(language);
 }
 
