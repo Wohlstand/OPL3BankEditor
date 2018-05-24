@@ -1044,7 +1044,13 @@ void BankEditor::createLanguageChoices()
 
     foreach (const QString &lang, languages) {
         QLocale loc(lang);
+#if QT_VERSION >= 0x040800
+        QString name = QString("%1 (%2)")
+                .arg(loc.nativeLanguageName())
+                .arg(loc.nativeCountryName());
+#else
         QString name = QLocale::languageToString(loc.language());
+#endif
 
         QString languageCode = loc.name();
         languageCode = languageCode.left(languageCode.indexOf('_'));
