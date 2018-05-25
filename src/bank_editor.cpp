@@ -1031,7 +1031,7 @@ void BankEditor::createLanguageChoices()
 #endif
 
     QStringList languages;
-    languages.push_back("en_US");
+    languages.push_back("en");  // generic english
     foreach (const QString &entry, dir.entryList()) {
         if (entry.startsWith(prefix, cs) && entry.endsWith(suffix, cs)) {
             QString lang = entry.mid(
@@ -1044,13 +1044,22 @@ void BankEditor::createLanguageChoices()
 
     foreach (const QString &lang, languages) {
         QLocale loc(lang);
+
+        QString name;
+        if(lang == "en")
+            name = "English";  // generic english with UK flag icon
+        else
+        {
 #if QT_VERSION >= 0x040800
-        QString name = QString("%1 (%2)")
+            name = QString("%1 (%2)")
                 .arg(loc.nativeLanguageName())
                 .arg(loc.nativeCountryName());
 #else
-        QString name = QLocale::languageToString(loc.language());
+            name = QLocale::languageToString(loc.language());
 #endif
+            if(!name.isEmpty())
+                name[0] = name[0].toUpper();
+        }
 
         QString languageCode = loc.name();
         languageCode = languageCode.left(languageCode.indexOf('_'));
