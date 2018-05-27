@@ -323,6 +323,9 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
             if (note == 123)  // all notes off
                 gen.NoteOffAllChans();
             break;
+        case 0xe:
+            gen.PitchBend((int)((vel << 7) | note) - 8192);
+            break;
         }
     }
 }

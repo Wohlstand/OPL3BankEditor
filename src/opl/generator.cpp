@@ -381,7 +381,17 @@ void Generator::PlayNoteF(int noteID)
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
 
-    int tone = noteID;
+    int ch = m_noteManager.noteOn(noteID);
+    PlayNoteCh(ch);
+
+}
+
+void Generator::PlayNoteCh(int ch)
+{
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
+    int tone;
 
     if(m_patch.tone)
     {
@@ -389,13 +399,16 @@ void Generator::PlayNoteF(int noteID)
         if(tone > 128)
             tone -= 128;
     }
+    else
+    {
+        tone = m_noteManager.channel(ch).note;
+    }
 
     uint16_t i[2] = { 0, 1 };
     bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
     bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
     uint16_t  adlchannel[2] = { 0, 0 };
 
-    int ch = m_noteManager.noteOn(noteID);
     if(!natural_4op || pseudo_4op)
     {
         if(pseudo_4op)
@@ -437,12 +450,12 @@ void Generator::PlayNoteF(int noteID)
     if(pseudo_4op || natural_4op)
         Touch_Real(adlchannel[1], 63);
 
-    bend  = 0.0 + m_patch.OPS[i[0]].finetune;
+    bend  = m_bend + m_patch.OPS[i[0]].finetune;
     NoteOn(adlchannel[0], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
 
     if(pseudo_4op)
     {
-        bend  = 0.0 + m_patch.OPS[i[1]].finetune + m_patch.voice2_fine_tune;
+        bend  = m_bend + m_patch.OPS[i[1]].finetune + m_patch.voice2_fine_tune;
         NoteOn(adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
     }
 }
@@ -705,7 +718,19 @@ void Generator::StopNote()
         StopNoteF(note);
 }
 
+void Generator::PitchBend(int bend)
+{
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
 
+    m_bend = bend * m_bendsense;
+
+    int channels = m_noteManager.channelCount();
+    for(int ch = 0; ch < channels; ++ch) {
+        if(m_noteManager.channel(ch).note != -1)
+            PlayNoteCh(ch);
+    }
+}
 
 void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {

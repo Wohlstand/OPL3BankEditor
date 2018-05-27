@@ -92,6 +92,7 @@ public:
     void Patch(uint32_t c, uint32_t i);
     void Pan(uint32_t c, uint32_t value);
     void PlayNoteF(int noteID);
+    void PlayNoteCh(int channelID);
     void StopNoteF(int noteID);
     void PlayDrum(uint8_t drum, int noteID);
     void switch4op(bool enabled, bool patchCleanUp = true);
@@ -108,6 +109,7 @@ public:
     void PlayMajor7Chord();
     void PlayMinor7Chord();
     void StopNote();
+    void PitchBend(int bend);
 
     void changePatch(const FmBank::Instrument &instrument, bool isDrum = false);
     void changeNote(int newnote);
@@ -127,6 +129,7 @@ private:
 
     class NotesManager
     {
+    public:
         struct Note
         {
             //! Currently pressed key. -1 means channel is free
@@ -134,6 +137,7 @@ private:
             //! Age in count of noteOn requests
             int age = 0;
         };
+    private:
         //! Channels range, contains entries count equal to chip channels
         QVector<Note> channels;
         //! Round-Robin cycler. Looks for any free channel that is not busy. Otherwise, oldest busy note will be replaced
@@ -145,9 +149,15 @@ private:
         uint8_t noteOn(int note);
         int8_t  noteOff(int note);
         void clearNotes();
+        const Note &channel(int ch) const
+            { return channels.at(ch); }
+        const int channelCount() const
+            { return (int)channels.size(); }
     } m_noteManager;
 
     int32_t     note;
+    double      m_bend = 0.0;
+    double      m_bendsense = 2.0 / 8192;
     bool        m_isInstrumentLoaded = false;
     bool        m_4op_last_state;
     uint8_t     deepTremoloMode;
