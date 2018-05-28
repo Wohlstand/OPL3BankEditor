@@ -33,9 +33,13 @@ public:
     explicit Piano(QWidget* parent = 0);
     ~Piano();
 
+private:
+    void findNote(QMouseEvent *evt, int &note);
+
 protected:
     virtual void mousePressEvent(QMouseEvent* evt);
-    virtual void mouseReleaseEvent(QMouseEvent*);
+    virtual void mouseReleaseEvent(QMouseEvent* evt);
+    virtual void mouseMoveEvent(QMouseEvent* evt);
     virtual void paintEvent(QPaintEvent*evt);
 signals:
     /**
@@ -53,6 +57,7 @@ signals:
     void released();
 
 private:
+    bool m_held = false;
     //! Table of highlighted notes
     bool m_highlightNotes[128];
     //! Recently played notes

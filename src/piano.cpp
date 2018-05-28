@@ -60,20 +60,28 @@ Piano::Piano(QWidget *parent) : QFrame(parent)
 {
     memset(m_highlightNotes, 0, sizeof(bool) * 128);
     m_recentNote = 0;
+    m_held = false;
 }
 
 Piano::~Piano()
 {}
 
-void Piano::mousePressEvent(QMouseEvent *evt)
+void Piano::findNote(QMouseEvent *evt, int &note)
 {
     double  x       = double(evt->pos().x());
     double  width   = double(this->width());
-    int     note    = int(floor(128.0 * (x / width)));
-
+    note    = int(floor(128.0 * (x / width)));
+    if(note < 0)
+        note = 0;
     if(note > 127)
         note = 127;
+}
 
+void Piano::mousePressEvent(QMouseEvent *evt)
+{
+    int note = -1;
+    findNote(evt, note);
+    m_held = true;
     m_recentNote            = note;
     m_highlightNotes[note]  = true;
     emit    gotNote(note);
@@ -81,12 +89,35 @@ void Piano::mousePressEvent(QMouseEvent *evt)
     repaint();
 }
 
-void Piano::mouseReleaseEvent(QMouseEvent *)
+void Piano::mouseReleaseEvent(QMouseEvent *evt)
 {
+    int note = -1;
+    findNote(evt, note);
+    m_held = false;
+    m_recentNote = note;
     m_highlightNotes[m_recentNote] = false;
     emit    gotNote(m_recentNote);
     emit    released();
     repaint();
+}
+
+void Piano::mouseMoveEvent(QMouseEvent *evt)
+{
+    if(!m_held)
+        return;
+    int note = -1;
+    findNote(evt, note);
+    if(note != m_recentNote)
+    {
+        m_highlightNotes[m_recentNote] = false;
+        emit    gotNote(m_recentNote);
+        emit    released();
+        m_recentNote = note;
+        m_highlightNotes[note] = true;
+        emit    gotNote(note);
+        emit    pressed();
+        repaint();
+    }
 }
 
 void Piano::paintEvent(QPaintEvent *evt)
