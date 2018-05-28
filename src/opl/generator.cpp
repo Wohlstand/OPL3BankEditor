@@ -732,6 +732,11 @@ void Generator::PitchBend(int bend)
     }
 }
 
+void Generator::PitchBendSensitivity(int cents)
+{
+    m_bendsense = cents * (1e-2 / 8192);
+}
+
 void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
     //Shutup everything

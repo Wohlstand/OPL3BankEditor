@@ -143,6 +143,16 @@ private:
     std::unique_ptr<Ring_Buffer> m_rb_midi;
     std::unique_ptr<uint8_t[]> m_body;
 
+    struct MidiChannelInfo
+    {
+        unsigned lastmrpn = 0;
+        unsigned lastlrpn = 0;
+        bool nrpn = false;
+        unsigned bendsensemsb = 2;
+        unsigned bendsenselsb = 0;
+    };
+    MidiChannelInfo m_midichan[16];
+
 #if defined(ENABLE_WIN9X_OPL_PROXY)
     class QStdMutex
     {

@@ -315,8 +315,11 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
     if(len == 3)
     {
         unsigned msg = data[0] >> 4;
+        unsigned chan = data[0] & 0x0f;
         unsigned note = data[1] & 0x7f;
         unsigned vel = data[2] & 0x7f;
+
+        MidiChannelInfo &ch = m_midichan[chan];
 
         if(msg == 0x9 && vel == 0)
             msg = 0x8;
@@ -331,10 +334,43 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
             gen.PlayNote();
             break;
         case 0xb:
-            if (note == 120)  // all sound off
+            switch (note) {
+            case 120:  // all sound off
                 gen.Silence();
-            if (note == 123)  // all notes off
+                break;
+            case 123:  // all notes off
                 gen.NoteOffAllChans();
+                break;
+            case 98:  // NRPN LSB
+                ch.lastlrpn = vel, ch.nrpn = true;
+                break;
+            case 99:  // NRPN MSB
+                ch.lastmrpn = vel, ch.nrpn = true;
+                break;
+            case 100:  // RPN LSB
+                ch.lastlrpn = vel, ch.nrpn = false;
+                break;
+            case 101:  // RPN MSB
+                ch.lastmrpn = vel, ch.nrpn = false;
+                break;
+            case 6: {  // data entry MSB
+                unsigned addr = ch.lastmrpn * 0x100 + ch.lastlrpn;
+                if (!ch.nrpn && addr == 0) {
+                    ch.bendsensemsb = vel;
+                    int cents = ch.bendsensemsb * 100 + ch.bendsenselsb;
+                    gen.PitchBendSensitivity(cents);
+                }
+                break;
+            }
+            case 38:  // data entry LSB
+                unsigned addr = ch.lastmrpn * 0x100 + ch.lastlrpn;
+                if (!ch.nrpn && addr == 0) {
+                    ch.bendsenselsb = vel;
+                    int cents = ch.bendsensemsb * 100 + ch.bendsenselsb;
+                    gen.PitchBendSensitivity(cents);
+                }
+                break;
+            }
             break;
         case 0xe:
             gen.PitchBend((int)((vel << 7) | note) - 8192);

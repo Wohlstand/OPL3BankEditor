@@ -110,6 +110,7 @@ public:
     void PlayMinor7Chord();
     void StopNote();
     void PitchBend(int bend);
+    void PitchBendSensitivity(int cents);
 
     void changePatch(const FmBank::Instrument &instrument, bool isDrum = false);
     void changeNote(int newnote);
