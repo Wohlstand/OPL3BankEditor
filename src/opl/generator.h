@@ -151,7 +151,7 @@ private:
         NotesManager();
         ~NotesManager();
         void allocateChannels(int count);
-        uint8_t noteOn(int note);
+        uint8_t noteOn(int note, bool *replace = nullptr);
         int8_t  noteOff(int note);
         void    channelOff(int ch);
         int8_t  findNoteOffChannel(int note);

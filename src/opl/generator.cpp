@@ -381,9 +381,31 @@ void Generator::PlayNoteF(int noteID)
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
 
-    int ch = m_noteManager.noteOn(noteID);
-    PlayNoteCh(ch);
+    bool replace;
+    int ch = m_noteManager.noteOn(noteID, &replace);
 
+    if(replace) {
+        //if it replaces an old note, shut up the old one first
+        //this lets the sustain take over with a fresh envelope
+        bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
+        bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
+        if(natural_4op)
+        {
+            NoteOff(channels1_4op[ch]);
+        }
+        else
+        {
+            if(pseudo_4op)
+            {
+                NoteOff(channels1[ch]);
+                NoteOff(channels2[ch]);
+            }
+            else
+                NoteOff(channels[ch]);
+        }
+    }
+
+    PlayNoteCh(ch);
 }
 
 void Generator::PlayNoteCh(int ch)
@@ -794,7 +816,7 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     Silence();
     m_bend = 0.0;
     m_bendsense = 2.0 / 8192;
-    m_hold = false;
+    //m_hold = false;
     switch4op(instrument.en_4op && !instrument.en_pseudo4op && (instrument.adlib_drum_number == 0));
     bool isAdLibDrums = isDrum && (instrument.adlib_drum_number > 0);
     changeAdLibPercussion(isAdLibDrums);
@@ -948,7 +970,7 @@ void Generator::NotesManager::allocateChannels(int count)
     cycle = 0;
 }
 
-uint8_t Generator::NotesManager::noteOn(int note)
+uint8_t Generator::NotesManager::noteOn(int note, bool *r)
 {
     uint8_t beganAt = cycle;
     uint8_t chan = 0;
@@ -959,6 +981,8 @@ uint8_t Generator::NotesManager::noteOn(int note)
         if(note >= 0)
             ch.age++;
     }
+
+    bool replace = true;
 
     do
     {
@@ -972,6 +996,7 @@ uint8_t Generator::NotesManager::noteOn(int note)
             channels[chan].note = note;
             channels[chan].held = false;
             channels[chan].age = 0;
+            replace = false;
             break;
         }
 
@@ -999,6 +1024,9 @@ uint8_t Generator::NotesManager::noteOn(int note)
             break;
         }
     } while(1);
+
+    if(r)
+        *r = replace;
 
     return chan;
 }
