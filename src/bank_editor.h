@@ -505,6 +505,9 @@ private slots:
 
     void on_velocityOffset_valueChanged(int arg1);
 
+    void on_pitchBendSlider_valueChanged(int value);
+    void on_pitchBendSlider_sliderReleased();
+
     /**
      * @brief Adjusts the size of the window after it has been shown
      */

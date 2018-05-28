@@ -18,7 +18,7 @@
 
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
-
+#include <cmath>
 
 void BankEditor::on_insName_textChanged(const QString &arg1)
 {
@@ -184,6 +184,16 @@ void BankEditor::on_velocityOffset_valueChanged(int arg1)
     sendPatch();
 }
 
+void BankEditor::on_pitchBendSlider_valueChanged(int value)
+{
+    int bend = (int)std::lround(value * (8192.0 / 100.0));
+    m_generator->ctl_pitchBend(bend);
+}
+
+void BankEditor::on_pitchBendSlider_sliderReleased()
+{
+    ui->pitchBendSlider->setValue(0);  // spring back to middle position
+}
 
 
 /* ***************** Modulator 1 ***************** */

@@ -110,6 +110,8 @@ BankEditor::BankEditor(QWidget *parent) :
 
     ui->instruments->installEventFilter(this);
 
+    ui->pitchBendSlider->setTracking(true);
+
     connect(ui->actionLanguageDefault, SIGNAL(triggered()), this, SLOT(onActionLanguageTriggered()));
 
     loadSettings();

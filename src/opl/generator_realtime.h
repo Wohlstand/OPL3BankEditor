@@ -54,6 +54,7 @@ public slots:
     virtual void ctl_noteOffAllChans() = 0;
     virtual void ctl_playNote() = 0;
     virtual void ctl_stopNote() = 0;
+    virtual void ctl_pitchBend(int bend) = 0;
 
     virtual void ctl_playChord(int chord) = 0;
     void ctl_playMajorChord();
@@ -119,6 +120,7 @@ public:
     void ctl_noteOffAllChans() override;
     void ctl_playNote() override;
     void ctl_stopNote() override;
+    void ctl_pitchBend(int bend) override;
     void ctl_playChord(int chord) override;
     void ctl_changePatch(FmBank::Instrument &instrument, bool isDrum = false) override;
     void ctl_changeDeepVibrato(bool enabled) override;

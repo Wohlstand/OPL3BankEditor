@@ -736,6 +736,8 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
     //Shutup everything
     Silence();
+    m_bend = 0.0;
+    m_bendsense = 2.0 / 8192;
     switch4op(instrument.en_4op && !instrument.en_pseudo4op && (instrument.adlib_drum_number == 0));
     bool isAdLibDrums = isDrum && (instrument.adlib_drum_number > 0);
     changeAdLibPercussion(isAdLibDrums);

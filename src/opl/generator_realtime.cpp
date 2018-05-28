@@ -28,6 +28,7 @@ enum MessageTag
     MSG_CtlNoteOffAllChans,
     MSG_CtlPlayNote,
     MSG_CtlStopNote,
+    MSG_CtlPitchBend,
     MSG_CtlPlayChord,
     MSG_CtlPatchChange,
     MSG_CtlDeepVibrato,
@@ -141,6 +142,15 @@ void RealtimeGenerator::ctl_stopNote()
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(m_note);
+}
+
+void RealtimeGenerator::ctl_pitchBend(int bend)
+{
+    Ring_Buffer &rb = *m_rb_ctl;
+    MessageHeader hdr = {MSG_CtlPitchBend, sizeof(int)};
+    wait_for_fifo_write_space(rb, hdr.size);
+    rb.put(hdr);
+    rb.put(bend);
 }
 
 void RealtimeGenerator::ctl_playChord(int chord)
@@ -267,6 +277,9 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
     case MSG_CtlStopNote:
         gen.changeNote(*(unsigned *)data);
         gen.StopNote();
+        break;
+    case MSG_CtlPitchBend:
+        gen.PitchBend(*(int *)data);
         break;
     case MSG_CtlPlayChord: {
         ChordMessage msg = *(ChordMessage *)data;
