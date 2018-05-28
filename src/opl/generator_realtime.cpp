@@ -344,7 +344,7 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
             break;
         case 0x9:
             gen.changeNote((int)note);
-            gen.PlayNote();
+            gen.PlayNote(vel);
             break;
         case 0xb:
             switch (note) {

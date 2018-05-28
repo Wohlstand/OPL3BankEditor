@@ -376,7 +376,7 @@ void Generator::Pan(uint32_t c, uint32_t value)
         WriteReg(0xC0 + Channels[cc], static_cast<uint8_t>(m_patch.OPS[m_ins[c]].feedconn | value));
 }
 
-void Generator::PlayNoteF(int noteID)
+void Generator::PlayNoteF(int noteID, uint32_t volume)
 {
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
@@ -405,10 +405,10 @@ void Generator::PlayNoteF(int noteID)
         }
     }
 
-    PlayNoteCh(ch);
+    PlayNoteCh(ch, (volume / 2));
 }
 
-void Generator::PlayNoteCh(int ch)
+void Generator::PlayNoteCh(int ch, uint32_t volume)
 {
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
@@ -467,10 +467,10 @@ void Generator::PlayNoteCh(int ch)
     if(pseudo_4op || natural_4op)
         Pan(adlchannel[1], 0x30);
 
-    Touch_Real(adlchannel[0], 63);
+    Touch_Real(adlchannel[0], volume);
 
     if(pseudo_4op || natural_4op)
-        Touch_Real(adlchannel[1], 63);
+        Touch_Real(adlchannel[1], volume);
 
     bend  = m_bend + m_patch.OPS[i[0]].finetune;
     NoteOn(adlchannel[0], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
@@ -703,12 +703,12 @@ void Generator::NoteOffAllChans()
 
 
 
-void Generator::PlayNote()
+void Generator::PlayNote(uint32_t volume)
 {
     if(rythmModePercussionMode)
         PlayDrum(testDrum, note);
     else
-        PlayNoteF(note);
+        PlayNoteF(note, volume);
 }
 
 void Generator::PlayMajorChord()

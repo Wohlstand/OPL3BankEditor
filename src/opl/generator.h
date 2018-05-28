@@ -91,8 +91,8 @@ public:
     void Touch(uint32_t c, uint32_t volume);
     void Patch(uint32_t c, uint32_t i);
     void Pan(uint32_t c, uint32_t value);
-    void PlayNoteF(int noteID);
-    void PlayNoteCh(int channelID);
+    void PlayNoteF(int noteID, uint32_t volume = 127);
+    void PlayNoteCh(int channelID, uint32_t volume = 63);
     void StopNoteF(int noteID);
     void StopNoteCh(int channelID);
     void PlayDrum(uint8_t drum, int noteID);
@@ -102,7 +102,7 @@ public:
     void Silence();
     void NoteOffAllChans();
 
-    void PlayNote();
+    void PlayNote(uint32_t volume = 127);
     void PlayMajorChord();
     void PlayMinorChord();
     void PlayAugmentedChord();
