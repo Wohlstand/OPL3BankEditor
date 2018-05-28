@@ -5,6 +5,7 @@ Version 1.5
 - Added support of a quick save for some of formats
 - Windows 9x build now allowed to use emulators together with the real chip emulator
 - Added localization support (Translated into French and Russian)
+- Added pitch bend controller and pedal hold support
 
 Version 1.4.0.1
 - Added ability to re-calculate sounding delays for entire instruments set
