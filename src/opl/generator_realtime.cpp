@@ -29,6 +29,7 @@ enum MessageTag
     MSG_CtlPlayNote,
     MSG_CtlStopNote,
     MSG_CtlPitchBend,
+    MSG_CtlHold,
     MSG_CtlPlayChord,
     MSG_CtlPatchChange,
     MSG_CtlDeepVibrato,
@@ -151,6 +152,15 @@ void RealtimeGenerator::ctl_pitchBend(int bend)
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(bend);
+}
+
+void RealtimeGenerator::ctl_hold(bool held)
+{
+    Ring_Buffer &rb = *m_rb_ctl;
+    MessageHeader hdr = {MSG_CtlHold, sizeof(bool)};
+    wait_for_fifo_write_space(rb, hdr.size);
+    rb.put(hdr);
+    rb.put(held);
 }
 
 void RealtimeGenerator::ctl_playChord(int chord)
@@ -281,6 +291,9 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
     case MSG_CtlPitchBend:
         gen.PitchBend(*(int *)data);
         break;
+    case MSG_CtlHold:
+        gen.Hold(*(bool *)data);
+        break;
     case MSG_CtlPlayChord: {
         ChordMessage msg = *(ChordMessage *)data;
         gen.changeNote(msg.note);
@@ -340,6 +353,9 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
                 break;
             case 123:  // all notes off
                 gen.NoteOffAllChans();
+                break;
+            case 64:  // hold pedal
+                gen.Hold(vel >= 64);
                 break;
             case 98:  // NRPN LSB
                 ch.lastlrpn = vel, ch.nrpn = true;

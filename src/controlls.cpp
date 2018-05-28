@@ -195,6 +195,10 @@ void BankEditor::on_pitchBendSlider_sliderReleased()
     ui->pitchBendSlider->setValue(0);  // spring back to middle position
 }
 
+void BankEditor::on_holdButton_toggled(bool checked)
+{
+    m_generator->ctl_hold(checked);
+}
 
 /* ***************** Modulator 1 ***************** */
 

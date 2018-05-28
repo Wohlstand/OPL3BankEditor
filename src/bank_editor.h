@@ -508,6 +508,8 @@ private slots:
     void on_pitchBendSlider_valueChanged(int value);
     void on_pitchBendSlider_sliderReleased();
 
+    void on_holdButton_toggled(bool checked);
+
     /**
      * @brief Adjusts the size of the window after it has been shown
      */
