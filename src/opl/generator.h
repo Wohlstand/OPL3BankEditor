@@ -137,6 +137,8 @@ private:
         {
             //! Currently pressed key. -1 means channel is free
             int note    = -1;
+            //! Note volume determined by velocity
+            uint32_t volume = 0;
             //! Age in count of noteOn requests
             int age = 0;
             //! Whether it has a pending noteOff being delayed while held
@@ -151,7 +153,7 @@ private:
         NotesManager();
         ~NotesManager();
         void allocateChannels(int count);
-        uint8_t noteOn(int note, bool *replace = nullptr);
+        uint8_t noteOn(int note, uint32_t volume, bool *replace = nullptr);
         int8_t  noteOff(int note);
         void    channelOff(int ch);
         int8_t  findNoteOffChannel(int note);

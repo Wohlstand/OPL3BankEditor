@@ -382,7 +382,7 @@ void Generator::PlayNoteF(int noteID, uint32_t volume)
         return;//Deny playing notes without instrument loaded
 
     bool replace;
-    int ch = m_noteManager.noteOn(noteID, &replace);
+    int ch = m_noteManager.noteOn(noteID, volume, &replace);
 
     if(replace) {
         //if it replaces an old note, shut up the old one first
@@ -777,9 +777,11 @@ void Generator::PitchBend(int bend)
     m_bend = bend * m_bendsense;
 
     int channels = m_noteManager.channelCount();
-    for(int ch = 0; ch < channels; ++ch) {
-        if(m_noteManager.channel(ch).note != -1)
-            PlayNoteCh(ch);
+    for(int ch = 0; ch < channels; ++ch)
+    {
+        const NotesManager::Note &channel = m_noteManager.channel(ch);
+        if(channel.note != -1)
+            PlayNoteCh(ch, channel.volume / 2);
     }
 }
 
@@ -970,7 +972,7 @@ void Generator::NotesManager::allocateChannels(int count)
     cycle = 0;
 }
 
-uint8_t Generator::NotesManager::noteOn(int note, bool *r)
+uint8_t Generator::NotesManager::noteOn(int note, uint32_t volume, bool *r)
 {
     uint8_t beganAt = cycle;
     uint8_t chan = 0;
@@ -994,6 +996,7 @@ uint8_t Generator::NotesManager::noteOn(int note, bool *r)
         if(channels[chan].note == -1)
         {
             channels[chan].note = note;
+            channels[chan].volume = volume;
             channels[chan].held = false;
             channels[chan].age = 0;
             replace = false;
@@ -1018,6 +1021,7 @@ uint8_t Generator::NotesManager::noteOn(int note, bool *r)
             {
                 chan = (uint8_t)oldest;
                 channels[chan].note = note;
+                channels[chan].volume = volume;
                 channels[chan].held = false;
                 channels[chan].age = 0;
             }
