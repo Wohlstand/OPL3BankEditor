@@ -30,6 +30,8 @@ Version | What's new
         | (November 19, 2017)
         | Change: Added 'blank instrument' flag into existing variable
         | (March 26, 2018)
+        | Change: Added rhythm-mode drum type three-bit number
+        | (May 29, 2018)
 -------------------------------------------------------------------------------
 
 ===============================================================================
@@ -56,10 +58,18 @@ Bytes-Lenght  | Description
               | in pseudo-4-operators mode
     1         | 8-bit unsigned integer, Percussion instrument key number
     1         | 8-bit unsigned integer, Bitwise flags:
-              |     0x00 - 2-operator mode
-              |     0x01 - 4-operator mode
-              |     0x02 - pseudo-4-operator (two 2-operator voices) mode
-              |     0x04 - is 'blank' instrument (instrument which has no sound)
+              |     [0EEEDCBA]
+              |     A) 0x00 - 2-operator mode
+              |     B) 0x01 - 4-operator mode
+              |     C) 0x02 - pseudo-4-operator (two 2-operator voices) mode
+              |     D) 0x04 - is 'blank' instrument (instrument which has no sound)
+              |     E) 0x38 - Reserved for rhythm-mode percussion type number (three bits number)
+              |        -> 0x08 - is Bass drum
+              |        -> 0x10 - is Snare
+              |        -> 0x18 - is Tom-tom
+              |        -> 0x20 - is Cymbal
+              |        -> 0x28 - is Hi-hat
+              |     0) Reserved / Unused
     1         | 8-bit unsigned integer, Feedback / Connection
               | for 1'st and 2'nd operators or first voice
     1         | 8-bit unsigned integer, Feedback / Connection
@@ -124,8 +134,18 @@ Bytes-Lenght      |      Description
                   |     MIDI banks (every bank contains 128 instruments)
     2             | [PBanks] Unsigned 16-bit BE integer, count of percussion
                   |     MIDI banks (every bank contains 128 instruments)
-    1             | Chip global Deep-Tremolo and Deep-Vibrato register
-    1             | ADLMIDI's Volume model. Default is 0, "Generic"
+    1             | 8-bit unsigned integer, Global bank bitwise flags:
+                  |     [000000BA]
+                  |     A) Deep-Tremolo flag
+                  |     B) Deep-Vibrato flag
+                  |     0) Unused / Reserved
+    1             | 8-bit unsigned integer, ADLMIDI's volume scaling model
+                  |     enumeration, default is 0:
+                  |     0 - Generic, linearized
+                  |     1 - Native OPL3's logariphmic volume model
+                  |     2 - DMX volume model
+                  |     3 - Apogee Sound System's volume model
+                  |     4 - Windows 9x driver like volume model
 --VERSION >= 2---Melodic bank meta-data-----
 (repeat MBanks times)
     32            | Name of melodic bank null-terminated string
