@@ -91,18 +91,27 @@ public:
     void Touch(uint32_t c, uint32_t volume);
     void Patch(uint32_t c, uint32_t i);
     void Pan(uint32_t c, uint32_t value);
-    void PlayNoteF(int noteID, uint32_t volume = 127);
-    void PlayNoteCh(int channelID, uint32_t volume = 63);
+    void PlayNoteF(int noteID, uint32_t volume = 127, uint8_t ccvolume = 100, uint8_t ccexpr = 127);
+    void PlayNoteCh(int channelID);
     void StopNoteF(int noteID);
     void StopNoteCh(int channelID);
     void PlayDrum(uint8_t drum, int noteID);
     void switch4op(bool enabled, bool patchCleanUp = true);
 
+    enum VolumesScale
+    {
+        VOLUME_Generic,
+        VOLUME_CMF,
+        VOLUME_DMX,
+        VOLUME_APOGEE,
+        VOLUME_9X
+    };
+
 public:
     void Silence();
     void NoteOffAllChans();
 
-    void PlayNote(uint32_t volume = 127);
+    void PlayNote(uint32_t volume = 127, uint8_t ccvolume = 100, uint8_t ccexpr = 127);
     void PlayMajorChord();
     void PlayMinorChord();
     void PlayAugmentedChord();
@@ -118,11 +127,15 @@ public:
     void changeNote(int newnote);
     void changeDeepTremolo(bool enabled);
     void changeDeepVibrato(bool enabled);
+    void changeVolumeModel(int volmodel);
     void changeAdLibPercussion(bool enabled);
     void updateRegBD();
 
     const GeneratorDebugInfo &debugInfo() const
         { return m_debug; }
+
+    static uint32_t getChipVolume(
+        uint32_t volume, uint8_t ccvolume, uint8_t ccexpr, int volmodel);
 
 private:
     GeneratorDebugInfo m_debug;
@@ -139,6 +152,10 @@ private:
             int note    = -1;
             //! Note volume determined by velocity
             uint32_t volume = 0;
+            //! Channel volume determined by controller
+            uint8_t ccvolume = 0;
+            //! Channel expression determined by controller
+            uint8_t ccexpr = 0;
             //! Age in count of noteOn requests
             int age = 0;
             //! Whether it has a pending noteOff being delayed while held
@@ -153,7 +170,7 @@ private:
         NotesManager();
         ~NotesManager();
         void allocateChannels(int count);
-        uint8_t noteOn(int note, uint32_t volume, bool *replace = nullptr);
+        uint8_t noteOn(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr, bool *replace = nullptr);
         int8_t  noteOff(int note);
         void    channelOff(int ch);
         int8_t  findNoteOffChannel(int note);
@@ -169,6 +186,7 @@ private:
     double      m_bend = 0.0;
     double      m_bendsense = 2.0 / 8192;
     bool        m_hold = false;
+    int         m_volmodel = VOLUME_Generic;
     bool        m_isInstrumentLoaded = false;
     bool        m_4op_last_state;
     uint8_t     deepTremoloMode;

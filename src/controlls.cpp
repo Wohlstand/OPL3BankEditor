@@ -54,6 +54,11 @@ void BankEditor::on_volumeModel_currentIndexChanged(int index)
     m_bank.volume_model = (uint8_t)index;
 }
 
+void BankEditor::on_volumeSlider_valueChanged(int value)
+{
+    m_generator->ctl_changeVolume((unsigned)value);
+}
+
 void BankEditor::on_feedback1_valueChanged(int arg1)
 {
     if(m_lock) return;

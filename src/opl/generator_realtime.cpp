@@ -34,6 +34,8 @@ enum MessageTag
     MSG_CtlPatchChange,
     MSG_CtlDeepVibrato,
     MSG_CtlDeepTremolo,
+    MSG_CtlVolumeModel,
+    MSG_CtlVolume,
 };
 
 struct MessageHeader
@@ -218,6 +220,24 @@ void RealtimeGenerator::ctl_changeDeepTremolo(bool enabled)
     rb.put(enabled);
 }
 
+void RealtimeGenerator::ctl_changeVolumeModel(int model)
+{
+    Ring_Buffer &rb = *m_rb_ctl;
+    MessageHeader hdr = {MSG_CtlVolumeModel, sizeof(int)};
+    wait_for_fifo_write_space(rb, hdr.size);
+    rb.put(hdr);
+    rb.put(model);
+}
+
+void RealtimeGenerator::ctl_changeVolume(unsigned vol)
+{
+    Ring_Buffer &rb = *m_rb_ctl;
+    MessageHeader hdr = {MSG_CtlVolume, sizeof(unsigned)};
+    wait_for_fifo_write_space(rb, hdr.size);
+    rb.put(hdr);
+    rb.put(vol);
+}
+
 /* MIDI */
 void RealtimeGenerator::midi_event(const uint8_t *msg, unsigned msglen)
 {
@@ -318,6 +338,17 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
     case MSG_CtlDeepTremolo:
         gen.changeDeepTremolo(*(bool *)data);
         break;
+    case MSG_CtlVolumeModel:
+        gen.changeVolumeModel(*(int *)data);
+        break;
+    case MSG_CtlVolume:
+    {
+        unsigned vol = *(unsigned *)data;
+        vol = (vol < 128) ? vol : 127;
+        for (unsigned i = 0; i < 16; ++i)
+            m_midichan[i].volume = vol;
+        break;
+    }
     }
 }
 
@@ -344,7 +375,7 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
             break;
         case 0x9:
             gen.changeNote((int)note);
-            gen.PlayNote(vel);
+            gen.PlayNote(vel, ch.volume, ch.expression);
             break;
         case 0xb:
             switch (note) {
@@ -353,6 +384,12 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
                 break;
             case 123:  // all notes off
                 gen.NoteOffAllChans();
+                break;
+            case 7:  // volume
+                ch.volume = vel;
+                break;
+            case 11:  // expression
+                ch.expression = vel;
                 break;
             case 64:  // hold pedal
                 gen.Hold(vel >= 64);

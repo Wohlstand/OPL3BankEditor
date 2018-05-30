@@ -70,6 +70,7 @@ void BankEditor::initAudio()
     //Deep tremolo and vibrato
     connect(ui->deepVibrato,  SIGNAL(toggled(bool)), m_generator,  SLOT(ctl_changeDeepVibrato(bool)));
     connect(ui->deepTremolo,  SIGNAL(toggled(bool)), m_generator,  SLOT(ctl_changeDeepTremolo(bool)));
+    connect(ui->volumeModel,  SIGNAL(currentIndexChanged(int)), m_generator,  SLOT(ctl_changeVolumeModel(int)));
     //Generator's debug info
     connect(m_generator, SIGNAL(debugInfo(QString)), ui->debugBox, SLOT(setText(QString)));
     //Key pressed on piano bar
