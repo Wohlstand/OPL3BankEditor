@@ -990,8 +990,7 @@ void Generator::updateRegBD()
     WriteReg(0x0BD, m_regBD);
 }
 
-uint32_t Generator::getChipVolume(
-    uint32_t vol, uint8_t ccvolume, uint8_t ccexpr, int volmodel)
+uint32_t Generator::getChipVolume(uint32_t vol, uint8_t ccvolume, uint8_t ccexpr, int volmodel)
 {
     uint32_t volume;
 
