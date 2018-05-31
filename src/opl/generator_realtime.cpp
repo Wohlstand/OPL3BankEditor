@@ -301,9 +301,15 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
         gen.NoteOffAllChans();
         break;
     case MSG_CtlPlayNote:
+    {
+        // use constant velocity, and controls from MIDI channel 1.
+        // if UI supports changing these later, modify this. (TODO)
+        const MidiChannelInfo &ch = m_midichan[0];
+        const uint8_t vel = 127;
         gen.changeNote(*(unsigned *)data);
-        gen.PlayNote();
+        gen.PlayNote(vel, ch.volume, ch.expression);
         break;
+    }
     case MSG_CtlStopNote:
         gen.changeNote(*(unsigned *)data);
         gen.StopNote();
