@@ -32,8 +32,16 @@
 extern "C" {
 #endif
 
+#if !defined(__STDC_VERSION__) || (defined(__STDC_VERSION__) && (__STDC_VERSION__ < 199901L)) \
+  || defined(__STRICT_ANSI__) || !defined(__cplusplus)
+typedef signed char int8_t;
+typedef unsigned char uint8_t;
+typedef signed short int int16_t;
+typedef unsigned short int uint16_t;
+#endif
+
 /* Global OPL flags */
-typedef enum
+typedef enum WOPLFileFlags
 {
     /* Enable Deep-Tremolo flag */
     WOPL_FLAG_DEEP_TREMOLO = 0x01,
@@ -42,7 +50,7 @@ typedef enum
 } WOPLFileFlags;
 
 /* Volume scaling model implemented in the libADLMIDI */
-typedef enum
+typedef enum WOPL_VolumeModel
 {
     WOPL_VM_Generic = 0,
     WOPL_VM_Native,
@@ -51,7 +59,7 @@ typedef enum
     WOPL_VM_Win9x
 } WOPL_VolumeModel;
 
-typedef enum
+typedef enum WOPL_InstrumentFlags
 {
     /* Is two-operator single-voice instrument (no flags) */
     WOPL_Ins_2op        = 0x00,
@@ -69,7 +77,7 @@ typedef enum
     WOPL_Ins_ALL_MASK   = 0x07
 } WOPL_InstrumentFlags;
 
-typedef enum
+typedef enum WOPL_RythmMode
 {
     /* RythmMode: BassDrum */
     WOPL_RM_BassDrum  = 0x08,
@@ -84,7 +92,7 @@ typedef enum
 } WOPL_RythmMode;
 
 /* Error codes */
-typedef enum
+typedef enum WOPL_ErrorCodes
 {
     WOPL_ERR_OK = 0,
     /* Magic number is not maching */
@@ -108,7 +116,7 @@ typedef enum
 #define WOPL_OP_MODULATOR2  3
 
 /* OPL3 Oerators data  */
-typedef struct
+typedef struct WOPLOperator
 {
     /* AM/Vib/Env/Ksr/FMult characteristics */
     uint8_t avekf_20;
@@ -123,7 +131,7 @@ typedef struct
 } WOPLOperator;
 
 /* Instrument entry */
-typedef struct
+typedef struct WOPLInstrument
 {
     /* Title of the instrument */
     char    inst_name[34];
@@ -152,7 +160,7 @@ typedef struct
 } WOPLInstrument;
 
 /* Bank entry */
-typedef struct
+typedef struct WOPLBank
 {
     /* Name of bank */
     char    bank_name[33];
@@ -165,7 +173,7 @@ typedef struct
 } WOPLBank;
 
 /* Instrument data file */
-typedef struct
+typedef struct WOPIFile
 {
     /* Version of instrument file */
     uint16_t        version;
@@ -176,7 +184,7 @@ typedef struct
 } WOPIFile;
 
 /* Bank data file */
-typedef struct
+typedef struct WOPLFile
 {
     /* Version of bank file */
     uint16_t version;
