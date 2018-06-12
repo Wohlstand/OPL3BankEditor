@@ -6,6 +6,7 @@ Bank_Examples/* linguist-vendored
 *.sh            linguist-vendored
 *.htm           linguist-vendored
 *.txt text eol=crlf
+*.ts            linguist-vendored
 
 # Watcom's project files
 *.wpj text eol=crlf
