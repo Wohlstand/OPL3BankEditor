@@ -55,7 +55,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     FmBank::Instrument &in = *in_p;
     std::vector<int16_t> stereoSampleBuf;
 
-    const unsigned rate = 44100;
+    const unsigned rate = 49716;
     const unsigned interval             = 150;
     const unsigned samples_per_interval = rate / interval;
     const int notenum = in.percNoteNum >= 128 ? (in.percNoteNum - 128) : in.percNoteNum;
@@ -75,7 +75,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     for(unsigned a = 0; a < 18; a += 2)
         WRITE_REG((uint16_t)initdata[a], (uint8_t)initdata[a + 1]);
 
-    const unsigned n_notes = in.en_4op || in.en_pseudo4op ? 2 : 1;
+    const unsigned n_notes = (in.en_4op || in.en_pseudo4op) ? 2 : 1;
     unsigned x[2] = {0, 0};
     if(n_notes == 2 && !in.en_pseudo4op)
     {
@@ -85,8 +85,8 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 
     uint8_t rawData[2][11];
 
-    rawData[0][0] = in.getAVEKM(MODULATOR1);
-    rawData[0][1] = in.getAVEKM(CARRIER1);
+    rawData[0][0] = in.getAVEKM(MODULATOR1) & 0x3F; //For clearer measurement, disable tremolo and vibrato
+    rawData[0][1] = in.getAVEKM(CARRIER1) & 0x3F;
     rawData[0][2] = in.getAtDec(MODULATOR1);
     rawData[0][3] = in.getAtDec(CARRIER1);
     rawData[0][4] = in.getSusRel(MODULATOR1);
@@ -97,8 +97,8 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     rawData[0][9] = in.getKSLL(CARRIER1);
     rawData[0][10] = in.getFBConn1();
 
-    rawData[1][0] = in.getAVEKM(MODULATOR2);
-    rawData[1][1] = in.getAVEKM(CARRIER2);
+    rawData[1][0] = in.getAVEKM(MODULATOR2) & 0x3F;
+    rawData[1][1] = in.getAVEKM(CARRIER2) & 0x3F;
     rawData[1][2] = in.getAtDec(MODULATOR2);
     rawData[1][3] = in.getAtDec(CARRIER2);
     rawData[1][4] = in.getSusRel(MODULATOR2);
@@ -144,6 +144,9 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     const unsigned max_on  = 40;
     const unsigned max_off = 60;
 
+    const double min_coefficient_on = 0.05;
+    const double min_coefficient_off = 0.2;
+
     // For up to 40 seconds, measure mean amplitude.
     std::vector<double> amplitudecurve_on;
     double highest_sofar = 0;
@@ -177,8 +180,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
             highest_sofar = std_deviation;
 
         if((period > max_silent * interval) &&
-            ((std_deviation < highest_sofar * 0.2)||
-             (sound_min >= -1 && sound_max <= 1))
+           ( (std_deviation < highest_sofar * min_coefficient_on) || (sound_min >= -1 && sound_max <= 1) )
         )
             break;
     }
@@ -214,7 +216,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
         std_deviation = std::sqrt(std_deviation / samples_per_interval);
         amplitudecurve_off.push_back(std_deviation);
 
-        if(std_deviation < highest_sofar * 0.2)
+        if(std_deviation < highest_sofar * min_coefficient_off)
             break;
 
         if((period > max_silent * interval) && (sound_min >= -1 && sound_max <= 1))
@@ -238,7 +240,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     }
     for(size_t a = peak_amplitude_time; a < amplitudecurve_on.size(); ++a)
     {
-        if(amplitudecurve_on[a] <= peak_amplitude_value * 0.2)
+        if(amplitudecurve_on[a] <= peak_amplitude_value * min_coefficient_on)
         {
             quarter_amplitude_time = a;
             break;
@@ -246,14 +248,14 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     }
     for(size_t a = 0; a < amplitudecurve_off.size(); ++a)
     {
-        if(amplitudecurve_off[a] <= peak_amplitude_value * 0.2)
+        if(amplitudecurve_off[a] <= peak_amplitude_value * min_coefficient_off)
         {
             keyoff_out_time = a;
             break;
         }
     }
 
-    if(keyoff_out_time == 0 && amplitudecurve_on.back() < peak_amplitude_value * 0.2)
+    if((keyoff_out_time == 0) && amplitudecurve_on.back() < peak_amplitude_value * min_coefficient_on)
         keyoff_out_time = quarter_amplitude_time;
 
     DurationInfo result;
@@ -274,7 +276,8 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 
 static void MeasureDurationsDefault(FmBank::Instrument *in_p)
 {
-    NukedOPL3 chip;
+    //NukedOPL3 chip;
+    DosBoxOPL3 chip;
     MeasureDurations(in_p, &chip);
 }
 
