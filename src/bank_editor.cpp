@@ -882,6 +882,7 @@ void BankEditor::loadInstrument()
         m_lock = true;
         ui->insName->setEnabled(false);
         ui->insName->clear();
+        ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2").arg("--").arg("--"));
         m_lock = false;
         return;
     }
@@ -892,6 +893,9 @@ void BankEditor::loadInstrument()
     ui->insName->setEnabled(true);
     m_lock = true;
     ui->insName->setText(QString::fromUtf8(m_curInst->name));
+    ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2")
+                                 .arg(m_curInst->ms_sound_kon)
+                                 .arg(m_curInst->ms_sound_koff));
     ui->perc_noteNum->setValue(m_curInst->percNoteNum);
     ui->percMode->setCurrentIndex(m_curInst->adlib_drum_number > 0 ? (m_curInst->adlib_drum_number - 5) : 0);
     ui->op4mode->setChecked(m_curInst->en_4op);

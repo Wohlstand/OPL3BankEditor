@@ -2728,6 +2728,25 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="debugDelaysInfo">
+            <property name="font">
+             <font>
+              <family>Monospace</family>
+              <pointsize>7</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string notr="true">Delay on: --, off: --</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::RichText</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QGroupBox" name="midiIn_zone">
             <property name="title">
              <string>MIDI input</string>
@@ -3449,7 +3468,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>1117</width>
-     <height>24</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
