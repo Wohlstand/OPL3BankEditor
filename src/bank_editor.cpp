@@ -760,6 +760,30 @@ void BankEditor::on_actionReMeasure_triggered()
     }
 }
 
+void BankEditor::on_actionReMeasureOne_triggered()
+{
+    FmBank::Instrument *inst = m_curInst;
+    FmBank::Instrument *instBackup = m_curInstBackup;
+    if(!inst)
+    {
+        QMessageBox::information(this,
+                                 tr("Nothing to measure"),
+                                 tr("No selected instrument to measure. Please select an instrument first!"));
+        return;
+    }
+
+    FmBank::Instrument workInst = *inst;
+    if(workInst.is_blank)
+        return;
+
+    if(m_measurer->doMeasurement(workInst))
+    {
+        *instBackup = *inst;
+        *inst = workInst;
+        loadInstrument();
+    }
+}
+
 void BankEditor::on_actionChipsBenchmark_triggered()
 {
     if(m_curInst)
