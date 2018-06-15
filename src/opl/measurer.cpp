@@ -292,7 +292,6 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     std::vector<double> amplitudecurve_on;
     double highest_sofar = 0;
     short sound_min = 0, sound_max = 0;
-    audioHistory.clear();
     amplitudecurve_on.reserve(max_on * interval);
     for(unsigned period = 0; period < max_on * interval; ++period)
     {
@@ -336,7 +335,6 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 
     // Now, for up to 60 seconds, measure mean amplitude.
     std::vector<double> amplitudecurve_off;
-    audioHistory.clear();
     amplitudecurve_off.reserve(max_off * interval);
     for(unsigned period = 0; period < max_off * interval; ++period)
     {
