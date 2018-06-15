@@ -27,6 +27,8 @@
 #include <chrono>
 #include <cmath>
 #include <memory>
+#include <fstream>
+#include <limits>
 
 #include "measurer.h"
 
@@ -113,6 +115,74 @@ static double MeasureRMS(const double *signal, const double *window, unsigned le
     rms = std::sqrt(rms / (length - 1));
 
     return rms;
+}
+
+static bool WriteAmplitudePlot(
+    const std::string &fileprefix,
+    const std::vector<double> &amps_on,
+    const std::vector<double> &amps_off,
+    double timestep)
+{
+    std::string datafile = fileprefix + ".dat";
+    std::string gpfile_on_off[2] =
+        { fileprefix + "-on.gp",
+          fileprefix + "-off.gp" };
+    const char *plot_title[2] =
+        { "Key-On Amplitude", "Key-Off Amplitude" };
+
+#if !defined(_WIN32)
+    size_t datafile_base = datafile.rfind("/");
+#else
+    size_t datafile_base = datafile.find_last_of("/\\");
+#endif
+    datafile_base = (datafile_base == datafile.npos) ? 0 : (datafile_base + 1);
+
+    size_t n_on = amps_on.size();
+    size_t n_off = amps_off.size();
+    size_t n = (n_on > n_off) ? n_on : n_off;
+
+    std::ofstream outs;
+
+    outs.open(datafile);
+    if(outs.bad())
+        return false;
+    for(size_t i = 0; i < n; ++i)
+    {
+        const double nan = std::numeric_limits<double>::quiet_NaN();
+        double values[2] =
+            { (i < n_on) ? amps_on[i] : nan,
+              (i < n_off) ? amps_off[i] : nan };
+        outs << i * timestep;
+        for(unsigned j = 0; j < 2; ++j)
+        {
+            if(!std::isnan(values[j]))
+                outs << ' ' << values[j];
+            else
+                outs << " m";
+        }
+        outs << '\n';
+    }
+    outs.flush();
+    if(outs.bad())
+        return false;
+    outs.close();
+
+    for(unsigned i = 0; i < 2; ++i)
+    {
+        outs.open(gpfile_on_off[i]);
+        if(outs.bad())
+            return false;
+        outs << "set datafile missing \"m\"\n";
+        outs << "plot \"" << datafile.substr(datafile_base) <<  "\""
+            " u 1:" << 2 + i << " w linespoints pt 4"
+            " t \"" << plot_title[i] << "\"\n";
+        outs.flush();
+        if(outs.bad())
+            return false;
+        outs.close();
+    }
+
+    return true;
 }
 
 static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
@@ -288,6 +358,13 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 
         if((period > max_silent * interval) && (sound_min >= -1 && sound_max <= 1))
             break;
+    }
+
+    if(false)
+    {
+        WriteAmplitudePlot(
+            "/tmp/amplitude", amplitudecurve_on, amplitudecurve_off,
+            (double)samples_per_interval / rate);
     }
 
     /* Analyze the results */
