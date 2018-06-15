@@ -345,6 +345,11 @@ private slots:
     void on_actionReMeasure_triggered();
 
     /**
+     * @brief Re-calculate sounding delays of the current instrument
+     */
+    void on_actionReMeasureOne_triggered();
+
+    /**
      * @brief Run benchmark of all supported emulators basing on current instrument
      */
     void on_actionChipsBenchmark_triggered();

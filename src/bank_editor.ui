@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1117</width>
-    <height>825</height>
+    <height>842</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -3468,7 +3468,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>1117</width>
-     <height>20</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -3521,6 +3521,7 @@ of second voice</string>
     <addaction name="separator"/>
     <addaction name="actionReset_current_instrument"/>
     <addaction name="separator"/>
+    <addaction name="actionReMeasureOne"/>
     <addaction name="actionReMeasure"/>
     <addaction name="actionChipsBenchmark"/>
     <addaction name="separator"/>
@@ -3756,6 +3757,11 @@ of second voice</string>
   <action name="actionLanguageDefault">
    <property name="text">
     <string>System default</string>
+   </property>
+  </action>
+  <action name="actionReMeasureOne">
+   <property name="text">
+    <string>Re-Calculate sounding delays of instrument</string>
    </property>
   </action>
  </widget>
