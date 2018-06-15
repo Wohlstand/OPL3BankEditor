@@ -27,6 +27,8 @@
 #include <chrono>
 #include <cmath>
 #include <memory>
+#include <fstream>
+#include <limits>
 
 #include "measurer.h"
 
@@ -50,15 +52,154 @@ struct DurationInfo
     uint8_t     padding[7];
 };
 
+template <class T>
+class AudioHistory
+{
+    std::unique_ptr<T[]> m_data;
+    size_t m_index = 0;  // points to the next write slot
+    size_t m_length = 0;
+    size_t m_capacity = 0;
+
+public:
+    size_t size() const { return m_length; }
+    size_t capacity() const { return m_capacity; }
+    const T *data() const { return &m_data[m_index + m_capacity - m_length]; }
+
+    void reset(size_t capacity)
+    {
+        m_data.reset(new T[2 * capacity]());
+        m_index = 0;
+        m_length = 0;
+        m_capacity = capacity;
+    }
+
+    void clear()
+    {
+        m_length = 0;
+    }
+
+    void add(const T &item)
+    {
+        T *data = m_data.get();
+        const size_t capacity = m_capacity;
+        size_t index = m_index;
+        data[index] = item;
+        data[index + capacity] = item;
+        m_index = (index + 1 != capacity) ? (index + 1) : 0;
+        size_t length = m_length + 1;
+        m_length = (length < capacity) ? length : capacity;
+    }
+};
+
+static void HannWindow(double *w, unsigned n)
+{
+    for (unsigned i = 0; i < n; ++i)
+        w[i] = 0.5 * (1.0 - std::cos(2 * M_PI * i / (n - 1)));
+}
+
+static double MeasureRMS(const double *signal, const double *window, unsigned length)
+{
+    double mean = 0;
+#pragma omp simd reduction(+: mean)
+    for(unsigned i = 0; i < length; ++i)
+        mean += window[i] * signal[i];
+    mean /= length;
+
+    double rms = 0;
+#pragma omp simd reduction(+: rms)
+    for(unsigned i = 0; i < length; ++i)
+    {
+        double diff = window[i] * signal[i] - mean;
+        rms += diff * diff;
+    }
+    rms = std::sqrt(rms / (length - 1));
+
+    return rms;
+}
+
+static bool WriteAmplitudePlot(
+    const std::string &fileprefix,
+    const std::vector<double> &amps_on,
+    const std::vector<double> &amps_off,
+    double timestep)
+{
+    std::string datafile = fileprefix + ".dat";
+    std::string gpfile_on_off[2] =
+        { fileprefix + "-on.gp",
+          fileprefix + "-off.gp" };
+    const char *plot_title[2] =
+        { "Key-On Amplitude", "Key-Off Amplitude" };
+
+#if !defined(_WIN32)
+    size_t datafile_base = datafile.rfind("/");
+#else
+    size_t datafile_base = datafile.find_last_of("/\\");
+#endif
+    datafile_base = (datafile_base == datafile.npos) ? 0 : (datafile_base + 1);
+
+    size_t n_on = amps_on.size();
+    size_t n_off = amps_off.size();
+    size_t n = (n_on > n_off) ? n_on : n_off;
+
+    std::ofstream outs;
+
+    outs.open(datafile);
+    if(outs.bad())
+        return false;
+    for(size_t i = 0; i < n; ++i)
+    {
+        const double nan = std::numeric_limits<double>::quiet_NaN();
+        double values[2] =
+            { (i < n_on) ? amps_on[i] : nan,
+              (i < n_off) ? amps_off[i] : nan };
+        outs << i * timestep;
+        for(unsigned j = 0; j < 2; ++j)
+        {
+            if(!std::isnan(values[j]))
+                outs << ' ' << values[j];
+            else
+                outs << " m";
+        }
+        outs << '\n';
+    }
+    outs.flush();
+    if(outs.bad())
+        return false;
+    outs.close();
+
+    for(unsigned i = 0; i < 2; ++i)
+    {
+        outs.open(gpfile_on_off[i]);
+        if(outs.bad())
+            return false;
+        outs << "set datafile missing \"m\"\n";
+        outs << "plot \"" << datafile.substr(datafile_base) <<  "\""
+            " u 1:" << 2 + i << " w linespoints pt 4"
+            " t \"" << plot_title[i] << "\"\n";
+        outs.flush();
+        if(outs.bad())
+            return false;
+        outs.close();
+    }
+
+    return true;
+}
+
 static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 {
     FmBank::Instrument &in = *in_p;
-    std::vector<int16_t> stereoSampleBuf;
+    AudioHistory<double> audioHistory;
 
     const unsigned rate = 49716;
     const unsigned interval             = 150;
     const unsigned samples_per_interval = rate / interval;
     const int notenum = in.percNoteNum >= 128 ? (in.percNoteNum - 128) : in.percNoteNum;
+
+    const double historyLength = 1.0;  // maximum duration to memorize (seconds)
+    audioHistory.reset(std::ceil(historyLength * rate));
+
+    std::unique_ptr<double[]> window;
+    unsigned winsize = 0;
 
 #define WRITE_REG(key, value) opl->writeReg(key, value)
     OPLChipBase *opl = chip;
@@ -151,36 +292,39 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     std::vector<double> amplitudecurve_on;
     double highest_sofar = 0;
     short sound_min = 0, sound_max = 0;
+    amplitudecurve_on.reserve(max_on * interval);
     for(unsigned period = 0; period < max_on * interval; ++period)
     {
-        stereoSampleBuf.clear();
-        stereoSampleBuf.resize(samples_per_interval * 2, 0);
-
-        opl->generate(stereoSampleBuf.data(), samples_per_interval);
-
-        double mean = 0.0;
-
-        for(unsigned long c = 0; c < samples_per_interval; ++c)
+        int16_t audioBuffer[2 * 256];
+        for(unsigned i = 0; i < samples_per_interval;)
         {
-            short s = stereoSampleBuf[c * 2];
-            mean += s;
-            if(sound_min > s) sound_min = s;
-            if(sound_max < s) sound_max = s;
+            size_t blocksize = samples_per_interval - i;
+            blocksize = (blocksize < 256) ? blocksize : 256;
+            opl->generate(audioBuffer, blocksize);
+            for (unsigned j = 0; j < blocksize; ++j)
+            {
+                int16_t s = audioBuffer[2 * j];
+                audioHistory.add(s);
+                if(sound_min > s) sound_min = s;
+                if(sound_max < s) sound_max = s;
+            }
+            i += blocksize;
         }
-        mean /= samples_per_interval;
-        double std_deviation = 0;
-        for(unsigned long c = 0; c < samples_per_interval; ++c)
+
+        if(winsize != audioHistory.size())
         {
-            double diff = (stereoSampleBuf[c * 2] - mean);
-            std_deviation += diff * diff;
+            winsize = audioHistory.size();
+            window.reset(new double[winsize]);
+            HannWindow(window.get(), winsize);
         }
-        std_deviation = std::sqrt(std_deviation / samples_per_interval);
-        amplitudecurve_on.push_back(std_deviation);
-        if(std_deviation > highest_sofar)
-            highest_sofar = std_deviation;
+
+        double rms = MeasureRMS(audioHistory.data(), window.get(), winsize);
+        amplitudecurve_on.push_back(rms);
+        if(rms > highest_sofar)
+            highest_sofar = rms;
 
         if((period > max_silent * interval) &&
-           ( (std_deviation < highest_sofar * min_coefficient_on) || (sound_min >= -1 && sound_max <= 1) )
+           ( (rms < highest_sofar * min_coefficient_on) || (sound_min >= -1 && sound_max <= 1) )
         )
             break;
     }
@@ -191,36 +335,46 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 
     // Now, for up to 60 seconds, measure mean amplitude.
     std::vector<double> amplitudecurve_off;
+    amplitudecurve_off.reserve(max_off * interval);
     for(unsigned period = 0; period < max_off * interval; ++period)
     {
-        stereoSampleBuf.clear();
-        stereoSampleBuf.resize(samples_per_interval * 2);
-
-        opl->generate(stereoSampleBuf.data(), samples_per_interval);
-
-        double mean = 0.0;
-        for(unsigned long c = 0; c < samples_per_interval; ++c)
+        int16_t audioBuffer[2 * 256];
+        for(unsigned i = 0; i < samples_per_interval;)
         {
-            short s = stereoSampleBuf[c * 2];
-            mean += s;
-            if(sound_min > s) sound_min = s;
-            if(sound_max < s) sound_max = s;
+            size_t blocksize = samples_per_interval - i;
+            blocksize = (blocksize < 256) ? blocksize : 256;
+            opl->generate(audioBuffer, blocksize);
+            for (unsigned j = 0; j < blocksize; ++j)
+            {
+                int16_t s = audioBuffer[2 * j];
+                audioHistory.add(s);
+                if(sound_min > s) sound_min = s;
+                if(sound_max < s) sound_max = s;
+            }
+            i += blocksize;
         }
-        mean /= samples_per_interval;
-        double std_deviation = 0;
-        for(unsigned long c = 0; c < samples_per_interval; ++c)
-        {
-            double diff = (stereoSampleBuf[c * 2] - mean);
-            std_deviation += diff * diff;
-        }
-        std_deviation = std::sqrt(std_deviation / samples_per_interval);
-        amplitudecurve_off.push_back(std_deviation);
 
-        if(std_deviation < highest_sofar * min_coefficient_off)
+        if(winsize != audioHistory.size())
+        {
+            winsize = audioHistory.size();
+            window.reset(new double[winsize]);
+            HannWindow(window.get(), winsize);
+        }
+
+        double rms = MeasureRMS(audioHistory.data(), window.get(), winsize);
+        amplitudecurve_off.push_back(rms);
+        if(rms < highest_sofar * min_coefficient_off)
             break;
 
         if((period > max_silent * interval) && (sound_min >= -1 && sound_max <= 1))
             break;
+    }
+
+    if(false)
+    {
+        WriteAmplitudePlot(
+            "/tmp/amplitude", amplitudecurve_on, amplitudecurve_off,
+            (double)samples_per_interval / rate);
     }
 
     /* Analyze the results */
