@@ -773,7 +773,10 @@ void BankEditor::on_actionReMeasureOne_triggered()
     }
 
     FmBank::Instrument workInst = *inst;
-    if(workInst.is_blank)
+    workInst.is_blank = false;
+
+    const FmBank::Instrument blankInst = FmBank::emptyInst();
+    if(memcmp(&workInst, &blankInst, sizeof(FmBank::Instrument)) == 0)
         return;
 
     if(m_measurer->doMeasurement(workInst))
