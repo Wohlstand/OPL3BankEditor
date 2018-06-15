@@ -303,7 +303,12 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
             blocksize = (blocksize < 256) ? blocksize : 256;
             opl->generate(audioBuffer, blocksize);
             for (unsigned j = 0; j < blocksize; ++j)
-                audioHistory.add(audioBuffer[2*j]);
+            {
+                int16_t s = audioBuffer[2 * j];
+                audioHistory.add(s);
+                if(sound_min > s) sound_min = s;
+                if(sound_max < s) sound_max = s;
+            }
             i += blocksize;
         }
 
@@ -342,7 +347,12 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
             blocksize = (blocksize < 256) ? blocksize : 256;
             opl->generate(audioBuffer, blocksize);
             for (unsigned j = 0; j < blocksize; ++j)
-                audioHistory.add(audioBuffer[2*j]);
+            {
+                int16_t s = audioBuffer[2 * j];
+                audioHistory.add(s);
+                if(sound_min > s) sound_min = s;
+                if(sound_max < s) sound_max = s;
+            }
             i += blocksize;
         }
 
