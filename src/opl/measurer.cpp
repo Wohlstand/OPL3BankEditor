@@ -97,13 +97,14 @@ static void HannWindow(double *w, unsigned n)
 
 static double MeasureRMS(const double *signal, const double *window, unsigned length)
 {
-    double mean = 0.0;
-
+    double mean = 0;
+#pragma omp simd
     for(unsigned i = 0; i < length; ++i)
         mean += window[i] * signal[i];
     mean /= length;
 
     double rms = 0;
+#pragma omp simd reduction(+: rms)
     for(unsigned i = 0; i < length; ++i)
     {
         double diff = window[i] * signal[i] - mean;
