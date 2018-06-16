@@ -95,6 +95,17 @@ add_custom_target(OPL3BankEditor_translations ALL
 install(FILES ${TRANSLATIONS}
   DESTINATION "share/opl3_bank_editor/translations")
 
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND
+    NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  install(FILES "src/resources/opl3_bank_editor.desktop"
+    DESTINATION "share/applications")
+  foreach(size 16;32;48)
+    install(FILES "src/resources/opl3_${size}.png"
+      DESTINATION "share/icons/hicolor/${size}x${size}/apps"
+      RENAME "opl3_bank_editor.png")
+  endforeach()
+endif()
+
 add_executable(OPL3BankEditor WIN32 MACOSX_BUNDLE
   ${SOURCES} ${FORMS} ${RESOURCES})
 set_target_properties(OPL3BankEditor PROPERTIES
