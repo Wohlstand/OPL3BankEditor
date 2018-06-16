@@ -42,6 +42,8 @@ greaterThan(QT_MAJOR_VERSION, 4):{
 CONFIG += rtmidi
 CONFIG += rtaudio
 
+QMAKE_CXXFLAGS += -fopenmp
+
 TEMPLATE = app
 TARGET = opl3_bank_editor
 INCLUDEPATH += $$PWD/

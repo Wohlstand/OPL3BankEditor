@@ -15,6 +15,8 @@ endif()
 set(USE_RTMIDI "ON" CACHE STRING "Use RtMidi")
 set(USE_RTAUDIO "ON" CACHE STRING "Use RtAudio")
 
+OPTION(DEBUG_WRITE_AMPLITUDE_PLOT "Write the captured result of sounding measurer into the apmplitudes plot" OFF)
+
 include(FindPkgConfig)
 
 find_package(Qt5Widgets REQUIRED)
@@ -97,6 +99,13 @@ add_executable(OPL3BankEditor WIN32 MACOSX_BUNDLE
   ${SOURCES} ${FORMS} ${RESOURCES})
 set_target_properties(OPL3BankEditor PROPERTIES
   OUTPUT_NAME "opl3_bank_editor")
+if(DEBUG_WRITE_AMPLITUDE_PLOT)
+  target_compile_definitions(OPL3BankEditor PRIVATE "-DDEBUG_WRITE_AMPLITUDE_PLOT")
+endif()
+
+if(NOT MSVC)
+  target_compile_options(OPL3BankEditor PRIVATE "-fopenmp")
+endif()
 target_link_libraries(OPL3BankEditor PRIVATE Qt5::Widgets Qt5::Concurrent ${CMAKE_THREAD_LIBS_INIT})
 install(TARGETS OPL3BankEditor DESTINATION "bin" RENAME "opl3_bank_editor")
 
