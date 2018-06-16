@@ -10,3 +10,4 @@ Icon=opl3_bank_editor
 Exec=opl3_bank_editor
 Categories=AudioVideo;Audio
 Type=Application
+MimeType=application/x-opl3-wopl;application/x-opl3-opli

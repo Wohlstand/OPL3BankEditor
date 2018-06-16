@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-opl3-wopl">
+    <sub-class-of type="application/octet-stream"/>
+    <comment>OPL3 bank (WOPL)</comment>
+    <glob pattern="*.wopl"/>
+  </mime-type>
+</mime-info>

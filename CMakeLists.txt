@@ -99,6 +99,10 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND
     NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   install(FILES "src/resources/opl3_bank_editor.desktop"
     DESTINATION "share/applications")
+  foreach(format wopl opli)
+    install(FILES "src/resources/mime/opl3-${format}.xml"
+      DESTINATION "share/mime/packages")
+  endforeach()
   foreach(size 16;32;48)
     install(FILES "src/resources/opl3_${size}.png"
       DESTINATION "share/icons/hicolor/${size}x${size}/apps"
