@@ -324,6 +324,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     audioHistory.reset(std::ceil(historyLength * g_outputRate));
 
     std::unique_ptr<double[]> window;
+    window.reset(new double[audioHistory.capacity()]);
     unsigned winsize = 0;
 
     TinySynth synth;
@@ -350,23 +351,31 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     double begin_amplitude        = 0;
     double peak_amplitude_value   = 0;
     size_t peak_amplitude_time    = 0;
-    size_t quarter_amplitude_time = 0;
+    size_t quarter_amplitude_time = max_period_on;
+    bool   quarter_amplitude_time_found = false;
     size_t keyoff_out_time        = 0;
+    bool   keyoff_out_time_found  = false;
 
+    const size_t audioBufferLength = 256;
+    const size_t audioBufferSize = 2 * audioBufferLength;
+    int16_t audioBuffer[audioBufferSize];
 
     // For up to 40 seconds, measure mean amplitude.
+#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
     std::vector<double> amplitudecurve_on;
+#endif
     double highest_sofar = 0;
     short sound_min = 0, sound_max = 0;
 
+#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
     amplitudecurve_on.reserve(max_period_on);
+#endif
     for(unsigned period = 0; period < max_period_on; ++period, ++windows_passed_on)
     {
-        int16_t audioBuffer[2 * 256];
         for(unsigned i = 0; i < samples_per_interval;)
         {
             size_t blocksize = samples_per_interval - i;
-            blocksize = (blocksize < 256) ? blocksize : 256;
+            blocksize = (blocksize < audioBufferLength) ? blocksize : audioBufferLength;
             synth.generate(audioBuffer, blocksize);
             for (unsigned j = 0; j < blocksize; ++j)
             {
@@ -381,12 +390,33 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
         if(winsize != audioHistory.size())
         {
             winsize = audioHistory.size();
-            window.reset(new double[winsize]);
             HannWindow(window.get(), winsize);
         }
 
         double rms = MeasureRMS(audioHistory.data(), window.get(), winsize);
+        /* ======== Peak time detection ======== */
+        if(period == 0)
+        {
+            begin_amplitude = rms;
+            peak_amplitude_value = rms;
+            peak_amplitude_time = 0;
+        }
+        else if(rms > peak_amplitude_value)
+        {
+            peak_amplitude_value = rms;
+            peak_amplitude_time  = period;
+            // In next step, update the quater amplitude time
+            quarter_amplitude_time_found = false;
+        }
+        else if(!quarter_amplitude_time_found && (rms <= peak_amplitude_value * min_coefficient_on))
+        {
+            quarter_amplitude_time = period;
+            quarter_amplitude_time_found = true;
+        }
+        /* ======== Peak time detection =END==== */
+#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
         amplitudecurve_on.push_back(rms);
+#endif
         if(rms > highest_sofar)
             highest_sofar = rms;
 
@@ -395,6 +425,21 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
         )
             break;
     }
+
+    if(!quarter_amplitude_time_found)
+        quarter_amplitude_time = windows_passed_on;
+
+#ifdef DEBUG_AMPLITUDE_PEAK_VALIDATION
+    char outBufOld[250];
+    char outBufNew[250];
+    std::memset(outBufOld, 0, 250);
+    std::memset(outBufNew, 0, 250);
+
+    std::snprintf(outBufOld, 250, "Peak: beg=%g, peakv=%g, peakp=%zu, q=%zu",
+                begin_amplitude,
+                peak_amplitude_value,
+                peak_amplitude_time,
+                quarter_amplitude_time);
 
     /* Detect the peak time */
     begin_amplitude        = amplitudecurve_on[0];
@@ -419,6 +464,19 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
         }
     }
 
+    std::snprintf(outBufNew, 250, "Peak: beg=%g, peakv=%g, peakp=%zu, q=%zu",
+                begin_amplitude,
+                peak_amplitude_value,
+                peak_amplitude_time,
+                quarter_amplitude_time);
+
+    if(memcmp(outBufNew, outBufOld, 250) != 0)
+    {
+        qDebug() << "Pre: " << outBufOld << "\n" <<
+                    "Pos: " << outBufNew;
+    }
+#endif
+
     if(windows_passed_on >= max_period_on)
     {
         // Just Keyoff the note
@@ -427,7 +485,6 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     else
     {
         // Reset the emulator and re-run the "ON" simulation until reaching the peak time
-        int16_t dummyBuffer[2 * 256];
         synth.resetChip();
         synth.setInstrument(in_p);
         synth.noteOn();
@@ -440,10 +497,10 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
             for(unsigned i = 0; i < samples_per_interval;)
             {
                 size_t blocksize = samples_per_interval - i;
-                blocksize = (blocksize < 256) ? blocksize : 256;
-                synth.generate(dummyBuffer, blocksize);
+                blocksize = (blocksize < audioBufferLength) ? blocksize : audioBufferLength;
+                synth.generate(audioBuffer, blocksize);
                 for (unsigned j = 0; j < blocksize; ++j)
-                    audioHistory.add(dummyBuffer[2 * j]);
+                    audioHistory.add(audioBuffer[2 * j]);
                 i += blocksize;
             }
         }
@@ -451,11 +508,12 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     }
 
     // Now, for up to 60 seconds, measure mean amplitude.
+#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
     std::vector<double> amplitudecurve_off;
     amplitudecurve_off.reserve(max_period_off);
+#endif
     for(unsigned period = 0; period < max_period_off; ++period, ++windows_passed_off)
     {
-        int16_t audioBuffer[2 * 256];
         for(unsigned i = 0; i < samples_per_interval;)
         {
             size_t blocksize = samples_per_interval - i;
@@ -474,12 +532,20 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
         if(winsize != audioHistory.size())
         {
             winsize = audioHistory.size();
-            window.reset(new double[winsize]);
             HannWindow(window.get(), winsize);
         }
 
         double rms = MeasureRMS(audioHistory.data(), window.get(), winsize);
+        /* ======== Find Key Off time ======== */
+        if(!keyoff_out_time_found && (rms <= peak_amplitude_value * min_coefficient_off))
+        {
+            keyoff_out_time = period;
+            keyoff_out_time_found = true;
+        }
+        /* ======== Find Key Off time ==END=== */
+#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
         amplitudecurve_off.push_back(rms);
+#endif
         if(rms < highest_sofar * min_coefficient_off)
             break;
 
@@ -493,6 +559,9 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
         (double)samples_per_interval / g_outputRate);
 #endif
 
+#ifdef DEBUG_AMPLITUDE_PEAK_VALIDATION
+    size_t debug_peak_old = keyoff_out_time;
+
     /* Analyze the final results */
     for(size_t a = 0; a < amplitudecurve_off.size(); ++a)
     {
@@ -503,8 +572,11 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
         }
     }
 
-    //if((keyoff_out_time == 0) && (amplitudecurve_on.back() < peak_amplitude_value * min_coefficient_off))
-    //    keyoff_out_time = quarter_amplitude_time;
+    if(debug_peak_old != keyoff_out_time)
+    {
+        qDebug() << "KeyOff time is 1:" << debug_peak_old << " and 2:" << keyoff_out_time;
+    }
+#endif
 
     DurationInfo result;
     result.peak_amplitude_time = peak_amplitude_time;
