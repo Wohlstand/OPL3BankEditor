@@ -49,8 +49,14 @@ void Application::translate(const QString &language)
 {
     if (language.isEmpty())
         return translate(QLocale::system().name());
-    m_qtTranslator.load("qt_" + language, getQtTranslationDir());
-    m_appTranslator.load("opl3bankeditor_" + language, getAppTranslationDir());
+
+    QString qtTranslationDir = getQtTranslationDir();
+    qDebug() << "Qt translation dir:" << qtTranslationDir;
+    m_qtTranslator.load("qt_" + language, qtTranslationDir);
+
+    QString appTranslationDir = getAppTranslationDir();
+    qDebug() << "App translation dir:" << appTranslationDir;
+    m_appTranslator.load("opl3bankeditor_" + language, appTranslationDir);
 }
 
 QString Application::getQtTranslationDir() const

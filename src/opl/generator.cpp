@@ -159,9 +159,10 @@ static const uint8_t W9X_volume_mapping_table[32] =
 
 QString GeneratorDebugInfo::toStr()
 {
-    return QString("Channels:\n"
-                   "2-op: %1, Ps-4op: %2\n"
-                   "4-op: %3")
+    return QObject::tr(
+        "Channels:\n"
+        "2-op: %1, Ps-4op: %2\n"
+        "4-op: %3")
         .arg(this->chan2op)
         .arg(this->chanPs4op)
         .arg(this->chan4op);
