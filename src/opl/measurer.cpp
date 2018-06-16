@@ -686,6 +686,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
     watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
     watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
     watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
+    watcher.connect(&watcher, SIGNAL(finished()), &m_progressBox, SLOT(accept()));
 
     watcher.setFuture(QtConcurrent::map(tasks, &MeasureDurationsDefault));
 
