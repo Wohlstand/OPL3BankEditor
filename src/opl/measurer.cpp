@@ -28,6 +28,8 @@
 #include <cmath>
 #include <memory>
 #include <fstream>
+#include <cstring>
+#include <cstdio>
 #include <limits>
 
 #include "measurer.h"
@@ -117,6 +119,7 @@ static double MeasureRMS(const double *signal, const double *window, unsigned le
     return rms;
 }
 
+#ifdef DEBUG_WRITE_AMPLITUDE_PLOT
 static bool WriteAmplitudePlot(
     const std::string &fileprefix,
     const std::vector<double> &amps_on,
@@ -184,123 +187,183 @@ static bool WriteAmplitudePlot(
 
     return true;
 }
+#endif
+
+static const unsigned g_outputRate = 49716;
+
+struct TinySynth
+{
+    OPLChipBase *m_chip;
+    unsigned m_notesNum;
+    int m_notenum;
+    int8_t m_fineTune;
+    int16_t m_noteOffsets[2];
+    unsigned m_x[2];
+
+    void resetChip()
+    {
+        static const short initdata[(2 + 3 + 2 + 2) * 2] =
+        {
+            0x004, 96, 0x004, 128,      // Pulse timer
+            0x105, 0, 0x105, 1, 0x105, 0, // Pulse OPL3 enable, leave disabled
+            0x001, 32, 0x0BD, 0         // Enable wave & melodic
+        };
+
+        m_chip->setRate(g_outputRate);
+
+        for(unsigned a = 0; a < 18; a += 2)
+            m_chip->writeReg((uint16_t)initdata[a], (uint8_t)initdata[a + 1]);
+    }
+
+    void setInstrument(FmBank::Instrument *in_p)
+    {
+        FmBank::Instrument &in = *in_p;
+        uint8_t rawData[2][11];
+
+        std::memset(m_x, 0, sizeof(m_x));
+        m_notenum = in.percNoteNum >= 128 ? (in.percNoteNum - 128) : in.percNoteNum;
+        if(m_notenum == 0)
+            m_notenum = 25;
+        m_notesNum = (in.en_4op || in.en_pseudo4op) ? 2 : 1;
+        m_fineTune = 0;
+        m_noteOffsets[0] = in.note_offset1;
+        m_noteOffsets[1] = in.note_offset2;
+        if((m_notesNum == 2) && !in.en_pseudo4op)
+        {
+            m_fineTune = in.fine_tune;
+            m_chip->writeReg(0x105, 1);
+            m_chip->writeReg(0x104, 0xFF);
+        }
+
+        rawData[0][0] = in.getAVEKM(MODULATOR1) & 0x3F; //For clearer measurement, disable tremolo and vibrato
+        rawData[0][1] = in.getAVEKM(CARRIER1) & 0x3F;
+        rawData[0][2] = in.getAtDec(MODULATOR1);
+        rawData[0][3] = in.getAtDec(CARRIER1);
+        rawData[0][4] = in.getSusRel(MODULATOR1);
+        rawData[0][5] = in.getSusRel(CARRIER1);
+        rawData[0][6] = in.getWaveForm(MODULATOR1);
+        rawData[0][7] = in.getWaveForm(CARRIER1);
+        rawData[0][8] = in.getKSLL(MODULATOR1);
+        rawData[0][9] = in.getKSLL(CARRIER1);
+        rawData[0][10] = in.getFBConn1();
+
+        rawData[1][0] = in.getAVEKM(MODULATOR2) & 0x3F;
+        rawData[1][1] = in.getAVEKM(CARRIER2) & 0x3F;
+        rawData[1][2] = in.getAtDec(MODULATOR2);
+        rawData[1][3] = in.getAtDec(CARRIER2);
+        rawData[1][4] = in.getSusRel(MODULATOR2);
+        rawData[1][5] = in.getSusRel(CARRIER2);
+        rawData[1][6] = in.getWaveForm(MODULATOR2);
+        rawData[1][7] = in.getWaveForm(CARRIER2);
+        rawData[1][8] = in.getKSLL(MODULATOR2);
+        rawData[1][9] = in.getKSLL(CARRIER2);
+        rawData[1][10] = in.getFBConn2();
+
+        for(unsigned n = 0; n < m_notesNum; ++n)
+        {
+            static const unsigned char patchdata[11] =
+            {0x20, 0x23, 0x60, 0x63, 0x80, 0x83, 0xE0, 0xE3, 0x40, 0x43, 0xC0};
+            for(unsigned a = 0; a < 10; ++a)
+                m_chip->writeReg(patchdata[a] + n * 8, rawData[n][a]);
+            m_chip->writeReg(patchdata[10] + n * 8, rawData[n][10] | 0x30);
+        }
+    }
+
+    void noteOn()
+    {
+        std::memset(m_x, 0, sizeof(m_x));
+        for(unsigned n = 0; n < m_notesNum; ++n)
+        {
+            double hertz = 172.00093 * std::exp(0.057762265 * (m_notenum + m_noteOffsets[n]));
+            if(hertz > 131071)
+            {
+                std::fprintf(stderr, "MEASURER WARNING: Why does note %d + note-offset %d produce hertz %g?          \n",
+                             m_notenum, m_noteOffsets[n], hertz);
+                hertz = 131071;
+            }
+            m_x[n] = 0x2000;
+            while(hertz >= 1023.5)
+            {
+                hertz /= 2.0;    // Calculate octave
+                m_x[n] += 0x400;
+            }
+            m_x[n] += (unsigned int)(hertz + 0.5);
+
+            // Keyon the note
+            m_chip->writeReg(0xA0 + n * 3, m_x[n] & 0xFF);
+            m_chip->writeReg(0xB0 + n * 3, m_x[n] >> 8);
+        }
+    }
+
+    void noteOff()
+    {
+        // Keyoff the note
+        for(unsigned n = 0; n < m_notesNum; ++n)
+            m_chip->writeReg(0xB0 + n * 3, (m_x[n] >> 8) & 0xDF);
+    }
+
+    void generate(int16_t *output, size_t frames)
+    {
+        m_chip->generate(output, frames);
+    }
+};
 
 static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 {
     FmBank::Instrument &in = *in_p;
     AudioHistory<double> audioHistory;
 
-    const unsigned rate = 49716;
     const unsigned interval             = 150;
-    const unsigned samples_per_interval = rate / interval;
-    const int notenum = in.percNoteNum >= 128 ? (in.percNoteNum - 128) : in.percNoteNum;
+    const unsigned samples_per_interval = g_outputRate / interval;
 
-    const double historyLength = 1.0;  // maximum duration to memorize (seconds)
-    audioHistory.reset(std::ceil(historyLength * rate));
+    const double historyLength = 0.1;  // maximum duration to memorize (seconds)
+    audioHistory.reset(std::ceil(historyLength * g_outputRate));
 
     std::unique_ptr<double[]> window;
     unsigned winsize = 0;
 
-#define WRITE_REG(key, value) opl->writeReg(key, value)
-    OPLChipBase *opl = chip;
+    TinySynth synth;
+    synth.m_chip = chip;
+    synth.resetChip();
+    synth.setInstrument(in_p);
+    synth.noteOn();
 
-    static const short initdata[(2 + 3 + 2 + 2) * 2] =
-    {
-        0x004, 96, 0x004, 128,      // Pulse timer
-        0x105, 0, 0x105, 1, 0x105, 0, // Pulse OPL3 enable, leave disabled
-        0x001, 32, 0x0BD, 0         // Enable wave & melodic
-    };
-
-    opl->setRate(rate);
-
-    for(unsigned a = 0; a < 18; a += 2)
-        WRITE_REG((uint16_t)initdata[a], (uint8_t)initdata[a + 1]);
-
-    const unsigned n_notes = (in.en_4op || in.en_pseudo4op) ? 2 : 1;
-    unsigned x[2] = {0, 0};
-    if(n_notes == 2 && !in.en_pseudo4op)
-    {
-        WRITE_REG(0x105, 1);
-        WRITE_REG(0x104, 0xFF);
-    }
-
-    uint8_t rawData[2][11];
-
-    rawData[0][0] = in.getAVEKM(MODULATOR1) & 0x3F; //For clearer measurement, disable tremolo and vibrato
-    rawData[0][1] = in.getAVEKM(CARRIER1) & 0x3F;
-    rawData[0][2] = in.getAtDec(MODULATOR1);
-    rawData[0][3] = in.getAtDec(CARRIER1);
-    rawData[0][4] = in.getSusRel(MODULATOR1);
-    rawData[0][5] = in.getSusRel(CARRIER1);
-    rawData[0][6] = in.getWaveForm(MODULATOR1);
-    rawData[0][7] = in.getWaveForm(CARRIER1);
-    rawData[0][8] = in.getKSLL(MODULATOR1);
-    rawData[0][9] = in.getKSLL(CARRIER1);
-    rawData[0][10] = in.getFBConn1();
-
-    rawData[1][0] = in.getAVEKM(MODULATOR2) & 0x3F;
-    rawData[1][1] = in.getAVEKM(CARRIER2) & 0x3F;
-    rawData[1][2] = in.getAtDec(MODULATOR2);
-    rawData[1][3] = in.getAtDec(CARRIER2);
-    rawData[1][4] = in.getSusRel(MODULATOR2);
-    rawData[1][5] = in.getSusRel(CARRIER2);
-    rawData[1][6] = in.getWaveForm(MODULATOR2);
-    rawData[1][7] = in.getWaveForm(CARRIER2);
-    rawData[1][8] = in.getKSLL(MODULATOR2);
-    rawData[1][9] = in.getKSLL(CARRIER2);
-    rawData[1][10] = in.getFBConn2();
-
-    for(unsigned n = 0; n < n_notes; ++n)
-    {
-        static const unsigned char patchdata[11] =
-        {0x20, 0x23, 0x60, 0x63, 0x80, 0x83, 0xE0, 0xE3, 0x40, 0x43, 0xC0};
-        for(unsigned a = 0; a < 10; ++a)
-            WRITE_REG(patchdata[a] + n * 8, rawData[n][a]);
-        WRITE_REG(patchdata[10] + n * 8, rawData[n][10] | 0x30);
-    }
-
-    for(unsigned n = 0; n < n_notes; ++n)
-    {
-        double hertz = 172.00093 * std::exp(0.057762265 * (notenum + in.fine_tune));
-        if(hertz > 131071)
-        {
-            std::fprintf(stderr, "MEASURER WARNING: Why does note %d + finetune %d produce hertz %g?          \n",
-                         notenum, in.fine_tune, hertz);
-            hertz = 131071;
-        }
-        x[n] = 0x2000;
-        while(hertz >= 1023.5)
-        {
-            hertz /= 2.0;    // Calculate octave
-            x[n] += 0x400;
-        }
-        x[n] += (unsigned int)(hertz + 0.5);
-
-        // Keyon the note
-        WRITE_REG(0xA0 + n * 3, x[n] & 0xFF);
-        WRITE_REG(0xB0 + n * 3, x[n] >> 8);
-    }
-
+    /* For capturing */
     const unsigned max_silent = 6;
     const unsigned max_on  = 40;
     const unsigned max_off = 60;
 
-    const double min_coefficient_on = 0.05;
+    unsigned max_period_on = max_on * interval;
+    unsigned max_period_off = max_off * interval;
+
+    const double min_coefficient_on = 0.008;
     const double min_coefficient_off = 0.2;
+
+    unsigned windows_passed_on = 0;
+    unsigned windows_passed_off = 0;
+
+    /* For Analyze the results */
+    double begin_amplitude        = 0;
+    double peak_amplitude_value   = 0;
+    size_t peak_amplitude_time    = 0;
+    size_t quarter_amplitude_time = 0;
+    size_t keyoff_out_time        = 0;
+
 
     // For up to 40 seconds, measure mean amplitude.
     std::vector<double> amplitudecurve_on;
     double highest_sofar = 0;
     short sound_min = 0, sound_max = 0;
-    amplitudecurve_on.reserve(max_on * interval);
-    for(unsigned period = 0; period < max_on * interval; ++period)
+
+    amplitudecurve_on.reserve(max_period_on);
+    for(unsigned period = 0; period < max_period_on; ++period, ++windows_passed_on)
     {
         int16_t audioBuffer[2 * 256];
         for(unsigned i = 0; i < samples_per_interval;)
         {
             size_t blocksize = samples_per_interval - i;
             blocksize = (blocksize < 256) ? blocksize : 256;
-            opl->generate(audioBuffer, blocksize);
+            synth.generate(audioBuffer, blocksize);
             for (unsigned j = 0; j < blocksize; ++j)
             {
                 int16_t s = audioBuffer[2 * j];
@@ -329,21 +392,71 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
             break;
     }
 
-    // Keyoff the note
-    for(unsigned n = 0; n < n_notes; ++n)
-        WRITE_REG(0xB0 + n * 3, (x[n] >> 8) & 0xDF);
+    /* Detect the peak time */
+    begin_amplitude        = amplitudecurve_on[0];
+    peak_amplitude_value   = begin_amplitude;
+    peak_amplitude_time    = 0;
+    quarter_amplitude_time = amplitudecurve_on.size();
+    keyoff_out_time        = 0;
+    for(size_t a = 1; a < amplitudecurve_on.size(); ++a)
+    {
+        if(amplitudecurve_on[a] > peak_amplitude_value)
+        {
+            peak_amplitude_value = amplitudecurve_on[a];
+            peak_amplitude_time  = a;
+        }
+    }
+    for(size_t a = peak_amplitude_time; a < amplitudecurve_on.size(); ++a)
+    {
+        if(amplitudecurve_on[a] <= peak_amplitude_value * min_coefficient_on)
+        {
+            quarter_amplitude_time = a;
+            break;
+        }
+    }
+
+    if(windows_passed_on >= max_period_on)
+    {
+        // Just Keyoff the note
+        synth.noteOff();
+    }
+    else
+    {
+        // Reset the emulator and re-run the "ON" simulation until reaching the peak time
+        int16_t dummyBuffer[2 * 256];
+        synth.resetChip();
+        synth.setInstrument(in_p);
+        synth.noteOn();
+
+        audioHistory.reset(std::ceil(historyLength * g_outputRate));
+        for(unsigned period = 0;
+            (period < peak_amplitude_time) && (period < max_period_on);
+            ++period)
+        {
+            for(unsigned i = 0; i < samples_per_interval;)
+            {
+                size_t blocksize = samples_per_interval - i;
+                blocksize = (blocksize < 256) ? blocksize : 256;
+                synth.generate(dummyBuffer, blocksize);
+                for (unsigned j = 0; j < blocksize; ++j)
+                    audioHistory.add(dummyBuffer[2 * j]);
+                i += blocksize;
+            }
+        }
+        synth.noteOff();
+    }
 
     // Now, for up to 60 seconds, measure mean amplitude.
     std::vector<double> amplitudecurve_off;
-    amplitudecurve_off.reserve(max_off * interval);
-    for(unsigned period = 0; period < max_off * interval; ++period)
+    amplitudecurve_off.reserve(max_period_off);
+    for(unsigned period = 0; period < max_period_off; ++period, ++windows_passed_off)
     {
         int16_t audioBuffer[2 * 256];
         for(unsigned i = 0; i < samples_per_interval;)
         {
             size_t blocksize = samples_per_interval - i;
             blocksize = (blocksize < 256) ? blocksize : 256;
-            opl->generate(audioBuffer, blocksize);
+            synth.generate(audioBuffer, blocksize);
             for (unsigned j = 0; j < blocksize; ++j)
             {
                 int16_t s = audioBuffer[2 * j];
@@ -370,36 +483,13 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
             break;
     }
 
-    if(false)
-    {
-        WriteAmplitudePlot(
-            "/tmp/amplitude", amplitudecurve_on, amplitudecurve_off,
-            (double)samples_per_interval / rate);
-    }
+#ifdef DEBUG_WRITE_AMPLITUDE_PLOT
+    WriteAmplitudePlot(
+        "/tmp/amplitude", amplitudecurve_on, amplitudecurve_off,
+        (double)samples_per_interval / g_outputRate);
+#endif
 
-    /* Analyze the results */
-    double begin_amplitude        = amplitudecurve_on[0];
-    double peak_amplitude_value   = begin_amplitude;
-    size_t peak_amplitude_time    = 0;
-    size_t quarter_amplitude_time = amplitudecurve_on.size();
-    size_t keyoff_out_time        = 0;
-
-    for(size_t a = 1; a < amplitudecurve_on.size(); ++a)
-    {
-        if(amplitudecurve_on[a] > peak_amplitude_value)
-        {
-            peak_amplitude_value = amplitudecurve_on[a];
-            peak_amplitude_time  = a;
-        }
-    }
-    for(size_t a = peak_amplitude_time; a < amplitudecurve_on.size(); ++a)
-    {
-        if(amplitudecurve_on[a] <= peak_amplitude_value * min_coefficient_on)
-        {
-            quarter_amplitude_time = a;
-            break;
-        }
-    }
+    /* Analyze the final results */
     for(size_t a = 0; a < amplitudecurve_off.size(); ++a)
     {
         if(amplitudecurve_off[a] <= peak_amplitude_value * min_coefficient_off)
@@ -409,8 +499,8 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
         }
     }
 
-    if((keyoff_out_time == 0) && amplitudecurve_on.back() < peak_amplitude_value * min_coefficient_on)
-        keyoff_out_time = quarter_amplitude_time;
+    //if((keyoff_out_time == 0) && (amplitudecurve_on.back() < peak_amplitude_value * min_coefficient_off))
+    //    keyoff_out_time = quarter_amplitude_time;
 
     DurationInfo result;
     result.peak_amplitude_time = peak_amplitude_time;
