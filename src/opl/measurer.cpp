@@ -232,9 +232,10 @@ struct TinySynth
         m_fineTune = 0;
         m_noteOffsets[0] = in.note_offset1;
         m_noteOffsets[1] = in.note_offset2;
+        if(in.en_pseudo4op)
+            m_fineTune = in.fine_tune;
         if((m_notesNum == 2) && !in.en_pseudo4op)
         {
-            m_fineTune = in.fine_tune;
             m_chip->writeReg(0x105, 1);
             m_chip->writeReg(0x104, 0xFF);
         }
