@@ -1082,7 +1082,7 @@ Voulez vous poursuivre l&apos;enregistrement ?</translation>
     <message>
         <location filename="../bank_editor.cpp" line="553"/>
         <source>No selected instrument to save. Please select an instrument first!</source>
-        <translation>Aucun instrument à enregistrer n&apos;est sélectionner. Veuillez d&apos;abord sélectionner un instrument !</translation>
+        <translation>Aucun instrument à enregistrer n&apos;est sélectionné. Veuillez d&apos;abord sélectionner un instrument !</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="570"/>
@@ -1114,7 +1114,7 @@ Voulez-vous continuer ?</translation>
     <message>
         <location filename="../bank_editor.cpp" line="771"/>
         <source>No selected instrument to measure. Please select an instrument first!</source>
-        <translation>Aucun instrument à mesurer n&apos;est sélectionner. Veuillez d&apos;abord sélectionner un instrument !</translation>
+        <translation>Aucun instrument à mesurer n&apos;est sélectionné. Veuillez d&apos;abord sélectionner un instrument !</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="798"/>
@@ -1567,7 +1567,7 @@ Si des problèmes audio se produisent, réassignez à ce paramètre à une valeu
         <source>Channels:
 2-op: %1, Ps-4op: %2
 4-op: %3</source>
-        <translation type="unfinished">Canaux :
+        <translation>Canaux :
 2-op : %1, Ps-4op : %2
 4-op : %3</translation>
     </message>
