@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=OPL3 Bank Editor
+Name[fr]=Éditeur de banque OPL3
+Comment=Edit OPL3 FM banks
+Comment[fr]=Édite les banques FM OPL3
+Icon=opl3_48.png
+Exec=opl3_bank_editor
+Categories=AudioVideo;Audio
+Type=Application
