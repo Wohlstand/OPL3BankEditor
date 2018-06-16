@@ -34,6 +34,10 @@
 
 #include "measurer.h"
 
+#ifndef M_PI
+#define M_PI    3.14159265358979323846
+#endif
+
 //Measurer is always needs for emulator
 #include "chips/opl_chip_base.h"
 #include "chips/nuked_opl3.h"
