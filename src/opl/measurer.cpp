@@ -313,6 +313,50 @@ struct TinySynth
     }
 };
 
+static void BenchmarkChip(FmBank::Instrument *in_p, OPLChipBase *chip)
+{
+    TinySynth synth;
+    synth.m_chip = chip;
+    synth.resetChip();
+    synth.setInstrument(in_p);
+
+    const unsigned interval             = 150;
+    const unsigned samples_per_interval = g_outputRate / interval;
+    const unsigned max_on  = 10;
+    const unsigned max_off = 20;
+
+    unsigned max_period_on = max_on * interval;
+    unsigned max_period_off = max_off * interval;
+
+    const size_t audioBufferLength = 256;
+    const size_t audioBufferSize = 2 * audioBufferLength;
+    int16_t audioBuffer[audioBufferSize];
+
+    synth.noteOn();
+    for(unsigned period = 0; period < max_period_on; ++period)
+    {
+        for(unsigned i = 0; i < samples_per_interval;)
+        {
+            size_t blocksize = samples_per_interval - i;
+            blocksize = (blocksize < audioBufferLength) ? blocksize : audioBufferLength;
+            synth.generate(audioBuffer, blocksize);
+            i += blocksize;
+        }
+    }
+
+    synth.noteOff();
+    for(unsigned period = 0; period < max_period_off; ++period)
+    {
+        for(unsigned i = 0; i < samples_per_interval;)
+        {
+            size_t blocksize = samples_per_interval - i;
+            blocksize = (blocksize < 256) ? blocksize : 256;
+            synth.generate(audioBuffer, blocksize);
+            i += blocksize;
+        }
+    }
+}
+
 static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 {
     FmBank::Instrument &in = *in_p;
@@ -607,7 +651,7 @@ static void MeasureDurationsBenchmark(FmBank::Instrument *in_p, OPLChipBase *chi
     std::chrono::steady_clock::time_point start, stop;
     Measurer::BenchmarkResult res;
     start = std::chrono::steady_clock::now();
-    MeasureDurations(in_p, chip);
+    BenchmarkChip(in_p, chip);
     stop  = std::chrono::steady_clock::now();
     res.elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
     res.name = QString::fromUtf8(chip->emulatorName());
