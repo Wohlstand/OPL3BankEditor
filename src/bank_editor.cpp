@@ -286,6 +286,7 @@ void BankEditor::onLanguageChanged()
     ui->currentFile->setText(m_currentFilePath);
     ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     reloadBanks();
+    displayDebugDelaysInfo();
 }
 
 void BankEditor::initFileData(QString &filePath)
@@ -900,6 +901,7 @@ void BankEditor::setCurrentInstrument(int num, bool isPerc)
 
 void BankEditor::loadInstrument()
 {
+    displayDebugDelaysInfo();
     if(!m_curInst)
     {
         ui->editzone->setEnabled(false);
@@ -909,7 +911,6 @@ void BankEditor::loadInstrument()
         m_lock = true;
         ui->insName->setEnabled(false);
         ui->insName->clear();
-        ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2").arg("--").arg("--"));
         m_lock = false;
         return;
     }
@@ -920,9 +921,6 @@ void BankEditor::loadInstrument()
     ui->insName->setEnabled(true);
     m_lock = true;
     ui->insName->setText(QString::fromUtf8(m_curInst->name));
-    ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2")
-                                 .arg(m_curInst->ms_sound_kon)
-                                 .arg(m_curInst->ms_sound_koff));
     ui->perc_noteNum->setValue(m_curInst->percNoteNum);
     ui->percMode->setCurrentIndex(m_curInst->adlib_drum_number > 0 ? (m_curInst->adlib_drum_number - 5) : 0);
     ui->op4mode->setChecked(m_curInst->en_4op);
@@ -997,6 +995,18 @@ void BankEditor::loadInstrument()
     ui->op4_ksr->setChecked(m_curInst->OP[CARRIER2].ksr);
 
     m_lock = false;
+}
+
+void BankEditor::displayDebugDelaysInfo()
+{
+    if(!m_curInst)
+    {
+        ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2").arg("--").arg("--"));
+        return;
+    }
+    ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2")
+                                 .arg(m_curInst->ms_sound_kon)
+                                 .arg(m_curInst->ms_sound_koff));
 }
 
 void BankEditor::sendPatch()

@@ -222,6 +222,8 @@ public:
      */
     void loadInstrument();
 
+    void displayDebugDelaysInfo();
+
     /**
      * @brief Send current instrument to OPL chip emulator for to test
      */
