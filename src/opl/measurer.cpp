@@ -348,8 +348,11 @@ static void BenchmarkChip(FmBank::Instrument *in_p, OPLChipBase *chip)
     }
 }
 
-static void ComputeDurations(const FmBank::Instrument &in, DurationInfo &result, OPLChipBase *chip)
+static void ComputeDurations(const FmBank::Instrument *in_p, DurationInfo *result_p, OPLChipBase *chip)
 {
+    const FmBank::Instrument &in = *in_p;
+    DurationInfo &result = *result_p;
+
     AudioHistory<double> audioHistory;
 
     const unsigned interval             = 150;
@@ -632,7 +635,7 @@ static void ComputeDurations(const FmBank::Instrument &in, DurationInfo &result,
     result.nosound = (peak_amplitude_value < 0.5) || ((sound_min >= -1) && (sound_max <= 1));
 }
 
-static void ComputeDurationsDefault(const FmBank::Instrument &in, DurationInfo &result)
+static void ComputeDurationsDefault(const FmBank::Instrument *in, DurationInfo *result)
 {
     DefaultOPL3 chip;
     ComputeDurations(in, result, &chip);
@@ -642,7 +645,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 {
     FmBank::Instrument &in = *in_p;
     DurationInfo result;
-    ComputeDurations(in, result, chip);
+    ComputeDurations(&in, &result, chip);
     in.ms_sound_kon = (uint16_t)result.ms_sound_kon;
     in.ms_sound_koff = (uint16_t)result.ms_sound_koff;
     in.is_blank = result.nosound;
@@ -823,7 +826,7 @@ bool Measurer::doComputation(const FmBank::Instrument &instrument, DurationInfo 
     watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
     watcher.connect(&watcher, SIGNAL(finished()), &m_progressBox, SLOT(accept()));
 
-    watcher.setFuture(QtConcurrent::run(&ComputeDurationsDefault, instrument, result));
+    watcher.setFuture(QtConcurrent::run(&ComputeDurationsDefault, &instrument, &result));
     m_progressBox.exec();
     watcher.waitForFinished();
 
@@ -831,7 +834,7 @@ bool Measurer::doComputation(const FmBank::Instrument &instrument, DurationInfo 
 
 #else
     m_progressBox.show();
-    ComputeDurationsDefault(instrument, result);
+    ComputeDurationsDefault(&instrument, &result);
     return true;
 #endif
 }
