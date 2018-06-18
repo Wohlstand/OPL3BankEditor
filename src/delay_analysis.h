@@ -49,6 +49,11 @@ private:
     void updateDisplay();
 
     /**
+     * @brief Update the text labels
+     */
+    void updateLabels();
+
+    /**
      * @brief Updates the text to display after a language change
      */
     void onLanguageChanged();
@@ -56,7 +61,7 @@ private:
 private:
     FmBank::Instrument m_ins;
     Measurer *m_measurer;
-    Measurer::DurationInfo m_result;
+    Measurer::DurationInfo m_result = {};
     std::unique_ptr<Ui::DelayAnalysis> m_ui;
 
     QwtPlotCurve *m_curveOn = nullptr;

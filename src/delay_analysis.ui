@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>826</width>
-    <height>478</height>
+    <height>516</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,9 @@
         <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="text">
-        <string>Time: 0ms</string>
+        <string>Delay: 0ms
+Peak amplitude: 0
+Amplitude at breaking point: 0</string>
        </property>
       </widget>
      </item>
@@ -52,7 +54,9 @@
         <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="text">
-        <string>Time: 0ms</string>
+        <string>Delay: 0ms
+Peak amplitude: 0
+Amplitude at breaking point: 0</string>
        </property>
       </widget>
      </item>

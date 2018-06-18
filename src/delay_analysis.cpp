@@ -79,27 +79,25 @@ void DelayAnalysisDialog::updateDisplay()
     const QColor colorBg = Qt::darkBlue;
 
     QwtPlot *plotOn = ui.plotDelayOn;
-    plotOn->setTitle("Key-On Amplitude");
     plotOn->setAxisScale(QwtPlot::xBottom, 0.0, xMaxOn);
     plotOn->setAxisScale(QwtPlot::yLeft, 0.0, yMaxOn);
     plotOn->setCanvasBackground(colorBg);
 
     QwtPlot *plotOff = ui.plotDelayOff;
-    plotOff->setTitle("Key-Off Amplitude");
     plotOff->setAxisScale(QwtPlot::xBottom, 0.0, xMaxOff);
     plotOff->setAxisScale(QwtPlot::yLeft, 0.0, yMaxOff);
     plotOff->setCanvasBackground(colorBg);
 
     QwtPlotCurve *curveOn = m_curveOn;
     if(!curveOn) {
-        curveOn = m_curveOn = new QwtPlotCurve("On");
+        curveOn = m_curveOn = new QwtPlotCurve;
         curveOn->setPen(colorCurve, 0.0, Qt::SolidLine);
         curveOn->attach(plotOn);
     }
 
     QwtPlotCurve *curveOff = m_curveOff;
     if(!curveOff) {
-        curveOff = m_curveOff = new QwtPlotCurve("Off");
+        curveOff = m_curveOff = new QwtPlotCurve;
         curveOff->setPen(colorCurve, 0.0, Qt::SolidLine);
         curveOff->attach(plotOff);
     }
@@ -146,18 +144,58 @@ void DelayAnalysisDialog::updateDisplay()
     }
     markerOff->setXValue(result.ms_sound_koff * 1e-3);
 
-    QLabel *lbOn = ui.textDelayOn;
-    QLabel *lbOff = ui.textDelayOff;
-    lbOn->setText(tr("Delay: %1 ms").arg(result.ms_sound_kon));
-    lbOff->setText(tr("Delay: %1 ms").arg(result.ms_sound_koff));
-
     plotOn->replot();
     plotOff->replot();
+
+    updateLabels();
+}
+
+void DelayAnalysisDialog::updateLabels()
+{
+    const Measurer::DurationInfo &result = m_result;
+
+    Ui::DelayAnalysis &ui = *m_ui;
+    QwtPlot *plotOn = ui.plotDelayOn;
+    QwtPlot *plotOff = ui.plotDelayOff;
+
+    double yMaxOn = plotOn->axisInterval(QwtPlot::yLeft).maxValue();
+    double yMaxOff = plotOff->axisInterval(QwtPlot::yLeft).maxValue();
+
+    if(plotOn)
+        plotOn->setTitle(tr("Key-On Amplitude"));
+    if(plotOff)
+        plotOff->setTitle(tr("Key-Off Amplitude"));
+
+    PlotData *dataOn = m_dataOn;
+    PlotData *dataOff = m_dataOff;
+
+    double yBreakOn = 0.0;
+    double yBreakOff = 0.0;
+    if(dataOn)
+        yBreakOn = dataOn->y(result.ms_sound_kon * 1e-3);
+    if(dataOff)
+        yBreakOff = dataOff->y(result.ms_sound_koff * 1e-3);
+
+    QLabel *lbOn = ui.textDelayOn;
+    QLabel *lbOff = ui.textDelayOff;
+    lbOn->setText(tr("Delay: %1 ms\n"
+                     "Peak amplitude: %2\n"
+                     "Amplitude at breaking point: %3")
+                  .arg(result.ms_sound_kon)
+                  .arg(yMaxOn)
+                  .arg(yBreakOn));
+    lbOff->setText(tr("Delay: %1 ms\n"
+                      "Peak amplitude: %2\n"
+                      "Amplitude at breaking point: %3")
+                   .arg(result.ms_sound_koff)
+                   .arg(yMaxOff)
+                   .arg(yBreakOff));
 }
 
 void DelayAnalysisDialog::onLanguageChanged()
 {
     m_ui->retranslateUi(this);
+    updateLabels();
 }
 
 void DelayAnalysisDialog::changeEvent(QEvent *event)
