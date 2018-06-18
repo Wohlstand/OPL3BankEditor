@@ -1121,7 +1121,7 @@ Voulez-vous continuer ?</translation>
         <location filename="../bank_editor.cpp" line="779"/>
         <location filename="../bank_editor.cpp" line="830"/>
         <source>No selected instrument to measure. Please select an instrument first!</source>
-        <translation>Aucun instrument à mesurer n&apos;est sélectionné. Veuillez d&apos;abord sélectionner un instrument!</translation>
+        <translation>Aucun instrument à mesurer n&apos;est sélectionné. Veuillez d&apos;abord sélectionner un instrument !</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="806"/>
