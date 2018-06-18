@@ -189,4 +189,6 @@ plots {
     SOURCES += src/delay_analysis.cpp
     HEADERS += src/delay_analysis.h
     FORMS += src/delay_analysis.ui
+    CONFIG += qwt
+    DEFINES += ENABLE_PLOTS
 }
