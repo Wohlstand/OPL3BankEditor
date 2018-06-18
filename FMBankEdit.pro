@@ -41,6 +41,7 @@ greaterThan(QT_MAJOR_VERSION, 4):{
 
 CONFIG += rtmidi
 CONFIG += rtaudio
+#CONFIG += plots
 
 QMAKE_CXXFLAGS += -fopenmp
 
@@ -183,3 +184,9 @@ RESOURCES += \
 TRANSLATIONS += \
     src/translations/opl3bankeditor_fr_FR.ts \
     src/translations/opl3bankeditor_ru_RU.ts
+
+plots {
+    SOURCES += src/delay_analysis.cpp
+    HEADERS += src/delay_analysis.h
+    FORMS += src/delay_analysis.ui
+}

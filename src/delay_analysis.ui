@@ -42,9 +42,9 @@
         <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="text">
-        <string>Delay: 0ms
-Peak amplitude: 0
-Amplitude at breaking point: 0</string>
+        <string>Delay: %1 ms
+Peak amplitude: %2
+Amplitude at breaking point: %3</string>
        </property>
       </widget>
      </item>
@@ -54,9 +54,9 @@ Amplitude at breaking point: 0</string>
         <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="text">
-        <string>Delay: 0ms
-Peak amplitude: 0
-Amplitude at breaking point: 0</string>
+        <string>Delay: %1 ms
+Peak amplitude: %2
+Amplitude at breaking point: %3</string>
        </property>
       </widget>
      </item>
