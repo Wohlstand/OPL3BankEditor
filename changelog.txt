@@ -8,6 +8,9 @@ Version 1.5
 - Added pitch bend controller and pedal hold support
 - Piano widget now allows sliding between keys while mouse button is held
 - Added ability to test notes and volume model with a different volume level
+- Reworked sounding delay calculation algorithm which now fixes several channel management issues on ADLMIDI
+- Rewritten the benchmark which is now fair and does same job on all testing emulators
+- Added optional sounding delay analytics feauture (Qwt library is required https://sourceforge.net/projects/qwt/)
 
 Version 1.4.0.1
 - Added ability to re-calculate sounding delays for entire instruments set
