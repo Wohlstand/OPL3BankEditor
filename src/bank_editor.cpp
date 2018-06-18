@@ -838,7 +838,9 @@ void BankEditor::on_actionDelayAnalysis_triggered()
     if(memcmp(&workInst, &blankInst, sizeof(FmBank::Instrument)) == 0)
         return;
 
-    DelayAnalysisDialog dialog(*inst, this);
+    DelayAnalysisDialog dialog(this);
+    if (!dialog.computeResult(*inst))
+        return;
     dialog.exec();
 }
 #endif

@@ -14,6 +14,10 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang)$")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  add_definitions("-D_USE_MATH_DEFINES")
+endif()
+
 set(USE_RTMIDI "ON" CACHE STRING "Use RtMidi")
 set(USE_RTAUDIO "ON" CACHE STRING "Use RtAudio")
 
