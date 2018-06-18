@@ -44,19 +44,10 @@
 #include "chips/nuked_opl3_v174.h"
 #include "chips/dosbox_opl3.h"
 
-struct DurationInfo
-{
-    uint64_t    peak_amplitude_time;
-    double      peak_amplitude_value;
-    double      quarter_amplitude_time;
-    double      begin_amplitude;
-    double      interval;
-    double      keyoff_out_time;
-    int64_t     ms_sound_kon;
-    int64_t     ms_sound_koff;
-    bool        nosound;
-    uint8_t     padding[7];
-};
+//typedef NukedOPL3 DefaultOPL3;
+typedef DosBoxOPL3 DefaultOPL3;
+
+typedef Measurer::DurationInfo DurationInfo;
 
 template <class T>
 class AudioHistory
@@ -219,9 +210,9 @@ struct TinySynth
             m_chip->writeReg((uint16_t)initdata[a], (uint8_t)initdata[a + 1]);
     }
 
-    void setInstrument(FmBank::Instrument *in_p)
+    void setInstrument(const FmBank::Instrument *in_p)
     {
-        FmBank::Instrument &in = *in_p;
+        const FmBank::Instrument &in = *in_p;
         uint8_t rawData[2][11];
 
         std::memset(m_x, 0, sizeof(m_x));
@@ -357,9 +348,8 @@ static void BenchmarkChip(FmBank::Instrument *in_p, OPLChipBase *chip)
     }
 }
 
-static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
+static void ComputeDurations(const FmBank::Instrument &in, DurationInfo &result, OPLChipBase *chip)
 {
-    FmBank::Instrument &in = *in_p;
     AudioHistory<double> audioHistory;
 
     const unsigned interval             = 150;
@@ -375,7 +365,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     TinySynth synth;
     synth.m_chip = chip;
     synth.resetChip();
-    synth.setInstrument(in_p);
+    synth.setInstrument(&in);
     synth.noteOn();
 
     /* For capturing */
@@ -531,7 +521,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     {
         // Reset the emulator and re-run the "ON" simulation until reaching the peak time
         synth.resetChip();
-        synth.setInstrument(in_p);
+        synth.setInstrument(&in);
         synth.noteOn();
 
         audioHistory.reset(std::ceil(historyLength * g_outputRate));
@@ -623,7 +613,6 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     }
 #endif
 
-    DurationInfo result;
     result.peak_amplitude_time = peak_amplitude_time;
     result.peak_amplitude_value = peak_amplitude_value;
     result.begin_amplitude = begin_amplitude;
@@ -633,7 +622,19 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     result.ms_sound_kon  = (int64_t)(quarter_amplitude_time * 1000.0 / interval);
     result.ms_sound_koff = (int64_t)(keyoff_out_time        * 1000.0 / interval);
     result.nosound = (peak_amplitude_value < 0.5) || ((sound_min >= -1) && (sound_max <= 1));
+}
 
+static void ComputeDurationsDefault(const FmBank::Instrument &in, DurationInfo &result)
+{
+    DefaultOPL3 chip;
+    ComputeDurations(in, result, &chip);
+}
+
+static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
+{
+    FmBank::Instrument &in = *in_p;
+    DurationInfo result;
+    ComputeDurations(in, result, chip);
     in.ms_sound_kon = (uint16_t)result.ms_sound_kon;
     in.ms_sound_koff = (uint16_t)result.ms_sound_koff;
     in.is_blank = result.nosound;
@@ -641,8 +642,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 
 static void MeasureDurationsDefault(FmBank::Instrument *in_p)
 {
-    //NukedOPL3 chip;
-    DosBoxOPL3 chip;
+    DefaultOPL3 chip;
     MeasureDurations(in_p, &chip);
 }
 
@@ -797,6 +797,33 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
 #else
     m_progressBox.show();
     MeasureDurationsDefault(&instrument);
+    return true;
+#endif
+}
+
+bool Measurer::doComputation(const FmBank::Instrument &instrument, DurationInfo &result)
+{
+    QProgressDialog m_progressBox(m_parentWindow);
+    m_progressBox.setWindowModality(Qt::WindowModal);
+    m_progressBox.setWindowTitle(tr("Sounding delay calculation"));
+    m_progressBox.setLabelText(tr("Please wait..."));
+
+#ifndef IS_QT_4
+    QFutureWatcher<void> watcher;
+    watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
+    watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
+    watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
+    watcher.connect(&watcher, SIGNAL(finished()), &m_progressBox, SLOT(accept()));
+
+    watcher.setFuture(QtConcurrent::run(&ComputeDurationsDefault, instrument, result));
+    m_progressBox.exec();
+    watcher.waitForFinished();
+
+    return !watcher.isCanceled();
+
+#else
+    m_progressBox.show();
+    ComputeDurationsDefault(instrument, result);
     return true;
 #endif
 }
