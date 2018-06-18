@@ -30,3 +30,22 @@ Why MinGW 5.3 and not 3.2 (which officially supported by Qt 4.4.3)?
 
 - After project successfully built, hit any key again, and statical debug+release assembly
 	is ready for usage! ;-)
+
+============= How to build the Qwt plotting library: =============
+
+- Unpack sources of Qwt 6.1.3.
+  (download from https://sourceforge.net/projects/qwt/files/qwt/6.1.3/)
+
+- In the build configuration, first disable some options which are incompatible with
+this build of Qt 4.4, and enable a static build. Find lines which enable these options
+in qwtconfig.pri, and comment them: QwtOpenGL, QwtDesigner, QwtDll.
+
+- Near the top of qwtbuild.pri, change the default setting of the CONFIG variable from
+"debug_and_release" to "release".
+
+- Run the commands "qmake", "make", and then "make install"
+
+- Set some environment variables to let qmake find Qwt. Set them in scripts, or system
+  registry under the key HKLM\System\CurrentControlSet\Control\Session Manager\Environment.
+    QWT_ROOT=c:\Qwt-6.1.3
+    QMAKEFEATURES=%QWT_ROOT%\features

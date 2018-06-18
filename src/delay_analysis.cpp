@@ -25,8 +25,8 @@
 #include <qwt_point_data.h>
 #include <qwt_spline.h>
 
-DelayAnalysisDialog::DelayAnalysisDialog(const FmBank::Instrument &ins, QWidget *parent)
-    : QDialog(parent), m_ins(ins),
+DelayAnalysisDialog::DelayAnalysisDialog(QWidget *parent)
+    : QDialog(parent),
       m_measurer(new Measurer(this)), m_ui(new Ui::DelayAnalysis)
 {
     m_ui->setupUi(this);
@@ -36,14 +36,13 @@ DelayAnalysisDialog::~DelayAnalysisDialog()
 {
 }
 
-int DelayAnalysisDialog::exec()
+bool DelayAnalysisDialog::computeResult(const FmBank::Instrument &ins)
 {
-    if (!m_measurer->doComputation(m_ins, m_result))
-        return QDialog::Rejected;
+    if (!m_measurer->doComputation(ins, m_result))
+        return false;
 
     updateDisplay();
-
-    return QDialog::exec();
+    return true;
 }
 
 class DelayAnalysisDialog::PlotData : public QwtSyntheticPointData

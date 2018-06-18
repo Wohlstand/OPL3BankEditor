@@ -38,6 +38,9 @@ greaterThan(QT_MAJOR_VERSION, 4):{
         INCLUDEPATH += $$PWD/src/audio/for-mingw-9x
     }
 }
+win32 {
+    DEFINES += _USE_MATH_DEFINES
+}
 
 CONFIG += rtmidi
 CONFIG += rtaudio

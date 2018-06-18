@@ -33,11 +33,10 @@ class DelayAnalysisDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit DelayAnalysisDialog(
-        const FmBank::Instrument &ins, QWidget *parent = NULL);
+    explicit DelayAnalysisDialog(QWidget *parent = NULL);
     ~DelayAnalysisDialog();
 
-    int exec() override;
+    bool computeResult(const FmBank::Instrument &ins);
 
 protected:
     void changeEvent(QEvent *event) override;
@@ -59,7 +58,6 @@ private:
     void onLanguageChanged();
 
 private:
-    FmBank::Instrument m_ins;
     Measurer *m_measurer;
     Measurer::DurationInfo m_result = {};
     std::unique_ptr<Ui::DelayAnalysis> m_ui;
