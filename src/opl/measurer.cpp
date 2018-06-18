@@ -361,8 +361,8 @@ static void ComputeDurations(const FmBank::Instrument *in_p, DurationInfo *resul
     const double historyLength = 0.1;  // maximum duration to memorize (seconds)
     audioHistory.reset(std::ceil(historyLength * g_outputRate));
 
-    const double timestep = (double)samples_per_interval / g_outputRate;  // interval between analysis steps (seconds)
 #if defined(ENABLE_PLOTS)
+    const double timestep = (double)samples_per_interval / g_outputRate;  // interval between analysis steps (seconds)
     result.amps_timestep = timestep;
 #endif
 
@@ -738,7 +738,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
     m_progressBox.setWindowTitle(tr("Sounding delay calculation"));
     m_progressBox.setLabelText(tr("Please wait..."));
 
-    #ifndef IS_QT_4
+#ifndef IS_QT_4
     QFutureWatcher<void> watcher;
     watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
     watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
@@ -772,7 +772,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
 
     return !watcher.isCanceled();
 
-    #else
+#else
     m_progressBox.setMaximum(tasks.size());
     m_progressBox.setValue(0);
     int count = 0;
@@ -784,7 +784,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
             return false;
     }
     return true;
-    #endif
+#endif
 }
 
 bool Measurer::doMeasurement(FmBank::Instrument &instrument)
