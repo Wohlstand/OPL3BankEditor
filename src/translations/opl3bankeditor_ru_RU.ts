@@ -86,7 +86,7 @@
         <location filename="../bank_editor.ui" line="1948"/>
         <location filename="../bank_editor.ui" line="1964"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Скорость нарастания.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Определяет время нарастания звука. Чем больше значение, тем тыстрее нарастание.&lt;/p&gt;&lt;p&gt;Диапазон от 0 до 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="372"/>
@@ -106,7 +106,7 @@
         <location filename="../bank_editor.ui" line="1974"/>
         <location filename="../bank_editor.ui" line="1990"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Скорость затухание.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Определяет время затухания звука при нажатии клавиши после достижения пиковой высоты вплоть до достижения &lt;b&gt;стабильного уровня&lt;/b&gt;. Чем больше значение, тем короче время затухания.&lt;/p&gt;&lt;p&gt;Диапазон от 0 до 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="398"/>
@@ -126,7 +126,7 @@
         <location filename="../bank_editor.ui" line="2000"/>
         <location filename="../bank_editor.ui" line="2016"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and changes to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Стабильный уровень.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Определяет точку, при которой звук стабилизируется и звучит с постоянной громкостью. Стабильный уровень следует за периодом затухания. Стабильный уровень - это дробь от максимального уровня. 0 - самый тихий, и 15 - самый громкий уровень. Чтобы стабиль работал, оператор должен иметь включённый флаг &quot;Удержание голоса&quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="424"/>
@@ -146,7 +146,7 @@
         <location filename="../bank_editor.ui" line="2026"/>
         <location filename="../bank_editor.ui" line="2042"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Скорость отпускания.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Определяет скорость полного затухания звука после отпускания клавиши. Чем выше значение, тем короче будет скорость отпускания.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="450"/>
@@ -354,7 +354,7 @@
         <location filename="../bank_editor.ui" line="2307"/>
         <location filename="../bank_editor.ui" line="2323"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Тоновое масштабирование (KSL)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Устанавливает осбаление громкости звука в зависимости от высоты тона.&lt;br&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot;margin-top:0;margin-bottom:0;margin-left:0;margin-right:0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot;font-weight:600&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Ослабление&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 дБ/окт&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 дБ/окт&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 дБ/окт&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="731"/>
@@ -362,11 +362,11 @@
         <location filename="../bank_editor.ui" line="1894"/>
         <location filename="../bank_editor.ui" line="2310"/>
         <source>Key Scale Level</source>
-        <translation>Уровень масштабирования</translation>
+        <translation>Тоновое масштабирования</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="765"/>
-        <location filename="../bank_editor.cpp" line="609"/>
+        <location filename="../bank_editor.cpp" line="617"/>
         <source>&lt;Untitled&gt;</source>
         <translation>&lt;Без названия&gt;</translation>
     </message>
@@ -376,12 +376,12 @@
         <location filename="../bank_editor.ui" line="2445"/>
         <location filename="../bank_editor.ui" line="2464"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack Modulation Factor&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If 0, no feedback is present. If 1-7, operator 1 will send a portion of its output back into itself.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Factor&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;When in four-operator mode, the FeedBack value is used only by Operator 1, value of Operators 2, 3 and 4 is ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Фактор обратной связи модуляции&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Если значение 0, обратная связь будет отключена. Если значение от 1 до 7, первый оператор отправит часть своего вывода обратно в себя.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot;margin-top:0;margin-bottom:0;margin-left:0;margin-right:0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Обратная связь&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Фактор&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;В четырёх-операторном режиме, значения обратной связи использованы только оператором 1, значения операторов 2, 3 и 4 проигнорированы.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="823"/>
         <source>Feedback 1</source>
-        <translation>Отклик 1</translation>
+        <translation>Обр.Связь 1</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="855"/>
@@ -397,7 +397,7 @@
 &lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;AM-AM&lt;/td&gt;&lt;/tr&gt;
 &lt;/table&gt;
 &lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Тип синтеза.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;АС (1) = Аддитивный синтез, ЧМ (0) = Частотная модуляция&lt;br&gt;В четырёх-операторном режиме используются два управляющих типом синтеза флага. Первый бит для операторов 1 и 2, а второй для операторов 3 и 4.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot;margin-top:0;margin-bottom:0;margin-left:0;margin-right:0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;th&gt;Оп 1&amp;amp;2&lt;/th&gt;&lt;th&gt;Оп 3&amp;amp;4&lt;/th&gt;&lt;th&gt;Тип&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;НЕТ&lt;/td&gt;&lt;td&gt;ЧМ&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;НЕТ&lt;/td&gt;&lt;td&gt;АС&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;ЧМ-ЧМ&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;АС-ЧМ&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;ЧМ-АС&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;АС-АС&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="868"/>
@@ -408,7 +408,7 @@
         <location filename="../bank_editor.ui" line="901"/>
         <location filename="../bank_editor.ui" line="2538"/>
         <source>AM</source>
-        <translation>АМ</translation>
+        <translation>АС</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="920"/>
@@ -420,7 +420,7 @@
         <location filename="../bank_editor.ui" line="954"/>
         <location filename="../bank_editor.ui" line="970"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don&apos;t offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In pair of 2-operator voices mode is an offset of the first voice&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;Смещение тона на один полутон (одна октава - 12 полутонов) br&gt;(0 - смещение отсутствует. Диапазон значений от -127 до 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;text-decoration:underline&quot;&gt;В режиме пары двух-операторных голсов - смещение тона первого голоса&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="957"/>
@@ -436,7 +436,7 @@
         <location filename="../bank_editor.ui" line="1009"/>
         <location filename="../bank_editor.ui" line="1028"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Номер ноты фиксированного тона&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Инструмент будет всегда играть указанный тон&lt;/p&gt;&lt;p&gt;Рекомендуется использовать для ударных инструментов. Если значение равно нулю, режим фиксированного тона будет отключён&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1012"/>
@@ -446,7 +446,7 @@
     <message>
         <location filename="../bank_editor.ui" line="1044"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Drum instrument mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic (a.k.a. Melodic) mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a mode where are percussions are playing in the regular melodic channels without any limits. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Is highly recommended to use&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bass-Drum/Snare/TomTom/Cymbal/Hi-hat&lt;/span&gt;&lt;br/&gt;Enables legacy percussion mode where are five restricted channels. This mode is restricts a playing more than one sound of every type. For example, in this mode is impossible playing multiple snares or multiple bass-drums. &lt;span style=&quot; text-decoration: underline;&quot;&gt;This mode is available only on some special bank formats (for example, IBK, SBI). Other bank formats are supports a generic mode only&lt;/span&gt;!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600;text-decoration:underline&quot;&gt;Режим ударного инструмента&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Общий (т.е. мелодический) режим&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Режим, в котором ударные инструменты играются в обычных мелодических каналов без каких либо ограничений. &lt;span style=&quot;text-decoration:underline&quot;&gt;Рекомендован к использованию&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Бас-барабан/Малый барабан/Том/Тарелка/Хай-хэт&lt;/span&gt;&lt;br&gt;Включает устаревший режим ударных, который ограничен пятью каналами. В этом режиме нельзя играть больше одного звука каждого типа. Например, в этом режиме невозможно играть несколько малых барабанов или несколько бас-барабанов. &lt;span style=&quot;text-decoration:underline&quot;&gt;Этот режим доступен только для специальных форматов банков (например, IBK и SBI). Для других форматов банков поддерживается лишь общий режим.&lt;/span&gt;!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1048"/>
@@ -507,7 +507,7 @@
     <message>
         <location filename="../bank_editor.ui" line="2448"/>
         <source>Feedback 2</source>
-        <translation>Отклик 2</translation>
+        <translation>Обр.Связь 2</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2499"/>
@@ -518,7 +518,7 @@
         <location filename="../bank_editor.ui" line="2600"/>
         <location filename="../bank_editor.ui" line="2619"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset second voice to one semi-tone (octave is 12 semi-tones) &lt;br/&gt;(0 is don&apos;t offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;Смещение тона второго голоса на один полутон (одна октава - 12 полутонов)&lt;br&gt;(0 - смещение отсутствует. Диапазон значений от -127 до 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;text-decoration:underline&quot;&gt;Только для режима пары двух-операторных голосов&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2603"/>
@@ -528,7 +528,7 @@
     <message>
         <location filename="../bank_editor.ui" line="2643"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enables 4-operators mode of OPL3 chip&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(not supported on OPL2 chip, but &amp;quot;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices&lt;/span&gt;&amp;quot; can be used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Включает четырёх-операторный режим на чипе OPL3.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(Не поддерживается на чипе OPL2, хотя, для этого можно применить &amp;quot;&lt;span style=&quot;text-decoration:underline&quot;&gt;Пару 2-операторных голосов&lt;/span&gt;&amp;quot;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2646"/>
@@ -538,7 +538,7 @@
     <message>
         <location filename="../bank_editor.ui" line="2662"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enables pseudo 4-operators mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;It&apos;s a pair of 2-operator voices which work independently from each other.&lt;br/&gt;Is possible to detune second voice and play both voices with different tones.&lt;/p&gt;&lt;p&gt;Mainly used in DMX OP2 files.&lt;br/&gt;This was needed for OPL2 chip which does not support 4 operators mode.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Включает псевдо-четырёх-операторный режим.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Это пара двух-операторных голосов, которые играются независимо друг от друга.&lt;br&gt;Возможно расстроить второй голос, чтобы играть оба голоса на разных тонах.&lt;/p&gt;&lt;p&gt;Первончально использовано в файлах DMX-OP2.&lt;br&gt;Это было нужно для чипа OPL2, который не поддерживает четырёх-операторный режим.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2665"/>
@@ -548,7 +548,7 @@
     <message>
         <location filename="../bank_editor.ui" line="2718"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Recently used channel ID&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(from 0 to N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Two-operators mode (2-op):&lt;/span&gt;&lt;br/&gt;Totally 18 two-operator channels available on OPL3 chip.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pseudo four-operators mode (Ps-4-op):&lt;/span&gt;&lt;br/&gt;Using of pairs of two-operator channels, in result we are have 9 double-voice channels&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Four-operators mode (4-op):&lt;/span&gt;&lt;br/&gt;Totally 6 four-operator channels available on OPL3 chip.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Индекс недавно использованного канала чипа&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(от 0 до N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Двух-операторный режим (2-оп):&lt;/span&gt;&lt;br/&gt;На чипе OPL3 всего 18 двух-операторных каналов.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Псевдо-четырёх-операторный (Пс-4-оп):&lt;/span&gt;&lt;br/&gt;Попарное использование двух-операторных каналов. В результате мы имеем 9 двух-голосых каналов. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Четырёх-операторный режим (4-оп):&lt;/span&gt;&lt;br/&gt;На чипе OPL3 всего 6 четырёх-операторных каналов.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2752"/>
@@ -573,7 +573,7 @@
     <message>
         <location filename="../bank_editor.ui" line="2861"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tremolo (Amplitude Vibrato) Depth.&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Unchecked&lt;/span&gt; = 1.0dB,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Checked&lt;/span&gt; = 4.8dB.&lt;/p&gt;&lt;p&gt;(Effect taking for instruments where tremolo flag is used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Глубина тремоло (Амплитудного вибрато).&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;text-decoration:underline&quot;&gt;Выключено&lt;/span&gt; = 1.0 дБ,&lt;br&gt;&lt;span style=&quot;text-decoration:underline&quot;&gt;Включено&lt;/span&gt; = 4.8 дБ.&lt;/p&gt;&lt;p&gt;(Влияет на инструменты, в которых используется флаг &quot;тремоло&quot;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2864"/>
@@ -583,7 +583,7 @@
     <message>
         <location filename="../bank_editor.ui" line="2882"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Vibrato Depth.&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Unchecked&lt;/span&gt; = 7 cents,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Checked&lt;/span&gt; = 14 cents.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;A &amp;quot;cent&amp;quot; is 1/100 of a semi-tone.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(Effect taking for instruments where vibrato flag is used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Глубина частоного вибрато.&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;text-decoration:underline&quot;&gt;Выключено&lt;/span&gt; = 7 гранул,&lt;br&gt;&lt;span style=&quot;text-decoration:underline&quot;&gt;Включено&lt;/span&gt; = 14 гранул.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-style:italic&quot;&gt;Одна &amp;quot;гранула&amp;quot; ровняется 1/100 от полутона.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(Влияет на инструменты, в которых используется флаг &quot;вибрато&quot;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2885"/>
@@ -593,7 +593,7 @@
     <message>
         <location filename="../bank_editor.ui" line="2895"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Declares a volume scale formula that will set physical volume level from a MIDI volume.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic &lt;/span&gt;- linear volume scale&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPL3 Native&lt;/span&gt; - Logarithmic volume scale produced by OPL3 chip natively&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indexed table of volumes that sets OPL volume by MIDI volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogee&lt;/span&gt; - Logarithmic volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Win9x Driver&lt;/span&gt; - A short non-smooth indexed table, shorter in two times than possible OPL3 volume levels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;Определяет формулу преобразования громкости, которая установит физический уровень громкости из MIDI-громкости.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Общий&lt;/span&gt;- Линеализация логарифмической громкости чипа.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Встроенная OPL3&lt;/span&gt; - Логарифмическая шкала громкости, реалезуемя самим чипом OPL3 напрямую.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;DMX&lt;/span&gt; - Индексированная таблица, которая устанавливает громкость OPL из MIDI-громкости&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Apogee&lt;/span&gt; - Другая логарифмическая шкала громкости&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Драйвер Win9x&lt;/span&gt; - Сокращённая неровная индексная таблица, короче в два раза чем позволяет диапазон чипа OPL3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2898"/>
@@ -613,7 +613,7 @@
     <message>
         <location filename="../bank_editor.ui" line="2947"/>
         <source>Apogee</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2952"/>
@@ -782,232 +782,237 @@ of second voice</source>
         <translation>Вставить один голос</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3541"/>
+        <location filename="../bank_editor.ui" line="3542"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3545"/>
+        <location filename="../bank_editor.ui" line="3546"/>
         <source>Choose chip emulator</source>
         <translation>Выбрать эмулятор чипа</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3562"/>
+        <location filename="../bank_editor.ui" line="3563"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3570"/>
+        <location filename="../bank_editor.ui" line="3571"/>
         <source>Save bank as...</source>
         <translation>Сохранить банк как...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3575"/>
+        <location filename="../bank_editor.ui" line="3576"/>
         <source>Exit</source>
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3583"/>
+        <location filename="../bank_editor.ui" line="3584"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3588"/>
+        <location filename="../bank_editor.ui" line="3589"/>
         <source>New</source>
         <translation>Новый</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3593"/>
+        <location filename="../bank_editor.ui" line="3594"/>
         <source>Copy current instrument</source>
         <translation>Копировать текущий инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3601"/>
+        <location filename="../bank_editor.ui" line="3602"/>
         <source>Paste instrument</source>
         <translation>Вставить инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3609"/>
+        <location filename="../bank_editor.ui" line="3610"/>
         <source>Reset current instrument</source>
         <translation>Сбросить текущий инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3617"/>
+        <location filename="../bank_editor.ui" line="3618"/>
         <source>Import instruments...</source>
         <translation>Импортировать инструменты...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3622"/>
+        <location filename="../bank_editor.ui" line="3623"/>
         <source>Add instrument</source>
         <translation>Добавить инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3627"/>
+        <location filename="../bank_editor.ui" line="3628"/>
         <source>Delete current instrument</source>
         <translation>Удалить выбранный инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3632"/>
+        <location filename="../bank_editor.ui" line="3633"/>
         <source>Save current instrument as...</source>
         <translation>Сохранить текущий инструмент как...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3643"/>
-        <location filename="../bank_editor.ui" line="3646"/>
+        <location filename="../bank_editor.ui" line="3644"/>
+        <location filename="../bank_editor.ui" line="3647"/>
         <source>United view of all banks</source>
         <translation>Объединённый вид всех банков</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3649"/>
+        <location filename="../bank_editor.ui" line="3650"/>
         <source>Show all instruments without separating them between of 128-instrument banks</source>
         <translation>Показать все инструменты без разделения на банки по 128 инструментов</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3654"/>
+        <location filename="../bank_editor.ui" line="3655"/>
         <source>Add bank</source>
         <translation>Добавить банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3659"/>
+        <location filename="../bank_editor.ui" line="3660"/>
         <source>Delete bank</source>
         <translation>Удалить банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3664"/>
+        <location filename="../bank_editor.ui" line="3665"/>
         <source>Clone bank</source>
         <translation>Клонировать банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3669"/>
+        <location filename="../bank_editor.ui" line="3670"/>
         <source>Clear instrument</source>
         <translation>Очистить инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3674"/>
+        <location filename="../bank_editor.ui" line="3675"/>
         <source>Clear bank</source>
         <translation>Очистить банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3679"/>
+        <location filename="../bank_editor.ui" line="3680"/>
         <source>Supported formats...</source>
         <translation>Поддерживаемые форматы...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3684"/>
+        <location filename="../bank_editor.ui" line="3685"/>
         <source>Swap two voices</source>
         <translation>Поменять два голоса</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3692"/>
+        <location filename="../bank_editor.ui" line="3693"/>
         <source>Paste voice 1 as voice 1</source>
         <translation>Вставить голос 1 как голос 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3697"/>
+        <location filename="../bank_editor.ui" line="3698"/>
         <source>Paste voice 1 as voice 2</source>
         <translation>Вставить голос 1 как голос 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3702"/>
+        <location filename="../bank_editor.ui" line="3703"/>
         <source>Paste voice 2 as voice 1</source>
         <translation>Вставить голос 2 как голос 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3707"/>
+        <location filename="../bank_editor.ui" line="3708"/>
         <source>Paste voice 2 as voice 2</source>
         <translation>Вставить голос 2 как голос 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3712"/>
+        <location filename="../bank_editor.ui" line="3713"/>
         <source>Re-Calculate all sounding delays</source>
         <translation>Пересчитать все длительности звучания</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3720"/>
+        <location filename="../bank_editor.ui" line="3721"/>
         <source>Nuked OPL3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3728"/>
+        <location filename="../bank_editor.ui" line="3729"/>
         <source>DosBox 0.74</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3733"/>
+        <location filename="../bank_editor.ui" line="3734"/>
         <source>Run emulators benchmark</source>
         <translation>Запустить тест эмуляторов</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3738"/>
+        <location filename="../bank_editor.ui" line="3739"/>
         <source>Save bank...</source>
         <translation>Сохранить банк...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3741"/>
+        <location filename="../bank_editor.ui" line="3742"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3749"/>
+        <location filename="../bank_editor.ui" line="3750"/>
         <source>Proxy to the real OPL3 chip</source>
         <translation>Проброс настоящего чипа OPL3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3754"/>
+        <location filename="../bank_editor.ui" line="3755"/>
         <source>Audio &amp;latency...</source>
         <translation>&amp;Задержка аудио...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3759"/>
+        <location filename="../bank_editor.ui" line="3760"/>
         <source>System default</source>
         <translation>По-умолчанию в системе</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3764"/>
+        <location filename="../bank_editor.ui" line="3765"/>
         <source>Re-Calculate sounding delays of instrument</source>
-        <translation type="unfinished"></translation>
+        <translation>Пересчитать длительности звучания инструмента</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="355"/>
-        <location filename="../bank_editor.cpp" line="444"/>
-        <location filename="../bank_editor.cpp" line="484"/>
+        <location filename="../bank_editor.ui" line="3770"/>
+        <source>Run delay analysis</source>
+        <translation>Запустить анализ длительностей</translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.cpp" line="363"/>
+        <location filename="../bank_editor.cpp" line="452"/>
+        <location filename="../bank_editor.cpp" line="492"/>
         <source>bad file format</source>
         <translation>неверный формат файла</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="358"/>
+        <location filename="../bank_editor.cpp" line="366"/>
         <source>can&apos;t open file</source>
         <translation>невозможно открыть файл</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="361"/>
+        <location filename="../bank_editor.cpp" line="369"/>
         <source>reading of this format is not implemented yet</source>
         <translation>чтение данного формата пока ещё не реализовано</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="364"/>
+        <location filename="../bank_editor.cpp" line="372"/>
         <source>unsupported file format</source>
         <translation>неподдерживаемый формат файла</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="367"/>
-        <location filename="../bank_editor.cpp" line="456"/>
-        <location filename="../bank_editor.cpp" line="496"/>
+        <location filename="../bank_editor.cpp" line="375"/>
+        <location filename="../bank_editor.cpp" line="464"/>
+        <location filename="../bank_editor.cpp" line="504"/>
         <source>unknown error occurred</source>
         <translation>произошла неизвестная ошибка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="379"/>
+        <location filename="../bank_editor.cpp" line="387"/>
         <source>Bank &apos;%1&apos; has been loaded!</source>
         <translation>Загружен банк &quot;%1&quot;!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="389"/>
+        <location filename="../bank_editor.cpp" line="397"/>
         <source>Save melodic-only bank file</source>
         <translation>Сохранить только мелодический банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="390"/>
+        <location filename="../bank_editor.cpp" line="398"/>
         <source>Saving into &apos;%1&apos; format allows to save one melodic only bank. All other banks include percussion will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
@@ -1016,12 +1021,12 @@ Do you want to continue file saving?</source>
 Продолжить сохранение файла?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="403"/>
+        <location filename="../bank_editor.cpp" line="411"/>
         <source>Save percussion-only bank file</source>
         <translation>Сохранить только ударный банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="404"/>
+        <location filename="../bank_editor.cpp" line="412"/>
         <source>Saving into &apos;%1&apos; format allows to save one percussion only bank. All other banks include melodic will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
@@ -1030,12 +1035,12 @@ Do you want to continue file saving?</source>
 Продолжить сохранение файла?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="419"/>
+        <location filename="../bank_editor.cpp" line="427"/>
         <source>Save GeneralMIDI bank file</source>
         <translation>Сохранить банк GeneralMIDI</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="420"/>
+        <location filename="../bank_editor.cpp" line="428"/>
         <source>Saving into &apos;%1&apos; format allows you to have one melodic and one percussion banks only. All extra banks will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
@@ -1044,109 +1049,111 @@ Do you want to continue file saving?</source>
 Продолжить сохранение файла?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="447"/>
-        <location filename="../bank_editor.cpp" line="487"/>
+        <location filename="../bank_editor.cpp" line="455"/>
+        <location filename="../bank_editor.cpp" line="495"/>
         <source>can&apos;t open file for write</source>
         <translation>невозможно открыть файл для записи</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="450"/>
-        <location filename="../bank_editor.cpp" line="490"/>
+        <location filename="../bank_editor.cpp" line="458"/>
+        <location filename="../bank_editor.cpp" line="498"/>
         <source>writing into this format is not implemented yet</source>
         <translation>записть в этот формат пока ещё не реализована</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="453"/>
-        <location filename="../bank_editor.cpp" line="493"/>
+        <location filename="../bank_editor.cpp" line="461"/>
+        <location filename="../bank_editor.cpp" line="501"/>
         <source>unsupported file format, please define file name extension to choice target file format</source>
         <translation>неподдерживаемый формат файла, пожалуйста, определите расширение имени чтобы указать желаемый формат файла</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="469"/>
+        <location filename="../bank_editor.cpp" line="477"/>
         <source>Bank file &apos;%1&apos; has been saved!</source>
         <translation>Банк &quot;%1&quot; успешно сохранён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="506"/>
+        <location filename="../bank_editor.cpp" line="514"/>
         <source>Instrument file &apos;%1&apos; has been saved!</source>
         <translation>Инструмент &quot;%1&quot; успешно сохранён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="552"/>
+        <location filename="../bank_editor.cpp" line="560"/>
         <source>Nothing to save</source>
         <translation>Сохранять нечего</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="553"/>
+        <location filename="../bank_editor.cpp" line="561"/>
         <source>No selected instrument to save. Please select an instrument first!</source>
         <translation>Инструменты для сохранеиня не выбраны. Пожалуйста, выберите инструмент!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="570"/>
+        <location filename="../bank_editor.cpp" line="578"/>
         <source>File is not saved</source>
         <translation>Файл не сохранён</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="570"/>
+        <location filename="../bank_editor.cpp" line="578"/>
         <source>File is modified and not saved. Do you want to save it?</source>
         <translation>Файл изменён, но пока ещё не сохранён. Хотите сохранить его?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="734"/>
+        <location filename="../bank_editor.cpp" line="742"/>
         <source>Reset instrument to initial state</source>
         <translation>Сбросить инструмент в исходное состояние</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="735"/>
+        <location filename="../bank_editor.cpp" line="743"/>
         <source>This instrument will be reset to initial state (since this file was loaded or saved).
 Do you wish to continue?</source>
         <translation>Текущий инструмент будет сброшен в исходное состояние (начиная от момента открытия или сохранения файла).
 Хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="749"/>
+        <location filename="../bank_editor.cpp" line="757"/>
         <source>Are you sure?</source>
         <translation>Вы уверены?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="750"/>
+        <location filename="../bank_editor.cpp" line="758"/>
         <source>All sounding delays measures will be re-calculated. This operation may take a while. Do you want to continue? You may cancel operation in any moment.</source>
         <translation>Все измеренные длительности звучания будут перерассчитаны. Данная операция может продиться очень долго. Хотите продолжить? Операцию можно будет отменить в любой момент.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="757"/>
+        <location filename="../bank_editor.cpp" line="765"/>
         <source>Sounding delays calculation has been completed!</source>
         <translation>Рассчёт длительностей звучания завершён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="759"/>
+        <location filename="../bank_editor.cpp" line="767"/>
         <source>Sounding delays calculation was canceled!</source>
         <translation>Рассчёт длительностей звучания отменён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="770"/>
+        <location filename="../bank_editor.cpp" line="778"/>
+        <location filename="../bank_editor.cpp" line="829"/>
         <source>Nothing to measure</source>
-        <translation type="unfinished"></translation>
+        <translation>Нечего измерять</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="771"/>
+        <location filename="../bank_editor.cpp" line="779"/>
+        <location filename="../bank_editor.cpp" line="830"/>
         <source>No selected instrument to measure. Please select an instrument first!</source>
-        <translation type="unfinished"></translation>
+        <translation>Не выбран инструмент для измерения. Пожалуйста, выберите инструмент!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="792"/>
+        <location filename="../bank_editor.cpp" line="806"/>
         <source>%1 passed in %2 milliseconds.
 </source>
         <translation>%1 прошёл за %2 миллисекунд.
 </translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="794"/>
+        <location filename="../bank_editor.cpp" line="808"/>
         <source>Benchmark result</source>
         <translation>Результат теста</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="795"/>
+        <location filename="../bank_editor.cpp" line="809"/>
         <source>Result of emulators benchmark based on &apos;%1&apos; instrument:
 
 %2</source>
@@ -1155,24 +1162,24 @@ Do you wish to continue?</source>
 %2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="803"/>
-        <location filename="../bank_editor.cpp" line="1343"/>
-        <location filename="../bank_editor.cpp" line="1359"/>
+        <location filename="../bank_editor.cpp" line="817"/>
+        <location filename="../bank_editor.cpp" line="1390"/>
+        <location filename="../bank_editor.cpp" line="1406"/>
         <source>Instrument is not selected</source>
         <translation>Инструмент не выбран</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="804"/>
+        <location filename="../bank_editor.cpp" line="818"/>
         <source>Please select any instrument to begin the benchmark of emulators!</source>
         <translation>Пожалуйста, выберите любой инструмент, чтобы начать тест эмуляторов!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="817"/>
+        <location filename="../bank_editor.cpp" line="855"/>
         <source>About bank editor</source>
         <translation>О редакторе банков</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="818"/>
+        <location filename="../bank_editor.cpp" line="856"/>
         <source>FM Bank Editor for Yamaha OPL3/OPL2 chip, Version %1
 
 %2
@@ -1191,124 +1198,165 @@ Source code available on GitHub:
 %3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="906"/>
-        <location filename="../bank_editor.cpp" line="917"/>
+        <location filename="../bank_editor.cpp" line="1035"/>
+        <location filename="../bank_editor.cpp" line="1038"/>
         <source>Delays on: %1, off: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Длит. нажат.: %1, отпуск.: %2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1041"/>
-        <location filename="../bank_editor.cpp" line="1163"/>
+        <location filename="../bank_editor.cpp" line="1088"/>
+        <location filename="../bank_editor.cpp" line="1210"/>
         <source>Bank %1</source>
         <translation>Банк %1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1148"/>
+        <location filename="../bank_editor.cpp" line="1195"/>
         <source>Change name of bank</source>
         <translation>Изменить имя банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1148"/>
+        <location filename="../bank_editor.cpp" line="1195"/>
         <source>Please type name of current bank (32 characters max):</source>
         <translation>Пожалуйста, наберите имя текущего банка (максимум 32 символа):</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1344"/>
+        <location filename="../bank_editor.cpp" line="1391"/>
         <source>Select instrument to clear please</source>
         <translation>Пожалуйста, выберите инструмент для очистки</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1360"/>
+        <location filename="../bank_editor.cpp" line="1407"/>
         <source>Select instrument to remove please</source>
         <translation>Пожалуйста, выберите инструмент для удаления</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1365"/>
+        <location filename="../bank_editor.cpp" line="1412"/>
         <source>Single instrument deletion</source>
         <translation>Удаление одного инструмента</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1366"/>
+        <location filename="../bank_editor.cpp" line="1413"/>
         <source>Deletion of instrument will cause offset of all next instrument indexes. Suggested to use &apos;Clear instrument&apos; action instead. Do you want continue deletion?</source>
         <translation>Удаление инструмента спровоцирует смещение индексов всех следующих инструментов. Вместо этого, желательно применить &quot;Очистить инструмент&quot;. Вы хотите продолжить удаление?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1417"/>
+        <location filename="../bank_editor.cpp" line="1464"/>
         <source>Add bank error</source>
         <translation>Ошибка добавления банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1418"/>
-        <location filename="../bank_editor.cpp" line="1456"/>
-        <location filename="../bank_editor.cpp" line="1545"/>
+        <location filename="../bank_editor.cpp" line="1465"/>
+        <location filename="../bank_editor.cpp" line="1503"/>
+        <location filename="../bank_editor.cpp" line="1592"/>
         <source>United bank mode is turned on. Disable it to be able add or remove banks.</source>
         <translation>Включён режим объединённого банка. Отключите его, чтобы можно было добавлять или удалять банки.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1503"/>
+        <location filename="../bank_editor.cpp" line="1550"/>
         <source>United bank mode is turned on. Disable it to be able clear banks.</source>
         <translation>Включён режим объединённого банка. Отключите его, чтобы можно было чистить банки.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1455"/>
+        <location filename="../bank_editor.cpp" line="1502"/>
         <source>Clone bank error</source>
         <translation>Ошибка клонирования банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1502"/>
+        <location filename="../bank_editor.cpp" line="1549"/>
         <source>Clear bank error</source>
         <translation>Ошибка очистки банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1508"/>
+        <location filename="../bank_editor.cpp" line="1555"/>
         <source>128-instrument bank erasure</source>
         <translation>Очистка 128-инструментного банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1509"/>
+        <location filename="../bank_editor.cpp" line="1556"/>
         <source>All instruments in this bank will be cleared. Do you want continue erasure?</source>
         <translation>Все инструменты в этом банке будут очищены. Вы хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1544"/>
-        <location filename="../bank_editor.cpp" line="1553"/>
+        <location filename="../bank_editor.cpp" line="1591"/>
+        <location filename="../bank_editor.cpp" line="1600"/>
         <source>Delete bank error</source>
         <translation>Ошибка удаления банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1554"/>
+        <location filename="../bank_editor.cpp" line="1601"/>
         <source>Removing of last bank is not allowed!</source>
         <translation>Удаление последнего банка не позволено!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1559"/>
+        <location filename="../bank_editor.cpp" line="1606"/>
         <source>128-instrument bank deletion</source>
         <translation>Удаление 128-инструментного банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1560"/>
+        <location filename="../bank_editor.cpp" line="1607"/>
         <source>Deletion of bank will cause offset of all next bank indexes. Suggested to use &apos;Clear bank&apos; action instead. Do you want continue deletion?</source>
         <translation>Удаление банка спровоцирует смещение индексов всех следующих инструментов. Вместо этого, желательно использовать &quot;Очистить банк&quot;. Хотите продолжить удаление?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1611"/>
+        <location filename="../bank_editor.cpp" line="1658"/>
         <source>Virtual port</source>
         <translation>Виртуальный порт</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1630"/>
+        <location filename="../bank_editor.cpp" line="1677"/>
         <source>Disable</source>
         <translation>Отключить</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1671"/>
+        <location filename="../bank_editor.cpp" line="1718"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1672"/>
+        <location filename="../bank_editor.cpp" line="1719"/>
         <source>Cannot open the MIDI port.</source>
         <translation>Невозможно открыть MIDI-порт.</translation>
+    </message>
+</context>
+<context>
+    <name>DelayAnalysis</name>
+    <message>
+        <location filename="../delay_analysis.ui" line="14"/>
+        <source>Delay analysis</source>
+        <translation>Анализ длительностей</translation>
+    </message>
+    <message>
+        <location filename="../delay_analysis.ui" line="45"/>
+        <location filename="../delay_analysis.ui" line="57"/>
+        <source>Delay: %1 ms
+Peak amplitude: %2
+Amplitude at breaking point: %3</source>
+        <translation>Длительность: %1 мс
+Пиковая амплитуда: %2
+Амплитуда на точке обрыва: %3</translation>
+    </message>
+</context>
+<context>
+    <name>DelayAnalysisDialog</name>
+    <message>
+        <location filename="../delay_analysis.cpp" line="165"/>
+        <source>Key-On Amplitude</source>
+        <translation>Амплитуда при нажатии клавиши</translation>
+    </message>
+    <message>
+        <location filename="../delay_analysis.cpp" line="167"/>
+        <source>Key-Off Amplitude</source>
+        <translation>Амплитуда при отпускании клавиши</translation>
+    </message>
+    <message>
+        <location filename="../delay_analysis.cpp" line="181"/>
+        <location filename="../delay_analysis.cpp" line="187"/>
+        <source>Delay: %1 ms
+Peak amplitude: %2
+Amplitude at breaking point: %3</source>
+        <translation>Длительность: %1 мс
+Пиковая амплитуда: %2
+Амплитуда на точке обрыва: %3</translation>
     </message>
 </context>
 <context>
@@ -1477,20 +1525,22 @@ If audio glitches occur, you should reset this setting to a higher value.</sourc
 <context>
     <name>Measurer</name>
     <message>
-        <location filename="../opl/measurer.cpp" line="357"/>
-        <location filename="../opl/measurer.cpp" line="412"/>
+        <location filename="../opl/measurer.cpp" line="738"/>
+        <location filename="../opl/measurer.cpp" line="794"/>
+        <location filename="../opl/measurer.cpp" line="821"/>
         <source>Sounding delay calculation</source>
         <translation>Рассчёт длительностей звучания</translation>
     </message>
     <message>
-        <location filename="../opl/measurer.cpp" line="358"/>
-        <location filename="../opl/measurer.cpp" line="413"/>
-        <location filename="../opl/measurer.cpp" line="440"/>
+        <location filename="../opl/measurer.cpp" line="739"/>
+        <location filename="../opl/measurer.cpp" line="795"/>
+        <location filename="../opl/measurer.cpp" line="822"/>
+        <location filename="../opl/measurer.cpp" line="849"/>
         <source>Please wait...</source>
         <translation>Пожалуйста подождите...</translation>
     </message>
     <message>
-        <location filename="../opl/measurer.cpp" line="439"/>
+        <location filename="../opl/measurer.cpp" line="848"/>
         <source>Benchmarking emulators</source>
         <translation>Тестирование эмуляторов</translation>
     </message>
@@ -1498,7 +1548,7 @@ If audio glitches occur, you should reset this setting to a higher value.</sourc
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../bank_editor.cpp" line="56"/>
+        <location filename="../bank_editor.cpp" line="59"/>
         <source>Bank %1, ID: %2</source>
         <translation>Банк %1, ID: %2</translation>
     </message>
@@ -1533,6 +1583,15 @@ If audio glitches occur, you should reset this setting to a higher value.</sourc
         <location filename="../common.cpp" line="188"/>
         <source>Can&apos;t save %1 file because %2.</source>
         <translation>Не возможно сохранить файл %1 потому что %2.</translation>
+    </message>
+    <message>
+        <location filename="../opl/generator.cpp" line="162"/>
+        <source>Channels:
+2-op: %1, Ps-4op: %2
+4-op: %3</source>
+        <translation>Каналы:
+2-оп: %1, Пс-4оп: %2
+4-оп: %3</translation>
     </message>
 </context>
 <context>
