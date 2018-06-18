@@ -362,7 +362,9 @@ static void ComputeDurations(const FmBank::Instrument *in_p, DurationInfo *resul
     audioHistory.reset(std::ceil(historyLength * g_outputRate));
 
     const double timestep = (double)samples_per_interval / g_outputRate;  // interval between analysis steps (seconds)
+#if defined(ENABLE_PLOTS)
     result.amps_timestep = timestep;
+#endif
 
     std::unique_ptr<double[]> window;
     window.reset(new double[audioHistory.capacity()]);

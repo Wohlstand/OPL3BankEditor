@@ -35,6 +35,9 @@
 #include "latency.h"
 #include "ins_names.h"
 #include "main.h"
+#if defined(ENABLE_PLOTS)
+#include "delay_analysis.h"
+#endif
 
 #include "FileFormats/ffmt_factory.h"
 #include "FileFormats/ffmt_enums.h"
@@ -128,6 +131,10 @@ BankEditor::BankEditor(QWidget *parent) :
     midiInAction->setMenu(midiInMenu);
 #else
     ui->midiIn_zone->hide();
+#endif
+
+#if !defined(ENABLE_PLOTS)
+    ui->actionDelayAnalysis->setVisible(false);
 #endif
 
     createLanguageChoices();
@@ -811,6 +818,30 @@ void BankEditor::on_actionChipsBenchmark_triggered()
                                  tr("Please select any instrument to begin the benchmark of emulators!"));
     }
 }
+
+#if defined(ENABLE_PLOTS)
+void BankEditor::on_actionDelayAnalysis_triggered()
+{
+    FmBank::Instrument *inst = m_curInst;
+    if(!inst)
+    {
+        QMessageBox::information(this,
+                                 tr("Nothing to measure"),
+                                 tr("No selected instrument to measure. Please select an instrument first!"));
+        return;
+    }
+
+    FmBank::Instrument workInst = *inst;
+    workInst.is_blank = false;
+
+    const FmBank::Instrument blankInst = FmBank::emptyInst();
+    if(memcmp(&workInst, &blankInst, sizeof(FmBank::Instrument)) == 0)
+        return;
+
+    DelayAnalysisDialog dialog(*inst, this);
+    dialog.exec();
+}
+#endif
 
 void BankEditor::on_actionFormatsSup_triggered()
 {
