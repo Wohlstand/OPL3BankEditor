@@ -361,8 +361,10 @@ static void ComputeDurations(const FmBank::Instrument *in_p, DurationInfo *resul
     const double historyLength = 0.1;  // maximum duration to memorize (seconds)
     audioHistory.reset(std::ceil(historyLength * g_outputRate));
 
-#if defined(ENABLE_PLOTS)
+#if define(ENABLE_PLOTS) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
     const double timestep = (double)samples_per_interval / g_outputRate;  // interval between analysis steps (seconds)
+#endif
+#if defined(ENABLE_PLOTS)
     result.amps_timestep = timestep;
 #endif
 
