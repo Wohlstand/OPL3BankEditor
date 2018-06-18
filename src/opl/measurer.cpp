@@ -358,6 +358,9 @@ static void ComputeDurations(const FmBank::Instrument &in, DurationInfo &result,
     const double historyLength = 0.1;  // maximum duration to memorize (seconds)
     audioHistory.reset(std::ceil(historyLength * g_outputRate));
 
+    const double timestep = (double)samples_per_interval / g_outputRate;  // interval between analysis steps (seconds)
+    result.amps_timestep = timestep;
+
     std::unique_ptr<double[]> window;
     window.reset(new double[audioHistory.capacity()]);
     unsigned winsize = 0;
@@ -396,13 +399,15 @@ static void ComputeDurations(const FmBank::Instrument &in, DurationInfo &result,
     int16_t audioBuffer[audioBufferSize];
 
     // For up to 40 seconds, measure mean amplitude.
-#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
-    std::vector<double> amplitudecurve_on;
-#endif
     double highest_sofar = 0;
     short sound_min = 0, sound_max = 0;
 
-#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
+#if defined(ENABLE_PLOTS)
+    std::vector<double> &amplitudecurve_on = result.amps_on;
+    amplitudecurve_on.clear();
+    amplitudecurve_on.reserve(max_period_on);
+#elif defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
+    std::vector<double> amplitudecurve_on;
     amplitudecurve_on.reserve(max_period_on);
 #endif
     for(unsigned period = 0; period < max_period_on; ++period, ++windows_passed_on)
@@ -449,7 +454,7 @@ static void ComputeDurations(const FmBank::Instrument &in, DurationInfo &result,
             quarter_amplitude_time_found = true;
         }
         /* ======== Peak time detection =END==== */
-#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
+#if defined(ENABLE_PLOTS) || defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
         amplitudecurve_on.push_back(rms);
 #endif
         if(rms > highest_sofar)
@@ -543,7 +548,11 @@ static void ComputeDurations(const FmBank::Instrument &in, DurationInfo &result,
     }
 
     // Now, for up to 60 seconds, measure mean amplitude.
-#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
+#if defined(ENABLE_PLOTS)
+    std::vector<double> &amplitudecurve_off = result.amps_off;
+    amplitudecurve_off.clear();
+    amplitudecurve_off.reserve(max_period_on);
+#elif defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
     std::vector<double> amplitudecurve_off;
     amplitudecurve_off.reserve(max_period_off);
 #endif
@@ -578,7 +587,7 @@ static void ComputeDurations(const FmBank::Instrument &in, DurationInfo &result,
             keyoff_out_time_found = true;
         }
         /* ======== Find Key Off time ==END=== */
-#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
+#if defined(ENABLE_PLOTS) || defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
         amplitudecurve_off.push_back(rms);
 #endif
         if(rms < highest_sofar * min_coefficient_off)
@@ -590,8 +599,7 @@ static void ComputeDurations(const FmBank::Instrument &in, DurationInfo &result,
 
 #ifdef DEBUG_WRITE_AMPLITUDE_PLOT
     WriteAmplitudePlot(
-        "/tmp/amplitude", amplitudecurve_on, amplitudecurve_off,
-        (double)samples_per_interval / g_outputRate);
+        "/tmp/amplitude", amplitudecurve_on, amplitudecurve_off, timestep);
 #endif
 
 #ifdef DEBUG_AMPLITUDE_PEAK_VALIDATION

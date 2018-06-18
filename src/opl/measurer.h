@@ -22,6 +22,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QVector>
+#include <vector>
 #include "../bank.h"
 
 class Measurer : public QObject
@@ -48,7 +49,11 @@ public:
         int64_t     ms_sound_kon;
         int64_t     ms_sound_koff;
         bool        nosound;
-        uint8_t     padding[7];
+#if defined(ENABLE_PLOTS)
+        std::vector<double> amps_on;
+        std::vector<double> amps_off;
+        double amps_timestep;
+#endif
     };
     bool doComputation(const FmBank::Instrument &instrument, DurationInfo &result);
 
