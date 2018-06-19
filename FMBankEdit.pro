@@ -46,7 +46,9 @@ CONFIG += rtmidi
 CONFIG += rtaudio
 #CONFIG += plots
 
+!macx:{
 QMAKE_CXXFLAGS += -fopenmp
+}
 
 TEMPLATE = app
 TARGET = opl3_bank_editor

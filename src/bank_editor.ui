@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1117</width>
-    <height>842</height>
+    <height>846</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -104,7 +104,7 @@
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1000">
                 <property name="spacing">
-                 <number>0</number>
+                 <number>8</number>
                 </property>
                 <property name="leftMargin">
                  <number>0</number>
@@ -140,6 +140,9 @@
                 </item>
                 <item>
                  <widget class="QComboBox" name="bank_no">
+                  <property name="frame">
+                   <bool>true</bool>
+                  </property>
                   <item>
                    <property name="text">
                     <string>Bank 0</string>
@@ -2852,11 +2855,6 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="font">
-                <font>
-                 <pointsize>8</pointsize>
-                </font>
-               </property>
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tremolo (Amplitude Vibrato) Depth.&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Unchecked&lt;/span&gt; = 1.0dB,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Checked&lt;/span&gt; = 4.8dB.&lt;/p&gt;&lt;p&gt;(Effect taking for instruments where tremolo flag is used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
@@ -2872,11 +2870,6 @@
                  <width>16777215</width>
                  <height>20</height>
                 </size>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>8</pointsize>
-                </font>
                </property>
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Vibrato Depth.&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Unchecked&lt;/span&gt; = 7 cents,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Checked&lt;/span&gt; = 14 cents.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;A &amp;quot;cent&amp;quot; is 1/100 of a semi-tone.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(Effect taking for instruments where vibrato flag is used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -3164,7 +3157,7 @@ Available from 0 to 127</string>
                 <enum>Qt::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Maximum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -3468,7 +3461,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>1117</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
