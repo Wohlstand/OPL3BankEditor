@@ -869,7 +869,7 @@ de la deuxième voix</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3650"/>
-        <source>Show all instruments without separating them between of 128-instrument banks</source>
+        <source>Show all instruments without separating them into 128-instrument banks</source>
         <translation>Afficher les instruments sans les séparer en banques de 128 instruments</translation>
     </message>
     <message>
