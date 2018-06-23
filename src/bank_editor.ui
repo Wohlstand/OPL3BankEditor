@@ -3461,7 +3461,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>1117</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -3640,7 +3640,7 @@ of second voice</string>
     <string>United view of all banks</string>
    </property>
    <property name="toolTip">
-    <string>Show all instruments without separating them between of 128-instrument banks</string>
+    <string>Show all instruments without separating them into 128-instrument banks</string>
    </property>
   </action>
   <action name="actionAddBank">
