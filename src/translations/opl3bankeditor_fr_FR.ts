@@ -754,17 +754,17 @@ de la deuxième voix</translation>
     <message>
         <location filename="../bank_editor.ui" line="3370"/>
         <source>Hold</source>
-        <translation type="unfinished"></translation>
+        <translation>Maintien</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3373"/>
         <source>H</source>
-        <translation type="unfinished"></translation>
+        <translation>H</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3417"/>
         <source>Pitch bend</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulation de hauteur tonale</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3476"/>
@@ -1134,19 +1134,18 @@ Voulez-vous continuer ?</translation>
         <location filename="../bank_editor.cpp" line="1035"/>
         <location filename="../bank_editor.cpp" line="1038"/>
         <source>Delays on: %1, off: %2</source>
-        <translation>Délais on: %1, off: %2</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1465"/>
         <location filename="../bank_editor.cpp" line="1503"/>
         <location filename="../bank_editor.cpp" line="1592"/>
         <source>United bank mode is turned on. Disable it to be able add or remove banks.</source>
-        <translation>Le mode unifié est activé. Désactivez le pour pouvoir ajouter ou supprimer des banques.</translation>
+        <translation>Le mode unifié est activé. Désactivez-le pour pouvoir ajouter ou supprimer des banques.</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1550"/>
         <source>United bank mode is turned on. Disable it to be able clear banks.</source>
-        <translation>Le mode unifié est activé. Désactivez le pour pouvoir effacer des banques.</translation>
+        <translation>Le mode unifié est activé. Désactivez-le pour pouvoir effacer des banques.</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1555"/>
@@ -1342,7 +1341,7 @@ Source code disponible sur GitHub :
 Peak amplitude: %2
 Amplitude at breaking point: %3</source>
         <translation>Délai : %1 ms
-Amplitude crête : %2
+Amplitude de crête : %2
 Amplitude au point de coupure : %3</translation>
     </message>
 </context>
@@ -1351,12 +1350,12 @@ Amplitude au point de coupure : %3</translation>
     <message>
         <location filename="../delay_analysis.cpp" line="165"/>
         <source>Key-On Amplitude</source>
-        <translation>Amplitude de Note Jouée</translation>
+        <translation>Amplitude de note jouée</translation>
     </message>
     <message>
         <location filename="../delay_analysis.cpp" line="167"/>
         <source>Key-Off Amplitude</source>
-        <translation>Amplitude de Note Relâchée</translation>
+        <translation>Amplitude de note relâchée</translation>
     </message>
     <message>
         <location filename="../delay_analysis.cpp" line="181"/>
@@ -1365,7 +1364,7 @@ Amplitude au point de coupure : %3</translation>
 Peak amplitude: %2
 Amplitude at breaking point: %3</source>
         <translation>Délai : %1 ms
-Amplitude crête : %2
+Amplitude de crête : %2
 Amplitude au point de coupure : %3</translation>
     </message>
 </context>
