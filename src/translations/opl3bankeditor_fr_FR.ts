@@ -1134,6 +1134,7 @@ Voulez-vous continuer ?</translation>
         <location filename="../bank_editor.cpp" line="1035"/>
         <location filename="../bank_editor.cpp" line="1038"/>
         <source>Delays on: %1, off: %2</source>
+        <translation>Délais on : %1, off : %2</translation> 
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1465"/>
