@@ -1,16 +1,19 @@
 /*
  * Copyright (C) 2013-2018 Alexey Khokholov (Nuke.YKT)
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  *  Nuked OPL3 emulator.
  *  Thanks:
@@ -86,7 +89,7 @@ struct _opl3_slot {
 };
 
 struct _opl3_channel {
-    opl3_slot *slots[2];
+    opl3_slot *slotz[2];/*Don't use "slots" keyword to avoid conflict with Qt applications*/
     opl3_channel *pair;
     opl3_chip *chip;
     Bit16s *out[4];

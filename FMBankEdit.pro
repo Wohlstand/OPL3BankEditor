@@ -129,7 +129,6 @@ SOURCES += \
     src/opl/measurer.cpp \
     src/opl/chips/dosbox_opl3.cpp \
     src/opl/chips/nuked_opl3.cpp \
-    src/opl/chips/opl_chip_base.cpp \
     src/opl/chips/nuked/nukedopl3.c \
     src/opl/chips/dosbox/dbopl.cpp \
     src/FileFormats/wopl/wopl_file.c \
@@ -169,6 +168,8 @@ HEADERS += \
     src/piano.h \
     src/version.h \
     src/opl/measurer.h \
+    src/opl/chips/opl_chip_base.h \
+    src/opl/chips/opl_chip_base.tcc \
     src/opl/chips/dosbox_opl3.h \
     src/opl/chips/nuked_opl3.h \
     src/opl/chips/opl_chip_base.h \

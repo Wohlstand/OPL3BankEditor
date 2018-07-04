@@ -76,9 +76,9 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     ins.en_pseudo4op    = (flags & WOPL_Ins_Pseudo4op) != 0;
     ins.is_blank        = (flags & WOPL_Ins_IsBlank) != 0;
     ins.adlib_drum_number = 0;
-    if((flags & WOPL_RythmModeMask) != 0)
+    if((flags & WOPL_RhythmModeMask) != 0)
     {
-        uint8_t rm = flags & WOPL_RythmModeMask;
+        uint8_t rm = flags & WOPL_RhythmModeMask;
         switch(rm)
         {
         case WOPL_RM_BassDrum:
@@ -90,7 +90,7 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
         case WOPL_RM_TomTom:
             ins.adlib_drum_number = 8;
             break;
-        case WOPL_RM_Cymball:
+        case WOPL_RM_Cymbal:
             ins.adlib_drum_number = 9;
             break;
         case WOPL_RM_HiHat:
@@ -143,9 +143,9 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
     }
 
     //Set rythm mode flag
-    if((in.inst_flags & WOPL_RythmModeMask) != 0)
+    if((in.inst_flags & WOPL_RhythmModeMask) != 0)
     {
-        uint8_t rm = in.inst_flags & WOPL_RythmModeMask;
+        uint8_t rm = in.inst_flags & WOPL_RhythmModeMask;
         switch(rm)
         {
         case WOPL_RM_BassDrum:
@@ -157,7 +157,7 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
         case WOPL_RM_TomTom:
             out.adlib_drum_number = 8;
             break;
-        case WOPL_RM_Cymball:
+        case WOPL_RM_Cymbal:
             out.adlib_drum_number = 9;
             break;
         case WOPL_RM_HiHat:
@@ -192,7 +192,7 @@ static void cvt_FMIns_to_WOPLI(FmBank::Instrument &in, WOPLInstrument &out)
             out.inst_flags |= WOPL_RM_TomTom;
             break;
         case 9:
-            out.inst_flags |= WOPL_RM_Cymball;
+            out.inst_flags |= WOPL_RM_Cymbal;
             break;
         case 10:
             out.inst_flags |= WOPL_RM_HiHat;
@@ -241,7 +241,7 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
             odata[39] |= WOPL_RM_TomTom;
             break;
         case 9:
-            odata[39] |= WOPL_RM_Cymball;
+            odata[39] |= WOPL_RM_Cymbal;
             break;
         case 10:
             odata[39] |= WOPL_RM_HiHat;

@@ -1,20 +1,32 @@
+/*
+ * Interfaces over Yamaha OPL3 (YMF262) chip emulators
+ *
+ * Copyright (C) 2017-2018 Vitaly Novichkov (Wohlstand)
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 #include "nuked_opl3.h"
 #include "nuked/nukedopl3.h"
 #include <cstring>
 
 NukedOPL3::NukedOPL3() :
-    OPLChipBase()
+    OPLChipBaseT()
 {
     m_chip = new opl3_chip;
-    reset(m_rate);
-}
-
-NukedOPL3::NukedOPL3(const NukedOPL3 &c):
-    OPLChipBase(c)
-{
-    m_chip = new opl3_chip;
-    std::memset(m_chip, 0, sizeof(opl3_chip));
-    reset(c.m_rate);
+    setRate(m_rate);
 }
 
 NukedOPL3::~NukedOPL3()
@@ -25,7 +37,7 @@ NukedOPL3::~NukedOPL3()
 
 void NukedOPL3::setRate(uint32_t rate)
 {
-    OPLChipBase::setRate(rate);
+    OPLChipBaseT::setRate(rate);
     opl3_chip *chip_r = reinterpret_cast<opl3_chip*>(m_chip);
     std::memset(chip_r, 0, sizeof(opl3_chip));
     OPL3_Reset(chip_r, rate);
@@ -33,12 +45,10 @@ void NukedOPL3::setRate(uint32_t rate)
 
 void NukedOPL3::reset()
 {
-    setRate(m_rate);
-}
-
-void NukedOPL3::reset(uint32_t rate)
-{
-    setRate(rate);
+    OPLChipBaseT::reset();
+    opl3_chip *chip_r = reinterpret_cast<opl3_chip*>(m_chip);
+    std::memset(chip_r, 0, sizeof(opl3_chip));
+    OPL3_Reset(chip_r, m_rate);
 }
 
 void NukedOPL3::writeReg(uint16_t addr, uint8_t data)
@@ -47,44 +57,10 @@ void NukedOPL3::writeReg(uint16_t addr, uint8_t data)
     OPL3_WriteRegBuffered(chip_r, addr, data);
 }
 
-int NukedOPL3::generate(int16_t *output, size_t frames)
+void NukedOPL3::nativeGenerate(int16_t *frame)
 {
     opl3_chip *chip_r = reinterpret_cast<opl3_chip*>(m_chip);
-    OPL3_GenerateStream(chip_r, output, (Bit32u)frames);
-    return (int)frames;
-}
-
-int NukedOPL3::generateAndMix(int16_t *output, size_t frames)
-{
-    opl3_chip *chip_r = reinterpret_cast<opl3_chip*>(m_chip);
-    OPL3_GenerateStreamMix(chip_r, output, (Bit32u)frames);
-    return (int)frames;
-}
-
-int NukedOPL3::generate32(int32_t *output, size_t frames)
-{
-    opl3_chip *chip_r = reinterpret_cast<opl3_chip*>(m_chip);
-    for(size_t i = 0; i < frames; ++i) {
-        int16_t frame[2];
-        OPL3_GenerateResampled(chip_r, frame);
-        output[0] = (int32_t)frame[0];
-        output[1] = (int32_t)frame[1];
-        output += 2;
-    }
-    return (int)frames;
-}
-
-int NukedOPL3::generateAndMix32(int32_t *output, size_t frames)
-{
-    opl3_chip *chip_r = reinterpret_cast<opl3_chip*>(m_chip);
-    for(size_t i = 0; i < frames; ++i) {
-        int16_t frame[2];
-        OPL3_GenerateResampled(chip_r, frame);
-        output[0] += (int32_t)frame[0];
-        output[1] += (int32_t)frame[1];
-        output += 2;
-    }
-    return (int)frames;
+    OPL3_Generate(chip_r, frame);
 }
 
 const char *NukedOPL3::emulatorName()
