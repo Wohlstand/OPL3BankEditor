@@ -91,16 +91,7 @@ void Win9x_OPL_Proxy::closeChip()
     }
 }
 
-Win9x_OPL_Proxy::Win9x_OPL_Proxy():
-    OPLChipBase()
-{
-    m_chip = new OPLProxyDriver;
-    std::memset(m_chip, 0, sizeof(OPLProxyDriver));
-    initChip();
-}
-
-Win9x_OPL_Proxy::Win9x_OPL_Proxy(const Win9x_OPL_Proxy &c):
-    OPLChipBase(c)
+Win9x_OPL_Proxy::Win9x_OPL_Proxy()
 {
     m_chip = new OPLProxyDriver;
     std::memset(m_chip, 0, sizeof(OPLProxyDriver));
@@ -114,14 +105,6 @@ Win9x_OPL_Proxy::~Win9x_OPL_Proxy()
     delete chip_r;
 }
 
-void Win9x_OPL_Proxy::setRate(uint32_t)
-{
-    /* Do nothing, as it's real chip, not an emulator */
-}
-
-void Win9x_OPL_Proxy::reset()
-{}
-
 void Win9x_OPL_Proxy::writeReg(uint16_t addr, uint8_t data)
 {
     OPLProxyDriver *chip_r = reinterpret_cast<OPLProxyDriver*>(m_chip);
@@ -129,26 +112,10 @@ void Win9x_OPL_Proxy::writeReg(uint16_t addr, uint8_t data)
         chip_r->chip_oplPoke(addr, data);
 }
 
-int Win9x_OPL_Proxy::generate(int16_t *output, size_t frames)
+void Win9x_OPL_Proxy::nativeGenerate(int16_t *frame)
 {
-    std::memset(output, 0, sizeof(int16_t) * frames * 2);
-    return (int)frames;
-}
-
-int Win9x_OPL_Proxy::generateAndMix(int16_t * /*output*/, size_t frames)
-{
-    return (int)frames;
-}
-
-int Win9x_OPL_Proxy::generate32(int32_t *output, size_t frames)
-{
-    std::memset(output, 0, sizeof(int32_t) * frames * 2);
-    return (int)frames;
-}
-
-int Win9x_OPL_Proxy::generateAndMix32(int32_t * /*output*/, size_t frames)
-{
-    return (int)frames;
+    frame[0] = 0;
+    frame[1] = 0;
 }
 
 const char *Win9x_OPL_Proxy::emulatorName()
