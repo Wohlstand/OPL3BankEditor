@@ -18,6 +18,7 @@
 
 #include "main.h"
 #include "bank_editor.h"
+#include "proxystyle.h"
 #include <QLibraryInfo>
 #include <QStringList>
 #include <QDebug>
@@ -27,6 +28,10 @@
 int main(int argc, char *argv[])
 {
     Application a(argc, argv);
+
+#if !defined(IS_QT_4)
+    a.setStyle(new BankEditor_ProxyStyle(a.style()));
+#endif
 
     BankEditor w;
     w.show();
