@@ -18,6 +18,7 @@ IF ERRORLEVEL 1 goto error
 md opl3-bank-editor
 IF NOT -%1-==-win9x- (
     cd bin-release
+    md translations
     copy "..\src\translations\*.qm" translations
     windeployqt opl3_bank_editor.exe
     IF ERRORLEVEL 1 goto error
