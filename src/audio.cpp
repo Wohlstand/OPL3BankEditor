@@ -101,138 +101,109 @@ void BankEditor::initAudio()
 #endif
 }
 
-static bool keyToNote(int k, IRealtimeControl *ctl)
+static int keyToNote(int k)
 {
-    bool pn = false;
+    int note = -1;
 
     switch(k)
     {
     case Qt::Key_Z:
-        ctl->changeNote(48);
-        pn = true;
+        note = 48;
         break;
     case Qt::Key_S:
-        ctl->changeNote(49);
-        pn = true;
+        note = 49;
         break;
     case Qt::Key_X:
-        ctl->changeNote(50);
-        pn = true;
+        note = 50;
         break;
     case Qt::Key_D:
-        ctl->changeNote(51);
-        pn = true;
+        note = 51;
         break;
     case Qt::Key_C:
-        ctl->changeNote(52);
-        pn = true;
+        note = 52;
         break;
     case Qt::Key_V:
-        ctl->changeNote(53);
-        pn = true;
+        note = 53;
         break;
     case Qt::Key_G:
-        ctl->changeNote(54);
-        pn = true;
+        note = 54;
         break;
     case Qt::Key_B:
-        ctl->changeNote(55);
-        pn = true;
+        note = 55;
         break;
     case Qt::Key_H:
-        ctl->changeNote(56);
-        pn = true;
+        note = 56;
         break;
     case Qt::Key_N:
-        ctl->changeNote(57);
-        pn = true;
+        note = 57;
         break;
     case Qt::Key_J:
-        ctl->changeNote(58);
-        pn = true;
+        note = 58;
         break;
     case Qt::Key_M:
-        ctl->changeNote(59);
-        pn = true;
+        note = 59;
         break;
     case Qt::Key_Q:
     case Qt::Key_Comma:
-        ctl->changeNote(60);
-        pn = true;
+        note = 60;
         break;
     case Qt::Key_2:
     case Qt::Key_L:
-        ctl->changeNote(61);
-        pn = true;
+        note = 61;
         break;
     case Qt::Key_W:
     case Qt::Key_Period:
-        ctl->changeNote(62);
-        pn = true;
+        note = 62;
         break;
     case Qt::Key_3:
     case Qt::Key_Semicolon:
-        ctl->changeNote(63);
-        pn = true;
+        note = 63;
         break;
     case Qt::Key_E:
     case Qt::Key_Slash:
-        ctl->changeNote(64);
-        pn = true;
+        note = 64;
         break;
     case Qt::Key_R:
-        ctl->changeNote(65);
-        pn = true;
+        note = 65;
         break;
     case Qt::Key_5:
-        ctl->changeNote(66);
-        pn = true;
+        note = 66;
         break;
     case Qt::Key_T:
-        ctl->changeNote(67);
-        pn = true;
+        note = 67;
         break;
     case Qt::Key_6:
-        ctl->changeNote(68);
-        pn = true;
+        note = 68;
         break;
     case Qt::Key_Y:
-        ctl->changeNote(69);
-        pn = true;
+        note = 69;
         break;
     case Qt::Key_7:
-        ctl->changeNote(70);
-        pn = true;
+        note = 70;
         break;
     case Qt::Key_U:
-        ctl->changeNote(71);
-        pn = true;
+        note = 71;
         break;
     case Qt::Key_I:
-        ctl->changeNote(72);
-        pn = true;
+        note = 72;
         break;
     case Qt::Key_9:
-        ctl->changeNote(73);
-        pn = true;
+        note = 73;
         break;
     case Qt::Key_O:
-        ctl->changeNote(74);
-        pn = true;
+        note = 74;
         break;
     case Qt::Key_0:
-        ctl->changeNote(75);
-        pn = true;
+        note = 75;
         break;
     case Qt::Key_P:
-        ctl->changeNote(76);
-        pn = true;
+        note = 76;
         break;
     default:
         break;
     }
 
-    return pn;
+    return note;
 }
 
 void BankEditor::pianoKeyPress(QKeyEvent *event)
@@ -242,8 +213,13 @@ void BankEditor::pianoKeyPress(QKeyEvent *event)
 
     if(ui->melodic->isChecked())
     {
-        if(keyToNote(event->key(), m_generator))
+        int key = event->key();
+        int note = keyToNote(key);
+        if(note != -1 && !pianoKeyCodes.contains(key)) {
+            m_generator->changeNote(note);
             m_generator->ctl_playNote();
+            pianoKeyCodes.insert(key);
+        }
     }
     else
     {
@@ -265,8 +241,13 @@ void BankEditor::pianoKeyRelease(QKeyEvent *event)
 
     if(ui->melodic->isChecked())
     {
-        if(keyToNote(event->key(), m_generator))
+        int key = event->key();
+        int note = keyToNote(key);
+        if(note != -1 && pianoKeyCodes.contains(key)) {
+            m_generator->changeNote(note);
             m_generator->ctl_stopNote();
+            pianoKeyCodes.remove(key);
+        }
     }
     else
     {
