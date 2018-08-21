@@ -280,26 +280,27 @@ void Generator::NoteOff(uint32_t c)
 
 void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
 {
-    uint16_t cc = c % 23;
-    uint16_t x = 0x2000;
+    uint32_t cc = c % 23;
+    uint32_t octave = 0;
 
-    if(hertz < 0 || hertz > 131071) // Avoid infinite loop
+    if(hertz < 0)
         return;
 
     while(hertz >= 1023.5)
     {
         hertz /= 2.0;    // Calculate octave
-        x += 0x400;
+        if(octave < 0x1C00)
+            octave += 0x400;
     }
 
-    x += static_cast<uint32_t>(hertz + 0.5);
+    octave += static_cast<uint32_t>(hertz + 0.5);
     uint16_t chn = Channels[cc];
 
-    if(cc >= 18)
-        x &= ~0x2000u;
+    if(cc < 18)
+        octave += 0x2000u; /* Key-ON [KON] */
 
-    WriteReg(0xA0 + chn, x & 0xFF);
-    WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(x >> 8));
+    WriteReg(0xA0 + chn, octave & 0xFF);
+    WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(octave >> 8));
 
     if(cc >= 18)
     {
