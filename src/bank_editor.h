@@ -545,6 +545,12 @@ protected:
     virtual void pianoKeyPress(QKeyEvent *event);
     virtual void pianoKeyRelease(QKeyEvent *event);
 
+private:
+    /**
+     * @brief Set of key codes currently active on piano
+     */
+    QSet<int> pianoKeyCodes;
+
 protected:
     void closeEvent(QCloseEvent *event);
     void dragEnterEvent(QDragEnterEvent *e);
