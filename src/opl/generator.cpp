@@ -179,12 +179,12 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
         //    | | ,-----+-+-+---- Attack/decay rates
         //    | | | ,---+-+-+-+-- AM/VIB/EG/KSR/Multiple bits
         //    | | | |   | | | |
-        //    | | | |   | | | |    ,----+-- KSL/attenuation settings
-        //    | | | |   | | | |    |    |    ,----- Feedback/connection bits
-        //    | | | |   | | | |    |    |    |    +- Fine tuning
+        //    | | | |   | | | |      ,----+-- KSL/attenuation settings
+        //    | | | |   | | | |      |    |                  ,----- Feedback/connection bits
+        //    | | | |   | | | |      |    |                  |    +- Fine tuning
         {
-            { 0x104C060, 0x10455B1, 0x51, 0x80, 0x4, +12 },
-            { 0x10490A0, 0x1045531, 0x52, 0x80, 0x6, +12 },
+            { 0x104C060, 0x10455B1, 0x60, 0xB1, 0x51, 0x80, 0x4, +12 },
+            { 0x10490A0, 0x1045531, 0xA0, 0x31, 0x52, 0x80, 0x6, +12 },
         },
         0,
         OPL_PatchSetup::Flag_Pseudo4op,
@@ -281,26 +281,71 @@ void Generator::NoteOff(uint32_t c)
 void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
 {
     uint32_t cc = c % 23;
-    uint32_t octave = 0;
+    uint32_t octave = 0, ftone = 0, mul_offset = 0;
 
     if(hertz < 0)
         return;
 
-    while(hertz >= 1023.5)
+    //Basic range until max of octaves reaching
+    while((hertz >= 1023.5) && (octave < 0x1C00))
     {
         hertz /= 2.0;    // Calculate octave
-        if(octave < 0x1C00)
-            octave += 0x400;
+        octave += 0x400;
     }
-
-    octave += static_cast<uint32_t>(hertz + 0.5);
+    //Extended range, rely on frequency multiplication increment
+    while(hertz >= 1022.75)
+    {
+        hertz /= 2.0;    // Calculate octave
+        mul_offset++;
+    }
+    ftone = octave + static_cast<uint32_t>(hertz + 0.5);
     uint16_t chn = Channels[cc];
 
     if(cc < 18)
-        octave += 0x2000u; /* Key-ON [KON] */
+    {
+        ftone += 0x2000u; /* Key-ON [KON] */
+        qDebug() << "mul" << mul_offset;
+#if 1
+        bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
+        size_t opgs = natural_4op ? 2 : 1;
+        for(size_t opg = 0; opg < opgs; opg++)
+        {
+            uint16_t o[2] = {Operators[cc * 2 + 0], Operators[cc * 2 + 1]};
+            uint8_t ops[2] {m_patch.OPS[opg].modulator_20, m_patch.OPS[opg].carrier_20};
+            for(size_t op = 0; op < 2; op++)
+            {
+                if((op > 1) && (o[op] == 0xFFF))
+                    break;
+                if(mul_offset > 0)
+                {
+                    uint32_t dt  = ops[op] & 0xF0;
+                    uint32_t mul = ops[op] & 0x0F;
+                    if((mul + mul_offset) > 0x0F)
+                    {
+                        mul_offset = 0;
+                        mul = 0x0F;
+                    }
+                    qDebug() << "op" << op << "mul" << (mul + mul_offset) <<
+                                "dt" << ((dt >> 4) & 1) << ((dt >> 5) & 1) << ((dt >> 6) & 1) << ((dt >> 7) & 1);
+                    WriteReg(0x20 + o[op],  uint8_t(dt | (mul + mul_offset)) & 0xFF);
+                }
+                else
+                {
+                    uint32_t dt = ops[op] & 0xF0;
+                    uint32_t mul = ops[op] & 0x0F;
+                    qDebug() << "op" << op << "mul" << mul <<
+                                "dt" << ((dt >> 4) & 1) << ((dt >> 5) & 1) << ((dt >> 6) & 1) << ((dt >> 7) & 1);
+                    //TODO: This breaks 4op voice because of incorrect channel was written!
+                    //      Resolve the operators management per 4-op channel
+                    WriteReg(0x20 + o[op],  ops[op] & 0xFF);
+                }
+            }
+        }
+#endif
+    }
 
-    WriteReg(0xA0 + chn, octave & 0xFF);
-    WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(octave >> 8));
+    WriteReg(0xA0 + chn, ftone & 0xFF);
+    WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(ftone >> 8));
 
     if(cc >= 18)
     {
@@ -658,8 +703,10 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
     {
         //Reset patch settings
         memset(&m_patch, 0, sizeof(OPL_PatchSetup));
+        m_patch.OPS[0].modulator_20   = 0x00;
         m_patch.OPS[0].modulator_40   = 0x3F;
         m_patch.OPS[0].modulator_E862 = 0x00FFFF00;
+        m_patch.OPS[1].carrier_20     = 0x00;
         m_patch.OPS[1].carrier_40     = 0x3F;
         m_patch.OPS[1].carrier_E862   = 0x00FFFF00;
     }
@@ -864,23 +911,29 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
         if(testDrum == 0)
         {
             m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
+            m_patch.OPS[0].modulator_20       = instrument.getAVEKM(MODULATOR1);
             m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
             m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
+            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
             m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
         }
 
         if((testDrum == 1) || (testDrum == 3))
         {
             m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
+            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
             m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
             m_patch.OPS[0].modulator_E862   = instrument.getDataE862(CARRIER1);
+            m_patch.OPS[0].modulator_20     = instrument.getAVEKM(CARRIER1);
             m_patch.OPS[0].modulator_40     = instrument.getKSLL(CARRIER1);
         }
         if((testDrum == 2) || (testDrum == 4))
         {
             m_patch.OPS[0].carrier_E862     = instrument.getDataE862(MODULATOR1);
+            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(MODULATOR1);
             m_patch.OPS[0].carrier_40       = instrument.getKSLL(MODULATOR1);
             m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
+            m_patch.OPS[0].modulator_20       = instrument.getAVEKM(MODULATOR1);
             m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
         }
 
@@ -892,13 +945,17 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     else
     {
         m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
+        m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
         m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
         m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
+        m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
         m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
         m_patch.OPS[0].feedconn         = instrument.getFBConn1();
         m_patch.OPS[1].modulator_E862   = instrument.getDataE862(MODULATOR2);
+        m_patch.OPS[1].modulator_20     = instrument.getAVEKM(MODULATOR2);
         m_patch.OPS[1].modulator_40     = instrument.getKSLL(MODULATOR2);
         m_patch.OPS[1].carrier_E862     = instrument.getDataE862(CARRIER2);
+        m_patch.OPS[1].carrier_20       = instrument.getAVEKM(CARRIER2);
         m_patch.OPS[1].carrier_40       = instrument.getKSLL(CARRIER2);
         m_patch.OPS[1].feedconn         = instrument.getFBConn2();
         m_patch.flags   = 0;

@@ -34,6 +34,8 @@ struct OPL_Operator
 {
     //! Operator properties
     uint32_t    modulator_E862, carrier_E862;
+    //! AM/VIB/EGT/KSR/MULT settings
+    uint8_t     modulator_20, carrier_20;
     //! KSL/attenuation settings
     uint8_t     modulator_40, carrier_40;
     //! Feedback/connection bits for the channel
