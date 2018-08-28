@@ -41,7 +41,10 @@
 
 #define BEND_COEFFICIENT 172.4387
 
-static const uint16_t Operators[NUM_OF_CHANNELS * 2] =
+#define OPL3_CHANNELS_MELODIC_BASE      0
+#define OPL3_CHANNELS_RHYTHM_BASE       18
+
+static const uint16_t g_Operators[NUM_OF_CHANNELS * 2] =
 {
     // Channels 0-2
     0x000, 0x003, 0x001, 0x004, 0x002, 0x005, // operators  0, 3,  1, 4,  2, 5
@@ -65,7 +68,7 @@ static const uint16_t Operators[NUM_OF_CHANNELS * 2] =
     0x011, 0xFFF
 }; // operator 13
 
-static const uint16_t Channels[NUM_OF_CHANNELS] =
+static const uint16_t g_Channels[NUM_OF_CHANNELS] =
 {
     0x000, 0x001, 0x002, 0x003, 0x004, 0x005, 0x006, 0x007, 0x008, // 0..8
     0x100, 0x101, 0x102, 0x103, 0x104, 0x105, 0x106, 0x107, 0x108, // 9..17 (secondary set)
@@ -111,24 +114,24 @@ static const uint16_t Channels[NUM_OF_CHANNELS] =
 #define USED_CHANNELS_4OP       6
 
 //! Regular 2-operator channels map
-static const uint16_t channels[USED_CHANNELS_2OP] =
+static const uint16_t g_channels2Map_2op[USED_CHANNELS_2OP] =
 {
     0,  1,  2,  3,  4,  5,  6,  7,  8,
     9,  10, 11, 12, 13, 14, 15, 16, 17
 };
 
 //! Pseudo 4-operators 2-operator channels map 1
-static const uint16_t channels1[USED_CHANNELS_2OP_PS4] = {0, 2, 4, 6, 8, 10, 12, 14, 16};
+static const uint16_t g_channelsMap1_p4op[USED_CHANNELS_2OP_PS4] = {0, 2, 4, 6, 8, 10, 12, 14, 16};
 //! Pseudo 4-operators 2-operator channels map 1
-static const uint16_t channels2[USED_CHANNELS_2OP_PS4] = {1, 3, 5, 7, 9, 11, 13, 15, 17};
+static const uint16_t g_channelsMap2_p4op[USED_CHANNELS_2OP_PS4] = {1, 3, 5, 7, 9, 11, 13, 15, 17};
 
 //! 4-operator channels map 1
-static const uint16_t channels1_4op[USED_CHANNELS_4OP] = {0,  1,  2,  9,  10, 11};
+static const uint16_t g_channelsMap1_4op[USED_CHANNELS_4OP] = {0,  1,  2,  9,  10, 11};
 //! 4-operator channels map 1
-static const uint16_t channels2_4op[USED_CHANNELS_4OP] = {3,  4,  5,  12, 13, 14};
+static const uint16_t g_channelsMap2_4op[USED_CHANNELS_4OP] = {3,  4,  5,  12, 13, 14};
 
 //! Mapping from MIDI volume level to OPL level value.
-static const uint8_t DMX_volume_mapping_table[128] =
+static const uint8_t g_DMX_volume_mapping_table[128] =
 {
     0,  1,  3,  5,  6,  8,  10, 11,
     13, 14, 16, 17, 19, 20, 22, 23,
@@ -149,7 +152,7 @@ static const uint8_t DMX_volume_mapping_table[128] =
 };
 
 //! Mapping from MIDI volume level to OPL level value.
-static const uint8_t W9X_volume_mapping_table[32] =
+static const uint8_t g_W9X_volume_mapping_table[32] =
 {
     63, 63, 40, 36, 32, 28, 23, 21,
     19, 17, 15, 14, 13, 12, 11, 10,
@@ -229,7 +232,7 @@ void Generator::initChip()
     chip->setRate(m_rate);
 
     for(uint32_t a = 0; a < 18; ++a)
-        WriteReg(0xB0 + Channels[a], 0x00);
+        WriteReg(0xB0 + g_Channels[a], 0x00);
 
     for(size_t a = 0; a < sizeof(data) / sizeof(*data); a += 2)
         WriteReg(data[a], static_cast<uint8_t>(data[a + 1]));
@@ -275,12 +278,13 @@ void Generator::NoteOff(uint32_t c)
         return;
     }
 
-    WriteReg(0xB0 + Channels[cc], m_pit[c] & 0xDF);
+    WriteReg(0xB0 + g_Channels[cc], m_pit[c] & 0xDF);
 }
 
-void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
+void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz) // Hertz range: 0..131071
 {
-    uint32_t cc = c % 23;
+    uint32_t cc1 = c1 % 23;
+    uint32_t cc2 = c2 % 23;
     uint32_t octave = 0, ftone = 0, mul_offset = 0;
 
     if(hertz < 0)
@@ -299,57 +303,55 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
         mul_offset++;
     }
     ftone = octave + static_cast<uint32_t>(hertz + 0.5);
-    uint16_t chn = Channels[cc];
+    uint16_t chn = g_Channels[cc1];
 
-    if(cc < 18)
+    if(cc1 < OPL3_CHANNELS_RHYTHM_BASE)
     {
         ftone += 0x2000u; /* Key-ON [KON] */
-        qDebug() << "mul" << mul_offset;
-#if 1
-        bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
-        size_t opgs = natural_4op ? 2 : 1;
-        for(size_t opg = 0; opg < opgs; opg++)
+
+        const bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
+        const size_t opsCount = natural_4op ? 4 : 2;
+        const uint16_t op_addr[4] =
         {
-            uint16_t o[2] = {Operators[cc * 2 + 0], Operators[cc * 2 + 1]};
-            uint8_t ops[2] {m_patch.OPS[opg].modulator_20, m_patch.OPS[opg].carrier_20};
-            for(size_t op = 0; op < 2; op++)
+            g_Operators[cc1 * 2 + 0], g_Operators[cc1 * 2 + 1],
+            g_Operators[cc2 * 2 + 0], g_Operators[cc2 * 2 + 1]
+        };
+        const uint8_t ops[4] =
+        {
+            m_patch.OPS[0].modulator_20,
+            m_patch.OPS[0].carrier_20,
+            m_patch.OPS[1].modulator_20,
+            m_patch.OPS[1].carrier_20
+        };
+
+        for(size_t op = 0; op < opsCount; op++)
+        {
+            if((op > 0) && (op_addr[op] == 0xFFF))
+                break;
+            if(mul_offset > 0)
             {
-                if((op > 1) && (o[op] == 0xFFF))
-                    break;
-                if(mul_offset > 0)
+                uint32_t dt  = ops[op] & 0xF0;
+                uint32_t mul = ops[op] & 0x0F;
+                if((mul + mul_offset) > 0x0F)
                 {
-                    uint32_t dt  = ops[op] & 0xF0;
-                    uint32_t mul = ops[op] & 0x0F;
-                    if((mul + mul_offset) > 0x0F)
-                    {
-                        mul_offset = 0;
-                        mul = 0x0F;
-                    }
-                    qDebug() << "op" << op << "mul" << (mul + mul_offset) <<
-                                "dt" << ((dt >> 4) & 1) << ((dt >> 5) & 1) << ((dt >> 6) & 1) << ((dt >> 7) & 1);
-                    WriteReg(0x20 + o[op],  uint8_t(dt | (mul + mul_offset)) & 0xFF);
+                    mul_offset = 0;
+                    mul = 0x0F;
                 }
-                else
-                {
-                    uint32_t dt = ops[op] & 0xF0;
-                    uint32_t mul = ops[op] & 0x0F;
-                    qDebug() << "op" << op << "mul" << mul <<
-                                "dt" << ((dt >> 4) & 1) << ((dt >> 5) & 1) << ((dt >> 6) & 1) << ((dt >> 7) & 1);
-                    //TODO: This breaks 4op voice because of incorrect channel was written!
-                    //      Resolve the operators management per 4-op channel
-                    WriteReg(0x20 + o[op],  ops[op] & 0xFF);
-                }
+                WriteReg(0x20 + op_addr[op],  uint8_t(dt | (mul + mul_offset)) & 0xFF);
+            }
+            else
+            {
+                WriteReg(0x20 + op_addr[op],  ops[op] & 0xFF);
             }
         }
-#endif
     }
 
     WriteReg(0xA0 + chn, ftone & 0xFF);
-    WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(ftone >> 8));
+    WriteReg(0xB0 + chn, m_pit[c1] = static_cast<uint8_t>(ftone >> 8));
 
-    if(cc >= 18)
+    if(cc1 >= OPL3_CHANNELS_RHYTHM_BASE)
     {
-        m_regBD |= (0x10 >> (cc - 18));
+        m_regBD |= (0x10 >> (cc1 - OPL3_CHANNELS_RHYTHM_BASE));
         WriteReg(0x0BD, m_regBD);
         //x |= 0x800; // for test
     }
@@ -361,7 +363,7 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
         volume = 63;
 
     uint16_t /*card = c/23,*/ cc = c % 23;
-    uint16_t i = m_ins[c], o1 = Operators[cc * 2], o2 = Operators[cc * 2 + 1];
+    uint16_t i = m_ins[c], o1 = g_Operators[cc * 2], o2 = g_Operators[cc * 2 + 1];
     uint16_t x = m_patch.OPS[i].modulator_40,
              y = m_patch.OPS[i].carrier_40;
     bool do_modulator;
@@ -432,8 +434,8 @@ void Generator::Patch(uint32_t c, uint32_t i)
     uint32_t cc = c % 23;
     static const uint16_t data[4] = {0x20, 0x60, 0x80, 0xE0};
     m_ins[c] = static_cast<uint16_t>(i);
-    uint16_t o1 = Operators[cc * 2 + 0],
-             o2 = Operators[cc * 2 + 1];
+    uint16_t o1 = g_Operators[cc * 2 + 0],
+             o2 = g_Operators[cc * 2 + 1];
     uint32_t x = m_patch.OPS[i].modulator_E862, y = m_patch.OPS[i].carrier_E862;
 
     for(uint32_t a = 0; a < 4; ++a)
@@ -449,8 +451,8 @@ void Generator::Patch(uint32_t c, uint32_t i)
 void Generator::Pan(uint32_t c, uint32_t value)
 {
     uint8_t cc = c % 23;
-    if(Channels[cc] != 0xFFF)
-        WriteReg(0xC0 + Channels[cc], static_cast<uint8_t>(m_patch.OPS[m_ins[c]].feedconn | value));
+    if(g_Channels[cc] != 0xFFF)
+        WriteReg(0xC0 + g_Channels[cc], static_cast<uint8_t>(m_patch.OPS[m_ins[c]].feedconn | value));
 }
 
 void Generator::PlayNoteF(int noteID, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
@@ -468,17 +470,17 @@ void Generator::PlayNoteF(int noteID, uint32_t volume, uint8_t ccvolume, uint8_t
         bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
         if(natural_4op)
         {
-            NoteOff(channels1_4op[ch]);
+            NoteOff(g_channelsMap1_4op[ch]);
         }
         else
         {
             if(pseudo_4op)
             {
-                NoteOff(channels1[ch]);
-                NoteOff(channels2[ch]);
+                NoteOff(g_channelsMap1_p4op[ch]);
+                NoteOff(g_channelsMap2_p4op[ch]);
             }
             else
-                NoteOff(channels[ch]);
+                NoteOff(g_channels2Map_2op[ch]);
         }
     }
 
@@ -513,21 +515,21 @@ void Generator::PlayNoteCh(int ch)
     {
         if(pseudo_4op)
         {
-            adlchannel[0] = channels1[ch];
-            adlchannel[1] = channels2[ch];
+            adlchannel[0] = g_channelsMap1_p4op[ch];
+            adlchannel[1] = g_channelsMap2_p4op[ch];
             m_debug.chanPs4op = ch;
         }
         else
         {
-            adlchannel[0] = channels[ch];
-            adlchannel[1] = channels[ch];
+            adlchannel[0] = g_channels2Map_2op[ch];
+            adlchannel[1] = g_channels2Map_2op[ch];
             m_debug.chan2op = ch;
         }
     }
     else if(natural_4op)
     {
-        adlchannel[0] = channels1_4op[ch];
-        adlchannel[1] = channels2_4op[ch];
+        adlchannel[0] = g_channelsMap1_4op[ch];
+        adlchannel[1] = g_channelsMap2_4op[ch];
         m_debug.chan4op = ch;
     }
 
@@ -553,12 +555,12 @@ void Generator::PlayNoteCh(int ch)
         Touch_Real(adlchannel[1], chipvolume);
 
     bend  = m_bend + m_patch.OPS[i[0]].finetune;
-    NoteOn(adlchannel[0], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+    NoteOn(adlchannel[0], adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
 
     if(pseudo_4op)
     {
         bend  = m_bend + m_patch.OPS[i[1]].finetune + m_patch.voice2_fine_tune;
-        NoteOn(adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+        NoteOn(adlchannel[1], 0, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
     }
 }
 
@@ -598,17 +600,17 @@ void Generator::StopNoteCh(int ch)
     bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
     if(natural_4op)
     {
-        NoteOff(channels1_4op[ch]);
+        NoteOff(g_channelsMap1_4op[ch]);
     }
     else
     {
         if(pseudo_4op)
         {
-            NoteOff(channels1[ch]);
-            NoteOff(channels2[ch]);
+            NoteOff(g_channelsMap1_p4op[ch]);
+            NoteOff(g_channelsMap2_p4op[ch]);
         }
         else
-            NoteOff(channels[ch]);
+            NoteOff(g_channels2Map_2op[ch]);
     }
 }
 
@@ -626,14 +628,14 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
             tone -= 128;
     }
 
-    uint32_t adlchannel = 18 + drum;
+    uint32_t adlchannel = OPL3_CHANNELS_RHYTHM_BASE + drum;
     Patch(adlchannel, 0);
     Pan(adlchannel, 0x30);
     Touch_Real(adlchannel, 63);
     double bend = 0.0;
     double phase = 0.0;
     bend  = 0.0 + m_patch.OPS[0].finetune;
-    NoteOn(adlchannel, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+    NoteOn(adlchannel, 0, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
 }
 
 void Generator::switch4op(bool enabled, bool patchCleanUp)
@@ -729,17 +731,17 @@ void Generator::Silence()
     {
         for(uint32_t c = 0; c < USED_CHANNELS_4OP; ++c)
         {
-            NoteOff(channels1_4op[c]);
-            Touch_Real(channels1_4op[c], 0);
-            Touch_Real(channels2_4op[c], 0);
+            NoteOff(g_channelsMap1_4op[c]);
+            Touch_Real(g_channelsMap1_4op[c], 0);
+            Touch_Real(g_channelsMap2_4op[c], 0);
         }
     }
     else
     {
         for(uint32_t c = 0; c < USED_CHANNELS_2OP; ++c)
         {
-            NoteOff(channels[c]);
-            Touch_Real(channels[c], 0);
+            NoteOff(g_channels2Map_2op[c]);
+            Touch_Real(g_channels2Map_2op[c], 0);
         }
     }
 
@@ -772,12 +774,12 @@ void Generator::NoteOffAllChans()
     if(natural_4op)
     {
         for(uint32_t c = 0; c < USED_CHANNELS_4OP; ++c)
-            NoteOff(channels1_4op[c]);
+            NoteOff(g_channelsMap1_4op[c]);
     }
     else
     {
         for(uint32_t c = 0; c < USED_CHANNELS_2OP; ++c)
-            NoteOff(channels[c]);
+            NoteOff(g_channels2Map_2op[c]);
     }
 
     m_noteManager.clearNotes();
@@ -933,11 +935,12 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
             m_patch.OPS[0].carrier_20       = instrument.getAVEKM(MODULATOR1);
             m_patch.OPS[0].carrier_40       = instrument.getKSLL(MODULATOR1);
             m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
-            m_patch.OPS[0].modulator_20       = instrument.getAVEKM(MODULATOR1);
+            m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
             m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
         }
 
         m_patch.OPS[0].feedconn         = instrument.getFBConn1();
+        m_patch.OPS[1].feedconn         = instrument.getFBConn2();
         m_patch.flags   = 0;
         m_patch.tone    = instrument.percNoteNum;
         m_patch.voice2_fine_tune = 0.0;
@@ -1077,7 +1080,7 @@ uint32_t Generator::getChipVolume(uint32_t vol, uint8_t ccvolume, uint8_t ccexpr
     {
         volume = 2 * ((ccvolume * ccexpr) * 127 / 16129) + 1;
         //volume = 2 * ccvolume + 1;
-        volume = ((uint32_t)DMX_volume_mapping_table[(vol < 128) ? vol : 127] * volume) >> 9;
+        volume = ((uint32_t)g_DMX_volume_mapping_table[(vol < 128) ? vol : 127] * volume) >> 9;
     }
     break;
 
@@ -1092,7 +1095,7 @@ uint32_t Generator::getChipVolume(uint32_t vol, uint8_t ccvolume, uint8_t ccexpr
     case VOLUME_9X:
     {
         //volume = 63 - W9X_volume_mapping_table[(((vol * ccvolume /** ccexpr*/) * 127 / 16129 /*2048383*/) >> 2)];
-        volume = 63 - W9X_volume_mapping_table[(((vol * ccvolume * ccexpr) * 127 / 2048383) >> 2)];
+        volume = 63 - g_W9X_volume_mapping_table[(((vol * ccvolume * ccexpr) * 127 / 2048383) >> 2)];
         //volume = W9X_volume_mapping_table[vol >> 2] + volume;
     }
     break;

@@ -87,8 +87,20 @@ public:
 
     void generate(int16_t *frames, unsigned nframes);
 
-    void NoteOn(uint32_t c, double hertz);
+    /**
+     * @brief Set the tone frequency on the chip channel and turn note on
+     * @param c1 2-op channel or 4-op master channel index
+     * @param c2 4-op slave channel, unused with 2-op
+     * @param hertz Tone frequency
+     */
+    void NoteOn(uint32_t c1, uint32_t c2, double hertz);
+
+    /**
+     * @brief Turn the note off
+     * @param c 2-op channel or master 4-op channel index
+     */
     void NoteOff(uint32_t c);
+
     void Touch_Real(uint32_t c, uint32_t volume);
     void Touch(uint32_t c, uint32_t volume);
     void Patch(uint32_t c, uint32_t i);
