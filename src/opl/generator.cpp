@@ -195,7 +195,7 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
     };
     m_regBD = 0;
     memset(m_ins, 0, sizeof(uint16_t)*NUM_OF_CHANNELS);
-    memset(m_pit, 0, sizeof(uint8_t)*NUM_OF_CHANNELS);
+    memset(m_keyBlockFNumCache, 0, sizeof(uint8_t)*NUM_OF_CHANNELS);
     memset(m_four_op_category, 0, NUM_OF_CHANNELS * 2);
 
     uint32_t p = 0;
@@ -278,7 +278,7 @@ void Generator::NoteOff(uint32_t c)
         return;
     }
 
-    WriteReg(0xB0 + g_Channels[cc], m_pit[c] & 0xDF);
+    WriteReg(0xB0 + g_Channels[cc], m_keyBlockFNumCache[c] & 0xDF);
 }
 
 void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz) // Hertz range: 0..131071
@@ -346,8 +346,12 @@ void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz) // Hertz range: 0
         }
     }
 
-    WriteReg(0xA0 + chn, ftone & 0xFF);
-    WriteReg(0xB0 + chn, m_pit[c1] = static_cast<uint8_t>(ftone >> 8));
+    if(chn != 0xFFF)
+    {
+        WriteReg(0xA0 + chn, ftone & 0xFF);
+        WriteReg(0xB0 + chn, (ftone >> 8));
+        m_keyBlockFNumCache[c1] = static_cast<uint8_t>(ftone >> 8);
+    }
 
     if(cc1 >= OPL3_CHANNELS_RHYTHM_BASE)
     {

@@ -225,7 +225,7 @@ private:
     //! index of operators pair, cached, needed by Touch()
     uint16_t    m_ins[NUM_OF_CHANNELS];
     //! value poked to B0, cached, needed by NoteOff)(
-    uint8_t     m_pit[NUM_OF_CHANNELS];
+    uint8_t     m_keyBlockFNumCache[NUM_OF_CHANNELS];
 };
 
 #endif // GENERATOR_H
