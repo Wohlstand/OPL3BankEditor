@@ -45,6 +45,9 @@ inline void VERIFY_BYTE(uint8_t &param, uint8_t mask)
 #define SIZEOF_INST     30
 
 static const char *bnk_magic = "ADLIB-";
+// Note: some banks are having those magics are confusing file format detector
+static const char *bnk_magicAM = "AMLIB-";
+static const char *bnk_magicAN = "ANLIB-";
 
 /**
  * @brief Reader and Writer of the Apogee Sound System TMB Bank format
@@ -65,7 +68,11 @@ public:
 
 bool AdLibBnk_impl::detectBank(char *magic)
 {
-    return (strncmp(magic + 2, bnk_magic, 6) == 0);
+    bool ret = false;
+    ret |= (strncmp(magic + 2, bnk_magic, 6) == 0);
+    ret |= (strncmp(magic + 2, bnk_magicAM, 6) == 0);
+    ret |= (strncmp(magic + 2, bnk_magicAN, 6) == 0);
+    return ret;
 }
 
 bool AdLibBnk_impl::detectInst(QString filePath)
@@ -113,9 +120,15 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
         return FfmtErrCode::ERR_BADFORMAT;
 
     memcpy(magic, dataS, 8);
-
-    if(strncmp(magic + 2, bnk_magic, 6) != 0)
-        return FfmtErrCode::ERR_BADFORMAT;
+    //Verify magic number
+    {
+        bool isMagicValid = false;
+        isMagicValid |= (strncmp(magic + 2, bnk_magic, 6) == 0);
+        isMagicValid |= (strncmp(magic + 2, bnk_magicAM, 6) == 0);
+        isMagicValid |= (strncmp(magic + 2, bnk_magicAN, 6) == 0);
+        if(!isMagicValid)
+            return FfmtErrCode::ERR_BADFORMAT;
+    }
 
     char    ver_maj = dataS[0],
             ver_min = dataS[1];
