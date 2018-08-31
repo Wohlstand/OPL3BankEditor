@@ -170,7 +170,7 @@ FfmtErrCode AIL_GTL::loadFile(QString filePath, FmBank &bank)
             return FfmtErrCode::ERR_BADFORMAT;
         }
 
-        if((insLen < 14) || (insLen > 25))
+        if(insLen < 14)
         {
             bank.reset();
             return FfmtErrCode::ERR_BADFORMAT;
@@ -179,7 +179,16 @@ FfmtErrCode AIL_GTL::loadFile(QString filePath, FmBank &bank)
         insLen -= 2;
 
         memset(idata, 0, 24);
-        /*qint64 got = */ file.read(char_p(idata), insLen);
+        if(insLen < 24)
+        {
+            file.read(char_p(idata), insLen);
+        }
+        else
+        {
+            file.read(char_p(idata), 24);
+            file.seek(file.pos() + (insLen - 24));
+        }
+        /*qint64 got = file.read(char_p(idata), insLen);*/
         //if(got != insLen)
         //{
         //    bank.reset();
