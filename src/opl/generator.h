@@ -94,7 +94,7 @@ public:
      * @param voice2ps4op where it is the second voice of a pseudo-4op instrument
      * @param hertz Tone frequency
      */
-    void NoteOn(uint32_t c1, uint32_t c2, double hertz, bool voice2ps4op);
+    void NoteOn(uint32_t c1, uint32_t c2, double hertz, bool voice2ps4op = false);
 
     /**
      * @brief Turn the note off

@@ -559,7 +559,7 @@ void Generator::PlayNoteCh(int ch)
         Touch_Real(adlchannel[1], chipvolume);
 
     bend  = m_bend + m_patch.OPS[i[0]].finetune;
-    NoteOn(adlchannel[0], adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)), false);
+    NoteOn(adlchannel[0], adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
 
     if(pseudo_4op)
     {
@@ -639,7 +639,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     double bend = 0.0;
     double phase = 0.0;
     bend  = 0.0 + m_patch.OPS[0].finetune;
-    NoteOn(adlchannel, 0, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)), false);
+    NoteOn(adlchannel, 0, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
 }
 
 void Generator::switch4op(bool enabled, bool patchCleanUp)
