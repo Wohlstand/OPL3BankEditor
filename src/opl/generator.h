@@ -91,9 +91,10 @@ public:
      * @brief Set the tone frequency on the chip channel and turn note on
      * @param c1 2-op channel or 4-op master channel index
      * @param c2 4-op slave channel, unused with 2-op
+     * @param voice2ps4op where it is the second voice of a pseudo-4op instrument
      * @param hertz Tone frequency
      */
-    void NoteOn(uint32_t c1, uint32_t c2, double hertz);
+    void NoteOn(uint32_t c1, uint32_t c2, double hertz, bool voice2ps4op);
 
     /**
      * @brief Turn the note off

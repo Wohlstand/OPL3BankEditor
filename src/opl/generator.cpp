@@ -281,7 +281,7 @@ void Generator::NoteOff(uint32_t c)
     WriteReg(0xB0 + g_Channels[cc], m_keyBlockFNumCache[c] & 0xDF);
 }
 
-void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz) // Hertz range: 0..131071
+void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz, bool voice2ps4op) // Hertz range: 0..131071
 {
     uint32_t cc1 = c1 % 23;
     uint32_t cc2 = c2 % 23;
@@ -318,8 +318,8 @@ void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz) // Hertz range: 0
         };
         const uint8_t ops[4] =
         {
-            m_patch.OPS[0].modulator_20,
-            m_patch.OPS[0].carrier_20,
+            m_patch.OPS[voice2ps4op ? 1 : 0].modulator_20,
+            m_patch.OPS[voice2ps4op ? 1 : 0].carrier_20,
             m_patch.OPS[1].modulator_20,
             m_patch.OPS[1].carrier_20
         };
@@ -559,12 +559,12 @@ void Generator::PlayNoteCh(int ch)
         Touch_Real(adlchannel[1], chipvolume);
 
     bend  = m_bend + m_patch.OPS[i[0]].finetune;
-    NoteOn(adlchannel[0], adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+    NoteOn(adlchannel[0], adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)), false);
 
     if(pseudo_4op)
     {
         bend  = m_bend + m_patch.OPS[i[1]].finetune + m_patch.voice2_fine_tune;
-        NoteOn(adlchannel[1], 0, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+        NoteOn(adlchannel[1], 0, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)), true);
     }
 }
 
@@ -639,7 +639,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     double bend = 0.0;
     double phase = 0.0;
     bend  = 0.0 + m_patch.OPS[0].finetune;
-    NoteOn(adlchannel, 0, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+    NoteOn(adlchannel, 0, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)), false);
 }
 
 void Generator::switch4op(bool enabled, bool patchCleanUp)
