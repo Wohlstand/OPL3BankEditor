@@ -60,8 +60,27 @@ static void convertInstrument(
     dst.en_pseudo4op = dst.en_4op && (xxP24NNN & 16) != 0;  // pseudo-4op maybe?
 
     //--- rhythm mode percussion: BD=0, SD=1, TOM=2, CYMB=3, HH=4
-    // bool is_perc = (src[25] & 32) != 0;
-    // unsigned perc = src[25] & 7;
+    bool is_perc = (src[25] & 32) != 0;
+    unsigned perc = src[25] & 7;
+
+    switch(is_perc ? perc : -1)
+    {
+    case 0:
+        dst.adlib_drum_number = 6;
+        break;
+    case 1:
+        dst.adlib_drum_number = 7;
+        break;
+    case 2:
+        dst.adlib_drum_number = 8;
+        break;
+    case 3:
+        dst.adlib_drum_number = 9;
+        break;
+    case 4:
+        dst.adlib_drum_number = 10;
+        break;
+    }
 }
 
 FfmtErrCode AdLibGoldBnk2_reader::loadFile(QString filePath, FmBank &bank)
