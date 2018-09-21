@@ -25,6 +25,7 @@
 
 #include "format_adlib_bnk.h"
 #include "format_adlib_tim.h"
+#include "format_adlibgold_bnk2.h"
 #include "format_ail2_gtl.h"
 #include "format_apogeetmb.h"
 #include "format_bisqwit.h"
@@ -95,6 +96,9 @@ void FmBankFormatFactory::registerAllFormats()
 
     //Legacy AdLib Timbre format
     registerBankFormat(new AdLibTimbre());
+
+    //AdLib Gold
+    registerBankFormat(new AdLibGoldBnk2_reader());
 
     //Bisqwit
     registerBankFormat(new BisqwitBank());

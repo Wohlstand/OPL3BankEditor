@@ -107,6 +107,7 @@ SOURCES += \
     src/FileFormats/ffmt_factory.cpp \
     src/FileFormats/format_adlib_bnk.cpp \
     src/FileFormats/format_adlib_tim.cpp \
+    src/FileFormats/format_adlibgold_bnk2.cpp \
     src/FileFormats/format_ail2_gtl.cpp \
     src/FileFormats/format_apogeetmb.cpp \
     src/FileFormats/format_bisqwit.cpp \
@@ -146,6 +147,7 @@ HEADERS += \
     src/FileFormats/ffmt_factory.h \
     src/FileFormats/format_adlib_bnk.h \
     src/FileFormats/format_adlib_tim.h \
+    src/FileFormats/format_adlibgold_bnk2.h \
     src/FileFormats/format_ail2_gtl.h \
     src/FileFormats/format_apogeetmb.h \
     src/FileFormats/format_bisqwit.h \
