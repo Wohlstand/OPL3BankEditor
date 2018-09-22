@@ -39,13 +39,7 @@ Linux | Windows | macOS
   * CIs for other operating systems are coming soon... (However, it's easy to build it by yourself :wink:)
 
 # How to build
-You need a Qt 5 to build this project.
-
-Run next commands from project directory:
-```
-qmake CONFIG+=release CONFIG-=debug FMBankEdit.pro
-make
-```
+Please, see [the wiki](https://github.com/Wohlstand/OPL3BankEditor/wiki).
 
 As alternate way you can open FMBankEdit.pro in the Qt Creator and build it.
 
