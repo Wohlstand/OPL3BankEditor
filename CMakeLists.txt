@@ -28,6 +28,7 @@ include(FindPkgConfig)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
+set(QWT_NAMES qwt-qt5 qwt) # find versions for Qt5 only
 find_package(Qwt)
 find_package(Threads REQUIRED)
 
@@ -48,6 +49,10 @@ if(USE_RTAUDIO)
     pkg_check_modules(PULSEAUDIO "libpulse-simple")
     message("!!   -- Pulseaudio driver: ${PULSEAUDIO_FOUND}")
   endif()
+endif()
+
+if(ENABLE_PLOTS)
+  message("!!   Qwt: ${QWT_LIBRARY}")
 endif()
 
 message("!!   Plots: ${ENABLE_PLOTS}")
