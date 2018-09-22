@@ -15,9 +15,9 @@ Linux | Windows | macOS
 * Apogee Sound System timbre formats (.TMB) ([Specification](http://www.shikadi.net/moddingwiki/Apogee_Sound_System_Timbre_Format))
 * SoundBlaster IBK files (.IBK) ([Specification](http://www.shikadi.net/moddingwiki/IBK_Format))
 * AdLib/HMI BNK files (.BNK) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Instrument_Bank_Format))
-* AdLib Timbe bank files (.SND, .TIM) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Timbre_Bank_Format))
+* AdLib Timbre bank files (.SND, .TIM) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Timbre_Bank_Format))
 * Global Timbre Library files for Audio Interface Library (.AD, .OPL) ([Specification](http://www.shikadi.net/moddingwiki/Global_Timbre_Library))
-* SB and O3 bank formats (a set of the concoctated SBI files) used with Linux drivers
+* SB and O3 bank formats (a set of the concatenated SBI files) used with Linux drivers
 * Bisqwit's ADLMIDI bank (.ADLRAW)
 
 ## Currently supported instrument formats
