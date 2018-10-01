@@ -223,7 +223,7 @@ FfmtErrCode AIL_GTL::loadFile(QString filePath, FmBank &bank)
             ins.setSusRel(MODULATOR2,   idata[15]);
             ins.setWaveForm(MODULATOR2, idata[16]);
             //Feedback/Connection 3<->4
-            uint8_t fb_c = idata[6]; //idata[17] is always zero, true FB field is bitwisely concoctated with idata[6]
+            uint8_t fb_c = idata[6]; //idata[17] is always zero, true FB field is bitwisely concatenated with idata[6]
             ins.setFBConn1(fb_c & 0x0F);
             ins.setFBConn2((fb_c & 0x0E) | (fb_c >> 7));
             //OP4
@@ -345,7 +345,7 @@ FfmtErrCode AIL_GTL::saveFile(QString filePath, FmBank &bank)
             odata[15] = ins.getSusRel(MODULATOR2);
             odata[16] = ins.getWaveForm(MODULATOR2);
 //            //Feedback/Connection 3<->4
-//            uint8_t fb_c = idata[6]; //idata[17] is always zero, true FB field is bitwisely concoctated with idata[6]
+//            uint8_t fb_c = idata[6]; //idata[17] is always zero, true FB field is bitwisely concatenated with idata[6]
             odata[17] = 0;
             odata[6] = uint8_t(ins.getFBConn1() | (ins.getFBConn2() << 7));
 //            ins.setFBConn1(fb_c & 0x0F);

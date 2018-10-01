@@ -219,6 +219,7 @@ void BankEditor::pianoKeyPress(QKeyEvent *event)
             m_generator->changeNote(note);
             m_generator->ctl_playNote();
             pianoKeyCodes.insert(key);
+            ui->piano->setNoteHighlighted(note, true);
         }
     }
     else
@@ -247,6 +248,7 @@ void BankEditor::pianoKeyRelease(QKeyEvent *event)
             m_generator->changeNote(note);
             m_generator->ctl_stopNote();
             pianoKeyCodes.remove(key);
+            ui->piano->setNoteHighlighted(note, false);
         }
     }
     else

@@ -32,6 +32,7 @@ class Piano : public QFrame
 public:
     explicit Piano(QWidget* parent = 0);
     ~Piano();
+    void setNoteHighlighted(int note, bool hl);
 
 private:
     void findNote(QMouseEvent *evt, int &note);
