@@ -59,13 +59,14 @@ message("!!   Plots: ${ENABLE_PLOTS}")
 
 include_directories("src")
 
-set(SOURCES
-  "src/audio.cpp"
-  "src/bank.cpp"
-  "src/bank_editor.cpp"
+set(COMMON_SOURCES
   "src/common.cpp"
-  "src/controlls.cpp"
-  "src/proxystyle.cpp"
+  "src/bank.cpp")
+add_library(Common STATIC ${COMMON_SOURCES})
+target_include_directories(Common PUBLIC "src")
+target_link_libraries(Common PUBLIC Qt5::Widgets)
+
+set(FILEFORMATS_SOURCES
   "src/FileFormats/ffmt_base.cpp"
   "src/FileFormats/ffmt_factory.cpp"
   "src/FileFormats/format_adlib_bnk.cpp"
@@ -82,6 +83,35 @@ set(SOURCES
   "src/FileFormats/format_sb_ibk.cpp"
   "src/FileFormats/format_wohlstand_opl3.cpp"
   "src/FileFormats/format_flatbuffer_opl3.cpp"
+  "src/FileFormats/wopl/wopl_file.c")
+add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
+target_include_directories(FileFormats PUBLIC "src")
+target_link_libraries(FileFormats PUBLIC Common)
+
+set(CHIPS_SOURCES
+  "src/opl/chips/dosbox_opl3.cpp"
+  "src/opl/chips/nuked_opl3.cpp"
+  "src/opl/chips/nuked/nukedopl3.c"
+  "src/opl/chips/dosbox/dbopl.cpp"
+  "src/opl/chips/nuked_opl3_v174.cpp"
+  "src/opl/chips/nuked/nukedopl3_174.c")
+add_library(Chips STATIC ${CHIPS_SOURCES})
+target_include_directories(Chips PUBLIC "src")
+
+set(MEASURER_SOURCES
+  "src/opl/measurer.cpp")
+add_library(Measurer STATIC ${MEASURER_SOURCES})
+target_include_directories(Measurer PUBLIC "src")
+target_link_libraries(Measurer PUBLIC Chips Common Qt5::Concurrent)
+if(NOT MSVC)
+  target_compile_options(Measurer PRIVATE "-fopenmp")
+endif()
+
+set(SOURCES
+  "src/audio.cpp"
+  "src/bank_editor.cpp"
+  "src/controlls.cpp"
+  "src/proxystyle.cpp"
   "src/formats_sup.cpp"
   "src/importer.cpp"
   "src/latency.cpp"
@@ -90,15 +120,7 @@ set(SOURCES
   "src/opl/generator.cpp"
   "src/opl/generator_realtime.cpp"
   "src/opl/realtime/ring_buffer.cpp"
-  "src/piano.cpp"
-  "src/opl/measurer.cpp"
-  "src/opl/chips/dosbox_opl3.cpp"
-  "src/opl/chips/nuked_opl3.cpp"
-  "src/opl/chips/nuked/nukedopl3.c"
-  "src/opl/chips/dosbox/dbopl.cpp"
-  "src/FileFormats/wopl/wopl_file.c"
-  "src/opl/chips/nuked_opl3_v174.cpp"
-  "src/opl/chips/nuked/nukedopl3_174.c")
+  "src/piano.cpp")
 if(ENABLE_PLOTS)
   list(APPEND SOURCES
     "src/delay_analysis.cpp")
@@ -152,11 +174,9 @@ endif()
 if(DEBUG_WRITE_AMPLITUDE_PLOT)
   target_compile_definitions(OPL3BankEditor PRIVATE "-DDEBUG_WRITE_AMPLITUDE_PLOT")
 endif()
+target_link_libraries(OPL3BankEditor PRIVATE FileFormats Chips Measurer)
 
-if(NOT MSVC)
-  target_compile_options(OPL3BankEditor PRIVATE "-fopenmp")
-endif()
-target_link_libraries(OPL3BankEditor PRIVATE Qt5::Widgets Qt5::Concurrent ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(OPL3BankEditor PRIVATE Qt5::Widgets ${CMAKE_THREAD_LIBS_INIT})
 if(ENABLE_PLOTS)
   target_link_libraries(OPL3BankEditor PRIVATE ${QWT_LIBRARIES})
 endif()
@@ -231,3 +251,7 @@ if(USE_RTAUDIO)
   target_compile_definitions(OPL3BankEditor PRIVATE "ENABLE_AUDIO_TESTING")
   target_link_libraries(OPL3BankEditor PRIVATE RtAudio)
 endif()
+
+add_executable(measurer
+  "utils/measurer/measurer.cpp")
+target_link_libraries(measurer PRIVATE FileFormats Measurer)
