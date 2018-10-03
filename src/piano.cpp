@@ -66,6 +66,15 @@ Piano::Piano(QWidget *parent) : QFrame(parent)
 Piano::~Piano()
 {}
 
+void Piano::setNoteHighlighted(int note, bool hl)
+{
+    if(note < 0 || note >= 128 || m_highlightNotes[note] == hl)
+        return;
+
+    m_highlightNotes[note] = hl;
+    repaint();
+}
+
 void Piano::findNote(QMouseEvent *evt, int &note)
 {
     double  x       = double(evt->pos().x());

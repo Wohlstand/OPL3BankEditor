@@ -28,6 +28,7 @@ include(FindPkgConfig)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
+set(QWT_NAMES qwt-qt5 qwt) # find versions for Qt5 only
 find_package(Qwt)
 find_package(Threads REQUIRED)
 
@@ -50,6 +51,10 @@ if(USE_RTAUDIO)
   endif()
 endif()
 
+if(ENABLE_PLOTS)
+  message("!!   Qwt: ${QWT_LIBRARY}")
+endif()
+
 message("!!   Plots: ${ENABLE_PLOTS}")
 
 include_directories("src")
@@ -65,6 +70,7 @@ set(SOURCES
   "src/FileFormats/ffmt_factory.cpp"
   "src/FileFormats/format_adlib_bnk.cpp"
   "src/FileFormats/format_adlib_tim.cpp"
+  "src/FileFormats/format_adlibgold_bnk2.cpp"
   "src/FileFormats/format_ail2_gtl.cpp"
   "src/FileFormats/format_apogeetmb.cpp"
   "src/FileFormats/format_bisqwit.cpp"

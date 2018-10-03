@@ -538,7 +538,7 @@ static void ComputeDurations(const FmBank::Instrument *in_p, DurationInfo *resul
 
         audioHistory.reset(std::ceil(historyLength * g_outputRate));
         for(unsigned period = 0;
-            (period < peak_amplitude_time) && (period < max_period_on);
+            ((period < peak_amplitude_time) || (period == 0)) && (period < max_period_on);
             ++period)
         {
             for(unsigned i = 0; i < samples_per_interval;)
