@@ -95,9 +95,6 @@ private:
     //! Recent flag of percussion
     bool m_recentPerc;
 
-    //! Clipboard
-    FmBank::Instrument  m_clipboard;
-
     //! Ignore all controls change events
     bool m_lock;
 
