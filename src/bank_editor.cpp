@@ -23,6 +23,7 @@
 #include <QSettings>
 #include <QUrl>
 #include <QMimeData>
+#include <QClipboard>
 #include <QtDebug>
 #ifdef ENABLE_WIN9X_OPL_PROXY
 #include <QSysInfo>
@@ -73,7 +74,6 @@ BankEditor::BankEditor(QWidget *parent) :
     ui(new Ui::BankEditor)
 {
     FmBankFormatFactory::registerAllFormats();
-    memset(&m_clipboard, 0, sizeof(FmBank::Instrument));
     m_curInst = nullptr;
     m_curInstBackup = nullptr;
     m_lock = false;
@@ -662,13 +662,25 @@ void BankEditor::on_actionExit_triggered()
 void BankEditor::on_actionCopy_triggered()
 {
     if(!m_curInst) return;
-    memcpy(&m_clipboard, m_curInst, sizeof(FmBank::Instrument));
+    QByteArray data((char *)m_curInst, sizeof(FmBank::Instrument));
+    QMimeData *md = new QMimeData;
+    md->setData("application/x-vnd.wohlstand.opl3-fm-instrument", data);
+    QApplication::clipboard()->setMimeData(md);
+}
+
+static bool instrumentFromClipboard(FmBank::Instrument &inst)
+{
+    const QMimeData *md = QApplication::clipboard()->mimeData();
+    if(!md) return false;
+    QByteArray data = md->data("application/x-vnd.wohlstand.opl3-fm-instrument");
+    if(data.size() != sizeof(FmBank::Instrument)) return false;
+    memcpy(&inst, data.data(), sizeof(FmBank::Instrument));
+    return true;
 }
 
 void BankEditor::on_actionPaste_triggered()
 {
-    if(!m_curInst) return;
-    memcpy(m_curInst, &m_clipboard, sizeof(FmBank::Instrument));
+    if(!m_curInst || !instrumentFromClipboard(*m_curInst)) return;
     flushInstrument();
     syncInstrumentName();
 }
@@ -676,45 +688,52 @@ void BankEditor::on_actionPaste_triggered()
 void BankEditor::on_actionPasteVoice11_triggered()
 {
     if(!m_curInst) return;
+    FmBank::Instrument clipboardInst;
+    if(!instrumentFromClipboard(clipboardInst)) return;
     size_t buffSize = sizeof(FmBank::Operator) * 2;
-    m_curInst->feedback1 = m_clipboard.feedback1;
-    m_curInst->connection1 = m_clipboard.connection1;
-    m_curInst->note_offset1 = m_clipboard.note_offset1;
-    memcpy(m_curInst->OP, m_clipboard.OP, buffSize);
+    m_curInst->feedback1 = clipboardInst.feedback1;
+    m_curInst->connection1 = clipboardInst.connection1;
+    m_curInst->note_offset1 = clipboardInst.note_offset1;
+    memcpy(m_curInst->OP, clipboardInst.OP, buffSize);
     flushInstrument();
 }
 
 void BankEditor::on_actionPasteVoice12_triggered()
 {
     if(!m_curInst) return;
-    if(!m_curInst) return;
+    FmBank::Instrument clipboardInst;
+    if(!instrumentFromClipboard(clipboardInst)) return;
     size_t buffSize = sizeof(FmBank::Operator) * 2;
-    m_curInst->feedback2 = m_clipboard.feedback1;
-    m_curInst->connection2 = m_clipboard.connection1;
-    m_curInst->note_offset2 = m_clipboard.note_offset1;
-    memcpy(m_curInst->OP + 2, m_clipboard.OP, buffSize);
+    m_curInst->feedback2 = clipboardInst.feedback1;
+    m_curInst->connection2 = clipboardInst.connection1;
+    m_curInst->note_offset2 = clipboardInst.note_offset1;
+    memcpy(m_curInst->OP + 2, clipboardInst.OP, buffSize);
     flushInstrument();
 }
 
 void BankEditor::on_actionPasteVoice21_triggered()
 {
     if(!m_curInst) return;
+    FmBank::Instrument clipboardInst;
+    if(!instrumentFromClipboard(clipboardInst)) return;
     size_t buffSize = sizeof(FmBank::Operator) * 2;
-    m_curInst->feedback1 = m_clipboard.feedback2;
-    m_curInst->connection1 = m_clipboard.connection2;
-    m_curInst->note_offset1 = m_clipboard.note_offset2;
-    memcpy(m_curInst->OP, m_clipboard.OP + 2, buffSize);
+    m_curInst->feedback1 = clipboardInst.feedback2;
+    m_curInst->connection1 = clipboardInst.connection2;
+    m_curInst->note_offset1 = clipboardInst.note_offset2;
+    memcpy(m_curInst->OP, clipboardInst.OP + 2, buffSize);
     flushInstrument();
 }
 
 void BankEditor::on_actionPasteVoice22_triggered()
 {
     if(!m_curInst) return;
+    FmBank::Instrument clipboardInst;
+    if(!instrumentFromClipboard(clipboardInst)) return;
     size_t buffSize = sizeof(FmBank::Operator) * 2;
-    m_curInst->feedback2 = m_clipboard.feedback2;
-    m_curInst->connection2 = m_clipboard.connection2;
-    m_curInst->note_offset2 = m_clipboard.note_offset2;
-    memcpy(m_curInst->OP + 2, m_clipboard.OP + 2, buffSize);
+    m_curInst->feedback2 = clipboardInst.feedback2;
+    m_curInst->connection2 = clipboardInst.connection2;
+    m_curInst->note_offset2 = clipboardInst.note_offset2;
+    memcpy(m_curInst->OP + 2, clipboardInst.OP + 2, buffSize);
     flushInstrument();
 }
 
