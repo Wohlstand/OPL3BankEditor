@@ -50,6 +50,10 @@ static const char *top_magic = "2OP\x1A";
 static const char *fop_magic = "4OP\x1A";
 static const char *zero_magic = "\0\0\0\0";
 
+// JuceOPLVSTi
+static const char *vsti_magic = "SBI\x1D";
+static const char vsti_inst_name[32] = "JuceOPLVSTi instrument         ";
+
 bool SbIBK_impl::detectIBK(const char *magic)
 {
     return (strncmp(magic, ibk_magic, 4) == 0);
@@ -57,7 +61,8 @@ bool SbIBK_impl::detectIBK(const char *magic)
 
 bool SbIBK_impl::detectSBI(const char *magic)
 {
-    return (strncmp(magic, sbi_magic, 4) == 0);
+    return (strncmp(magic, sbi_magic, 4) == 0) ||
+           (strncmp(magic, vsti_magic, 4) == 0);
 }
 
 bool SbIBK_impl::detectSBI4OP(const char *magic)
@@ -98,7 +103,7 @@ bool SbIBK_impl::detectUNIXO3(QString filePath, BankFormats &format)
     return (fileSize == 7680);
 }
 
-static void raw2sbi(FmBank::Instrument &ins, uint8_t *idata, bool fourOp = false)
+static void raw2sbi(FmBank::Instrument &ins, uint8_t *idata, bool fourOp = false, bool hasSbiExtraFields = true)
 {
     int MODULATOR   = fourOp ? MODULATOR2 : MODULATOR1;
     int CARRIER     = fourOp ? CARRIER2 : CARRIER1;
@@ -130,7 +135,7 @@ static void raw2sbi(FmBank::Instrument &ins, uint8_t *idata, bool fourOp = false
     else
         ins.setFBConn1(idata[10]);//46  //57
 
-    if(!fourOp)
+    if(!fourOp && hasSbiExtraFields)
     {
         //        BYTE percvoc;   /* Percussion voice number                    : JWO */
         ins.adlib_drum_number  = idata[11];//47 //58
@@ -304,8 +309,18 @@ FfmtErrCode SbIBK_impl::loadFileSBI(QString filePath, FmBank::Instrument &inst, 
     if(file.read(magic, 4) != 4)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    if(strncmp(magic, sbi_magic, 4) != 0)
+    bool isSbiMagic = strncmp(magic, sbi_magic, 4) == 0;
+    bool isVstiMagic = strncmp(magic, vsti_magic, 4) == 0;
+
+    if(!isSbiMagic && !isVstiMagic)
         return FfmtErrCode::ERR_BADFORMAT;
+
+    bool hasSbiExtraFields = true;
+    if(isVstiMagic)
+    {
+        // JuceOPLVSTi SBI has the end filled with 0x20 junk
+        hasSbiExtraFields = false;
+    }
 
     //char tempName[32];
     //sprintf(tempName, "NONAME%03d", 0);
@@ -323,11 +338,19 @@ FfmtErrCode SbIBK_impl::loadFileSBI(QString filePath, FmBank::Instrument &inst, 
     }
 
     FmBank::Instrument &ins = inst;
-    drumFlag = (idata[11] != 0x00);
-    raw2sbi(ins, idata, false);
+    if (hasSbiExtraFields)
+        drumFlag = (idata[11] != 0x00);
+    raw2sbi(ins, idata, false, hasSbiExtraFields);
 
     if(isDrum)
         *isDrum = drumFlag;
+
+    if(isVstiMagic && strncmp(inst.name, vsti_inst_name, 32) == 0)
+    {
+        // it's the hardcoded JuceOPLVSTi name, replace with filename
+        QString nameFromPath = QFileInfo(filePath).baseName();
+        strncpy(inst.name, nameFromPath.toUtf8().data(), 32);
+    }
 
     if(inst.name[0] == '\0')
     {
