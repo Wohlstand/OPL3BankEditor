@@ -47,6 +47,7 @@ Importer::Importer(QWidget *parent) :
     connect(ui->selectAll, SIGNAL(clicked()), ui->instruments, SLOT(selectAll()));
     ui->doImport->setEnabled(false);
     ui->instruments->setSelectionMode(QAbstractItemView::MultiSelection);
+    ui->stackedWidget->setCurrentWidget(ui->pageAssoc);
     this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     //this->setFixedSize(this->window()->width(), this->window()->height());
 }
@@ -507,12 +508,14 @@ void Importer::reloadInstrumentNames()
 void Importer::on_importAssoc_clicked()
 {
     ui->instruments->setSelectionMode(QAbstractItemView::MultiSelection);
+    ui->stackedWidget->setCurrentWidget(ui->pageAssoc);
 }
 
 void Importer::on_importReplace_clicked()
 {
     ui->instruments->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->instruments->clearSelection();
+    ui->stackedWidget->setCurrentWidget(ui->pageReplace);
 }
 
 void Importer::on_doImport_clicked()
@@ -533,6 +536,13 @@ void Importer::on_doImport_clicked()
 
     if(ui->importAssoc->isChecked())
     {
+        if(ui->destinationMelodic->isChecked())
+            dstPercussive = false;
+        else if(ui->destinationPercussion->isChecked())
+            dstPercussive = true;
+        else
+            dstPercussive = srcPercussive;
+
         for(QListWidgetItem *item : selected)
         {
             int id = item->data(Qt::UserRole).toInt();
@@ -550,7 +560,7 @@ void Importer::on_doImport_clicked()
 
             dstIns[id % 128] = srcIns[id];
         }
-        m_main->statusBar()->showMessage(tr("%1 instruments has been imported!").arg(selected.size()), 5000);
+        m_main->statusBar()->showMessage(tr("%1 instruments have been imported!").arg(selected.size()), 5000);
     }
     else
     {
