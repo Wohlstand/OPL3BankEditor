@@ -47,6 +47,7 @@ Importer::Importer(QWidget *parent) :
     connect(ui->selectAll, SIGNAL(clicked()), ui->instruments, SLOT(selectAll()));
     ui->doImport->setEnabled(false);
     ui->instruments->setSelectionMode(QAbstractItemView::MultiSelection);
+    ui->stackedWidget->setCurrentWidget(ui->pageAssoc);
     this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     //this->setFixedSize(this->window()->width(), this->window()->height());
 }
@@ -507,22 +508,14 @@ void Importer::reloadInstrumentNames()
 void Importer::on_importAssoc_clicked()
 {
     ui->instruments->setSelectionMode(QAbstractItemView::MultiSelection);
+    ui->stackedWidget->setCurrentWidget(ui->pageAssoc);
 }
 
 void Importer::on_importReplace_clicked()
 {
     ui->instruments->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->instruments->clearSelection();
-}
-
-static inline void importInstrument(QVector<FmBank::Instrument> &store, FmBank::Instrument &inst, int idDst)
-{
-    if(store.size() <= idDst)
-    {
-        FmBank::Instrument nins = FmBank::emptyInst();
-        store.fill(nins, idDst - store.size());
-    }
-    store[idDst] = inst;
+    ui->stackedWidget->setCurrentWidget(ui->pageReplace);
 }
 
 void Importer::on_doImport_clicked()
@@ -535,32 +528,55 @@ void Importer::on_doImport_clicked()
         return;
     }
 
+    FmBank &srcFmBank = m_bank;
+    FmBank &dstFmBank = m_main->m_bank;
+
+    bool srcPercussive = !ui->melodic->isChecked();
+    bool dstPercussive = m_main->isDrumsMode();
+
     if(ui->importAssoc->isChecked())
     {
+        if(ui->destinationMelodic->isChecked())
+            dstPercussive = false;
+        else if(ui->destinationPercussion->isChecked())
+            dstPercussive = true;
+        else
+            dstPercussive = srcPercussive;
+
         for(QListWidgetItem *item : selected)
         {
             int id = item->data(Qt::UserRole).toInt();
-            importInstrument(m_main->isDrumsMode() ?
-                             m_main->m_bank.Ins_Percussion_box :
-                             m_main->m_bank.Ins_Melodic_box,
-                             ui->melodic->isChecked() ?
-                             m_bank.Ins_Melodic_box[id] :
-                             m_bank.Ins_Percussion_box[id], id);
+
+            FmBank::MidiBank *srcMidiBank = &
+                (srcPercussive ? srcFmBank.Banks_Percussion : srcFmBank.Banks_Melodic)
+                [id / 128];
+            FmBank::Instrument *srcIns = srcPercussive ?
+                srcFmBank.Ins_Percussion : srcFmBank.Ins_Melodic;
+
+            FmBank::MidiBank *dstMidiBank;
+            FmBank::Instrument *dstIns;
+            if(dstFmBank.createBank(srcMidiBank->msb, srcMidiBank->lsb, dstPercussive, &dstMidiBank, &dstIns))
+                memcpy(dstMidiBank->name, srcMidiBank->name, sizeof(FmBank::MidiBank::name));
+
+            dstIns[id % 128] = srcIns[id];
         }
-        m_main->statusBar()->showMessage(tr("%1 instruments has been imported!").arg(selected.size()), 5000);
+        m_main->statusBar()->showMessage(tr("%1 instruments have been imported!").arg(selected.size()), 5000);
     }
     else
     {
-        if(m_main->m_recentNum >= 0)
+        int dstId = m_main->m_recentNum;
+        if(dstId >= 0)
         {
-            int id = selected[0]->data(Qt::UserRole).toInt();
-            importInstrument(m_main->isDrumsMode() ?
-                             m_main->m_bank.Ins_Percussion_box :
-                             m_main->m_bank.Ins_Melodic_box,
-                             ui->melodic->isChecked() ?
-                             m_bank.Ins_Melodic_box[id] :
-                             m_bank.Ins_Percussion_box[id], m_main->m_recentNum);
-            m_main->statusBar()->showMessage(tr("Instrument #%1 has been imported!").arg(id), 5000);
+            int srcId = selected[0]->data(Qt::UserRole).toInt();
+
+            FmBank::Instrument *srcIns = srcPercussive ?
+                srcFmBank.Ins_Percussion : srcFmBank.Ins_Melodic;
+            FmBank::Instrument *dstIns = dstPercussive ?
+                dstFmBank.Ins_Percussion : dstFmBank.Ins_Melodic;
+
+            dstIns[dstId] = srcIns[srcId];
+
+            m_main->statusBar()->showMessage(tr("Instrument #%1 has been imported!").arg(srcId), 5000);
         }
         else
         {

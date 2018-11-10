@@ -331,6 +331,12 @@ public:
     static Instrument emptyInst();
 
     /**
+     * @brief Get blank instrument entry
+     * @return blank instrument entry
+     */
+    static Instrument blankInst();
+
+    /**
      * @brief Get empty bank meta-data entry
      * @return null-filled bank entry
      */
@@ -338,6 +344,30 @@ public:
 
     inline int countMelodic() const { return Ins_Melodic_box.size(); }
     inline int countDrums() const   { return Ins_Percussion_box.size(); }
+
+    /**
+     * @brief Get the identified bank
+     * @brief msb MIDI bank MSB index
+     * @brief lsb MIDI bank LSB index
+     * @brief percussive true iff it's a drum bank
+     * @brief pBank unless null, receives a pointer to the MIDI bank instance
+     * @brief pIns unless null, receives a pointer to the first instrument
+     * @return true if the bank exists, false if it doesn't
+     */
+    bool getBank(uint8_t msb, uint8_t lsb, bool percussive,
+                 MidiBank **pBank, Instrument **pIns);
+
+    /**
+     * @brief Get the identified bank, creating if necessary
+     * @brief msb MIDI bank MSB index
+     * @brief lsb MIDI bank LSB index
+     * @brief percussive true iff it's a drum bank
+     * @brief pBank unless null, receives a pointer to the MIDI bank instance
+     * @brief pIns unless null, receives a pointer to the first instrument
+     * @return true if the bank is created, false if it already exists
+     */
+    bool createBank(uint8_t msb, uint8_t lsb, bool percussive,
+                    MidiBank **pBank, Instrument **pIns);
 
     //! Pointer to array of melodic instruments
     Instrument* Ins_Melodic;

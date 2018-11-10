@@ -165,6 +165,13 @@ FmBank::Instrument FmBank::emptyInst()
     return inst;
 }
 
+FmBank::Instrument FmBank::blankInst()
+{
+    FmBank::Instrument inst = emptyInst();
+    inst.is_blank = true;
+    return inst;
+}
+
 FmBank::MidiBank FmBank::emptyBank(uint16_t index)
 {
     FmBank::MidiBank bank;
@@ -173,6 +180,62 @@ FmBank::MidiBank FmBank::emptyBank(uint16_t index)
     bank.msb = ((index >> 8) & 0xFF);
     bank.name[0] = '\0';
     return bank;
+}
+
+bool FmBank::getBank(uint8_t msb, uint8_t lsb, bool percussive,
+                     MidiBank **pBank, Instrument **pIns)
+{
+    Instrument *Ins = percussive ? Ins_Percussion : Ins_Melodic;
+    QVector<Instrument> &Ins_Box = percussive ? Ins_Percussion_box : Ins_Melodic_box;
+    QVector<MidiBank> &Banks = percussive ? Banks_Percussion : Banks_Melodic;
+
+    for(size_t index = 0, count = Banks.size(); index < count; ++index)
+    {
+        MidiBank &midiBank = Banks[index];
+        if(midiBank.msb == msb && midiBank.lsb == lsb)
+        {
+            if(pBank)
+                *pBank = &midiBank;
+            if(pIns)
+                *pIns = &Ins[128 * index];
+            return true;
+        }
+    }
+
+    if(pBank)
+        *pBank = nullptr;
+    if(pIns)
+        *pIns = nullptr;
+
+    return false;
+}
+
+bool FmBank::createBank(uint8_t msb, uint8_t lsb, bool percussive,
+                        MidiBank **pBank, Instrument **pIns)
+{
+    if(getBank(msb, lsb, percussive, pBank, pIns))
+        return false;
+
+    Instrument *&Ins = percussive ? Ins_Percussion : Ins_Melodic;
+    QVector<Instrument> &Ins_Box = percussive ? Ins_Percussion_box : Ins_Melodic_box;
+    QVector<MidiBank> &Banks = percussive ? Banks_Percussion : Banks_Melodic;
+
+    size_t index = Banks.size();
+    Banks.push_back(MidiBank());
+    MidiBank &midiBank = Banks.back();
+    memset(midiBank.name, 0, sizeof(midiBank.name));
+    midiBank.msb = msb;
+    midiBank.lsb = lsb;
+
+    Ins_Box.insert(Ins_Box.end(), 128, blankInst());
+    Ins = Ins_Box.data();
+
+    if(pBank)
+        *pBank = &midiBank;
+    if(pIns)
+        *pIns = &Ins[128 * index];
+
+    return true;
 }
 
 uint8_t FmBank::Instrument::getAVEKM(int OpID) const
