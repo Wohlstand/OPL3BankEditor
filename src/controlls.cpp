@@ -64,7 +64,7 @@ void BankEditor::on_feedback1_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->feedback1 = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_am1_clicked(bool checked)
@@ -73,7 +73,7 @@ void BankEditor::on_am1_clicked(bool checked)
     if(!m_curInst) return;
     if(checked)
         m_curInst->connection1 = FmBank::Instrument::AM;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_fm1_clicked(bool checked)
@@ -82,7 +82,7 @@ void BankEditor::on_fm1_clicked(bool checked)
     if(!m_curInst) return;
     if(checked)
         m_curInst->connection1 = FmBank::Instrument::FM;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_percMode_currentIndexChanged(int index)
@@ -98,7 +98,7 @@ void BankEditor::on_percMode_currentIndexChanged(int index)
         m_curInst->adlib_drum_number = uint8_t(5 + index);
         break;
     }
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_perc_noteNum_valueChanged(int arg1)
@@ -108,7 +108,7 @@ void BankEditor::on_perc_noteNum_valueChanged(int arg1)
     m_curInst->percNoteNum = uint8_t(arg1);
     if(ui->percussion->isChecked())
         ui->noteToTest->setValue(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_feedback2_valueChanged(int arg1)
@@ -116,7 +116,7 @@ void BankEditor::on_feedback2_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->feedback2 = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_am2_clicked(bool checked)
@@ -125,7 +125,7 @@ void BankEditor::on_am2_clicked(bool checked)
     if(!m_curInst) return;
     if(checked)
         m_curInst->connection2 = FmBank::Instrument::AM;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_fm2_clicked(bool checked)
@@ -134,7 +134,7 @@ void BankEditor::on_fm2_clicked(bool checked)
     if(!m_curInst) return;
     if(checked)
         m_curInst->connection2 = FmBank::Instrument::FM;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4mode_clicked(bool checked)
@@ -144,7 +144,7 @@ void BankEditor::on_op4mode_clicked(bool checked)
     m_curInst->en_4op = checked;
     if(!checked)
         ui->doubleVoice->setChecked(false);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_doubleVoice_toggled(bool checked)
@@ -152,7 +152,7 @@ void BankEditor::on_doubleVoice_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->en_pseudo4op = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 
@@ -161,7 +161,7 @@ void BankEditor::on_secVoiceFineTune_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->fine_tune = int8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_noteOffset1_valueChanged(int arg1)
@@ -169,7 +169,7 @@ void BankEditor::on_noteOffset1_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->note_offset1 = int16_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 
@@ -178,7 +178,7 @@ void BankEditor::on_noteOffset2_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->note_offset2 = int16_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_velocityOffset_valueChanged(int arg1)
@@ -186,7 +186,7 @@ void BankEditor::on_velocityOffset_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->velocity_offset = int8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_pitchBendSlider_valueChanged(int value)
@@ -212,7 +212,7 @@ void BankEditor::on_op1_attack_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].attack = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_sustain_valueChanged(int arg1)
@@ -220,7 +220,7 @@ void BankEditor::on_op1_sustain_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].sustain = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_decay_valueChanged(int arg1)
@@ -228,7 +228,7 @@ void BankEditor::on_op1_decay_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].decay = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_release_valueChanged(int arg1)
@@ -236,7 +236,7 @@ void BankEditor::on_op1_release_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].release = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_level_valueChanged(int arg1)
@@ -244,7 +244,7 @@ void BankEditor::on_op1_level_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].level = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_freqmult_valueChanged(int arg1)
@@ -252,7 +252,7 @@ void BankEditor::on_op1_freqmult_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].fmult = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_ksl_valueChanged(int arg1)
@@ -260,7 +260,7 @@ void BankEditor::on_op1_ksl_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].ksl = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_waveform_currentIndexChanged(int index)
@@ -268,7 +268,7 @@ void BankEditor::on_op1_waveform_currentIndexChanged(int index)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].waveform = uint8_t(index);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_am_toggled(bool checked)
@@ -276,7 +276,7 @@ void BankEditor::on_op1_am_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].am = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_vib_toggled(bool checked)
@@ -284,7 +284,7 @@ void BankEditor::on_op1_vib_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].vib = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_eg_toggled(bool checked)
@@ -292,7 +292,7 @@ void BankEditor::on_op1_eg_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].eg = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op1_ksr_toggled(bool checked)
@@ -300,7 +300,7 @@ void BankEditor::on_op1_ksr_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR1].ksr = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 
@@ -312,7 +312,7 @@ void BankEditor::on_op2_attack_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].attack = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_sustain_valueChanged(int arg1)
@@ -320,7 +320,7 @@ void BankEditor::on_op2_sustain_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].sustain = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_decay_valueChanged(int arg1)
@@ -328,7 +328,7 @@ void BankEditor::on_op2_decay_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].decay = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_release_valueChanged(int arg1)
@@ -336,7 +336,7 @@ void BankEditor::on_op2_release_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].release = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_level_valueChanged(int arg1)
@@ -344,7 +344,7 @@ void BankEditor::on_op2_level_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].level = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_freqmult_valueChanged(int arg1)
@@ -352,7 +352,7 @@ void BankEditor::on_op2_freqmult_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].fmult = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_ksl_valueChanged(int arg1)
@@ -360,7 +360,7 @@ void BankEditor::on_op2_ksl_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].ksl = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_waveform_currentIndexChanged(int index)
@@ -368,7 +368,7 @@ void BankEditor::on_op2_waveform_currentIndexChanged(int index)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].waveform = uint8_t(index);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_am_toggled(bool checked)
@@ -376,7 +376,7 @@ void BankEditor::on_op2_am_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].am = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_vib_toggled(bool checked)
@@ -384,7 +384,7 @@ void BankEditor::on_op2_vib_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].vib = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_eg_toggled(bool checked)
@@ -392,7 +392,7 @@ void BankEditor::on_op2_eg_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].eg = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op2_ksr_toggled(bool checked)
@@ -400,7 +400,7 @@ void BankEditor::on_op2_ksr_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER1].ksr = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 
@@ -412,7 +412,7 @@ void BankEditor::on_op3_attack_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].attack = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_sustain_valueChanged(int arg1)
@@ -420,7 +420,7 @@ void BankEditor::on_op3_sustain_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].sustain = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_decay_valueChanged(int arg1)
@@ -428,7 +428,7 @@ void BankEditor::on_op3_decay_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].decay = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_release_valueChanged(int arg1)
@@ -436,7 +436,7 @@ void BankEditor::on_op3_release_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].release = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_level_valueChanged(int arg1)
@@ -444,7 +444,7 @@ void BankEditor::on_op3_level_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].level = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_freqmult_valueChanged(int arg1)
@@ -452,7 +452,7 @@ void BankEditor::on_op3_freqmult_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].fmult = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_ksl_valueChanged(int arg1)
@@ -460,7 +460,7 @@ void BankEditor::on_op3_ksl_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].ksl = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_waveform_currentIndexChanged(int index)
@@ -468,7 +468,7 @@ void BankEditor::on_op3_waveform_currentIndexChanged(int index)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].waveform = uint8_t(index);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_am_toggled(bool checked)
@@ -476,7 +476,7 @@ void BankEditor::on_op3_am_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].am = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_vib_toggled(bool checked)
@@ -484,7 +484,7 @@ void BankEditor::on_op3_vib_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].vib = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_eg_toggled(bool checked)
@@ -492,7 +492,7 @@ void BankEditor::on_op3_eg_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].eg = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op3_ksr_toggled(bool checked)
@@ -500,7 +500,7 @@ void BankEditor::on_op3_ksr_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[MODULATOR2].ksr = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 
@@ -512,7 +512,7 @@ void BankEditor::on_op4_attack_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].attack = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_sustain_valueChanged(int arg1)
@@ -520,7 +520,7 @@ void BankEditor::on_op4_sustain_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].sustain = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_decay_valueChanged(int arg1)
@@ -528,7 +528,7 @@ void BankEditor::on_op4_decay_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].decay = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_release_valueChanged(int arg1)
@@ -536,7 +536,7 @@ void BankEditor::on_op4_release_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].release = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_level_valueChanged(int arg1)
@@ -544,7 +544,7 @@ void BankEditor::on_op4_level_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].level = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_freqmult_valueChanged(int arg1)
@@ -552,7 +552,7 @@ void BankEditor::on_op4_freqmult_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].fmult = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_ksl_valueChanged(int arg1)
@@ -560,7 +560,7 @@ void BankEditor::on_op4_ksl_valueChanged(int arg1)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].ksl = uint8_t(arg1);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_waveform_currentIndexChanged(int index)
@@ -568,7 +568,7 @@ void BankEditor::on_op4_waveform_currentIndexChanged(int index)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].waveform = uint8_t(index);
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_am_toggled(bool checked)
@@ -576,7 +576,7 @@ void BankEditor::on_op4_am_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].am = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_vib_toggled(bool checked)
@@ -584,7 +584,7 @@ void BankEditor::on_op4_vib_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].vib = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_eg_toggled(bool checked)
@@ -592,7 +592,7 @@ void BankEditor::on_op4_eg_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].eg = checked;
-    sendPatch();
+    afterChangeControlValue();
 }
 
 void BankEditor::on_op4_ksr_toggled(bool checked)
@@ -600,5 +600,18 @@ void BankEditor::on_op4_ksr_toggled(bool checked)
     if(m_lock) return;
     if(!m_curInst) return;
     m_curInst->OP[CARRIER2].ksr = checked;
+    afterChangeControlValue();
+}
+
+/* ***************** All ***************** */
+
+void BankEditor::afterChangeControlValue()
+{
+    Q_ASSERT(m_curInst);
+    if(m_curInst->is_blank)
+    {
+        m_curInst->is_blank = false;
+        syncInstrumentBlankness();
+    }
     sendPatch();
 }

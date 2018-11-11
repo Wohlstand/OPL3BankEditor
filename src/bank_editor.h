@@ -204,9 +204,13 @@ public:
      */
     void flushInstrument();
     /**
-     * @brief Syncronize instrument name in the list widget with actual instrument name in the data store
+     * @brief Synchronize instrument name in the list widget with actual instrument name in the data store
      */
     void syncInstrumentName();
+    /**
+     * @brief Synchronize instrument blank state in the list widget with actual instrument name in the data store
+     */
+    void syncInstrumentBlankness();
     /**
      * @brief Sets current instrument to editand test
      * @param num Number of instrument (from 0 to 127)
@@ -521,6 +525,11 @@ private slots:
     void on_pitchBendSlider_sliderReleased();
 
     void on_holdButton_toggled(bool checked);
+
+    /**
+     * @brief Update after a change of any control value
+     */
+    void afterChangeControlValue();
 
     /**
      * @brief Adjusts the size of the window after it has been shown
