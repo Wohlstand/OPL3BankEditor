@@ -106,6 +106,9 @@ target_link_libraries(Measurer PUBLIC Chips Common Qt5::Concurrent)
 if(NOT MSVC)
   target_compile_options(Measurer PRIVATE "-fopenmp")
 endif()
+if(ENABLE_PLOTS)
+  target_compile_definitions(Measurer PUBLIC "-DENABLE_PLOTS")
+endif()
 
 set(SOURCES
   "src/audio.cpp"
@@ -168,7 +171,6 @@ add_executable(OPL3BankEditor WIN32 MACOSX_BUNDLE
 set_target_properties(OPL3BankEditor PROPERTIES
   OUTPUT_NAME "opl3_bank_editor")
 if(ENABLE_PLOTS)
-  target_compile_definitions(OPL3BankEditor PRIVATE "-DENABLE_PLOTS")
   target_include_directories(OPL3BankEditor PRIVATE ${QWT_INCLUDE_DIRS})
 endif()
 if(DEBUG_WRITE_AMPLITUDE_PLOT)
