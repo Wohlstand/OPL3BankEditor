@@ -1,4 +1,5 @@
 Version 1.5
+- Added Adlib Gold file format
 - Added Real-Time MIDI support
 - Voice management has been improved
 - Reworked audio output support
