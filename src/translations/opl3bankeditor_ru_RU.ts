@@ -655,7 +655,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3070"/>
         <source>Major chord</source>
-        <translation>Мажорный аккорд</translation>
+        <translation>Маж. аккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3083"/>
@@ -665,7 +665,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3086"/>
         <source>Minor chord</source>
-        <translation>Минорный аккорд</translation>
+        <translation>Мин. аккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3099"/>
@@ -675,7 +675,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3102"/>
         <source>Augmented chord</source>
-        <translation>Увеличенный аккорд</translation>
+        <translation>Увл. аккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3115"/>
@@ -685,7 +685,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3118"/>
         <source>Diminished chord</source>
-        <translation>Уменьшенный аккорд</translation>
+        <translation>Умен. аккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3131"/>
@@ -695,7 +695,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3134"/>
         <source>Major 7-chord</source>
-        <translation>Мажорный септаккорд</translation>
+        <translation>Маж. септаккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3147"/>
@@ -705,7 +705,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3150"/>
         <source>Minor 7-chord</source>
-        <translation>Минорный септаккорд</translation>
+        <translation>Мин. септаккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3179"/>
