@@ -3,7 +3,9 @@
 #include <cstring>
 #include "win9x_opl_proxy.h"
 
-#ifndef _WIN32
+#ifdef _WIN32
+#include <windows.h>
+#else
 /* FAKE DUMMIES FOR ABILITY TO BUILD THIS CODE ON ANY OS */
 #define _stdcall
 typedef intptr_t HINSTANCE;
