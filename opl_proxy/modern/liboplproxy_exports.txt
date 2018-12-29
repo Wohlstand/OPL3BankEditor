@@ -1,30 +1,28 @@
-Microsoft (R) COFF/PE Dumper Version 14.00.24215.1
-Copyright (C) Microsoft Corporation.  All rights reserved.
+There is an export table in .edata at 0x6fdc6000
 
+The Export Tables (interpreted .edata section contents)
 
-Dump of file liboplproxy.dll
+Export Flags                    0
+Time/Date stamp                 5c1afcbf
+Major/Minor                     0/0
+Name                            00006050 oplproxy.dll
+Ordinal Base                    1
+Number in:
+        Export Address Table            00000004
+        [Name Pointer/Ordinal] Table    00000004
+Table Addresses
+        Export Address Table            00006028
+        Name Pointer Table              00006038
+        Ordinal Table                   00006048
 
-File Type: DLL
+Export Address Table -- Ordinal Base 1
+        [   0] +base[   1] 15b0 Export RVA
+        [   1] +base[   2] 15e8 Export RVA
+        [   2] +base[   3] 15be Export RVA
+        [   3] +base[   4] 15da Export RVA
 
-  Section contains the following exports for liboplproxy.dll
-
-    00000000 characteristics
-           0 time date stamp
-        0.00 version
-           1 ordinal base
-           3 number of functions
-           3 number of names
-
-    ordinal hint RVA      name
-
-          1    0 00001010 _chipInit@0
-          3    1 0000104A _chipPoke@8
-          2    2 0000102D _chipUnInit@0
-
-  Summary
-
-        1000 .edata
-        1000 .idata
-        1000 .reloc
-        6000 AUTO
-        3000 DGROUP
+[Ordinal/Name Pointer] Table
+        [   0] chipInit@0
+        [   1] chipPoke@8
+        [   2] chipSetPort@4
+        [   3] chipUnInit@0
