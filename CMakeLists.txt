@@ -95,8 +95,14 @@ set(CHIPS_SOURCES
   "src/opl/chips/dosbox/dbopl.cpp"
   "src/opl/chips/nuked_opl3_v174.cpp"
   "src/opl/chips/nuked/nukedopl3_174.c")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  list(APPEND CHIPS_SOURCES "src/opl/chips/win9x_opl_proxy.cpp")
+endif()
 add_library(Chips STATIC ${CHIPS_SOURCES})
 target_include_directories(Chips PUBLIC "src")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  target_compile_definitions(Chips PUBLIC "-DENABLE_WIN9X_OPL_PROXY")
+endif()
 
 set(MEASURER_SOURCES
   "src/opl/measurer.cpp")
