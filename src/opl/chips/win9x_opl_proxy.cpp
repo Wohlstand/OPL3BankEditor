@@ -1,4 +1,4 @@
-#include <QSysInfo>
+//#include <QSysInfo>
 #include <QMessageBox>
 #include <cstring>
 #include "win9x_opl_proxy.h"
@@ -46,6 +46,10 @@ template<class FunkPtr>
 void initOplFunction(HINSTANCE &chip_lib, FunkPtr &ptr, const char *procName, bool required = true)
 {
     ptr = (FunkPtr)GetProcAddress(chip_lib, procName);
+
+    if(!ptr && procName[0] == '_')
+        ptr = (FunkPtr)GetProcAddress(chip_lib, procName + 1);
+
     static bool shownWarning = false;
     if(!ptr && required && !shownWarning)
     {
@@ -63,10 +67,12 @@ void initOplFunction(HINSTANCE &chip_lib, FunkPtr &ptr, const char *procName, bo
 void Win9x_OPL_Proxy::initChip()
 {
     OPLProxyDriver *chip_r = reinterpret_cast<OPLProxyDriver*>(m_chip);
+    /*
     QSysInfo::WinVersion wver = QSysInfo::windowsVersion();
     bool m_enableProxy =    (wver == QSysInfo::WV_98) ||
                             (wver == QSysInfo::WV_Me);
-    if(m_enableProxy && !chip_r->chip_lib)
+    */
+    if(/*m_enableProxy && */ !chip_r->chip_lib)
     {
         chip_r->chip_lib = LoadLibraryA("liboplproxy.dll");
         if(!chip_r->chip_lib)
