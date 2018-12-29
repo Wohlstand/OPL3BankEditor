@@ -122,6 +122,7 @@ SOURCES += \
     src/formats_sup.cpp \
     src/importer.cpp \
     src/latency.cpp \
+    src/hardware.cpp \
     src/ins_names.cpp \
     src/main.cpp \
     src/opl/generator.cpp \
@@ -162,6 +163,7 @@ HEADERS += \
     src/formats_sup.h \
     src/importer.h \
     src/latency.h \
+    src/hardware.h \
     src/ins_names.h \
     src/main.h \
     src/opl/generator.h \

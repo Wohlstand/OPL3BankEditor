@@ -12,6 +12,9 @@ public:
     Win9x_OPL_Proxy();
     virtual ~Win9x_OPL_Proxy() override;
 
+    bool canSetOplAddress() const;
+    void setOplAddress(uint16_t address);
+
     bool canRunAtPcmRate() const override { return false; }
     void setRate(uint32_t rate) override {}
     void reset() override {}

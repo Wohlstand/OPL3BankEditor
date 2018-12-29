@@ -119,6 +119,11 @@ private:
     QAction         *m_midiInAction = nullptr;
     #endif
 
+#ifdef ENABLE_WIN9X_OPL_PROXY
+    /* ********** OPL proxy stuff ********** */
+    unsigned m_proxyOplAddress = 0x388;
+#endif
+
     /*!
      * \brief Initializes audio subsystem and FM generator
      */
@@ -433,6 +438,12 @@ private slots:
      * @brief Opens the latency setting dialog
      */
     void on_actionLatency_triggered();
+#ifdef ENABLE_WIN9X_OPL_PROXY
+    /**
+     * @brief Opens the hardware OPL dialog
+     */
+    void on_actionHardware_OPL_triggered();
+#endif
     /**
      * @brief Changes the current language
      */

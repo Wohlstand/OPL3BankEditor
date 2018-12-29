@@ -118,6 +118,7 @@ set(SOURCES
   "src/formats_sup.cpp"
   "src/importer.cpp"
   "src/latency.cpp"
+  "src/hardware.cpp"
   "src/ins_names.cpp"
   "src/main.cpp"
   "src/opl/generator.cpp"

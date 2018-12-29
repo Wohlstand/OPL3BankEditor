@@ -3544,6 +3544,7 @@ of second voice</string>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
     <addaction name="actionLatency"/>
+    <addaction name="actionHardware_OPL"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdito"/>
@@ -3761,6 +3762,11 @@ of second voice</string>
   <action name="actionDelayAnalysis">
    <property name="text">
     <string>Run delay analysis</string>
+   </property>
+  </action>
+  <action name="actionHardware_OPL">
+   <property name="text">
+    <string>Hardware OPL...</string>
    </property>
   </action>
  </widget>
