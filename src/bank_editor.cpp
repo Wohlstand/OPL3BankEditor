@@ -1229,6 +1229,7 @@ void BankEditor::on_actionHardware_OPL_triggered()
         {
             proxy.setOplAddress(newAddress);
             m_proxyOplAddress = newAddress;
+            sendPatch();
         }
     }
 
