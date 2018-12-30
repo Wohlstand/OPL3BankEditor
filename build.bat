@@ -36,7 +36,7 @@ IF -%1-==-win9x- (
     SET DEPLOY_FILES=%DEPLOY_FILES% .\opl_proxy\win9x\liboplproxy.dll
     SET DEST_ARCHIVE=opl3-bank-editor-dev-win9x.zip
 ) ELSE (
-    SET DEPLOY_FILES=%DEPLOY_FILES% .\opl_proxy\modern\liboplproxy.dll
+    SET DEPLOY_FILES=%DEPLOY_FILES% .\opl_proxy\modern\liboplproxy.dll .\opl_proxy\modern\inpout32.dll
 )
 SET DEPLOY_FILES=%DEPLOY_FILES% Bank_Examples
 SET DEPLOY_FILES=%DEPLOY_FILES% .\formats_info.htm .\license.txt .\changelog.txt
