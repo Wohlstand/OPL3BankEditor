@@ -70,7 +70,7 @@ void HardwareDialog::setupUi()
 
     QLineEdit *ctlAddressEdit = m_ctlAddressEdit = new QLineEdit;
     ctlBox->addWidget(ctlAddressEdit);
-    ctlAddressEdit->setInputMask("hhh");
+    ctlAddressEdit->setInputMask("hhhh");
 
     QDialogButtonBox *bbox = new QDialogButtonBox(QDialogButtonBox::Ok);
     vl->addWidget(bbox);
