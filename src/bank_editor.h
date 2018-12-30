@@ -232,6 +232,11 @@ public:
     void displayDebugDelaysInfo();
 
     /**
+     * @brief Reinitialize the OPL chip
+     */
+    void initChip();
+
+    /**
      * @brief Send current instrument to OPL chip emulator for to test
      */
     void sendPatch();

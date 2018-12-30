@@ -46,6 +46,7 @@ public:
     IRealtimeControl(QObject *parent = nullptr);
     virtual ~IRealtimeControl() {}
     virtual void ctl_switchChip(int chipId) = 0;
+    virtual void ctl_initChip() = 0;
 
 public slots:
     void changeNote(int note) { m_note = note; }
@@ -119,6 +120,7 @@ private:
 public:
     /* Control */
     void ctl_switchChip(int chipId) override;
+    void ctl_initChip() override;
     void ctl_silence() override;
     void ctl_noteOffAllChans() override;
     void ctl_playNote() override;

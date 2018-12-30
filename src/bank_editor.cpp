@@ -1076,6 +1076,12 @@ void BankEditor::displayDebugDelaysInfo()
                                  .arg(m_curInst->ms_sound_koff));
 }
 
+void BankEditor::initChip()
+{
+    if(!m_generator) return;
+    m_generator->ctl_initChip();
+}
+
 void BankEditor::sendPatch()
 {
     if(!m_curInst) return;
@@ -1229,6 +1235,7 @@ void BankEditor::on_actionHardware_OPL_triggered()
         {
             proxy.setOplAddress(newAddress);
             m_proxyOplAddress = newAddress;
+            initChip();
             sendPatch();
         }
     }

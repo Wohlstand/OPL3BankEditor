@@ -24,6 +24,7 @@
 enum MessageTag
 {
     MSG_MidiEvent,
+    MSG_CtlInitChip,
     MSG_CtlSilence,
     MSG_CtlNoteOffAllChans,
     MSG_CtlPlayNote,
@@ -111,6 +112,14 @@ void RealtimeGenerator::ctl_switchChip(int chipId)
     // non-RT, hence lock and processing in control thread
     std::unique_lock<mutex_type> lock(m_generator_mutex);
     m_gen->switchChip((Generator::OPL_Chips)chipId);
+}
+
+void RealtimeGenerator::ctl_initChip()
+{
+    Ring_Buffer &rb = *m_rb_ctl;
+    MessageHeader hdr = {MSG_CtlInitChip, 0};
+    wait_for_fifo_write_space(rb, hdr.size);
+    rb.put(hdr);
 }
 
 void RealtimeGenerator::ctl_silence()
@@ -293,6 +302,9 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
     switch(tag) {
     case MSG_MidiEvent:
         rt_midi_process(data, len);
+        break;
+    case MSG_CtlInitChip:
+        gen.initChip();
         break;
     case MSG_CtlSilence:
         gen.Silence();
