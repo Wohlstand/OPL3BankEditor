@@ -25,9 +25,6 @@
 #include <QMimeData>
 #include <QClipboard>
 #include <QtDebug>
-#ifdef ENABLE_WIN9X_OPL_PROXY
-#include <QSysInfo>
-#endif
 
 #include "importer.h"
 #include "formats_sup.h"
@@ -109,10 +106,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
 #ifdef ENABLE_WIN9X_OPL_PROXY
-    QSysInfo::WinVersion wver = QSysInfo::windowsVersion();
-    bool enableOpl3Proxy =  (wver == QSysInfo::WV_98) ||
-                            (wver == QSysInfo::WV_Me);
-    ui->actionWin9xOPLProxy->setVisible(enableOpl3Proxy);
+    m_proxyOpl = &Generator::oplProxy();
 #else
     ui->actionWin9xOPLProxy->setVisible(false);
 #endif
@@ -1220,11 +1214,10 @@ void BankEditor::on_actionLatency_triggered()
 #ifdef ENABLE_WIN9X_OPL_PROXY
 void BankEditor::on_actionHardware_OPL_triggered()
 {
-    Win9x_OPL_Proxy proxy;
+    Win9x_OPL_Proxy &proxy = *m_proxyOpl;
     bool supportsChangeAddress = proxy.canSetOplAddress();
 
     HardwareDialog *dlg = new HardwareDialog;
-
     dlg->setOplAddress(m_proxyOplAddress);
     dlg->setCanChangeOplAddress(supportsChangeAddress);
     dlg->exec();

@@ -27,6 +27,10 @@
 #include "chips/opl_chip_base.h"
 #include "../bank.h"
 
+#ifdef ENABLE_WIN9X_OPL_PROXY
+class Win9x_OPL_Proxy;
+#endif
+
 #define NUM_OF_CHANNELS         23
 #define MAX_OPLGEN_BUFFER_SIZE  4096
 
@@ -152,6 +156,10 @@ public:
     static uint32_t getChipVolume(
         uint32_t volume, uint8_t ccvolume, uint8_t ccexpr, int volmodel);
 
+#ifdef ENABLE_WIN9X_OPL_PROXY
+    static Win9x_OPL_Proxy &oplProxy();
+#endif
+
 private:
     GeneratorDebugInfo m_debug;
 
@@ -209,7 +217,8 @@ private:
     uint8_t     rythmModePercussionMode;
     uint8_t     testDrum;
     uint32_t    m_rate = 44100;
-    std::unique_ptr<OPLChipBase> chip;
+    struct OPLChipDelete { void operator()(OPLChipBase *); };
+    std::unique_ptr<OPLChipBase, OPLChipDelete> chip;
 
     OPL_PatchSetup m_patch;
     uint8_t     m_regBD;

@@ -121,6 +121,7 @@ private:
 
 #ifdef ENABLE_WIN9X_OPL_PROXY
     /* ********** OPL proxy stuff ********** */
+    Win9x_OPL_Proxy *m_proxyOpl = nullptr;
     unsigned m_proxyOplAddress = 0x388;
 #endif
 

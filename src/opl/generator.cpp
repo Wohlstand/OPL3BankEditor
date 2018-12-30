@@ -220,6 +220,15 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
 Generator::~Generator()
 {}
 
+void Generator::OPLChipDelete::operator()(OPLChipBase *x)
+{
+#ifdef ENABLE_WIN9X_OPL_PROXY
+    if(x == &Generator::oplProxy())
+        return;
+#endif
+    delete x;
+}
+
 void Generator::initChip()
 {
     static const uint16_t data[] =
@@ -242,13 +251,21 @@ void Generator::initChip()
     Silence();
 }
 
+#ifdef ENABLE_WIN9X_OPL_PROXY
+Win9x_OPL_Proxy &Generator::oplProxy()
+{
+    static Win9x_OPL_Proxy proxy;
+    return proxy;
+}
+#endif
+
 void Generator::switchChip(Generator::OPL_Chips chipId)
 {
     switch(chipId)
     {
     case CHIP_Win9xProxy:
 #ifdef ENABLE_WIN9X_OPL_PROXY
-        chip.reset(new Win9x_OPL_Proxy());
+        chip.reset(&oplProxy());
 #endif
         break;
     case CHIP_DosBox:

@@ -1,4 +1,3 @@
-//#include <QSysInfo>
 #include <QMessageBox>
 #include <cstring>
 #include "win9x_opl_proxy.h"
@@ -67,12 +66,7 @@ void initOplFunction(HINSTANCE &chip_lib, FunkPtr &ptr, const char *procName, bo
 void Win9x_OPL_Proxy::initChip()
 {
     OPLProxyDriver *chip_r = reinterpret_cast<OPLProxyDriver*>(m_chip);
-    /*
-    QSysInfo::WinVersion wver = QSysInfo::windowsVersion();
-    bool m_enableProxy =    (wver == QSysInfo::WV_98) ||
-                            (wver == QSysInfo::WV_Me);
-    */
-    if(/*m_enableProxy && */ !chip_r->chip_lib)
+    if(!chip_r->chip_lib)
     {
         chip_r->chip_lib = LoadLibraryA("liboplproxy.dll");
         if(!chip_r->chip_lib)
