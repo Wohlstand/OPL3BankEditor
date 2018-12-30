@@ -62,6 +62,7 @@ enum class InstFormats
     FORMAT_INST_SBIex,
     FORMAT_INST_ADLIB_INS,
     FORMAT_INST_SGI,
+    FORMAT_INST_CIF,
 };
 
 enum class FormatCaps
