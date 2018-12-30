@@ -117,6 +117,7 @@ SOURCES += \
     src/FileFormats/format_junlevizion.cpp \
     src/FileFormats/format_rad_importer.cpp \
     src/FileFormats/format_sb_ibk.cpp \
+    src/FileFormats/format_misc_sgi.cpp \
     src/FileFormats/format_wohlstand_opl3.cpp \
     src/FileFormats/format_flatbuffer_opl3.cpp \
     src/formats_sup.cpp \
@@ -157,6 +158,7 @@ HEADERS += \
     src/FileFormats/format_junlevizion.h \
     src/FileFormats/format_rad_importer.h \
     src/FileFormats/format_sb_ibk.h \
+    src/FileFormats/format_misc_sgi.h \
     src/FileFormats/format_wohlstand_opl3.h \
     src/FileFormats/format_flatbuffer_opl3.h \
     src/formats_sup.h \

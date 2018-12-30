@@ -35,6 +35,7 @@
 #include "format_junlevizion.h"
 #include "format_rad_importer.h"
 #include "format_sb_ibk.h"
+#include "format_misc_sgi.h"
 #include "format_wohlstand_opl3.h"
 #include "format_flatbuffer_opl3.h"
 
@@ -110,6 +111,9 @@ void FmBankFormatFactory::registerAllFormats()
 
     //Flatbuffer
     registerBankFormat(new FlatbufferOpl3());
+
+    //Misc
+    registerInstFormat(new Misc_SGI());
 }
 
 
