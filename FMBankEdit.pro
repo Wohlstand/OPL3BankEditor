@@ -91,7 +91,7 @@ rtmidi {
     DEFINES += ENABLE_MIDI
     include("src/midi/midi_rtmidi.pri")
 }
-win32: lessThan(QT_MAJOR_VERSION, 5):{
+win32 {
     include("src/opl/chips/win9x_opl_proxy.pri")
     DEFINES += ENABLE_WIN9X_OPL_PROXY
 }
@@ -124,6 +124,7 @@ SOURCES += \
     src/formats_sup.cpp \
     src/importer.cpp \
     src/latency.cpp \
+    src/hardware.cpp \
     src/ins_names.cpp \
     src/main.cpp \
     src/opl/generator.cpp \
@@ -166,6 +167,7 @@ HEADERS += \
     src/formats_sup.h \
     src/importer.h \
     src/latency.h \
+    src/hardware.h \
     src/ins_names.h \
     src/main.h \
     src/opl/generator.h \

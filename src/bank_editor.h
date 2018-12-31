@@ -119,6 +119,12 @@ private:
     QAction         *m_midiInAction = nullptr;
     #endif
 
+#ifdef ENABLE_WIN9X_OPL_PROXY
+    /* ********** OPL proxy stuff ********** */
+    Win9x_OPL_Proxy *m_proxyOpl = nullptr;
+    unsigned m_proxyOplAddress = 0x388;
+#endif
+
     /*!
      * \brief Initializes audio subsystem and FM generator
      */
@@ -224,6 +230,11 @@ public:
     void loadInstrument();
 
     void displayDebugDelaysInfo();
+
+    /**
+     * @brief Reinitialize the OPL chip
+     */
+    void initChip();
 
     /**
      * @brief Send current instrument to OPL chip emulator for to test
@@ -433,6 +444,12 @@ private slots:
      * @brief Opens the latency setting dialog
      */
     void on_actionLatency_triggered();
+#ifdef ENABLE_WIN9X_OPL_PROXY
+    /**
+     * @brief Opens the hardware OPL dialog
+     */
+    void on_actionHardware_OPL_triggered();
+#endif
     /**
      * @brief Changes the current language
      */

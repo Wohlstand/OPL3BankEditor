@@ -25,19 +25,20 @@
 #include <QMimeData>
 #include <QClipboard>
 #include <QtDebug>
-#ifdef ENABLE_WIN9X_OPL_PROXY
-#include <QSysInfo>
-#endif
 
 #include "importer.h"
 #include "formats_sup.h"
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
 #include "latency.h"
+#include "hardware.h"
 #include "ins_names.h"
 #include "main.h"
 #if defined(ENABLE_PLOTS)
 #include "delay_analysis.h"
+#endif
+#ifdef ENABLE_WIN9X_OPL_PROXY // to set hardware port
+#include "opl/chips/win9x_opl_proxy.h"
 #endif
 
 #include "FileFormats/ffmt_factory.h"
@@ -105,12 +106,13 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
 #ifdef ENABLE_WIN9X_OPL_PROXY
-    QSysInfo::WinVersion wver = QSysInfo::windowsVersion();
-    bool enableOpl3Proxy =  (wver == QSysInfo::WV_98) ||
-                            (wver == QSysInfo::WV_Me);
-    ui->actionWin9xOPLProxy->setVisible(enableOpl3Proxy);
+    m_proxyOpl = &Generator::oplProxy();
 #else
     ui->actionWin9xOPLProxy->setVisible(false);
+#endif
+
+#ifndef ENABLE_WIN9X_OPL_PROXY
+    ui->actionHardware_OPL->setVisible(false);
 #endif
 
     ui->instruments->installEventFilter(this);
@@ -1074,6 +1076,12 @@ void BankEditor::displayDebugDelaysInfo()
                                  .arg(m_curInst->ms_sound_koff));
 }
 
+void BankEditor::initChip()
+{
+    if(!m_generator) return;
+    m_generator->ctl_initChip();
+}
+
 void BankEditor::sendPatch()
 {
     if(!m_curInst) return;
@@ -1208,6 +1216,33 @@ void BankEditor::on_actionLatency_triggered()
     m_audioLatency = dlg->latency();
     delete dlg;
 }
+
+#ifdef ENABLE_WIN9X_OPL_PROXY
+void BankEditor::on_actionHardware_OPL_triggered()
+{
+    Win9x_OPL_Proxy &proxy = *m_proxyOpl;
+    bool supportsChangeAddress = proxy.canSetOplAddress();
+
+    HardwareDialog *dlg = new HardwareDialog;
+    dlg->setOplAddress(m_proxyOplAddress);
+    dlg->setCanChangeOplAddress(supportsChangeAddress);
+    dlg->exec();
+
+    if(supportsChangeAddress)
+    {
+        unsigned newAddress = dlg->oplAddress();
+        if(newAddress != m_proxyOplAddress)
+        {
+            proxy.setOplAddress(newAddress);
+            m_proxyOplAddress = newAddress;
+            initChip();
+            sendPatch();
+        }
+    }
+
+    delete dlg;
+}
+#endif
 
 void BankEditor::onActionLanguageTriggered()
 {

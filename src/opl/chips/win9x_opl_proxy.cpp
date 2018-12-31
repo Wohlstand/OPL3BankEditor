@@ -1,9 +1,10 @@
-#include <QSysInfo>
 #include <QMessageBox>
 #include <cstring>
 #include "win9x_opl_proxy.h"
 
-#ifndef _WIN32
+#ifdef _WIN32
+#include <windows.h>
+#else
 /* FAKE DUMMIES FOR ABILITY TO BUILD THIS CODE ON ANY OS */
 #define _stdcall
 typedef intptr_t HINSTANCE;
@@ -28,6 +29,7 @@ extern "C"
     typedef void (_stdcall *opl_poke)(uint16_t index, uint16_t value);
     typedef void (_stdcall *opl_init)(void);
     typedef void (_stdcall *opl_unInit)(void);
+    typedef void (_stdcall *opl_setPort)(uint16_t port);
 }
 
 struct OPLProxyDriver
@@ -35,15 +37,22 @@ struct OPLProxyDriver
     opl_poke     chip_oplPoke = nullptr;
     opl_init     chip_oplInit = nullptr;
     opl_unInit   chip_oplUninit = nullptr;
+    opl_setPort  chip_oplSetPort = nullptr;
     HINSTANCE    chip_lib = 0;
 };
 
 template<class FunkPtr>
-void initOplFunction(HINSTANCE &chip_lib, FunkPtr &ptr, const char *procName)
+void initOplFunction(HINSTANCE &chip_lib, FunkPtr &ptr, const char *procName, bool required = true)
 {
     ptr = (FunkPtr)GetProcAddress(chip_lib, procName);
-    if(!ptr)
+
+    if(!ptr && procName[0] == '_')
+        ptr = (FunkPtr)GetProcAddress(chip_lib, procName + 1);
+
+    static bool shownWarning = false;
+    if(!ptr && required && !shownWarning)
     {
+        shownWarning = true;
         QMessageBox::warning(nullptr,
                              "liboplproxy.dll error",
                              QString("Oops... I have failed to load %1 function:\n"
@@ -57,10 +66,7 @@ void initOplFunction(HINSTANCE &chip_lib, FunkPtr &ptr, const char *procName)
 void Win9x_OPL_Proxy::initChip()
 {
     OPLProxyDriver *chip_r = reinterpret_cast<OPLProxyDriver*>(m_chip);
-    QSysInfo::WinVersion wver = QSysInfo::windowsVersion();
-    bool m_enableProxy =    (wver == QSysInfo::WV_98) ||
-                            (wver == QSysInfo::WV_Me);
-    if(m_enableProxy && !chip_r->chip_lib)
+    if(!chip_r->chip_lib)
     {
         chip_r->chip_lib = LoadLibraryA("liboplproxy.dll");
         if(!chip_r->chip_lib)
@@ -70,6 +76,7 @@ void Win9x_OPL_Proxy::initChip()
             initOplFunction(chip_r->chip_lib, chip_r->chip_oplInit,   "_chipInit@0");
             initOplFunction(chip_r->chip_lib, chip_r->chip_oplPoke,   "_chipPoke@8");
             initOplFunction(chip_r->chip_lib, chip_r->chip_oplUninit, "_chipUnInit@0");
+            initOplFunction(chip_r->chip_lib, chip_r->chip_oplSetPort, "_chipSetPort@4", false);
             if(chip_r->chip_oplInit)
                 chip_r->chip_oplInit();
         }
@@ -88,7 +95,21 @@ void Win9x_OPL_Proxy::closeChip()
         chip_r->chip_oplInit = nullptr;
         chip_r->chip_oplPoke = nullptr;
         chip_r->chip_oplUninit = nullptr;
+        chip_r->chip_oplSetPort = nullptr;
     }
+}
+
+bool Win9x_OPL_Proxy::canSetOplAddress() const
+{
+    OPLProxyDriver *chip_r = reinterpret_cast<OPLProxyDriver*>(m_chip);
+    return chip_r->chip_oplSetPort != nullptr;
+}
+
+void Win9x_OPL_Proxy::setOplAddress(uint16_t address)
+{
+    OPLProxyDriver *chip_r = reinterpret_cast<OPLProxyDriver*>(m_chip);
+    if(chip_r->chip_oplSetPort)
+        chip_r->chip_oplSetPort(address);
 }
 
 Win9x_OPL_Proxy::Win9x_OPL_Proxy()

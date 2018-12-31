@@ -1,0 +1,8 @@
+*.lib
+!liboplproxy.dll
+*.map
+*.lk1
+*.mk1
+*.sym
+*.mk
+*.obj
