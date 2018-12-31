@@ -14,10 +14,7 @@
 
 /.qmake.cache
 /.qmake.stash
-*.pro.user
-*.pro.user.*
-*.qbs.user
-*.qbs.user.*
+*.user*
 *.moc
 *.qm
 moc_*.cpp
@@ -39,4 +36,6 @@ Makefile*
 /_Misc/res*.txt
 /_Misc/byte*
 !/_Misc/byte*.c
+
+/build/*
 
