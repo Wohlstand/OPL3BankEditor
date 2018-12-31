@@ -18,5 +18,5 @@ win32 {
 }
 macx {
     DEFINES += __MACOSX_CORE__
-    LIBS += -framework CoreMidi
+    LIBS += -framework CoreMIDI
 }
