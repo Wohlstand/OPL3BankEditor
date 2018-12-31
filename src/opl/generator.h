@@ -27,7 +27,7 @@
 #include "chips/opl_chip_base.h"
 #include "../bank.h"
 
-#ifdef ENABLE_WIN9X_OPL_PROXY
+#ifdef ENABLE_HW_OPL_PROXY
 class Win9x_OPL_Proxy;
 #endif
 
@@ -156,7 +156,7 @@ public:
     static uint32_t getChipVolume(
         uint32_t volume, uint8_t ccvolume, uint8_t ccexpr, int volmodel);
 
-#ifdef ENABLE_WIN9X_OPL_PROXY
+#ifdef ENABLE_HW_OPL_PROXY
     static Win9x_OPL_Proxy &oplProxy();
 #endif
 

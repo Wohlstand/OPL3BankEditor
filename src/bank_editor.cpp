@@ -37,7 +37,7 @@
 #if defined(ENABLE_PLOTS)
 #include "delay_analysis.h"
 #endif
-#ifdef ENABLE_WIN9X_OPL_PROXY // to set hardware port
+#ifdef ENABLE_HW_OPL_PROXY // to set hardware port
 #include "opl/chips/win9x_opl_proxy.h"
 #endif
 
@@ -105,13 +105,13 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorDosBox, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
-#ifdef ENABLE_WIN9X_OPL_PROXY
+#ifdef ENABLE_HW_OPL_PROXY
     m_proxyOpl = &Generator::oplProxy();
 #else
     ui->actionWin9xOPLProxy->setVisible(false);
 #endif
 
-#ifndef ENABLE_WIN9X_OPL_PROXY
+#ifndef ENABLE_HW_OPL_PROXY
     ui->actionHardware_OPL->setVisible(false);
 #endif
 
@@ -1217,7 +1217,7 @@ void BankEditor::on_actionLatency_triggered()
     delete dlg;
 }
 
-#ifdef ENABLE_WIN9X_OPL_PROXY
+#ifdef ENABLE_HW_OPL_PROXY
 void BankEditor::on_actionHardware_OPL_triggered()
 {
     Win9x_OPL_Proxy &proxy = *m_proxyOpl;

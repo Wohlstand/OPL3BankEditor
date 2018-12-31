@@ -93,7 +93,10 @@ rtmidi {
 }
 win32 {
     include("src/opl/chips/win9x_opl_proxy.pri")
-    DEFINES += ENABLE_WIN9X_OPL_PROXY
+    DEFINES += ENABLE_HW_OPL_PROXY
+    lessThan(QT_MAJOR_VERSION, 4):{
+        DEFINES += ENABLE_WIN9X_OPL_PROXY
+    }
 }
 
 SOURCES += \

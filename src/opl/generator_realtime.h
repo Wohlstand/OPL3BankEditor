@@ -163,7 +163,7 @@ private:
     };
     MidiChannelInfo m_midichan[16];
 
-#if defined(ENABLE_WIN9X_OPL_PROXY)
+#if defined(ENABLE_HW_OPL_PROXY)
     class QStdMutex
     {
     public:

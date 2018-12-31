@@ -24,7 +24,7 @@
 #include "chips/nuked_opl3.h"
 #include "chips/dosbox_opl3.h"
 
-#ifdef ENABLE_WIN9X_OPL_PROXY
+#ifdef ENABLE_HW_OPL_PROXY
 #include "chips/win9x_opl_proxy.h"
 #endif
 
@@ -222,7 +222,7 @@ Generator::~Generator()
 
 void Generator::OPLChipDelete::operator()(OPLChipBase *x)
 {
-#ifdef ENABLE_WIN9X_OPL_PROXY
+#ifdef ENABLE_HW_OPL_PROXY
     if(x == &Generator::oplProxy())
         return;
 #endif
@@ -251,7 +251,7 @@ void Generator::initChip()
     Silence();
 }
 
-#ifdef ENABLE_WIN9X_OPL_PROXY
+#ifdef ENABLE_HW_OPL_PROXY
 Win9x_OPL_Proxy &Generator::oplProxy()
 {
     static Win9x_OPL_Proxy proxy;
@@ -264,7 +264,7 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
     switch(chipId)
     {
     case CHIP_Win9xProxy:
-#ifdef ENABLE_WIN9X_OPL_PROXY
+#ifdef ENABLE_HW_OPL_PROXY
         chip.reset(&oplProxy());
 #endif
         break;

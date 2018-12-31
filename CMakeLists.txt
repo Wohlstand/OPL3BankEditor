@@ -103,7 +103,7 @@ endif()
 add_library(Chips STATIC ${CHIPS_SOURCES})
 target_include_directories(Chips PUBLIC "src")
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  target_compile_definitions(Chips PUBLIC "-DENABLE_WIN9X_OPL_PROXY")
+  target_compile_definitions(Chips PUBLIC "-DENABLE_HW_OPL_PROXY")
 endif()
 
 set(MEASURER_SOURCES
