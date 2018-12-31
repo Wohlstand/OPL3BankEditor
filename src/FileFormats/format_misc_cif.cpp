@@ -24,11 +24,13 @@ static const char *CIF_magic = "<CUD-FM-Instrument>\x1a";
 
 bool Misc_CIF::detectInst(const QString &filePath, char* magic)
 {
+    Q_UNUSED(filePath);
     return memcmp(magic, CIF_magic, 20) == 0;
 }
 
 FfmtErrCode Misc_CIF::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
 {
+    Q_UNUSED(isDrum);
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;

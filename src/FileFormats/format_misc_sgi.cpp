@@ -39,6 +39,7 @@ bool Misc_SGI::detectInst(const QString &filePath, char* magic)
 
 FfmtErrCode Misc_SGI::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
 {
+    Q_UNUSED(isDrum);
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;
@@ -48,7 +49,7 @@ FfmtErrCode Misc_SGI::loadFileInst(QString filePath, FmBank::Instrument &inst, b
         return FfmtErrCode::ERR_BADFORMAT;
 
     for(unsigned op = 0; op < 2; ++op) {
-        FmBank::Operator &o = inst.OP[op];
+        // FmBank::Operator &o = inst.OP[op];
         unsigned i = 12 * (op ^ 1);
         inst.setAtDec(op, (idata[i + 1] & 0xf) | ((idata[i + 0] & 0xf) << 4));
         inst.setSusRel(op, (idata[i + 3]  & 0xf) | ((idata[i + 2]  & 0xf) << 4));

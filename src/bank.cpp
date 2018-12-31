@@ -186,7 +186,7 @@ bool FmBank::getBank(uint8_t msb, uint8_t lsb, bool percussive,
                      MidiBank **pBank, Instrument **pIns)
 {
     Instrument *Ins = percussive ? Ins_Percussion : Ins_Melodic;
-    QVector<Instrument> &Ins_Box = percussive ? Ins_Percussion_box : Ins_Melodic_box;
+    // QVector<Instrument> &Ins_Box = percussive ? Ins_Percussion_box : Ins_Melodic_box;
     QVector<MidiBank> &Banks = percussive ? Banks_Percussion : Banks_Melodic;
 
     for(size_t index = 0, count = Banks.size(); index < count; ++index)
