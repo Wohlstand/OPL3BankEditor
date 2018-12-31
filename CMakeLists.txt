@@ -81,6 +81,8 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_junlevizion.cpp"
   "src/FileFormats/format_rad_importer.cpp"
   "src/FileFormats/format_sb_ibk.cpp"
+  "src/FileFormats/format_misc_sgi.cpp"
+  "src/FileFormats/format_misc_cif.cpp"
   "src/FileFormats/format_wohlstand_opl3.cpp"
   "src/FileFormats/format_flatbuffer_opl3.cpp"
   "src/FileFormats/wopl/wopl_file.c")
