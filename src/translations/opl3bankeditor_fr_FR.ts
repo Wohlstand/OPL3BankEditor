@@ -985,7 +985,7 @@ de la deuxième voix</translation>
     <message>
         <location filename="../bank_editor.ui" line="3769"/>
         <source>Hardware OPL...</source>
-        <translation type="unfinished"></translation>
+        <translation>OPL matériel...</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="376"/>
@@ -1379,28 +1379,29 @@ Amplitude au point de coupure : %3</translation>
     <message>
         <location filename="../hardware.cpp" line="55"/>
         <source>Hardware OPL</source>
-        <translation type="unfinished"></translation>
+        <translation>OPL matériel</translation>
     </message>
     <message>
         <location filename="../hardware.cpp" line="60"/>
         <source>Define the hardware address.</source>
-        <translation type="unfinished"></translation>
+        <translation>Définir l&apos;adresse du matériel.</translation>
     </message>
     <message>
         <location filename="../hardware.cpp" line="69"/>
         <source>Hexadecimal address: </source>
-        <translation type="unfinished"></translation>
+        <translation>Adresse en hexadécimal : </translation>
     </message>
     <message>
         <location filename="../hardware.cpp" line="87"/>
         <source>Usually $388, varies depending on card.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le plus souvent $388, varie en fonction de la carte.</translation>
     </message>
     <message>
         <location filename="../hardware.cpp" line="89"/>
         <source>Impossible to set the hardware address.
 Make sure you installed the latest OPL proxy.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de définir l&apos;adresse du matériel.
+Vérifiez que le proxy OPL le plus récent est installé.</translation>
     </message>
 </context>
 <context>
