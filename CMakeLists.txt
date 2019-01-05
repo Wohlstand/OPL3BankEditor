@@ -85,6 +85,7 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_misc_cif.cpp"
   "src/FileFormats/format_wohlstand_opl3.cpp"
   "src/FileFormats/format_flatbuffer_opl3.cpp"
+  "src/FileFormats/ymf262_to_wopi.cpp"
   "src/FileFormats/wopl/wopl_file.c")
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
 target_include_directories(FileFormats PUBLIC "src")
