@@ -185,5 +185,80 @@ FfmtErrCode DRO_Importer::loadFileV1(QFile &file, FmBank &bank)
 
 FfmtErrCode DRO_Importer::loadFileV2(QFile &file, FmBank &bank)
 {
-    return FfmtErrCode::ERR_NOT_IMLEMENTED;
+    uint32_t lengthPairs;
+    uint32_t lengthMs;
+    uint8_t hardwareType;
+    uint8_t format;
+    uint8_t compression;
+    uint8_t shortDelayCode;
+    uint8_t longDelayCode;
+    uint8_t lengthCodeMap;
+    uint8_t codeMap[256];
+
+    if(!readUIntLE(file, &lengthPairs) ||
+       !readUIntLE(file, &lengthMs) ||
+       !readUIntLE(file, &hardwareType) ||
+       !readUIntLE(file, &format) ||
+       !readUIntLE(file, &compression) ||
+       !readUIntLE(file, &shortDelayCode) ||
+       !readUIntLE(file, &longDelayCode) ||
+       !readUIntLE(file, &lengthCodeMap) || (lengthCodeMap >= 0x80) ||
+       file.read((char *)codeMap, lengthCodeMap) != lengthCodeMap)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    if(format != 0 || compression != 0)
+        return FfmtErrCode::ERR_UNSUPPORTED_FORMAT;
+
+    if(hardwareType > 2)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    RawYmf262ToWopi chip[2];
+    unsigned nchip = 1;
+    if(hardwareType == OplMode2x2)
+    {
+        nchip = 2;
+        chip[1].shareInstruments(chip[0]);
+    }
+
+    for(uint32_t i = 0; i < lengthPairs; ++i)
+    {
+        uint8_t data[2];
+        if(file.read((char *)data, 2) != 2)
+            return FfmtErrCode::ERR_BADFORMAT;
+
+        if(data[0] == shortDelayCode || data[0] == longDelayCode)
+        {
+            for (unsigned c = 0; c < nchip; ++c)
+                chip[c].doAnalyzeState();
+        }
+        else
+        {
+            unsigned chipSelect = data[0] >> 7;
+            unsigned regIndex = data[0] & 0x7f;
+
+            if(regIndex >= lengthCodeMap)
+                return FfmtErrCode::ERR_BADFORMAT;
+
+            uint8_t reg = codeMap[regIndex];
+            uint8_t val = data[1];
+
+            if(chipSelect && hardwareType == OplMode2x2)
+                chip[1].passReg(reg, val);
+            else if(chipSelect && hardwareType == OplMode3)
+                chip[0].passReg(reg | 0x100u, val);
+            else
+                chip[0].passReg(reg, val);
+        }
+    }
+
+    for (unsigned c = 0; c < nchip; ++c)
+        chip[c].doAnalyzeState();
+
+    bank.reset();
+    bank.Ins_Melodic_box.clear();
+    for(const FmBank::Instrument &ins : chip[0].caughtInstruments())
+        bank.Ins_Melodic_box.push_back(ins);
+    bank.Ins_Melodic = bank.Ins_Melodic_box.data();
+
+    return FfmtErrCode::ERR_OK;
 }
