@@ -16,6 +16,8 @@ Version 1.5
 - Added highlighting of piano keys when playing notes via keyboard
 - Clipboard is now global: you can run multiple copies of OPN2-BE and copy instruments between different opened files without of importer usage
 - Added ability to use hardware OPL3 chip on modern Windows builds through inpout32.dll library, for example, on C-Media chips with OPL3 clone like CMI8738
+- Added support for SGI and CIF instrument formats
+- Added support for instrument importing from DosBox DRO dumps
 
 Version 1.4.0.1
 - Added ability to re-calculate sounding delays for entire instruments set
