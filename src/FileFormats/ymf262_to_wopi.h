@@ -22,13 +22,17 @@
 #include <stdint.h>
 #include <QSet>
 #include <QList>
+#include <QSharedPointer>
 
 #include "../bank.h"
 
 class RawYmf262ToWopi
 {
-    QSet<QByteArray> m_cache;
-    QList<FmBank::Instrument> m_caughtInstruments;
+    struct InstrumentData
+    {
+        QSet<QByteArray> cache;
+        QList<FmBank::Instrument> caughtInstruments;
+    };
 
     enum ChannelCategory
     {
@@ -58,10 +62,12 @@ class RawYmf262ToWopi
 
     Channel m_channel[18];
     Operator m_operator[36];
+    QSharedPointer<InstrumentData> m_insdata;
 
 public:
     RawYmf262ToWopi();
     void reset();
+    void shareInstruments(RawYmf262ToWopi &other);
     void passReg(uint16_t addr, uint8_t val);
     void doAnalyzeState();
     const QList<FmBank::Instrument> &caughtInstruments();

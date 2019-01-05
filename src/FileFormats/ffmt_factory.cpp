@@ -35,6 +35,7 @@
 #include "format_junlevizion.h"
 #include "format_rad_importer.h"
 #include "format_sb_ibk.h"
+#include "format_dro_importer.h"
 #include "format_misc_sgi.h"
 #include "format_misc_cif.h"
 #include "format_wohlstand_opl3.h"
@@ -109,6 +110,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new CMF_Importer());
     registerBankFormat(new IMF_Importer());
     registerBankFormat(new RAD_Importer());
+    registerBankFormat(new DRO_Importer());
 
     //Flatbuffer
     registerBankFormat(new FlatbufferOpl3());

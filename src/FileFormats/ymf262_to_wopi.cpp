@@ -21,13 +21,15 @@
 
 RawYmf262ToWopi::RawYmf262ToWopi()
 {
+    m_insdata.reset(new InstrumentData);
     reset();
 }
 
 void RawYmf262ToWopi::reset()
 {
-    m_cache.clear();
-    m_caughtInstruments.clear();
+    InstrumentData &insdata = *m_insdata;
+    insdata.cache.clear();
+    insdata.caughtInstruments.clear();
 
     for(unsigned i = 0; i < 9; ++i)
     {
@@ -56,6 +58,11 @@ void RawYmf262ToWopi::reset()
         m_operator[i].reg80 = 0;
         m_operator[i].regE0 = 0;
     }
+}
+
+void RawYmf262ToWopi::shareInstruments(RawYmf262ToWopi &other)
+{
+    m_insdata = other.m_insdata;
 }
 
 static unsigned operatorOfRegister(unsigned reg)
@@ -93,25 +100,27 @@ void RawYmf262ToWopi::passReg(uint16_t addr, uint8_t val)
     {
         // 4-op mask
         updateChannelRoles(val);
+        return;
     }
 
     for(unsigned operatorReg : {0x20, 0x40, 0x60, 0x80, 0xE0})
     {
         if(reg >= operatorReg && reg < operatorReg + 18)
         {
-                unsigned opno = operatorOfRegister((reg - 0x20) | cs);
-                if(opno != ~0u)
+            unsigned opno = operatorOfRegister((reg - operatorReg) | cs);
+            if(opno != ~0u)
+            {
+                Operator &op = m_operator[opno];
+                switch(operatorReg)
                 {
-                    Operator &op = m_operator[opno];
-                    switch(operatorReg)
-                    {
-                    case 0x20: op.reg20 = val; break;
-                    case 0x40: op.reg40 = val; break;
-                    case 0x60: op.reg60 = val; break;
-                    case 0x80: op.reg80 = val; break;
-                    case 0xE0: op.regE0 = val; break;
-                    }
+                case 0x20: op.reg20 = val; break;
+                case 0x40: op.reg40 = val; break;
+                case 0x60: op.reg60 = val; break;
+                case 0x80: op.reg80 = val; break;
+                case 0xE0: op.regE0 = val; break;
                 }
+            }
+            return;
         }
     }
 
@@ -127,12 +136,15 @@ void RawYmf262ToWopi::passReg(uint16_t addr, uint8_t val)
             case 0xB0: ch.regB0 = val; break;
             case 0xC0: ch.regC0 = val; break;
             }
+            return;
         }
     }
 }
 
 void RawYmf262ToWopi::doAnalyzeState()
 {
+    InstrumentData &insdata = *m_insdata;
+
     for(unsigned chno = 0; chno < 18; chno++)
     {
         const Channel &ch = m_channel[chno];
@@ -188,21 +200,21 @@ void RawYmf262ToWopi::doAnalyzeState()
             insRaw.push_back((char)ins.getFBConn2());
         }
 
-        if(!m_cache.contains(insRaw))
+        if(!insdata.cache.contains(insRaw))
         {
             std::snprintf(ins.name, 32,
                           "Ins %d, channel %u",
-                          m_caughtInstruments.size(),
+                          insdata.caughtInstruments.size(),
                           chno);
-            m_caughtInstruments.push_back(ins);
-            m_cache.insert(insRaw);
+            insdata.caughtInstruments.push_back(ins);
+            insdata.cache.insert(insRaw);
         }
     }
 }
 
 const QList<FmBank::Instrument> &RawYmf262ToWopi::caughtInstruments()
 {
-    return m_caughtInstruments;
+    return m_insdata->caughtInstruments;
 }
 
 void RawYmf262ToWopi::updateChannelRoles(uint8_t mask)
