@@ -20,9 +20,9 @@
 #define YMF262_TO_WOPI_HPP
 
 #include <stdint.h>
+#include <memory>
 #include <QSet>
 #include <QList>
-#include <QSharedPointer>
 
 #include "../bank.h"
 
@@ -62,7 +62,7 @@ class RawYmf262ToWopi
 
     Channel m_channel[18];
     Operator m_operator[36];
-    QSharedPointer<InstrumentData> m_insdata;
+    std::shared_ptr<InstrumentData> m_insdata;
 
 public:
     RawYmf262ToWopi();
