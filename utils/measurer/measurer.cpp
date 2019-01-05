@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     }
 
     QApplication app(argc, argv);
+    Q_UNUSED(app);
 
     WohlstandOPL3 format;
     QString woplFileInput = argv[1];
