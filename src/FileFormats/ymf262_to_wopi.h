@@ -23,6 +23,7 @@
 #include <memory>
 #include <QSet>
 #include <QList>
+#include <QByteArray>
 
 #include "../bank.h"
 
