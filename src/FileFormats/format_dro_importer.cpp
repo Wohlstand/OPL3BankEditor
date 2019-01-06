@@ -35,6 +35,7 @@ static bool readUIntLE(QIODevice &in, T *p)
 
 bool DRO_Importer::detect(const QString &filePath, char* magic)
 {
+    Q_UNUSED(filePath);
     return !memcmp(magic, "DBRAWOPL", 8);
 }
 
