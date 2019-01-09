@@ -96,7 +96,7 @@ void RawYmf262ToWopi::passReg(uint16_t addr, uint8_t val)
     unsigned cs = addr & 0x100; // primary/secondary channel set
     unsigned reg = addr & 0xff;
 
-    if(reg == 0x104)
+    if(addr == 0x104)
     {
         // 4-op mask
         updateChannelRoles(val);
