@@ -247,7 +247,7 @@ FfmtErrCode DRO_Importer::loadFileV2(QFile &file, FmBank &bank)
                 chip[1].passReg(reg, val);
             else if(chipSelect && hardwareType == OplMode3)
                 chip[0].passReg(reg | 0x100u, val);
-            else
+            else if (!chipSelect)
                 chip[0].passReg(reg, val);
         }
     }
