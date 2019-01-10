@@ -58,9 +58,9 @@ bool IMF_Importer::detect(const QString &filePath, char *)
 
 FfmtErrCode IMF_Importer::loadFile(QString filePath, FmBank &bank)
 {
-    uint8_t ymram[0xFF];
+    uint8_t ymram[0x100];
     bool    keys[9];
-    memset(ymram, 0, 0xFF);
+    memset(ymram, 0, 0x100);
     memset(keys, 0, sizeof(bool) * 9);
 
     QSet<QByteArray> cache;
