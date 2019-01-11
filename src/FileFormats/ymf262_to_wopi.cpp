@@ -105,7 +105,7 @@ void RawYmf262ToWopi::passReg(uint16_t addr, uint8_t val)
 
     for(unsigned operatorReg : {0x20, 0x40, 0x60, 0x80, 0xE0})
     {
-        if(reg >= operatorReg && reg < operatorReg + 18)
+        if(reg >= operatorReg && reg < operatorReg + 0x16)
         {
             unsigned opno = operatorOfRegister((reg - operatorReg) | cs);
             if(opno != ~0u)
