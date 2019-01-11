@@ -105,7 +105,7 @@ void RawYmf262ToWopi::passReg(uint16_t addr, uint8_t val)
 
     for(unsigned operatorReg : {0x20, 0x40, 0x60, 0x80, 0xE0})
     {
-        if(reg >= operatorReg && reg < operatorReg + 18)
+        if(reg >= operatorReg && reg < operatorReg + 0x16)
         {
             unsigned opno = operatorOfRegister((reg - operatorReg) | cs);
             if(opno != ~0u)
@@ -141,6 +141,30 @@ void RawYmf262ToWopi::passReg(uint16_t addr, uint8_t val)
     }
 }
 
+static bool operatorRole(unsigned opno, bool en_4op, bool con1, bool con2)
+{
+    static const bool opRoles[10][2] =
+    {
+        { false, true  }, /* 2 op FM */
+        { true,  true  }, /* 2 op AM */
+        { false, false }, /* 4 op FM-FM ops 1&2 */
+        { true,  false }, /* 4 op AM-FM ops 1&2 */
+        { false, true  }, /* 4 op FM-AM ops 1&2 */
+        { true,  false }, /* 4 op AM-AM ops 1&2 */
+        { false, true  }, /* 4 op FM-FM ops 3&4 */
+        { false, true  }, /* 4 op AM-FM ops 3&4 */
+        { false, true  }, /* 4 op FM-AM ops 3&4 */
+        { true,  true  }  /* 4 op AM-AM ops 3&4 */
+    };
+
+    unsigned mode = con1;
+    if(en_4op)
+        mode += 2 * con2 + ((opno < 2) ? 2 : 6);
+
+    bool modulator = opRoles[mode][opno & 1];
+    return modulator;
+}
+
 void RawYmf262ToWopi::doAnalyzeState()
 {
     InstrumentData &insdata = *m_insdata;
@@ -171,6 +195,14 @@ void RawYmf262ToWopi::doAnalyzeState()
             ops[CARRIER2] = ch.buddy->pair[1];
         }
 
+        ins.setFBConn1(ch.regC0 & 15);
+        insRaw.push_back((char)ins.getFBConn1());
+        if(ins.en_4op)
+        {
+            ins.setFBConn2(ch.buddy->regC0 & 15);
+            insRaw.push_back((char)ins.getFBConn2());
+        }
+
         for (unsigned pairno = 0; pairno < (ins.en_4op ? 2 : 1); ++pairno)
         {
             for(unsigned i = 0; i < 2; ++i)
@@ -183,6 +215,28 @@ void RawYmf262ToWopi::doAnalyzeState()
                 ins.setAtDec(opno, src->reg60);
                 ins.setSusRel(opno, src->reg80);
                 ins.setWaveForm(opno, src->regE0);
+            }
+        }
+
+        unsigned maxLevel = 0;
+        for (unsigned opno = 0; opno < (ins.en_4op ? 4 : 2); ++opno)
+        {
+            bool modulator = operatorRole(opno, ins.en_4op, ins.connection1, ins.connection2);
+            if(!modulator)
+                maxLevel = std::max((unsigned)ins.OP[opno].level, maxLevel);
+        }
+        for (unsigned opno = 0; opno < (ins.en_4op ? 4 : 2); ++opno)
+        {
+            bool modulator = operatorRole(opno, ins.en_4op, ins.connection1, ins.connection2);
+            if(!modulator)
+                ins.OP[opno].level += 63 - maxLevel;
+        }
+
+        for (unsigned pairno = 0; pairno < (ins.en_4op ? 2 : 1); ++pairno)
+        {
+            for(unsigned i = 0; i < 2; ++i)
+            {
+                unsigned opno = 2 * pairno + i;
 
                 insRaw.push_back((char)ins.getAVEKM(opno));
                 insRaw.push_back((char)ins.getKSLL(opno));
@@ -190,14 +244,6 @@ void RawYmf262ToWopi::doAnalyzeState()
                 insRaw.push_back((char)ins.getSusRel(opno));
                 insRaw.push_back((char)ins.getWaveForm(opno));
             }
-        }
-
-        ins.setFBConn1(ch.regC0 & 15);
-        insRaw.push_back((char)ins.getFBConn1());
-        if(ins.en_4op)
-        {
-            ins.setFBConn2(ch.buddy->regC0 & 15);
-            insRaw.push_back((char)ins.getFBConn2());
         }
 
         if(!insdata.cache.contains(insRaw))
