@@ -206,6 +206,12 @@ public:
 
     /* ************** Helpful functions ************** */
     /**
+     * @brief Get the instrument name by index from off the current bank state
+     * @param instrument id
+     * @return The title of instrument
+     */
+    QString getInstrumentName(int instrument, bool isAuto = true, bool isPerc = false);
+    /**
      * @brief Loads current instrument into GUI controlls and sends it to generator
      */
     void flushInstrument();

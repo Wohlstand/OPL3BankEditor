@@ -44,6 +44,8 @@ public:
     void reloadInstrumentNames();
     void setCurrentInstrument(int num, bool isPerc);
 
+    QString getInstrumentName(int instrument, bool isAuto = true, bool isPerc = false);
+
 public slots:
     void setMelodic();
     void setDrums();

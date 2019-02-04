@@ -601,6 +601,29 @@ bool BankEditor::askForSaving()
     return true;
 }
 
+QString BankEditor::getInstrumentName(int instrument, bool isAuto, bool isPerc)
+{
+    int index = ui->bank_no->currentIndex();
+    QString name = "<Unknown>";
+    if(index >= 0)
+    {
+        int lsb = ui->bank_lsb->value();
+        int msb = ui->bank_msb->value();
+        MidiProgramId pr = MidiProgramId(isAuto ? m_recentPerc : isPerc, msb, lsb, instrument % 128);
+        unsigned specObtained = kMidiSpecXG;
+        const MidiProgram *p = getMidiProgram(pr, kMidiSpecXG, &specObtained);
+        if(p)
+            name = p->patchName;
+        else
+        {
+            p = getFallbackProgram(pr, kMidiSpecGM1, &specObtained);
+            Q_ASSERT(p);
+            name = p->patchName;
+        }
+    }
+    return name;
+}
+
 void BankEditor::flushInstrument()
 {
     loadInstrument();
@@ -616,8 +639,8 @@ void BankEditor::syncInstrumentName()
     {
         curInstr->setText(
             m_curInst->name[0] != '\0' ?
-            QString::fromUtf8(m_curInst->name) :
-            (m_recentPerc ? getMidiInsNameP(m_recentNum) : getMidiInsNameM(m_recentNum))
+                    QString::fromUtf8(m_curInst->name) :
+                    getInstrumentName(m_recentNum)
         );
     }
     syncInstrumentBlankness();
@@ -1355,7 +1378,7 @@ void BankEditor::setMelodic()
     {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(m_bank.Ins_Melodic[i].name[0] != '\0' ?
-                      QString::fromUtf8(m_bank.Ins_Melodic[i].name) : getMidiInsNameM(i));
+                      QString::fromUtf8(m_bank.Ins_Melodic[i].name) : getInstrumentName(i, false, false));
         setInstrumentMetaInfo(item, i);
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         item->setForeground(m_bank.Ins_Melodic[i].is_blank ?
@@ -1374,7 +1397,7 @@ void BankEditor::setDrums()
     {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(m_bank.Ins_Percussion[i].name[0] != '\0' ?
-                      QString::fromUtf8(m_bank.Ins_Percussion[i].name) : getMidiInsNameP(i));
+                      QString::fromUtf8(m_bank.Ins_Percussion[i].name) : getInstrumentName(i, false, true));
         setInstrumentMetaInfo(item, i);
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         item->setForeground(m_bank.Ins_Percussion[i].is_blank ?
@@ -1399,7 +1422,7 @@ void BankEditor::reloadInstrumentNames()
                 int index = items[i]->data(Qt::UserRole).toInt();
                 items[i]->setText(m_bank.Ins_Percussion[index].name[0] != '\0' ?
                                   QString::fromUtf8(m_bank.Ins_Percussion[index].name) :
-                                  getMidiInsNameP(index));
+                                  getInstrumentName(index, false, false));
                 items[i]->setForeground(m_bank.Ins_Percussion[i].is_blank ?
                                         Qt::gray : Qt::black);
             }
@@ -1417,7 +1440,7 @@ void BankEditor::reloadInstrumentNames()
                 int index = items[i]->data(Qt::UserRole).toInt();
                 items[i]->setText(m_bank.Ins_Melodic[index].name[0] != '\0' ?
                                   QString::fromUtf8(m_bank.Ins_Melodic[index].name) :
-                                  getMidiInsNameM(index));
+                                  getInstrumentName(index, false, false));
                 items[i]->setForeground(m_bank.Ins_Melodic[i].is_blank ?
                                         Qt::gray : Qt::black);
             }
@@ -1437,7 +1460,7 @@ void BankEditor::on_actionAddInst_triggered()
         m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
         ins = m_bank.Ins_Melodic_box.last();
         id = m_bank.countMelodic() - 1;
-        item->setText(ins.name[0] != '\0' ? QString::fromUtf8(ins.name) : getMidiInsNameM(id));
+        item->setText(ins.name[0] != '\0' ? QString::fromUtf8(ins.name) : getInstrumentName(id, false, false));
     }
     else
     {
@@ -1445,7 +1468,7 @@ void BankEditor::on_actionAddInst_triggered()
         m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
         ins = m_bank.Ins_Percussion_box.last();
         id = m_bank.countDrums() - 1;
-        item->setText(ins.name[0] != '\0' ? QString::fromUtf8(ins.name) : getMidiInsNameP(id));
+        item->setText(ins.name[0] != '\0' ? QString::fromUtf8(ins.name) : getInstrumentName(id, false, true));
     }
 
     setInstrumentMetaInfo(item, id);

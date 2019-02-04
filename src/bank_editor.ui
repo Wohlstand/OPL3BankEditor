@@ -3513,6 +3513,15 @@ of second voice</string>
      <addaction name="actionPasteVoice21"/>
      <addaction name="actionPasteVoice22"/>
     </widget>
+    <widget class="QMenu" name="menuPreferred_MIDI_standard">
+     <property name="title">
+      <string>Preferred MIDI standard</string>
+     </property>
+     <addaction name="actionStandardGM"/>
+     <addaction name="actionStandardGS"/>
+     <addaction name="actionStandardXG"/>
+     <addaction name="actionStandardGM2"/>
+    </widget>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
     <addaction name="menuPasteOneVoice"/>
@@ -3535,6 +3544,8 @@ of second voice</string>
     <addaction name="actionDelInst"/>
     <addaction name="separator"/>
     <addaction name="actionAdLibBnkMode"/>
+    <addaction name="separator"/>
+    <addaction name="menuPreferred_MIDI_standard"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
@@ -3773,6 +3784,38 @@ of second voice</string>
   <action name="actionHardware_OPL">
    <property name="text">
     <string>Hardware OPL...</string>
+   </property>
+  </action>
+  <action name="actionStandardGM">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">General MIDI</string>
+   </property>
+  </action>
+  <action name="actionStandardGS">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">GS</string>
+   </property>
+  </action>
+  <action name="actionStandardXG">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">XG</string>
+   </property>
+  </action>
+  <action name="actionStandardGM2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">General MIDI 2</string>
    </property>
   </action>
  </widget>
