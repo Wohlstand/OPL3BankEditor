@@ -20,15 +20,75 @@
 #define INSTRUMENTNAMES_H
 
 #include <QString>
+#include <cstdint>
 
-//! List of melodic instrument names
-extern const char *MidiInsName[128];
+#pragma pack(push, 1)
+struct MidiProgram
+{
+    //! Kind of instrument. 'M' melodic 'P' percussive
+    char kind;
+    //! Bank identifier MSB
+    unsigned char bankMsb;
+    //! Bank identifier LSB. (if percussive, this is the program number)
+    unsigned char bankLsb;
+    //! Program number (if percussive, this is the key number)
+    unsigned char program;
+    //! Bank name
+    const char *bankName;
+    //! Patch name
+    const char *patchName;
+};
+#pragma pack(pop)
 
-//! List of percussion instrument names
-extern const char *MidiPercName[128];
+enum MidiSpec
+{
+    //! General MIDI Level 1
+    kMidiSpecGM1 = 1,
+    //! General MIDI Level 2
+    kMidiSpecGM2 = 2,
+    //! Roland Sound Canvas
+    kMidiSpecSC  = 4,
+    //! Roland GS
+    kMidiSpecGS  = 8,
+    //! Yamaha XG Level 1, 2, 3
+    kMidiSpecXG  = 16,
+    //! No MIDI specification
+    kMidiSpecNone = 0,
+    //! Any MIDI specification
+    kMidiSpecAny = 255,
+};
 
-QString getMidiInsNameM(int index);
+struct MidiProgramId
+{
+    explicit MidiProgramId(uint32_t i = 0) : identifier(i)
+    {
+    }
 
-QString getMidiInsNameP(int index);
+    MidiProgramId(bool d, unsigned m, unsigned l, unsigned p) : identifier()
+    {
+        percussive = d;
+        bankMsb = m;
+        bankLsb = l;
+        program = p;
+    }
+
+    union
+    {
+        uint32_t identifier;
+        struct
+        {
+            bool percussive : 1;
+            unsigned bankMsb : 7;
+            unsigned bankLsb : 7;
+            unsigned program : 7;
+        };
+    };
+};
+
+const MidiProgram *getMidiProgram(MidiProgramId id, unsigned spec, unsigned *specObtained = nullptr);
+const MidiProgram *getFallbackProgram(MidiProgramId id, unsigned spec, unsigned *specObtained = nullptr);
+
+Q_DECL_DEPRECATED QString getMidiInsNameM(unsigned index);
+Q_DECL_DEPRECATED QString getMidiInsNameP(unsigned index);
 
 #endif // INSTRUMENTNAMES_H
