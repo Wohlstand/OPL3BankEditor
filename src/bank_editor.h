@@ -412,12 +412,12 @@ private slots:
     /**
      * @brief Read value from MSB field and write into bank meta-data entry
      */
-    void on_bank_msb_editingFinished();
+    void on_bank_msb_valueChanged(int value);
 
     /**
      * @brief Read value from LSB field and write into bank meta-data entry
      */
-    void on_bank_lsb_editingFinished();
+    void on_bank_lsb_valueChanged(int value);
 
     /**
      * @brief Add new instrument into end
