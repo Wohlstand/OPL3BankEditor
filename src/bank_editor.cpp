@@ -665,7 +665,7 @@ QString BankEditor::getBankName(int bank, bool isAuto, bool isPerc)
 unsigned BankEditor::getSelectedMidiSpec() const
 {
     QAction *act = m_actionGroupStandard->checkedAction();
-    return act ? act->data().toUInt() : kMidiSpecAny;
+    return act ? act->data().toUInt() : unsigned(kMidiSpecAny);
 }
 
 void BankEditor::flushInstrument()
