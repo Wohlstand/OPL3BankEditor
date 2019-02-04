@@ -87,6 +87,22 @@ BankEditor::BankEditor(QWidget *parent) :
     m_recentMelodicNote = ui->noteToTest->value();
     m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
     m_bank.Ins_Percussion_box.fill(FmBank::blankInst());
+
+    QActionGroup *actionGroupStandard = new QActionGroup(this);
+    m_actionGroupStandard = actionGroupStandard;
+    ui->actionStandardGM->setData(kMidiSpecGM1);
+    ui->actionStandardGM2->setData(kMidiSpecGM2|kMidiSpecGM1);
+    ui->actionStandardGS->setData(kMidiSpecGS|kMidiSpecSC|kMidiSpecGM1);
+    ui->actionStandardXG->setData(kMidiSpecXG|kMidiSpecGM1);
+    actionGroupStandard->addAction(ui->actionStandardGM);
+    actionGroupStandard->addAction(ui->actionStandardGM2);
+    actionGroupStandard->addAction(ui->actionStandardGS);
+    actionGroupStandard->addAction(ui->actionStandardXG);
+    actionGroupStandard->setExclusive(true);
+    ui->actionStandardXG->setChecked(true);
+    connect(actionGroupStandard, SIGNAL(triggered(QAction *)),
+            this, SLOT(reloadInstrumentNames()));
+
     setMelodic();
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
@@ -601,27 +617,28 @@ bool BankEditor::askForSaving()
     return true;
 }
 
-QString BankEditor::getInstrumentName(int instrument, bool isAuto, bool isPerc)
+QString BankEditor::getInstrumentName(int instrument, bool isAuto, bool isPerc) const
 {
     int index = ui->bank_no->currentIndex();
-    QString name = "<Unknown>";
+    QString name = tr("<Unknown>");
     if(index >= 0)
     {
         int lsb = ui->bank_lsb->value();
         int msb = ui->bank_msb->value();
         MidiProgramId pr = MidiProgramId(isAuto ? m_recentPerc : isPerc, msb, lsb, instrument % 128);
+        unsigned spec = getSelectedMidiSpec();
         unsigned specObtained = kMidiSpecXG;
-        const MidiProgram *p = getMidiProgram(pr, kMidiSpecXG, &specObtained);
-        if(p)
-            name = p->patchName;
-        else
-        {
-            p = getFallbackProgram(pr, kMidiSpecGM1, &specObtained);
-            Q_ASSERT(p);
-            name = p->patchName;
-        }
+        const MidiProgram *p = getMidiProgram(pr, spec, &specObtained);
+        p = p ? p : getFallbackProgram(pr, spec, &specObtained);
+        name = p ? p->patchName : tr("<Reserved %1>").arg(instrument % 128);
     }
     return name;
+}
+
+unsigned BankEditor::getSelectedMidiSpec() const
+{
+    QAction *act = m_actionGroupStandard->checkedAction();
+    return act ? act->data().toUInt() : kMidiSpecAny;
 }
 
 void BankEditor::flushInstrument()
@@ -1422,7 +1439,7 @@ void BankEditor::reloadInstrumentNames()
                 int index = items[i]->data(Qt::UserRole).toInt();
                 items[i]->setText(m_bank.Ins_Percussion[index].name[0] != '\0' ?
                                   QString::fromUtf8(m_bank.Ins_Percussion[index].name) :
-                                  getInstrumentName(index, false, false));
+                                  getInstrumentName(index, false, true));
                 items[i]->setForeground(m_bank.Ins_Percussion[i].is_blank ?
                                         Qt::gray : Qt::black);
             }

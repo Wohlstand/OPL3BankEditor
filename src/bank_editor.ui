@@ -3518,9 +3518,9 @@ of second voice</string>
       <string>Preferred MIDI standard</string>
      </property>
      <addaction name="actionStandardGM"/>
+     <addaction name="actionStandardGM2"/>
      <addaction name="actionStandardGS"/>
      <addaction name="actionStandardXG"/>
-     <addaction name="actionStandardGM2"/>
     </widget>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
@@ -3799,7 +3799,7 @@ of second voice</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">GS</string>
+    <string notr="true">Roland GS</string>
    </property>
   </action>
   <action name="actionStandardXG">
@@ -3807,7 +3807,7 @@ of second voice</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">XG</string>
+    <string notr="true">Yamaha XG</string>
    </property>
   </action>
   <action name="actionStandardGM2">

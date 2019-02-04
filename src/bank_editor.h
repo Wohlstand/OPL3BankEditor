@@ -44,6 +44,7 @@ namespace Ui
 }
 
 class Importer;
+class QActionGroup;
 
 /**
  * @brief Main application window
@@ -60,6 +61,8 @@ private:
     QString             m_recentPath;
     //! Recently opened bank file
     QString             m_recentBankFilePath;
+    //! Action group of MIDI specs
+    QActionGroup       *m_actionGroupStandard;
     //! Choosen UI language
     QString             m_language;
     //! Currently using chip
@@ -210,7 +213,11 @@ public:
      * @param instrument id
      * @return The title of instrument
      */
-    QString getInstrumentName(int instrument, bool isAuto = true, bool isPerc = false);
+    QString getInstrumentName(int instrument, bool isAuto = true, bool isPerc = false) const;
+    /**
+     * @brief Get the selected MIDI specification from GUI
+     */
+    unsigned getSelectedMidiSpec() const;
     /**
      * @brief Loads current instrument into GUI controlls and sends it to generator
      */
@@ -284,7 +291,7 @@ public slots:
     void setDrums();
 
     /**
-     * @brief Reload names lf instruments in the list
+     * @brief Reload names of instruments in the list
      */
     void reloadInstrumentNames();
 
