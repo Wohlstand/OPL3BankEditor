@@ -81,12 +81,14 @@ struct MidiProgramId
             unsigned bankMsb : 7;
             unsigned bankLsb : 7;
             unsigned program : 7;
+            bool reserved : 1;
         };
     };
 };
 
 const MidiProgram *getMidiProgram(MidiProgramId id, unsigned spec, unsigned *specObtained = nullptr);
 const MidiProgram *getFallbackProgram(MidiProgramId id, unsigned spec, unsigned *specObtained = nullptr);
+const MidiProgram *getMidiBank(MidiProgramId id, unsigned spec, unsigned *specObtained = nullptr);
 
 Q_DECL_DEPRECATED QString getMidiInsNameM(unsigned index);
 Q_DECL_DEPRECATED QString getMidiInsNameP(unsigned index);

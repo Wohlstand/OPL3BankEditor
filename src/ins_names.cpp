@@ -37,6 +37,11 @@ static void fillInstMap(InstrumentMap &map, const MidiProgram *pgms, unsigned si
         id.bankLsb = pgms[i].bankLsb;
         id.program = pgms[i].program;
         map[id.identifier] = &pgms[i];
+        // insert pseudo-entry for bank (reserved = 1, program = 0)
+        id.reserved = 1;
+        id.program = 0;
+        if(!map.contains(id.identifier))
+            map[id.identifier] = &pgms[i];
     }
 
     map.squeeze();
@@ -102,6 +107,13 @@ const MidiProgram *getFallbackProgram(MidiProgramId id, unsigned spec, unsigned 
     }
 
     return pgm;
+}
+
+const MidiProgram *getMidiBank(MidiProgramId id, unsigned spec, unsigned *specObtained)
+{
+    id.reserved = 1;
+    id.program = 0;
+    return getMidiProgram(id, spec, specObtained);
 }
 
 /// Deprecated

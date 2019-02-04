@@ -102,6 +102,8 @@ BankEditor::BankEditor(QWidget *parent) :
     ui->actionStandardXG->setChecked(true);
     connect(actionGroupStandard, SIGNAL(triggered(QAction *)),
             this, SLOT(reloadInstrumentNames()));
+    connect(actionGroupStandard, SIGNAL(triggered(QAction *)),
+            this, SLOT(reloadBankNames()));
 
     setMelodic();
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
@@ -623,14 +625,39 @@ QString BankEditor::getInstrumentName(int instrument, bool isAuto, bool isPerc) 
     QString name = tr("<Unknown>");
     if(index >= 0)
     {
+        if(isAuto)
+            isPerc = isDrumsMode();
         int lsb = ui->bank_lsb->value();
         int msb = ui->bank_msb->value();
-        MidiProgramId pr = MidiProgramId(isAuto ? m_recentPerc : isPerc, msb, lsb, instrument % 128);
+        MidiProgramId pr = MidiProgramId(isPerc, msb, lsb, instrument % 128);
         unsigned spec = getSelectedMidiSpec();
         unsigned specObtained = kMidiSpecXG;
         const MidiProgram *p = getMidiProgram(pr, spec, &specObtained);
         p = p ? p : getFallbackProgram(pr, spec, &specObtained);
         name = p ? p->patchName : tr("<Reserved %1>").arg(instrument % 128);
+    }
+    return name;
+}
+
+QString BankEditor::getBankName(int bank, bool isAuto, bool isPerc)
+{
+    QString name;
+    if(bank >= 0)
+    {
+        if(isAuto)
+            isPerc = isDrumsMode();
+        FmBank::MidiBank *mb = isPerc ?
+            &m_bank.Banks_Percussion[bank] : &m_bank.Banks_Melodic[bank];
+        if(mb->name[0])
+            name = QString::fromUtf8(mb->name);
+        else
+        {
+            MidiProgramId id(isPerc, mb->msb, mb->lsb, 0);
+            unsigned spec = getSelectedMidiSpec();
+            unsigned specObtained = kMidiSpecXG;
+            if(const MidiProgram *p = getMidiBank(id, spec, &specObtained))
+                name = QString::fromUtf8(p->bankName);
+        }
     }
     return name;
 }
@@ -1158,7 +1185,7 @@ void BankEditor::setDrumMode(bool dmode)
     ui->piano->setDisabled(dmode);
 }
 
-bool BankEditor::isDrumsMode()
+bool BankEditor::isDrumsMode() const
 {
     return !ui->melodic->isChecked() || ui->percussion->isChecked();
 }
@@ -1174,12 +1201,17 @@ void BankEditor::reloadBanks()
         countOfBanks = ((m_bank.countMelodic() - 1) / 128) + 1;
     for(int i = 0; i < countOfBanks; i++)
     {
-        const char *label = isDrum ? m_bank.Banks_Percussion[i].name : m_bank.Banks_Melodic[i].name;
-        if(label[0] == 0)
-            ui->bank_no->addItem(tr("Bank %1").arg(i), i);
-        else
-            ui->bank_no->addItem(QString("%1: %2").arg(i).arg(label), i);
+        ui->bank_no->addItem(QString(), i);
+        refreshBankName(i);
     }
+}
+
+void BankEditor::refreshBankName(int index)
+{
+    if(index < 0)
+        return;
+    QString name = getBankName(index, true);
+    ui->bank_no->setItemText(index, QString("%1: %2").arg(index).arg(name));
 }
 
 void BankEditor::createLanguageChoices()
@@ -1305,16 +1337,13 @@ void BankEditor::on_bankRename_clicked()
 {
     int index = ui->bank_no->currentIndex();
     QString label;
-    if(isDrumsMode())
-        label = QString::fromUtf8(m_bank.Banks_Percussion[index].name);
-    else
-        label = QString::fromUtf8(m_bank.Banks_Melodic[index].name);
+    bool isDrum = isDrumsMode();
     bool ok = false;
     label = QInputDialog::getText(this, tr("Change name of bank"), tr("Please type name of current bank (32 characters max):"), QLineEdit::EchoMode::Normal, label, &ok);
     if(ok)
     {
         QByteArray arr = label.toUtf8();
-        if(isDrumsMode())
+        if(isDrum)
         {
             memset(m_bank.Banks_Percussion[index].name, 0, 32);
             memcpy(m_bank.Banks_Percussion[index].name, arr.data(), (size_t)arr.size());
@@ -1324,10 +1353,7 @@ void BankEditor::on_bankRename_clicked()
             memset(m_bank.Banks_Melodic[index].name, 0, 32);
             memcpy(m_bank.Banks_Melodic[index].name, arr.data(), (size_t)arr.size());
         }
-        if(arr.size() == 0)
-            ui->bank_no->setItemText(index, tr("Bank %1").arg(index));
-        else
-            ui->bank_no->setItemText(index, QString("%1: %2").arg(index).arg(label));
+        refreshBankName(index);
     }
 }
 
@@ -1371,6 +1397,7 @@ void BankEditor::on_bank_msb_valueChanged(int value)
         else
             m_bank.Banks_Melodic[index].msb = uint8_t(ui->bank_msb->value());
     }
+    refreshBankName(index);
     QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
 }
 
@@ -1387,6 +1414,7 @@ void BankEditor::on_bank_lsb_valueChanged(int value)
         else
             m_bank.Banks_Melodic[index].lsb = uint8_t(ui->bank_lsb->value());
     }
+    refreshBankName(index);
     QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
 }
 
@@ -1468,6 +1496,18 @@ void BankEditor::reloadInstrumentNames()
             }
         }
     }
+}
+
+void BankEditor::reloadBankNames()
+{
+    int countOfBanks;
+    bool isDrum = isDrumsMode();
+    if(isDrum)
+        countOfBanks = ((m_bank.countDrums() - 1) / 128) + 1;
+    else
+        countOfBanks = ((m_bank.countMelodic() - 1) / 128) + 1;
+    for(int i = 0; i < countOfBanks; i++)
+        refreshBankName(i);
 }
 
 void BankEditor::on_actionAddInst_triggered()

@@ -215,6 +215,12 @@ public:
      */
     QString getInstrumentName(int instrument, bool isAuto = true, bool isPerc = false) const;
     /**
+     * @brief Get the bank name by index from off the current bank state
+     * @param bank id
+     * @return The title of bank
+     */
+    QString getBankName(int bank, bool isAuto = true, bool isPerc = false);
+    /**
      * @brief Get the selected MIDI specification from GUI
      */
     unsigned getSelectedMidiSpec() const;
@@ -260,9 +266,11 @@ public:
      */
     void setDrumMode(bool dmode);
 
-    bool isDrumsMode();
+    bool isDrumsMode() const;
 
     void reloadBanks();
+
+    void refreshBankName(int index);
 
     /**
      * @brief Creates the list of available languages
@@ -294,6 +302,11 @@ public slots:
      * @brief Reload names of instruments in the list
      */
     void reloadInstrumentNames();
+
+    /**
+     * @brief Reload names of banks in the list
+     */
+    void reloadBankNames();
 
 private slots:
     /* ***************** Common slots ***************** */
