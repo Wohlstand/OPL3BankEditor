@@ -1600,23 +1600,21 @@ void BankEditor::on_actionAddBank_triggered()
     if(isDrumsMode())
     {
         int oldSize = m_bank.Ins_Percussion_box.size();
-        size_t addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
-        size_t size = sizeof(FmBank::Instrument) * addSize;
-        m_bank.Ins_Percussion_box.resize(m_bank.Ins_Percussion_box.size() + int(addSize));
+        int addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
+        m_bank.Ins_Percussion_box.resize(oldSize + addSize);
         m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
         m_bank.Banks_Percussion.push_back(FmBank::emptyBank(uint16_t(m_bank.Banks_Percussion.count())));
-        memset(m_bank.Ins_Percussion + oldSize, 0, size_t(size));
+        std::fill(m_bank.Ins_Percussion_box.end() - addSize, m_bank.Ins_Percussion_box.end(), FmBank::blankInst());
         setDrums();
     }
     else
     {
         int oldSize = m_bank.Ins_Melodic_box.size();
-        size_t addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
-        size_t size = sizeof(FmBank::Instrument) * addSize;
-        m_bank.Ins_Melodic_box.resize(m_bank.Ins_Melodic_box.size() + int(addSize));
+        int addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
+        m_bank.Ins_Melodic_box.resize(oldSize + int(addSize));
         m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
         m_bank.Banks_Melodic.push_back(FmBank::emptyBank(uint16_t(m_bank.Banks_Melodic.count())));
-        memset(m_bank.Ins_Melodic + oldSize, 0, size_t(size));
+        std::fill(m_bank.Ins_Melodic_box.end() - addSize, m_bank.Ins_Melodic_box.end(), FmBank::blankInst());
         setMelodic();
     }
 
@@ -1641,11 +1639,10 @@ void BankEditor::on_actionCloneBank_triggered()
     if(isDrumsMode())
     {
         int oldSize = m_bank.Ins_Percussion_box.size();
-        size_t addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
-        size_t size = sizeof(FmBank::Instrument) * addSize;
-        m_bank.Ins_Percussion_box.resize(m_bank.Ins_Percussion_box.size() + int(addSize));
+        int addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
+        m_bank.Ins_Percussion_box.resize(oldSize + addSize);
         m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
-        memset(m_bank.Ins_Percussion + oldSize, 0, size_t(size));
+        std::fill(m_bank.Ins_Percussion_box.end() - addSize, m_bank.Ins_Percussion_box.end(), FmBank::blankInst());
         memcpy(m_bank.Ins_Percussion + (newBank * 128),
                m_bank.Ins_Percussion + (curBank * 128),
                sizeof(FmBank::Instrument) * 128);
@@ -1655,11 +1652,10 @@ void BankEditor::on_actionCloneBank_triggered()
     else
     {
         int oldSize = m_bank.Ins_Melodic_box.size();
-        size_t addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
-        size_t size = sizeof(FmBank::Instrument) * addSize;
-        m_bank.Ins_Melodic_box.resize(m_bank.Ins_Melodic_box.size() + int(addSize));
+        int addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
+        m_bank.Ins_Melodic_box.resize(oldSize + addSize);
         m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
-        memset(m_bank.Ins_Melodic + oldSize, 0, size_t(size));
+        std::fill(m_bank.Ins_Melodic_box.end() - addSize, m_bank.Ins_Melodic_box.end(), FmBank::blankInst());
         memcpy(m_bank.Ins_Melodic + (newBank * 128),
                m_bank.Ins_Melodic + (curBank * 128),
                sizeof(FmBank::Instrument) * 128);
