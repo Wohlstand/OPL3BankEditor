@@ -196,7 +196,7 @@
                    <string>MIDI bank MSB index alias. Means which MSB bank index will refer this bank.</string>
                   </property>
                   <property name="maximum">
-                   <number>255</number>
+                   <number>127</number>
                   </property>
                  </widget>
                 </item>
@@ -232,7 +232,7 @@
                    <string>MIDI bank LSB index alias. Means which LSB bank index will refer this bank.</string>
                   </property>
                   <property name="maximum">
-                   <number>255</number>
+                   <number>127</number>
                   </property>
                  </widget>
                 </item>
