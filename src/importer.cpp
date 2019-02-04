@@ -481,22 +481,17 @@ void Importer::setCurrentInstrument(int num, bool isPerc)
 QString Importer::getInstrumentName(int instrument, bool isAuto, bool isPerc)
 {
     int index = instrument / 128;
-    QString name = "<Unknown>";
+    QString name = tr("<Unknown>");
     if(index >= 0)
     {
-//        int lsb = ui->bank_lsb->value();
-//        int msb = ui->bank_msb->value();
-        MidiProgramId pr = MidiProgramId(isAuto ? ui->percussion->isChecked() : isPerc, 0, 0, instrument);
-        unsigned specObtained = kMidiSpecGM1;
-        const MidiProgram *p = getMidiProgram(pr, kMidiSpecGM1, &specObtained);
-        if(p)
-            name = p->patchName;
-        else
-        {
-            p = getFallbackProgram(pr, kMidiSpecGM1, &specObtained);
-            Q_ASSERT(p);
-            name = p->patchName;
-        }
+        int lsb = 0; // TODO importer: ui->bank_lsb->value();
+        int msb = 0; // TODO importer: ui->bank_msb->value();
+        MidiProgramId pr = MidiProgramId(isAuto ? ui->percussion->isChecked() : isPerc, msb, lsb, instrument);
+        unsigned spec = kMidiSpecXG|kMidiSpecGM1; // TODO importer: getSelectedMidiSpec();
+        unsigned specObtained = kMidiSpecXG;
+        const MidiProgram *p = getMidiProgram(pr, spec, &specObtained);
+        p = p ? p : getFallbackProgram(pr, spec, &specObtained);
+        name = p ? p->patchName : tr("<Reserved %1>").arg(instrument % 128);
     }
     return name;
 }
