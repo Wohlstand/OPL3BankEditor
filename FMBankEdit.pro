@@ -176,6 +176,7 @@ HEADERS += \
     src/latency.h \
     src/hardware.h \
     src/ins_names.h \
+    src/ins_names_data.h \
     src/main.h \
     src/opl/generator.h \
     src/opl/generator_realtime.h \

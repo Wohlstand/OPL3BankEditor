@@ -144,7 +144,7 @@ void Importer::setMelodic()
     {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(m_bank.Ins_Melodic[i].name[0] != '\0' ?
-                      QString::fromUtf8(m_bank.Ins_Melodic[i].name) : getMidiInsNameM(i));
+                      QString::fromUtf8(m_bank.Ins_Melodic[i].name) : getInstrumentName(i, false, false));
         item->setData(Qt::UserRole, i);
         item->setToolTip(QString("ID: %1").arg(i));
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -160,7 +160,7 @@ void Importer::setDrums()
     {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(m_bank.Ins_Percussion[i].name[0] != '\0' ?
-                      QString::fromUtf8(m_bank.Ins_Percussion[i].name) : getMidiInsNameP(i));
+                      QString::fromUtf8(m_bank.Ins_Percussion[i].name) : getInstrumentName(i, false, true));
         item->setData(Qt::UserRole, i);
         item->setToolTip(QString("ID: %1").arg(i));
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -478,6 +478,23 @@ void Importer::setCurrentInstrument(int num, bool isPerc)
     m_main->m_curInst = isPerc ? &m_bank.Ins_Percussion[num] : &m_bank.Ins_Melodic[num];
 }
 
+QString Importer::getInstrumentName(int instrument, bool isAuto, bool isPerc)
+{
+    int index = instrument / 128;
+    QString name = tr("<Unknown>");
+    if(index >= 0)
+    {
+        int lsb = 0; // TODO importer: ui->bank_lsb->value();
+        int msb = 0; // TODO importer: ui->bank_msb->value();
+        MidiProgramId pr = MidiProgramId(isAuto ? ui->percussion->isChecked() : isPerc, msb, lsb, instrument);
+        unsigned spec = kMidiSpecXG|kMidiSpecGM1; // TODO importer: getSelectedMidiSpec();
+        unsigned specObtained = kMidiSpecXG;
+        const MidiProgram *p = getMidiProgram(pr, spec, &specObtained);
+        p = p ? p : getFallbackProgram(pr, spec, &specObtained);
+        name = p ? p->patchName : tr("<Reserved %1>").arg(instrument % 128);
+    }
+    return name;
+}
 
 void Importer::reloadInstrumentNames()
 {
@@ -490,7 +507,7 @@ void Importer::reloadInstrumentNames()
             int index = items[i]->data(Qt::UserRole).toInt();
             items[i]->setText(m_bank.Ins_Percussion[index].name[0] != '\0' ?
                               QString::fromUtf8(m_bank.Ins_Percussion[index].name) :
-                              getMidiInsNameP(index));
+                              getInstrumentName(index, false, true));
         }
     }
     else
@@ -500,7 +517,7 @@ void Importer::reloadInstrumentNames()
             int index = items[i]->data(Qt::UserRole).toInt();
             items[i]->setText(m_bank.Ins_Melodic[index].name[0] != '\0' ?
                               QString::fromUtf8(m_bank.Ins_Melodic[index].name) :
-                              getMidiInsNameM(index));
+                              getInstrumentName(index, false, false));
         }
     }
 }
