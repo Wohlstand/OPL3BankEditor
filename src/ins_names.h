@@ -77,11 +77,11 @@ struct MidiProgramId
         uint32_t identifier;
         struct
         {
-            bool percussive : 1;
-            unsigned bankMsb : 7;
-            unsigned bankLsb : 7;
-            unsigned program : 7;
-            bool reserved : 1;
+            uint32_t percussive : 1;
+            uint32_t bankMsb : 7;
+            uint32_t bankLsb : 7;
+            uint32_t program : 7;
+            uint32_t reserved : 1;
         };
     };
 };
