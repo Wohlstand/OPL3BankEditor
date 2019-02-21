@@ -102,7 +102,7 @@ private:
     bool m_lock;
 
     //! OPL chip emulator frontent
-    IRealtimeControl *m_generator;
+    IRealtimeControl *m_generator = nullptr;
 
     //! Sound length measurer
     Measurer        *m_measurer;

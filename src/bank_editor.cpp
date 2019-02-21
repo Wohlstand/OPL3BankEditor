@@ -145,6 +145,11 @@ BankEditor::BankEditor(QWidget *parent) :
     m_bankBackup = m_bank;
 
     initAudio();
+
+#ifdef ENABLE_HW_OPL_PROXY
+    initChip();
+#endif
+
 #ifdef ENABLE_MIDI
     QAction *midiInAction = m_midiInAction = new QAction(
         ui->midiIn->icon(), ui->midiIn->text(), this);
