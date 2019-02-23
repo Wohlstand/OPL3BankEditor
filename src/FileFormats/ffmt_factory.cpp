@@ -38,6 +38,7 @@
 #include "format_dro_importer.h"
 #include "format_misc_sgi.h"
 #include "format_misc_cif.h"
+#include "format_misc_rad_inst.h"
 #include "format_wohlstand_opl3.h"
 #include "format_flatbuffer_opl3.h"
 
@@ -118,6 +119,7 @@ void FmBankFormatFactory::registerAllFormats()
     //Misc
     registerInstFormat(new Misc_SGI());
     registerInstFormat(new Misc_CIF());
+    registerInstFormat(new Misc_RealityAdLib());
 }
 
 
