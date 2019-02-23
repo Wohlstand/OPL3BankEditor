@@ -3557,6 +3557,7 @@ of second voice</string>
      </property>
      <addaction name="actionEmulatorNuked"/>
      <addaction name="actionEmulatorDosBox"/>
+     <addaction name="actionEmulatorOpal"/>
      <addaction name="actionWin9xOPLProxy"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
@@ -3816,6 +3817,14 @@ of second voice</string>
    </property>
    <property name="text">
     <string notr="true">General MIDI 2</string>
+   </property>
+  </action>
+  <action name="actionEmulatorOpal">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Opal OPL3</string>
    </property>
   </action>
  </widget>

@@ -20,7 +20,7 @@
 #include "../common.h"
 #include <QFileInfo>
 
-bool Misc_HSC::detectInst(const QString &filePath, char* magic)
+bool Misc_HSC::detectInst(const QString &filePath, char* )
 {
     return filePath.endsWith(".ins", Qt::CaseInsensitive) &&
         QFileInfo(filePath).size() == 12;
