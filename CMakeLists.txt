@@ -84,6 +84,8 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_dro_importer.cpp"
   "src/FileFormats/format_misc_sgi.cpp"
   "src/FileFormats/format_misc_cif.cpp"
+  "src/FileFormats/format_misc_hsc.cpp"
+  "src/FileFormats/format_misc_rad_inst.cpp"
   "src/FileFormats/format_wohlstand_opl3.cpp"
   "src/FileFormats/format_flatbuffer_opl3.cpp"
   "src/FileFormats/ymf262_to_wopi.cpp"

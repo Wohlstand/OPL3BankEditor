@@ -123,6 +123,7 @@ SOURCES += \
     src/FileFormats/format_dro_importer.cpp \
     src/FileFormats/format_misc_sgi.cpp \
     src/FileFormats/format_misc_cif.cpp \
+    src/FileFormats/format_misc_hsc.cpp \
     src/FileFormats/format_misc_rad_inst.cpp \
     src/FileFormats/format_wohlstand_opl3.cpp \
     src/FileFormats/format_flatbuffer_opl3.cpp \
@@ -169,6 +170,7 @@ HEADERS += \
     src/FileFormats/format_dro_importer.h \
     src/FileFormats/format_misc_sgi.h \
     src/FileFormats/format_misc_cif.h \
+    src/FileFormats/format_misc_hsc.h \
     src/FileFormats/format_misc_rad_inst.h \
     src/FileFormats/format_wohlstand_opl3.h \
     src/FileFormats/format_flatbuffer_opl3.h \
