@@ -59,11 +59,11 @@ static const uint16_t g_Operators[NUM_OF_CHANNELS * 2] =
     // Channel 18
     0x010, 0x013,  // operators 12,15
     // Channel 19
-    0x014, 0xFFF,  // operator 16
+    0xFFF, 0x014,  // operator 16
     // Channel 19
     0x012, 0xFFF,  // operator 14
     // Channel 19
-    0x015, 0xFFF,  // operator 17
+    0xFFF, 0x015,  // operator 17
     // Channel 19
     0x011, 0xFFF
 }; // operator 13
@@ -77,6 +77,13 @@ static const uint16_t g_Channels[NUM_OF_CHANNELS] =
 // <- hw percussions, <s>0xFFF = no support for pitch/pan</s>,
 //      From AdLib MIDI manual: Hi-Hat and Cymbal are taking pitch value from
 //          last pitch value set to the TomTom
+
+static const uint16_t g_Channels_pan[NUM_OF_CHANNELS] =
+{
+    0x000, 0x001, 0x002, 0x003, 0x004, 0x005, 0x006, 0x007, 0x008, // 0..8
+    0x100, 0x101, 0x102, 0x103, 0x104, 0x105, 0x106, 0x107, 0x108, // 9..17 (secondary set)
+    0x006, 0x007, 0x008, 0xFFF, 0xFFF
+};
 
 /*
     In OPL3 mode:
@@ -194,15 +201,15 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
         -0.125000 // Fine tuning
     };
     m_regBD = 0;
-    memset(m_ins, 0, sizeof(uint16_t)*NUM_OF_CHANNELS);
-    memset(m_keyBlockFNumCache, 0, sizeof(uint8_t)*NUM_OF_CHANNELS);
+    memset(m_ins, 0, sizeof(uint16_t) * NUM_OF_CHANNELS);
+    memset(m_keyBlockFNumCache, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
     memset(m_four_op_category, 0, NUM_OF_CHANNELS * 2);
 
     uint32_t p = 0;
     for(uint32_t b = 0; b < 18; ++b)
         m_four_op_category[p++] = 0;
     for(uint32_t b = 0; b < 5; ++b)
-        m_four_op_category[p++] = 8;
+        m_four_op_category[p++] = ChanCat_Rhythm_Slave;
 
     m_4op_last_state = true;
     deepTremoloMode   = 0;
@@ -238,6 +245,7 @@ void Generator::initChip()
         0x001, 32, 0x105, 1             // Enable wave, OPL3 extensions
     };
 
+    chip->setChipId(0);
     chip->setRate(m_rate);
 
     for(uint32_t a = 0; a < 18; ++a)
@@ -343,8 +351,8 @@ void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz, bool voice2ps4op)
 
         for(size_t op = 0; op < opsCount; op++)
         {
-            if((op > 0) && (op_addr[op] == 0xFFF))
-                break;
+            if(op_addr[op] == 0xFFF)
+                continue;
             if(mul_offset > 0)
             {
                 uint32_t dt  = ops[op] & 0xF0;
@@ -365,7 +373,7 @@ void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz, bool voice2ps4op)
 
     if(chn != 0xFFF)
     {
-        WriteReg(0xA0 + chn, ftone & 0xFF);
+        WriteReg(0xA0 + chn, (ftone & 0xFF));
         WriteReg(0xB0 + chn, (ftone >> 8));
         m_keyBlockFNumCache[c1] = static_cast<uint8_t>(ftone >> 8);
     }
@@ -384,21 +392,25 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
         volume = 63;
 
     uint16_t /*card = c/23,*/ cc = c % 23;
-    uint16_t i = m_ins[c], o1 = g_Operators[cc * 2], o2 = g_Operators[cc * 2 + 1];
+    uint16_t i = m_ins[c],
+            o1 = g_Operators[cc * 2 + 0],
+            o2 = g_Operators[cc * 2 + 1];
     uint16_t x = m_patch.OPS[i].modulator_40,
              y = m_patch.OPS[i].carrier_40;
     bool do_modulator;
     bool do_carrier;
     uint32_t mode = 1; // 2-op AM
 
-    if(m_four_op_category[c] == 0 || m_four_op_category[c] == 3)
+    if(m_four_op_category[c] == ChanCat_Regular ||
+       m_four_op_category[c] == ChanCat_Rhythm_Bass)
     {
         mode = m_patch.OPS[i].feedconn & 1; // 2-op FM or 2-op AM
     }
-    else if(m_four_op_category[c] == 1 || m_four_op_category[c] == 2)
+    else if(m_four_op_category[c] == ChanCat_4op_Master ||
+            m_four_op_category[c] == ChanCat_4op_Slave)
     {
         uint32_t i0, i1;
-        if(m_four_op_category[c] == 1)
+        if(m_four_op_category[c] == ChanCat_4op_Master)
         {
             i0 = i;
             i1 = m_ins[c + 3];
@@ -429,8 +441,9 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     };
     do_modulator = do_ops[ mode ][ 0 ];
     do_carrier   = do_ops[ mode ][ 1 ];
-    WriteReg(0x40 + o1, static_cast<uint8_t>(do_modulator ? (x | 63) - volume + volume * (x & 63) / 63 : x));
 
+    if(o1 != 0xFFF)
+        WriteReg(0x40 + o1, static_cast<uint8_t>(do_modulator ? (x | 63) - volume + volume * (x & 63) / 63 : x));
     if(o2 != 0xFFF)
         WriteReg(0x40 + o2, static_cast<uint8_t>(do_carrier   ? (y | 63) - volume + volume * (y & 63) / 63 : y));
 
@@ -459,21 +472,20 @@ void Generator::Patch(uint32_t c, uint32_t i)
              o2 = g_Operators[cc * 2 + 1];
     uint32_t x = m_patch.OPS[i].modulator_E862, y = m_patch.OPS[i].carrier_E862;
 
-    for(uint32_t a = 0; a < 4; ++a)
+    for(uint32_t a = 0; a < 4; ++a, x >>= 8, y >>= 8)
     {
-        WriteReg(data[a] + o1, x & 0xFF);
-        x >>= 8;
+        if(o1 != 0xFFF)
+            WriteReg(data[a] + o1, x & 0xFF);
         if(o2 != 0xFFF)
             WriteReg(data[a] + o2, y & 0xFF);
-        y >>= 8;
     }
 }
 
 void Generator::Pan(uint32_t c, uint32_t value)
 {
     uint8_t cc = c % 23;
-    if(g_Channels[cc] != 0xFFF)
-        WriteReg(0xC0 + g_Channels[cc], static_cast<uint8_t>(m_patch.OPS[m_ins[c]].feedconn | value));
+    if(g_Channels_pan[cc] != 0xFFF)
+        WriteReg(0xC0 + g_Channels_pan[cc], static_cast<uint8_t>(m_patch.OPS[m_ins[c]].feedconn | value));
 }
 
 void Generator::PlayNoteF(int noteID, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
@@ -484,7 +496,8 @@ void Generator::PlayNoteF(int noteID, uint32_t volume, uint8_t ccvolume, uint8_t
     bool replace;
     int ch = m_noteManager.noteOn(noteID, volume, ccvolume, ccexpr, &replace);
 
-    if(replace) {
+    if(replace)
+    {
         //if it replaces an old note, shut up the old one first
         //this lets the sustain take over with a fresh envelope
         bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
@@ -650,7 +663,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     }
 
     uint32_t adlchannel = OPL3_CHANNELS_RHYTHM_BASE + drum;
-    Patch(adlchannel, 0);
+    // Patch(adlchannel, 0);
     Pan(adlchannel, 0x30);
     Touch_Real(adlchannel, 63);
     double bend = 0.0;
@@ -670,17 +683,23 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
     }
 
     memset(&m_four_op_category, 0, sizeof(m_four_op_category));
-    uint32_t p = 0;
 
-    for(uint32_t b = 0; b < 18; ++b) m_four_op_category[p++] = 0;
-    for(uint32_t b = 0; b < 5; ++b)  m_four_op_category[p++] = 8;
-
-    // Mark all channels that are reserved for four-operator function
-    if(rythmModePercussionMode != 0)
+    if(rythmModePercussionMode == 0)
     {
-        //for(uint32_t a = 0; a < NumCards; ++a) {}
-        for(uint32_t b = 0; b < 5; ++b) m_four_op_category[18 + b] = static_cast<char>(b + 3);
-        for(uint32_t b = 0; b < 3; ++b) m_four_op_category[6  + b] = 8;
+        for(size_t b = 0; b < 23; ++b)
+        {
+            m_four_op_category[b] =
+                (b >= 18) ? ChanCat_Rhythm_Slave : ChanCat_Regular;
+        }
+    }
+    else
+    {
+        for(size_t b = 0; b < 23; ++b)
+        {
+            m_four_op_category[b] =
+                (b >= 18) ? static_cast<ChanCat>(ChanCat_Rhythm_Bass + (b - 18)) :
+                (b >= 6 && b < 9) ? ChanCat_Rhythm_Slave : ChanCat_Regular;
+        }
     }
 
     if(enabled)
@@ -692,8 +711,8 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
 
         for(uint32_t a = 0; a < fours; ++a)
         {
-            m_four_op_category[nextfour    ] = 1;
-            m_four_op_category[nextfour + 3] = 2;
+            m_four_op_category[nextfour    ] = ChanCat_4op_Master;
+            m_four_op_category[nextfour + 3] = ChanCat_4op_Slave;
 
             switch(a % 6)
             {
@@ -745,25 +764,10 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
 
 void Generator::Silence()
 {
-    //bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
-    bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
-    //Shutup!
-    if(natural_4op)
+    for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
     {
-        for(uint32_t c = 0; c < USED_CHANNELS_4OP; ++c)
-        {
-            NoteOff(g_channelsMap1_4op[c]);
-            Touch_Real(g_channelsMap1_4op[c], 0);
-            Touch_Real(g_channelsMap2_4op[c], 0);
-        }
-    }
-    else
-    {
-        for(uint32_t c = 0; c < USED_CHANNELS_2OP; ++c)
-        {
-            NoteOff(g_channels2Map_2op[c]);
-            Touch_Real(g_channels2Map_2op[c], 0);
-        }
+        NoteOff(c);
+        Touch_Real(c, 0);
     }
 
     m_noteManager.clearNotes();
@@ -924,47 +928,62 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     m_bend = 0.0;
     m_bendsense = 2.0 / 8192;
     //m_hold = false;
+    bool isRhythmMode = isDrum && (instrument.adlib_drum_number >= 6);
+    changeRhythmMode(isRhythmMode);
     switch4op(instrument.en_4op && !instrument.en_pseudo4op && (instrument.adlib_drum_number == 0));
-    bool isAdLibDrums = isDrum && (instrument.adlib_drum_number > 0);
-    changeAdLibPercussion(isAdLibDrums);
 
-    if(isAdLibDrums)
+    if(isRhythmMode)
     {
         testDrum = instrument.adlib_drum_number - 6;
-        if(testDrum == 0)
-        {
-            m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
-            m_patch.OPS[0].modulator_20       = instrument.getAVEKM(MODULATOR1);
-            m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
-            m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
-            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
-            m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
-        }
+//        if(testDrum == 0)
+//        {
+//            m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
+//            m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
+//            m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
+//            m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
+//            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
+//            m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
+//        }
 
-        if((testDrum == 1) || (testDrum == 3))
-        {
-            m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
-            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
-            m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
-            m_patch.OPS[0].modulator_E862   = instrument.getDataE862(CARRIER1);
-            m_patch.OPS[0].modulator_20     = instrument.getAVEKM(CARRIER1);
-            m_patch.OPS[0].modulator_40     = instrument.getKSLL(CARRIER1);
-        }
-        if((testDrum == 2) || (testDrum == 4))
-        {
-            m_patch.OPS[0].carrier_E862     = instrument.getDataE862(MODULATOR1);
-            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(MODULATOR1);
-            m_patch.OPS[0].carrier_40       = instrument.getKSLL(MODULATOR1);
-            m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
-            m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
-            m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
-        }
-
+//        if((testDrum == 1) || (testDrum == 3))
+//        {
+//            m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
+//            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
+//            m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
+//            m_patch.OPS[0].modulator_E862   = instrument.getDataE862(CARRIER1);
+//            m_patch.OPS[0].modulator_20     = instrument.getAVEKM(CARRIER1);
+//            m_patch.OPS[0].modulator_40     = instrument.getKSLL(CARRIER1);
+//        }
+//        if((testDrum == 2) || (testDrum == 4))
+//        {
+//            m_patch.OPS[0].carrier_E862     = instrument.getDataE862(MODULATOR1);
+//            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(MODULATOR1);
+//            m_patch.OPS[0].carrier_40       = instrument.getKSLL(MODULATOR1);
+//            m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
+//            m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
+//            m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
+//        }
+        m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
+        m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
+        m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
+        m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
+        m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
+        m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
         m_patch.OPS[0].feedconn         = instrument.getFBConn1();
+
+        m_patch.OPS[1].modulator_E862   = instrument.getDataE862(MODULATOR2);
+        m_patch.OPS[1].modulator_20     = instrument.getAVEKM(MODULATOR2);
+        m_patch.OPS[1].modulator_40     = instrument.getKSLL(MODULATOR2);
+        m_patch.OPS[1].carrier_E862     = instrument.getDataE862(CARRIER2);
+        m_patch.OPS[1].carrier_20       = instrument.getAVEKM(CARRIER2);
+        m_patch.OPS[1].carrier_40       = instrument.getKSLL(CARRIER2);
         m_patch.OPS[1].feedconn         = instrument.getFBConn2();
+
         m_patch.flags   = 0;
         m_patch.tone    = instrument.percNoteNum;
         m_patch.voice2_fine_tune = 0.0;
+
+        Patch(OPL3_CHANNELS_RHYTHM_BASE + testDrum, 0);
     }
     else
     {
@@ -1061,7 +1080,7 @@ void Generator::changeVolumeModel(int volmodel)
     m_volmodel = volmodel;
 }
 
-void Generator::changeAdLibPercussion(bool enabled)
+void Generator::changeRhythmMode(bool enabled)
 {
     rythmModePercussionMode = uint8_t(enabled);
     updateRegBD();

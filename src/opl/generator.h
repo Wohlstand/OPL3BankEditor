@@ -147,7 +147,7 @@ public:
     void changeDeepTremolo(bool enabled);
     void changeDeepVibrato(bool enabled);
     void changeVolumeModel(int volmodel);
-    void changeAdLibPercussion(bool enabled);
+    void changeRhythmMode(bool enabled);
     void updateRegBD();
 
     const GeneratorDebugInfo &debugInfo() const
@@ -222,6 +222,31 @@ private:
 
     OPL_PatchSetup m_patch;
     uint8_t     m_regBD;
+
+    /**
+     * @brief Channel categiry enumeration
+     */
+    enum ChanCat
+    {
+        //! Regular melodic/percussion channel
+        ChanCat_Regular     = 0,
+        //! Four-op master
+        ChanCat_4op_Master  = 1,
+        //! Four-op slave
+        ChanCat_4op_Slave   = 2,
+        //! Rhythm-mode Bass drum
+        ChanCat_Rhythm_Bass     = 3,
+        //! Rhythm-mode Snare drum
+        ChanCat_Rhythm_Snare    = 4,
+        //! Rhythm-mode Tom-Tom
+        ChanCat_Rhythm_Tom      = 5,
+        //! Rhythm-mode Cymbal
+        ChanCat_Rhythm_Cymbal   = 6,
+        //! Rhythm-mode Hi-Hat
+        ChanCat_Rhythm_HiHat    = 7,
+        //! Rhythm-mode Slave channel
+        ChanCat_Rhythm_Slave    = 8
+    };
 
     int8_t      m_four_op_category[NUM_OF_CHANNELS * 2];
     // 1 = quad-master, 2 = quad-slave, 0 = regular
