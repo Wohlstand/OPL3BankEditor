@@ -682,6 +682,8 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
         Touch_Real(b, 0);
     }
 
+    updateRegBD();
+
     memset(&m_four_op_category, 0, sizeof(m_four_op_category));
 
     if(rythmModePercussionMode == 0)
@@ -753,11 +755,11 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
         m_patch.OPS[1].carrier_E862   = 0x00FFFF00;
     }
 
-    //Clear all operator registers from crap from previous patches
+    //Clear all operator registers from crap left from previous patches
     for(uint32_t b = 0; b < NUM_OF_CHANNELS; ++b)
     {
         Patch(b, 0);
-        Pan(b, 0x00);
+        Pan(b, (rythmModePercussionMode == 0) ? 0x00 : 0x30);
         Touch_Real(b, 0);
     }
 }
@@ -929,6 +931,7 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     m_bendsense = 2.0 / 8192;
     //m_hold = false;
     bool isRhythmMode = isDrum && (instrument.adlib_drum_number >= 6);
+
     changeRhythmMode(isRhythmMode);
     switch4op(instrument.en_4op && !instrument.en_pseudo4op && (instrument.adlib_drum_number == 0));
 
