@@ -87,8 +87,25 @@ void BankEditor::on_fm1_clicked(bool checked)
 
 void BankEditor::on_percMode_currentIndexChanged(int index)
 {
-    if(m_lock) return;
-    if(!m_curInst) return;
+    ui->carrier1->setEnabled(ui->melodic->isChecked() || index <= 1 || index == 2 || index == 4);
+    ui->modulator1->setEnabled(ui->melodic->isChecked() || index <= 1 || index == 3 || index == 5);
+
+    ui->op4mode->setEnabled(ui->melodic->isChecked() || index == 0);
+
+    if(m_lock || !m_curInst)
+        return;
+
+    // Remove 4op flag when switching the rhythm mode!
+    m_lock = true;
+    if(ui->op4mode->isChecked() && ui->percussion->isChecked() && index > 0)
+    {
+        ui->op4mode->setChecked(false);
+        ui->doubleVoice->setChecked(false);
+        m_curInst->en_4op = false;
+        m_curInst->en_pseudo4op = false;
+    }
+    m_lock = false;
+
     switch(index)
     {
     case 0:

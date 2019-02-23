@@ -18,6 +18,8 @@ Version 1.5
 - Added ability to use hardware OPL3 chip on modern Windows builds through inpout32.dll library, for example, on C-Media chips with OPL3 clone like CMI8738
 - Added support for SGI and CIF instrument formats
 - Added support for instrument importing from DosBox DRO dumps
+- Fixed playback of Rhyth-mode percussions
+- Rhythm-mode percussions will disable unnecessary UI parts and unused operators
 
 Version 1.4.0.1
 - Added ability to re-calculate sounding delays for entire instruments set

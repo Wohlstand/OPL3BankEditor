@@ -935,95 +935,36 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     changeRhythmMode(isRhythmMode);
     switch4op(instrument.en_4op && !instrument.en_pseudo4op && (instrument.adlib_drum_number == 0));
 
-    if(isRhythmMode)
+    m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
+    m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
+    m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
+    m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
+    m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
+    m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
+    m_patch.OPS[0].feedconn         = instrument.getFBConn1();
+
+    m_patch.OPS[1].modulator_E862   = instrument.getDataE862(MODULATOR2);
+    m_patch.OPS[1].modulator_20     = instrument.getAVEKM(MODULATOR2);
+    m_patch.OPS[1].modulator_40     = instrument.getKSLL(MODULATOR2);
+    m_patch.OPS[1].carrier_E862     = instrument.getDataE862(CARRIER2);
+    m_patch.OPS[1].carrier_20       = instrument.getAVEKM(CARRIER2);
+    m_patch.OPS[1].carrier_40       = instrument.getKSLL(CARRIER2);
+    m_patch.OPS[1].feedconn         = instrument.getFBConn2();
+
+    m_patch.flags   = 0;
+    m_patch.tone    = 0;
+    m_patch.voice2_fine_tune = 0.0;
+
+    if(isDrum)
+        m_patch.tone = instrument.percNoteNum;
+
+    if(isRhythmMode)// Rhythm-mode percussion instrument
     {
         testDrum = instrument.adlib_drum_number - 6;
-//        if(testDrum == 0)
-//        {
-//            m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
-//            m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
-//            m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
-//            m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
-//            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
-//            m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
-//        }
-
-//        if((testDrum == 1) || (testDrum == 3))
-//        {
-//            m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
-//            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
-//            m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
-//            m_patch.OPS[0].modulator_E862   = instrument.getDataE862(CARRIER1);
-//            m_patch.OPS[0].modulator_20     = instrument.getAVEKM(CARRIER1);
-//            m_patch.OPS[0].modulator_40     = instrument.getKSLL(CARRIER1);
-//        }
-//        if((testDrum == 2) || (testDrum == 4))
-//        {
-//            m_patch.OPS[0].carrier_E862     = instrument.getDataE862(MODULATOR1);
-//            m_patch.OPS[0].carrier_20       = instrument.getAVEKM(MODULATOR1);
-//            m_patch.OPS[0].carrier_40       = instrument.getKSLL(MODULATOR1);
-//            m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
-//            m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
-//            m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
-//        }
-        m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
-        m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
-        m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
-        m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
-        m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
-        m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
-        m_patch.OPS[0].feedconn         = instrument.getFBConn1();
-
-        m_patch.OPS[1].modulator_E862   = instrument.getDataE862(MODULATOR2);
-        m_patch.OPS[1].modulator_20     = instrument.getAVEKM(MODULATOR2);
-        m_patch.OPS[1].modulator_40     = instrument.getKSLL(MODULATOR2);
-        m_patch.OPS[1].carrier_E862     = instrument.getDataE862(CARRIER2);
-        m_patch.OPS[1].carrier_20       = instrument.getAVEKM(CARRIER2);
-        m_patch.OPS[1].carrier_40       = instrument.getKSLL(CARRIER2);
-        m_patch.OPS[1].feedconn         = instrument.getFBConn2();
-
-        m_patch.flags   = 0;
-        m_patch.tone    = instrument.percNoteNum;
-        m_patch.voice2_fine_tune = 0.0;
-
         Patch(OPL3_CHANNELS_RHYTHM_BASE + testDrum, 0);
     }
-    else
+    else // Melodic or Generic percussion instrument
     {
-        m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
-        m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
-        m_patch.OPS[0].modulator_40     = instrument.getKSLL(MODULATOR1);
-        m_patch.OPS[0].carrier_E862     = instrument.getDataE862(CARRIER1);
-        m_patch.OPS[0].carrier_20       = instrument.getAVEKM(CARRIER1);
-        m_patch.OPS[0].carrier_40       = instrument.getKSLL(CARRIER1);
-        m_patch.OPS[0].feedconn         = instrument.getFBConn1();
-        m_patch.OPS[1].modulator_E862   = instrument.getDataE862(MODULATOR2);
-        m_patch.OPS[1].modulator_20     = instrument.getAVEKM(MODULATOR2);
-        m_patch.OPS[1].modulator_40     = instrument.getKSLL(MODULATOR2);
-        m_patch.OPS[1].carrier_E862     = instrument.getDataE862(CARRIER2);
-        m_patch.OPS[1].carrier_20       = instrument.getAVEKM(CARRIER2);
-        m_patch.OPS[1].carrier_40       = instrument.getKSLL(CARRIER2);
-        m_patch.OPS[1].feedconn         = instrument.getFBConn2();
-        m_patch.flags   = 0;
-        m_patch.tone    = 0;
-        m_patch.voice2_fine_tune = 0.0;
-
-        if(isDrum)
-        {
-            m_patch.tone = instrument.percNoteNum;
-            //if(instrument.percNoteNum && instrument.percNoteNum < 20)
-            //{
-            //    uint8_t nnum = instrument.percNoteNum;
-
-            //    while(nnum && nnum < 20)
-            //    {
-            //        nnum += 12;
-            //        m_patch.OPS[0].finetune -= 12;
-            //        m_patch.OPS[1].finetune -= 12;
-            //    }
-            //}
-        }
-
         if(instrument.en_4op && instrument.en_pseudo4op)
         {
             m_patch.voice2_fine_tune = (double(instrument.fine_tune) * 15.625) / 1000.0;
