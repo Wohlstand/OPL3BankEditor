@@ -43,6 +43,7 @@
 #include "chips/nuked_opl3.h"
 #include "chips/nuked_opl3_v174.h"
 #include "chips/dosbox_opl3.h"
+#include "chips/opal_opl3.h"
 
 //typedef NukedOPL3 DefaultOPL3;
 typedef DosBoxOPL3 DefaultOPL3;
@@ -679,7 +680,8 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
     {
         std::shared_ptr<OPLChipBase>(new NukedOPL3v174),
         std::shared_ptr<OPLChipBase>(new NukedOPL3),
-        std::shared_ptr<OPLChipBase>(new DosBoxOPL3)
+        std::shared_ptr<OPLChipBase>(new DosBoxOPL3),
+        std::shared_ptr<OPLChipBase>(new OpalOPL3)
     };
     for(std::shared_ptr<OPLChipBase> &p : emuls)
         MeasureDurationsBenchmark(in_p, p.get(), result);

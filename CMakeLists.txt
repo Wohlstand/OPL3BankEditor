@@ -97,6 +97,7 @@ target_link_libraries(FileFormats PUBLIC Common)
 set(CHIPS_SOURCES
   "src/opl/chips/dosbox_opl3.cpp"
   "src/opl/chips/nuked_opl3.cpp"
+  "src/opl/chips/opal_opl3.cpp"
   "src/opl/chips/nuked/nukedopl3.c"
   "src/opl/chips/dosbox/dbopl.cpp"
   "src/opl/chips/nuked_opl3_v174.cpp"
