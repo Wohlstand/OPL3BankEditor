@@ -122,6 +122,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorNuked, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorDosBox, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorOpal, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorJava, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
 #ifdef ENABLE_HW_OPL_PROXY
@@ -220,6 +221,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorNuked->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
+    ui->actionEmulatorJava->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
 
     switch(m_currentChip)
@@ -232,6 +234,9 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_Opal:
         ui->actionEmulatorOpal->setChecked(true);
+        break;
+    case Generator::CHIP_Java:
+        ui->actionEmulatorJava->setChecked(true);
         break;
     case Generator::CHIP_Win9xProxy:
         ui->actionWin9xOPLProxy->setChecked(true);
@@ -1010,6 +1015,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorNuked->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
+    ui->actionEmulatorJava->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
 
     if(menuItem == ui->actionEmulatorNuked)
@@ -1030,6 +1036,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorOpal->setChecked(true);
         m_currentChip = Generator::CHIP_Opal;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorJava)
+    {
+        ui->actionEmulatorJava->setChecked(true);
+        m_currentChip = Generator::CHIP_Java;
         m_generator->ctl_switchChip(m_currentChip);
     }
     else

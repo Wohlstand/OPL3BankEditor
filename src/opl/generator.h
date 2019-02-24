@@ -82,6 +82,7 @@ public:
         CHIP_Nuked = 0,
         CHIP_DosBox,
         CHIP_Opal,
+        CHIP_Java,
         CHIP_Win9xProxy
     };
     Generator(uint32_t sampleRate, OPL_Chips initialChip);

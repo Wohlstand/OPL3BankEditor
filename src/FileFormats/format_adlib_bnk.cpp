@@ -401,7 +401,12 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
                                   bank.Ins_Melodic_box[ ins ];
         strncpy(inst.name, Ins.name, 8);
         if(inst.name[0] == '\0')
-            snprintf(inst.name, 8, "%c-%05d", (isDrum ? 'P' : 'M'), ins);
+        {
+            char name_tmp[33] = {0};
+            snprintf(name_tmp, 32, "%c-%05u", (isDrum ? 'P' : 'M'), ins);
+            name_tmp[8] = '\0';
+            strncpy(inst.name, name_tmp, 8);
+        }
         inst.name[8] = '\0';
         inst.index = ins;
         /*YES, IT'S "USED"! (I see no reasons to keep junk data in the file)*/ /*(char)isDrum*/
