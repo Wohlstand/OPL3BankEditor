@@ -3558,6 +3558,7 @@ of second voice</string>
      <addaction name="actionEmulatorNuked"/>
      <addaction name="actionEmulatorDosBox"/>
      <addaction name="actionEmulatorOpal"/>
+     <addaction name="actionEmulatorJava"/>
      <addaction name="actionWin9xOPLProxy"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
@@ -3824,7 +3825,15 @@ of second voice</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Opal OPL3</string>
+    <string notr="true">Opal OPL3</string>
+   </property>
+  </action>
+  <action name="actionEmulatorJava">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Java OPL3</string>
    </property>
   </action>
  </widget>
