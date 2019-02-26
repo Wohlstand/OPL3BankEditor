@@ -77,13 +77,15 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
             pseudoOpl2.passReg(reg, val);
             break;
 
-        case 0x5e: // YMF262 port 0, write value dd to register aa
-        case 0x5f: // YMF262 port 1, write value dd to register aa
+        case 0x5e:   // YMF262 port 0, write value dd to register aa
+        case 0x5f: { // YMF262 port 1, write value dd to register aa
             file.read(char_p(&reg), 1);
             file.read(char_p(&val), 1);
-            if(cmd == 0x5f) reg |= 0x100u;
-            pseudoOpl3.passReg(reg, val);
+            uint16_t regopl3 = reg;
+            if(cmd == 0x5f) regopl3 |= 0x100u;
+            pseudoOpl3.passReg(regopl3, val);
             break;
+        }
 
         case 0x61://Wait samples
         case 0x62://Wait samples
