@@ -68,6 +68,7 @@ target_link_libraries(Common PUBLIC Qt5::Widgets)
 
 set(FILEFORMATS_SOURCES
   "src/FileFormats/ffmt_base.cpp"
+  "src/FileFormats/ffmt_enums.cpp"
   "src/FileFormats/ffmt_factory.cpp"
   "src/FileFormats/format_adlib_bnk.cpp"
   "src/FileFormats/format_adlib_tim.cpp"
