@@ -23,6 +23,7 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include "bank.h"
+#include "FileFormats/ffmt_enums.h"
 
 namespace Ui {
 class Importer;
@@ -39,7 +40,7 @@ public:
     explicit Importer(QWidget *parent = 0);
     ~Importer();
 
-    bool openFile(QString filePath, bool isBank=true);
+    bool openFile(QString filePath, bool isBank = true, FfmtErrCode *errp = nullptr);
     void initFileData(QString &filePath);
     void reloadInstrumentNames();
     void setCurrentInstrument(int num, bool isPerc);

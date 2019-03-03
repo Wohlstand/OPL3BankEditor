@@ -171,9 +171,17 @@ public:
     /*!
      * \brief Open file
      * \param filePath absolute path to the file to open
+     * \param errp a location to receive the error code in case of failure
      * \return true if file successfully opened, false if failed
      */
-    bool openFile(QString filePath);
+    bool openFile(QString filePath, FfmtErrCode *errp = nullptr);
+
+    /*!
+     * \brief Open file or import it if it cannot be loaded as bank
+     * \param filePath absolute path to the file to open
+     * \return true if file successfully opened, false if failed
+     */
+    bool openOrImportFile(QString filePath);
 
     /*!
      * \brief Save bank file

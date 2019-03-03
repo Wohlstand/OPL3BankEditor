@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     QStringList args = a.arguments();
     if(args.size()>1)
-        w.openFile(args[1]);
+        w.openOrImportFile(args[1]);
 
     return a.exec();
 }

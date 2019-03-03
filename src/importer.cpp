@@ -57,7 +57,7 @@ Importer::~Importer()
     delete ui;
 }
 
-bool Importer::openFile(QString filePath, bool isBank)
+bool Importer::openFile(QString filePath, bool isBank, FfmtErrCode *errp)
 {
     FfmtErrCode err = FfmtErrCode::ERR_UNKNOWN;
     BankFormats format = BankFormats::FORMAT_UNKNOWN;
@@ -103,8 +103,13 @@ bool Importer::openFile(QString filePath, bool isBank)
 
     if(err != FfmtErrCode::ERR_OK)
     {
-        QString errText = FileFormats::getErrorText(err);
-        ErrMessageO(this, errText, isBank);
+        if(!errp)
+        {
+            QString errText = FileFormats::getErrorText(err);
+            ErrMessageO(this, errText, isBank);
+        }
+        else
+            *errp = err;
         return false;
     }
     if(FmBankFormatFactory::isImportOnly(format))
