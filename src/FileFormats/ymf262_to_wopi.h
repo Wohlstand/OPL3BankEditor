@@ -37,9 +37,13 @@ class RawYmf262ToWopi
 
     enum ChannelCategory
     {
+        // generic channels
         ChanCat_2op,
         ChanCat_4opMaster,
-        ChanCat_4opSlave
+        ChanCat_4opSlave,
+        // rhythm-mode channels
+        ChanCat_RhythmBD, ChanCat_RhythmSD, ChanCat_RhythmTT,
+        ChanCat_RhythmCY, ChanCat_RhythmHH
     };
 
     struct Operator
@@ -61,7 +65,9 @@ class RawYmf262ToWopi
         Channel *buddy;
     };
 
-    Channel m_channel[18];
+    uint8_t m_4opMask;
+    uint8_t m_regBD;
+    Channel m_channel[18 + 5];
     Operator m_operator[36];
     std::shared_ptr<InstrumentData> m_insdata;
 
@@ -74,7 +80,7 @@ public:
     const QList<FmBank::Instrument> &caughtInstruments();
 
 private:
-    void updateChannelRoles(uint8_t mask);
+    void updateChannelRoles();
 };
 
 #endif

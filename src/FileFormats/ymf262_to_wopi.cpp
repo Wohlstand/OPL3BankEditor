@@ -31,6 +31,9 @@ void RawYmf262ToWopi::reset()
     insdata.cache.clear();
     insdata.caughtInstruments.clear();
 
+    m_4opMask = 0;
+    m_regBD = 0;
+
     for(unsigned i = 0; i < 9; ++i)
     {
         unsigned o = 6 * (i / 3) + (i % 3);
@@ -49,6 +52,18 @@ void RawYmf262ToWopi::reset()
         m_channel[i].regB0 = 0;
         m_channel[i].regC0 = 0;
     }
+
+    m_channel[18].cat = ChanCat_RhythmBD;
+    m_channel[18].pair[0] = &m_operator[12];
+    m_channel[18].pair[1] = &m_operator[15];
+    m_channel[19].cat = ChanCat_RhythmSD;
+    m_channel[19].pair[0] = m_channel[19].pair[1] = &m_operator[16];
+    m_channel[20].cat = ChanCat_RhythmTT;
+    m_channel[20].pair[0] = m_channel[20].pair[1] = &m_operator[14];
+    m_channel[21].cat = ChanCat_RhythmCY;
+    m_channel[21].pair[0] = m_channel[21].pair[1] = &m_operator[17];
+    m_channel[22].cat = ChanCat_RhythmHH;
+    m_channel[22].pair[0] = m_channel[22].pair[1] = &m_operator[13];
 
     for(unsigned i = 0; i < 36; ++i)
     {
@@ -96,10 +111,16 @@ void RawYmf262ToWopi::passReg(uint16_t addr, uint8_t val)
     unsigned cs = addr & 0x100; // primary/secondary channel set
     unsigned reg = addr & 0xff;
 
-    if(addr == 0x104)
+    if(addr == 0x104) // 4-op mask
     {
-        // 4-op mask
-        updateChannelRoles(val);
+        m_4opMask = val & 0x3f;
+        updateChannelRoles();
+        return;
+    }
+
+    if(addr == 0xbd) // percussion mode
+    {
+        m_regBD = val;
         return;
     }
 
@@ -136,6 +157,18 @@ void RawYmf262ToWopi::passReg(uint16_t addr, uint8_t val)
             case 0xB0: ch.regB0 = val; break;
             case 0xC0: ch.regC0 = val; break;
             }
+
+            if(chno >= 6 && chno <= 10)
+            {
+                Channel &rhy = m_channel[chno - 6 + 18];
+                switch(channelReg)
+                {
+                case 0xA0: rhy.regA0 = val; break;
+                case 0xB0: rhy.regB0 = val; break;
+                case 0xC0: rhy.regC0 = val; break;
+                }
+            }
+
             return;
         }
     }
@@ -169,31 +202,38 @@ void RawYmf262ToWopi::doAnalyzeState()
 {
     InstrumentData &insdata = *m_insdata;
 
-    for(unsigned chno = 0; chno < 18; chno++)
+    for(unsigned chno = 0; chno < 18 + 5; chno++)
     {
         const Channel &ch = m_channel[chno];
-        bool keyOn = (ch.regB0 & 32) != 0;
 
-        if(!keyOn)
-            continue; //Skip if key is not pressed
-
-        ChannelCategory cat = m_channel->cat;
+        ChannelCategory cat = ch.cat;
         if(cat == ChanCat_4opSlave)
             continue;
+
+        bool keyOn;
+        if (cat < ChanCat_RhythmBD)
+            keyOn = (ch.regB0 & 32) != 0;
+        else {
+            unsigned nthPerc = cat - ChanCat_RhythmBD;
+            keyOn = (m_regBD & (1 << (4 - nthPerc))) != 0;
+        }
+        if(!keyOn)
+            continue; //Skip if key is not pressed
 
         QByteArray insRaw; //Raw instrument
         FmBank::Instrument ins = FmBank::emptyInst();
 
-        ins.en_4op = cat == ChanCat_4opMaster;
-
         Operator *ops[4];
         ops[MODULATOR1] = ch.pair[0];
         ops[CARRIER1] = ch.pair[1];
-        if(ins.en_4op)
-        {
+
+        if (cat == ChanCat_4opMaster) {
+            ins.en_4op = true;
             ops[MODULATOR2] = ch.buddy->pair[0];
             ops[CARRIER2] = ch.buddy->pair[1];
         }
+        else if (cat != ChanCat_2op)
+            ins.adlib_drum_number = (cat - ChanCat_RhythmBD) + 6;
 
         ins.setFBConn1(ch.regC0 & 15);
         insRaw.push_back((char)ins.getFBConn1());
@@ -263,11 +303,13 @@ const QList<FmBank::Instrument> &RawYmf262ToWopi::caughtInstruments()
     return m_insdata->caughtInstruments;
 }
 
-void RawYmf262ToWopi::updateChannelRoles(uint8_t mask)
+void RawYmf262ToWopi::updateChannelRoles()
 {
+    unsigned mask4 = m_4opMask;
+
     for(unsigned pair = 0; pair < 6; ++pair)
     {
-        bool fourOp = (mask & (1u << pair)) != 0;
+        bool fourOp = (mask4 & (1u << pair)) != 0;
 
         unsigned chno1st = (pair < 3) ? pair : (pair + 6);
         unsigned chno2nd = chno1st + 3;
