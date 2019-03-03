@@ -794,7 +794,7 @@ de la deuxième voix</translation>
     <message>
         <location filename="../bank_editor.ui" line="3518"/>
         <source>Preferred MIDI standard</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard MIDI préféré</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3552"/>
@@ -1096,12 +1096,12 @@ Voulez vous poursuivre l&apos;enregistrement ?</translation>
     <message>
         <location filename="../bank_editor.cpp" line="645"/>
         <source>&lt;Unknown&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Inconnu&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="657"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Réservé&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="872"/>
@@ -1530,12 +1530,12 @@ Vérifiez que le proxy OPL le plus récent est installé.</translation>
     <message>
         <location filename="../importer.cpp" line="469"/>
         <source>&lt;Unknown&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Inconnu&gt;</translation>
     </message>
     <message>
         <location filename="../importer.cpp" line="479"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Réservé %1&gt;</translation>
     </message>
     <message>
         <location filename="../importer.cpp" line="529"/>
@@ -1665,7 +1665,7 @@ Si des problèmes audio se produisent, réassignez à ce paramètre à une valeu
     <message>
         <location filename="../ins_names.cpp" line="135"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Réservé %1&gt;</translation>
     </message>
 </context>
 <context>
