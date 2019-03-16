@@ -73,7 +73,10 @@ void BankCompareDialog::updateComparison()
         ".compare-B { color: red; }"
         );
 
-    br->setHtml(text);
+    if(text.isEmpty())
+        br->setHtml(tr("<h1>Banks are identical.<h1>"));
+    else
+        br->setHtml(text);
 }
 
 std::set<uint32_t> BankCompareDialog::collectIds(const FmBank &fmb)
