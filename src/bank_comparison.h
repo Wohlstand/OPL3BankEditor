@@ -31,10 +31,15 @@ namespace Ui { class BankCompareDialog; }
 
 class BankCompareDialog : public QDialog
 {
+    Q_OBJECT
+
 public:
     explicit BankCompareDialog(
         unsigned midiSpec, const FmBank &bankA, const FmBank &bankB, QWidget *parent = nullptr);
     ~BankCompareDialog();
+
+private slots:
+    void on_chkIgnoreMeasurement_clicked(bool);
 
 private:
     void updateComparison();
@@ -43,7 +48,12 @@ private:
     static QString checkOnlyIn(
         unsigned spec, const QString &nameA, const QString &styleClassA, const FmBank &A, const FmBank &B);
     static QString checkDifferences(
-        unsigned spec, uint32_t id, const FmBank::Instrument &A, const FmBank::Instrument &B);
+        unsigned spec, uint32_t id, const FmBank::Instrument &A, const FmBank::Instrument &B, unsigned options);
+
+    enum DiffOption
+    {
+        DiffOpt_IgnoreMeasurement = 1,
+    };
 
     struct DiffElement
     {
@@ -62,8 +72,8 @@ private:
     static QString nameOfInstrument(unsigned spec, const FmBank::Instrument &ins, uint32_t id, bool *isFallback = nullptr);
 
     unsigned m_midiSpec = 0;
-    const FmBank &m_bankA;
-    const FmBank &m_bankB;
+    FmBank m_bankA;
+    FmBank m_bankB;
     std::unique_ptr<Ui::BankCompareDialog> m_ui;
 };
 

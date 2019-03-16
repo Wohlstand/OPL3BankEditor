@@ -41,6 +41,11 @@ BankCompareDialog::~BankCompareDialog()
 {
 }
 
+void BankCompareDialog::on_chkIgnoreMeasurement_clicked(bool)
+{
+    updateComparison();
+}
+
 void BankCompareDialog::updateComparison()
 {
     QString text;
@@ -55,12 +60,17 @@ void BankCompareDialog::updateComparison()
     const std::set<uint32_t> idsA = collectIds(A);
     const std::set<uint32_t> idsB = collectIds(B);
 
+    unsigned diffOptions = 0;
+
+    if (m_ui->chkIgnoreMeasurement->isChecked())
+        diffOptions |= DiffOpt_IgnoreMeasurement;
+
     for(uint32_t id : idsA)
     {
         if(idsB.find(id) != idsB.end())
         {
             text += checkDifferences(
-                m_midiSpec, id, *instrumentOfId(A, id), *instrumentOfId(B, id));
+                m_midiSpec, id, *instrumentOfId(A, id), *instrumentOfId(B, id), diffOptions);
         }
     }
 
@@ -151,7 +161,7 @@ QString BankCompareDialog::checkOnlyIn(unsigned spec, const QString &nameA, cons
     return text;
 }
 
-QString BankCompareDialog::checkDifferences(unsigned spec, uint32_t id, const FmBank::Instrument &A, const FmBank::Instrument &B)
+QString BankCompareDialog::checkDifferences(unsigned spec, uint32_t id, const FmBank::Instrument &A, const FmBank::Instrument &B, unsigned options)
 {
     QString text;
     unsigned index = 0;
@@ -214,6 +224,7 @@ QString BankCompareDialog::checkDifferences(unsigned spec, uint32_t id, const Fm
         {
             if(!A.en_4op && (mp.flags & MP_4OpOnly) != 0) continue;
             if(A.en_4op && !A.en_pseudo4op && (mp.flags & MP_Pseudo4OpOnly) != 0) continue;
+            if((options & DiffOpt_IgnoreMeasurement) != 0 && (mp.flags & MP_Measure) != 0) continue;
             mps.push_back(&mp);
         }
 
