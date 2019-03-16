@@ -1101,7 +1101,7 @@ Voulez vous poursuivre l&apos;enregistrement ?</translation>
     <message>
         <location filename="../bank_editor.cpp" line="657"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation>&lt;Réservé&gt;</translation>
+        <translation>&lt;Réservé %1&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="872"/>

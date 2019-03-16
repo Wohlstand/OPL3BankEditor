@@ -3533,6 +3533,7 @@ of second voice</string>
     <addaction name="actionReMeasure"/>
     <addaction name="actionDelayAnalysis"/>
     <addaction name="actionChipsBenchmark"/>
+    <addaction name="actionCompareWith"/>
     <addaction name="separator"/>
     <addaction name="actionAddBank"/>
     <addaction name="actionCloneBank"/>
@@ -3834,6 +3835,11 @@ of second voice</string>
    </property>
    <property name="text">
     <string notr="true">Java OPL3</string>
+   </property>
+  </action>
+  <action name="actionCompareWith">
+   <property name="text">
+    <string>Compare with other bank...</string>
    </property>
   </action>
  </widget>

@@ -128,6 +128,7 @@ endif()
 set(SOURCES
   "src/audio.cpp"
   "src/bank_editor.cpp"
+  "src/bank_comparison.cpp"
   "src/controlls.cpp"
   "src/proxystyle.cpp"
   "src/formats_sup.cpp"
@@ -147,6 +148,7 @@ endif()
 
 set(UIS
   "src/bank_editor.ui"
+  "src/bank_comparison.ui"
   "src/formats_sup.ui"
   "src/importer.ui")
 if(ENABLE_PLOTS)

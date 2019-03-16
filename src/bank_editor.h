@@ -402,6 +402,11 @@ private slots:
      */
     void on_actionChipsBenchmark_triggered();
 
+    /**
+     * @brief Select another bank file and do a comparison
+     */
+    void on_actionCompareWith_triggered();
+
 #if defined(ENABLE_PLOTS)
     /**
      * @brief Run the delay analysis of the current instrument

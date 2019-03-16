@@ -103,6 +103,7 @@ SOURCES += \
     src/audio.cpp \
     src/bank.cpp \
     src/bank_editor.cpp \
+    src/bank_comparison.cpp \
     src/common.cpp \
     src/controlls.cpp \
     src/proxystyle.cpp \
@@ -152,6 +153,7 @@ SOURCES += \
 
 HEADERS += \
     src/bank_editor.h \
+    src/bank_comparison.h \
     src/bank.h \
     src/common.h \
     src/proxystyle.h \
@@ -210,6 +212,7 @@ HEADERS += \
 
 FORMS += \
     src/bank_editor.ui \
+    src/bank_comparison.ui \
     src/formats_sup.ui \
     src/importer.ui
 
