@@ -234,23 +234,27 @@ QString BankCompareDialog::checkDifferences(unsigned spec, uint32_t id, const Fm
             text += tabulateDiffElements(elts);
 
         // Part of operator
-        elts.clear();
         for(unsigned op = 0; op < (A.en_4op ? 4 : 2); ++op)
         {
+            elts.clear();
             unsigned opDiffIndex = 0;
 
             for(const MetaParameter *mp : mps)
             {
+                bool isOfOperator = false;
                 switch (op) {
                 case 0:
-                    if((mp->flags & MP_Operator1) != MP_Operator1) continue; else break;
+                    isOfOperator = (mp->flags & MP_Operator1) == MP_Operator1; break;
                 case 1:
-                    if((mp->flags & MP_Operator2) != MP_Operator2) continue; else break;
+                    isOfOperator = (mp->flags & MP_Operator2) == MP_Operator2; break;
                 case 2:
-                    if((mp->flags & MP_Operator3) != MP_Operator3) continue; else break;
+                    isOfOperator = (mp->flags & MP_Operator3) == MP_Operator3; break;
                 case 3:
-                    if((mp->flags & MP_Operator4) != MP_Operator4) continue; else break;
+                    isOfOperator = (mp->flags & MP_Operator4) == MP_Operator4; break;
                 };
+
+                if(!isOfOperator)
+                    continue;
 
                 int valA = mp->get(A);
                 int valB = mp->get(B);
