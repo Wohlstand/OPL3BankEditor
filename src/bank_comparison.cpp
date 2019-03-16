@@ -22,6 +22,12 @@
 #include <QDebug>
 #include <string.h>
 
+#if QT_VERSION >= 0x050000
+namespace Qt {
+    static inline QString escape(const QString &s) { return s.toHtmlEscaped(); }
+}
+#endif
+
 BankCompareDialog::BankCompareDialog(
     unsigned midiSpec, const FmBank &bankA, const FmBank &bankB, QWidget *parent)
     : QDialog(parent), m_midiSpec(midiSpec), m_bankA(bankA), m_bankB(bankB), m_ui(new Ui::BankCompareDialog)
@@ -112,7 +118,7 @@ QString BankCompareDialog::checkOnlyIn(unsigned spec, const QString &nameA, cons
 
         if(index == 0)
         {
-            text += tr("<h1>Only in bank %1</h1>").arg(nameA.toHtmlEscaped());
+            text += tr("<h1>Only in bank %1</h1>").arg(Qt::escape(nameA));
             text += "<table>";
         }
 
@@ -124,10 +130,10 @@ QString BankCompareDialog::checkOnlyIn(unsigned spec, const QString &nameA, cons
         QString insName = nameOfInstrument(spec, *ins, id, &isFallback);
 
         text += QString("<tr><td>%1</td><td>%2</td><td class='name name%3'>%4</td></tr>")
-            .arg(stringOfId(id).toHtmlEscaped())
-            .arg(mbName.toHtmlEscaped())
+            .arg(Qt::escape(stringOfId(id)))
+            .arg(Qt::escape(mbName))
             .arg(isFallback ? " name-fallback" : "")
-            .arg(insName.toHtmlEscaped());
+            .arg(Qt::escape(insName));
 
         ++index;
     }
@@ -149,8 +155,8 @@ QString BankCompareDialog::checkDifferences(unsigned spec, uint32_t id, const Fm
     {
         QString text;
         text += QString("<h1>%1 <span class='compare-A'>%2</span></h1>")
-            .arg(stringOfId(id).toHtmlEscaped())
-            .arg(nameOfInstrument(spec, A, id).toHtmlEscaped());
+            .arg(Qt::escape(stringOfId(id)))
+            .arg(Qt::escape(nameOfInstrument(spec, A, id)));
         text += "<div>";
         return text;
     };
@@ -162,7 +168,7 @@ QString BankCompareDialog::checkDifferences(unsigned spec, uint32_t id, const Fm
             text += insDiffHeader();
 
         text += tr("<p>Renamed to <span class='compare-B'>%1</span></p>")
-            .arg(((B.name[0] != '\0') ? QString::fromUtf8(B.name) : tr("(empty string)")).toHtmlEscaped());
+            .arg(Qt::escape(((B.name[0] != '\0') ? QString::fromUtf8(B.name) : tr("(empty string)"))));
         ++index;
     }
 
