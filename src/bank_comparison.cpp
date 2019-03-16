@@ -49,8 +49,8 @@ void BankCompareDialog::updateComparison()
     const FmBank &A = m_bankA;
     const FmBank &B = m_bankB;
 
-    text += checkOnlyIn(m_midiSpec, tr("Current"), A, B);
-    text += checkOnlyIn(m_midiSpec, tr("Other"), B, A);
+    text += checkOnlyIn(m_midiSpec, tr("Current"), "compare-A", A, B);
+    text += checkOnlyIn(m_midiSpec, tr("Other"), "compare-B", B, A);
 
     const std::set<uint32_t> idsA = collectIds(A);
     const std::set<uint32_t> idsB = collectIds(B);
@@ -103,7 +103,7 @@ std::set<uint32_t> BankCompareDialog::collectIds(const FmBank &fmb)
     return ids;
 }
 
-QString BankCompareDialog::checkOnlyIn(unsigned spec, const QString &nameA, const FmBank &A, const FmBank &B)
+QString BankCompareDialog::checkOnlyIn(unsigned spec, const QString &nameA, const QString &styleClassA, const FmBank &A, const FmBank &B)
 {
     QString text;
     unsigned index = 0;
@@ -118,7 +118,9 @@ QString BankCompareDialog::checkOnlyIn(unsigned spec, const QString &nameA, cons
 
         if(index == 0)
         {
-            text += tr("<h1>Only in bank %1</h1>").arg(Qt::escape(nameA));
+            text += tr("<h1>Only in bank <span class='%1'>%2</span></h1>")
+                .arg(styleClassA)
+                .arg(Qt::escape(nameA));
             text += "<table>";
         }
 
@@ -187,10 +189,10 @@ QString BankCompareDialog::checkDifferences(unsigned spec, uint32_t id, const Fm
 
         std::vector<DiffElement> elts;
         elts.emplace_back("4op", A.en_4op, B.en_4op);
-        if(A.en_4op)
+        if(A.en_4op || B.en_4op)
             elts.emplace_back("ps4op", A.en_pseudo4op, B.en_pseudo4op);
         elts.emplace_back("con1", A.connection1, B.connection1);
-        if(A.en_4op)
+        if(A.en_4op || B.en_4op)
             elts.emplace_back("con2", A.connection2, B.connection2);
 
         text += tabulateDiffElements(elts);

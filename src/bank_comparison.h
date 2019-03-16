@@ -41,7 +41,7 @@ private:
     static std::set<uint32_t> collectIds(const FmBank &fmb);
 
     static QString checkOnlyIn(
-        unsigned spec, const QString &nameA, const FmBank &A, const FmBank &B);
+        unsigned spec, const QString &nameA, const QString &styleClassA, const FmBank &A, const FmBank &B);
     static QString checkDifferences(
         unsigned spec, uint32_t id, const FmBank::Instrument &A, const FmBank::Instrument &B);
 
