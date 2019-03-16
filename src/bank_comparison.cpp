@@ -218,7 +218,7 @@ QString BankCompareDialog::checkDifferences(unsigned spec, uint32_t id, const Fm
         elts.clear();
         for(const MetaParameter *mp : mps)
         {
-            if((mp->flags & MP_Operator1) != 0) continue;
+            if((mp->flags & MP_OperatorMask) != 0) continue;
 
             int valA = mp->get(A);
             int valB = mp->get(B);
@@ -244,14 +244,14 @@ QString BankCompareDialog::checkDifferences(unsigned spec, uint32_t id, const Fm
                 bool isOfOperator = false;
                 switch (op) {
                 case 0:
-                    isOfOperator = (mp->flags & MP_Operator1) == MP_Operator1; break;
+                    isOfOperator = (mp->flags & MP_OperatorMask) == MP_Operator1; break;
                 case 1:
-                    isOfOperator = (mp->flags & MP_Operator2) == MP_Operator2; break;
+                    isOfOperator = (mp->flags & MP_OperatorMask) == MP_Operator2; break;
                 case 2:
-                    isOfOperator = (mp->flags & MP_Operator3) == MP_Operator3; break;
+                    isOfOperator = (mp->flags & MP_OperatorMask) == MP_Operator3; break;
                 case 3:
-                    isOfOperator = (mp->flags & MP_Operator4) == MP_Operator4; break;
-                };
+                    isOfOperator = (mp->flags & MP_OperatorMask) == MP_Operator4; break;
+               };
 
                 if(!isOfOperator)
                     continue;

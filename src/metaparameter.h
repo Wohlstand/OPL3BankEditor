@@ -44,8 +44,10 @@ enum MetaParameterFlag
     MP_Measure       = 32,
     MP_Operator1     = 4,  /* all operators set the 3rd flag bit */
     MP_Operator2     = (MP_Operator1 + 1),
-    MP_Operator3     = (MP_Operator1 + 2) | MP_4OpOnly,
-    MP_Operator4     = (MP_Operator1 + 3) | MP_4OpOnly,
+    MP_Operator3     = (MP_Operator1 + 2),
+    MP_Operator4     = (MP_Operator1 + 3),
+
+    MP_OperatorMask = MP_Operator1|MP_Operator2|MP_Operator3|MP_Operator4
 };
 
 static const MetaParameter MP_instrument[] =
@@ -74,8 +76,8 @@ static const MetaParameter MP_instrument[] =
     {"ksr", G(ins.OP[n].ksr), 0, 1, (flags)}
     OP(MODULATOR1, MP_Operator1),
     OP(CARRIER1, MP_Operator2),
-    OP(MODULATOR2, MP_Operator3),
-    OP(CARRIER2, MP_Operator4),
+    OP(MODULATOR2, MP_Operator3|MP_4OpOnly),
+    OP(CARRIER2, MP_Operator4|MP_4OpOnly),
 #undef OP
     {"note1", G(ins.note_offset1), -128, 127, MP_None},
     {"note2", G(ins.note_offset2), -128, 127, MP_Pseudo4OpOnly},
