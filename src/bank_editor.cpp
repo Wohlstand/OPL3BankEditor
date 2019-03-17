@@ -203,7 +203,14 @@ void BankEditor::loadSettings()
     ui->deepTremolo->setChecked(setup.value("deep-tremolo", false).toBool());
     ui->deepVibrato->setChecked(setup.value("deep-vibrato", false).toBool());
     m_recentPath = setup.value("recent-path").toString();
-    m_currentChip = (Generator::OPL_Chips)setup.value("chip-emulator", defaultChip).toInt();
+    {
+        int chipEmulator = setup.value("chip-emulator", defaultChip).toInt();
+        if(chipEmulator >= Generator::CHIP_END)
+            chipEmulator = Generator::CHIP_BEGIN;
+        if(chipEmulator < Generator::CHIP_BEGIN)
+            chipEmulator = Generator::CHIP_BEGIN;
+        m_currentChip = static_cast<Generator::OPL_Chips>(chipEmulator);
+    }
     m_language = setup.value("language").toString();
     m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
 #ifdef ENABLE_HW_OPL_PROXY
@@ -226,6 +233,7 @@ void BankEditor::loadSettings()
 
     switch(m_currentChip)
     {
+    default:
     case Generator::CHIP_Nuked:
         ui->actionEmulatorNuked->setChecked(true);
         break;

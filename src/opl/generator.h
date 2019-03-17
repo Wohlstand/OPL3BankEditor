@@ -79,11 +79,13 @@ class Generator
 public:
     enum OPL_Chips
     {
+        CHIP_BEGIN = 0,
         CHIP_Nuked = 0,
         CHIP_DosBox,
         CHIP_Opal,
         CHIP_Java,
-        CHIP_Win9xProxy
+        CHIP_Win9xProxy,
+        CHIP_END
     };
     Generator(uint32_t sampleRate, OPL_Chips initialChip);
     ~Generator();
