@@ -962,7 +962,7 @@ void BankEditor::on_actionCompareWith_triggered()
 {
     QString filters = FmBankFormatFactory::getOpenFiltersList();
     QString fileToOpen;
-    fileToOpen = QFileDialog::getOpenFileName(this, "Open other bank file",
+    fileToOpen = QFileDialog::getOpenFileName(this, tr("Open other bank file"),
                                               m_recentPath, filters, nullptr,
                                               FILE_OPEN_DIALOG_OPTIONS);
     if(fileToOpen.isEmpty())
