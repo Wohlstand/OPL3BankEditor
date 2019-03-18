@@ -19,67 +19,57 @@
     <message>
         <location filename="../bank_comparison.ui" line="14"/>
         <source>Bank comparison</source>
-        <translation type="unfinished"></translation>
+        <translation>Сравнение банков</translation>
     </message>
     <message>
         <location filename="../bank_comparison.ui" line="22"/>
         <source>Ignore measurement data</source>
-        <translation type="unfinished"></translation>
+        <translation>Игнорировать измерительные данные</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="57"/>
         <source>Current</source>
-        <translation type="unfinished"></translation>
+        <translation>Текущий</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="58"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Другой</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="87"/>
         <source>&lt;h1&gt;Banks are identical.&lt;h1&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h1&gt;Банки одинаковые.&lt;h1&gt;</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="134"/>
         <source>&lt;h1&gt;Only in bank &lt;span class=&apos;%1&apos;&gt;%2&lt;/span&gt;&lt;/h1&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../bank_comparison.cpp" line="158"/>
-        <source>&lt;/table&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h1&gt;Только в банке &lt;span class=&apos;%1&apos;&gt;%2&lt;/span&gt;&lt;/h1&gt;</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="185"/>
         <source>&lt;p&gt;Renamed to &lt;span class=&apos;compare-B&apos;&gt;%1&lt;/span&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Переименовано в &lt;span class=&apos;compare-B&apos;&gt;%1&lt;/span&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="186"/>
         <source>(empty string)</source>
-        <translation type="unfinished"></translation>
+        <translation>(пустая строка)</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="201"/>
         <source>&lt;p&gt;Uses &lt;span class=&apos;compare-B&apos;&gt;different algorithm&lt;/span&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Использует &lt;span class=&apos;compare-B&apos;&gt;другой алгоритм&lt;/span&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="281"/>
         <source>&lt;h2&gt;Operator %1&lt;/h2&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../bank_comparison.cpp" line="294"/>
-        <source>&lt;/div&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h2&gt;Оператор %1&lt;/h2&gt;</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="354"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation type="unfinished">&lt;Резерв %1&gt;</translation>
+        <translation>&lt;Резерв %1&gt;</translation>
     </message>
 </context>
 <context>
@@ -1053,7 +1043,7 @@ of second voice</source>
     <message>
         <location filename="../bank_editor.ui" line="3842"/>
         <source>Compare with other bank...</source>
-        <translation type="unfinished"></translation>
+        <translation>Сравнить с другим банком...</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="512"/>
@@ -1252,7 +1242,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../bank_editor.cpp" line="965"/>
         <source>Open other bank file</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть другой банк</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1020"/>

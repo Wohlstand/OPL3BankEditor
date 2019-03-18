@@ -47,11 +47,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../bank_comparison.cpp" line="158"/>
-        <source>&lt;/table&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../bank_comparison.cpp" line="185"/>
         <source>&lt;p&gt;Renamed to &lt;span class=&apos;compare-B&apos;&gt;%1&lt;/span&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
@@ -72,14 +67,9 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../bank_comparison.cpp" line="294"/>
-        <source>&lt;/div&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../bank_comparison.cpp" line="354"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation type="unfinished">&lt;Réservé %1&gt;</translation>
+        <translation>&lt;Réservé %1&gt;</translation>
     </message>
 </context>
 <context>
