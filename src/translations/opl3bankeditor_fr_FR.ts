@@ -19,52 +19,52 @@
     <message>
         <location filename="../bank_comparison.ui" line="14"/>
         <source>Bank comparison</source>
-        <translation type="unfinished"></translation>
+        <translation>Comparaison de banques</translation>
     </message>
     <message>
         <location filename="../bank_comparison.ui" line="22"/>
         <source>Ignore measurement data</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorer les données mesurées</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="57"/>
         <source>Current</source>
-        <translation type="unfinished"></translation>
+        <translation>Actuelle</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="58"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Autre</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="87"/>
         <source>&lt;h1&gt;Banks are identical.&lt;h1&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h1&gt;Les banques sont identiques.&lt;h1&gt;</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="134"/>
         <source>&lt;h1&gt;Only in bank &lt;span class=&apos;%1&apos;&gt;%2&lt;/span&gt;&lt;/h1&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h1&gt;Uniquement dans la banque &lt;span class=&apos;%1&apos;&gt;%2&lt;/span&gt;&lt;/h1&gt;</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="185"/>
         <source>&lt;p&gt;Renamed to &lt;span class=&apos;compare-B&apos;&gt;%1&lt;/span&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Renommé &lt;span class=&apos;compare-B&apos;&gt;%1&lt;/span&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="186"/>
         <source>(empty string)</source>
-        <translation type="unfinished"></translation>
+        <translation>(chaîne vide)</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="201"/>
         <source>&lt;p&gt;Uses &lt;span class=&apos;compare-B&apos;&gt;different algorithm&lt;/span&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Utilise un &lt;span class=&apos;compare-B&apos;&gt;algorithme différent&lt;/span&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="281"/>
         <source>&lt;h2&gt;Operator %1&lt;/h2&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h2&gt;Opérateur %1&lt;/h2&gt;</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="354"/>
@@ -1053,7 +1053,7 @@ de la deuxième voix</translation>
     <message>
         <location filename="../bank_editor.ui" line="3842"/>
         <source>Compare with other bank...</source>
-        <translation type="unfinished"></translation>
+        <translation>Comparer avec une autre banque...</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="512"/>
@@ -1200,7 +1200,7 @@ Voulez-vous continuer ?</translation>
     <message>
         <location filename="../bank_editor.cpp" line="965"/>
         <source>Open other bank file</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir une autre banque</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1216"/>
