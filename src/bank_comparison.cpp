@@ -155,7 +155,7 @@ QString BankCompareDialog::checkOnlyIn(unsigned spec, const QString &nameA, cons
 
     if(index > 0)
     {
-        text += tr("</table>");
+        text += "</table>";
     }
 
     return text;
@@ -291,7 +291,7 @@ QString BankCompareDialog::checkDifferences(unsigned spec, uint32_t id, const Fm
 
     if(index > 0)
     {
-        text += tr("</div>");
+        text += "</div>";
     }
 
     return text;
