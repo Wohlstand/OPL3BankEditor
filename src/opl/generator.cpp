@@ -281,6 +281,7 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
     case CHIP_DosBox:
         chip.reset(new DosBoxOPL3());
         break;
+    default:
     case CHIP_Nuked:
         chip.reset(new NukedOPL3());
         break;
