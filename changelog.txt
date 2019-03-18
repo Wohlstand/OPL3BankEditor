@@ -22,6 +22,7 @@ Version 1.5
 - Rhythm-mode percussions will disable unnecessary UI parts and unused operators
 - Added Public Domain Opal OPL3 emulator made by Reality (a team who originally made the Reality Adlib Tracker)
 - Added LGPL licensed JavaOPL3 emulator made by Robson Cozendey in Java and later rewritten into C++ for GZDoom (Thanks to Jean Pierre Cimalando for a work!)
+- Added banks comparison tool
 
 Version 1.4.0.1
 - Added ability to re-calculate sounding delays for entire instruments set
