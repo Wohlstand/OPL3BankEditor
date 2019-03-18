@@ -30,6 +30,7 @@
 #include "formats_sup.h"
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
+#include "bank_comparison.h"
 #include "latency.h"
 #include "hardware.h"
 #include "ins_names.h"
@@ -955,6 +956,30 @@ void BankEditor::on_actionChipsBenchmark_triggered()
                                  tr("Instrument is not selected"),
                                  tr("Please select any instrument to begin the benchmark of emulators!"));
     }
+}
+
+void BankEditor::on_actionCompareWith_triggered()
+{
+    QString filters = FmBankFormatFactory::getOpenFiltersList();
+    QString fileToOpen;
+    fileToOpen = QFileDialog::getOpenFileName(this, "Open other bank file",
+                                              m_recentPath, filters, nullptr,
+                                              FILE_OPEN_DIALOG_OPTIONS);
+    if(fileToOpen.isEmpty())
+        return;
+
+    FmBank otherBank;
+    BankFormats format;
+    FfmtErrCode err = FmBankFormatFactory::OpenBankFile(fileToOpen, otherBank, &format);
+    if(err != FfmtErrCode::ERR_OK)
+    {
+        QString errText = FileFormats::getErrorText(err);
+        ErrMessageO(this, errText);
+        return;
+    }
+
+    BankCompareDialog dlg(getSelectedMidiSpec(), m_bank, otherBank, this);
+    dlg.exec();
 }
 
 #if defined(ENABLE_PLOTS)
