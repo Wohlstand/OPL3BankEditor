@@ -132,7 +132,7 @@ SOURCES += \
     src/FileFormats/ymf262_to_wopi.cpp \
     src/formats_sup.cpp \
     src/importer.cpp \
-    src/latency.cpp \
+    src/audio_config.cpp \
     src/hardware.cpp \
     src/ins_names.cpp \
     src/main.cpp \
@@ -182,7 +182,7 @@ HEADERS += \
     src/FileFormats/ymf262_to_wopi.h \
     src/formats_sup.h \
     src/importer.h \
-    src/latency.h \
+    src/audio_config.h \
     src/hardware.h \
     src/ins_names.h \
     src/ins_names_data.h \
@@ -214,7 +214,8 @@ FORMS += \
     src/bank_editor.ui \
     src/bank_comparison.ui \
     src/formats_sup.ui \
-    src/importer.ui
+    src/importer.ui \
+    src/audio_config.ui
 
 RESOURCES += \
     src/resources/resources.qrc

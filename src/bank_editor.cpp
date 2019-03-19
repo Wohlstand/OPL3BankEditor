@@ -31,7 +31,7 @@
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
 #include "bank_comparison.h"
-#include "latency.h"
+#include "audio_config.h"
 #include "hardware.h"
 #include "ins_names.h"
 #include "main.h"
@@ -1360,13 +1360,16 @@ void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
     }
 }
 
-void BankEditor::on_actionLatency_triggered()
+void BankEditor::on_actionAudioConfig_triggered()
 {
-    LatencyDialog *dlg = new LatencyDialog(this);
-    dlg->setLatency(m_audioLatency);
-    dlg->exec();
-    m_audioLatency = dlg->latency();
-    delete dlg;
+    AudioConfigDialog dlg(m_audioOut, this);
+    dlg.setLatency(m_audioLatency);
+    dlg.setDeviceName(m_audioDevice);
+    if(dlg.exec() == QDialog::Accepted)
+    {
+        m_audioLatency = dlg.latency();
+        m_audioDevice = dlg.deviceName();
+    }
 }
 
 #ifdef ENABLE_HW_OPL_PROXY

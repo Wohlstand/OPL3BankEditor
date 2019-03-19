@@ -482,9 +482,9 @@ private slots:
      */
     void on_actionAdLibBnkMode_triggered(bool checked);
     /**
-     * @brief Opens the latency setting dialog
+     * @brief Opens the audio configuration dialog
      */
-    void on_actionLatency_triggered();
+    void on_actionAudioConfig_triggered();
 #ifdef ENABLE_HW_OPL_PROXY
     /**
      * @brief Opens the hardware OPL dialog

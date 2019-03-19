@@ -3563,7 +3563,7 @@ of second voice</string>
      <addaction name="actionWin9xOPLProxy"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
-    <addaction name="actionLatency"/>
+    <addaction name="actionAudioConfig"/>
     <addaction name="actionHardware_OPL"/>
    </widget>
    <addaction name="menuFile"/>
@@ -3764,9 +3764,9 @@ of second voice</string>
     <string>Proxy to the real OPL3 chip</string>
    </property>
   </action>
-  <action name="actionLatency">
+  <action name="actionAudioConfig">
    <property name="text">
-    <string>Audio &amp;latency...</string>
+    <string>Audio &amp;configuration</string>
    </property>
   </action>
   <action name="actionLanguageDefault">

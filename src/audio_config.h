@@ -16,32 +16,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LATENCY_H
-#define LATENCY_H
+#ifndef AUDIO_CONFIG_H
+#define AUDIO_CONFIG_H
 
 #include <QDialog>
-class QSlider;
-class QLineEdit;
+#include <memory>
+namespace Ui { class AudioConfigDialog; }
+class AudioOutRt;
 
-class LatencyDialog : public QDialog
+class AudioConfigDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    LatencyDialog(QWidget *parent = nullptr);
-    ~LatencyDialog();
+    explicit AudioConfigDialog(AudioOutRt *audioOut, QWidget *parent = nullptr);
+    ~AudioConfigDialog();
 
     double latency() const;
     void setLatency(double lat);
 
+    QString deviceName() const;
+    void setDeviceName(const QString &deviceName);
+
 private:
-    void setupUi();
-    QSlider *m_ctlLatency;
-    QLineEdit *m_ctlLatencyEdit;
+    AudioOutRt *m_audioOut = nullptr;
+    std::unique_ptr<Ui::AudioConfigDialog> m_ui;
 
 private slots:
-    void onSliderValueChanged(int value);
-    void onTextEditingFinished();
+    void on_ctlLatency_valueChanged(int value);
+    void on_ctlLatencyEdit_editingFinished();
+    void on_btnChooseDevice_clicked();
 };
 
 #endif // LATENCY_H
