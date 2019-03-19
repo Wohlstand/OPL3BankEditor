@@ -69,6 +69,8 @@ private:
     Generator::OPL_Chips m_currentChip;
     //! Audio latency (ms)
     double m_audioLatency;
+    //! Name of the audio device
+    QString m_audioDevice;
 
 public:
     //! Audio latency constants (ms)

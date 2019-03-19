@@ -27,7 +27,7 @@
 void BankEditor::initAudio()
 {
     qDebug() << "Init audioOut...";
-    m_audioOut = new AudioOutRt(m_audioLatency * 1e-3, this);
+    m_audioOut = new AudioOutRt(m_audioLatency * 1e-3, m_audioDevice.toStdString(), this);
     qDebug() << "Init Generator...";
     std::shared_ptr<Generator> generator(
         new Generator(uint32_t(m_audioOut->sampleRate()), m_currentChip));

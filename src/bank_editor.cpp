@@ -214,6 +214,7 @@ void BankEditor::loadSettings()
     }
     m_language = setup.value("language").toString();
     m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
+    m_audioDevice = setup.value("audio-device", QString()).toString();
 #ifdef ENABLE_HW_OPL_PROXY
     m_proxyOplAddress = setup.value("hw-opl-address", 0x388).toUInt();
     Win9x_OPL_Proxy &proxy = *m_proxyOpl;
@@ -262,6 +263,7 @@ void BankEditor::saveSettings()
     setup.setValue("chip-emulator", (int)m_currentChip);
     setup.setValue("language", m_language);
     setup.setValue("audio-latency", m_audioLatency);
+    setup.setValue("audio-device", m_audioDevice);
 #ifdef ENABLE_HW_OPL_PROXY
     setup.setValue("hw-opl-address", m_proxyOplAddress);
 #endif

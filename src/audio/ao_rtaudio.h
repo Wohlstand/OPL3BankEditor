@@ -25,13 +25,17 @@ class IRealtimeProcess;
 class AudioOutRt : public QObject
 {
 public:
-    explicit AudioOutRt(double latency, QObject *parent = nullptr);
+    explicit AudioOutRt(double latency,
+                        const std::string &device_name = std::string(),
+                        QObject *parent = nullptr);
     unsigned sampleRate() const;
     void start(IRealtimeProcess &rt);
     void stop();
+    std::vector<std::string> listCompatibleDevices();
 private:
     static int process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
     static void errorCallback(RtAudioError::Type type, const std::string &errorText);
+    static bool isCompatibleDevice(const RtAudio::DeviceInfo &info);
     IRealtimeProcess *m_rt = nullptr;
     std::unique_ptr<RtAudio> m_audioOut;
 };
