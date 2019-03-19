@@ -56,9 +56,6 @@
         <property name="readOnly">
          <bool>true</bool>
         </property>
-        <property name="placeholderText">
-         <string>Default device</string>
-        </property>
        </widget>
       </item>
      </layout>

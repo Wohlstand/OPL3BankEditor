@@ -26,6 +26,10 @@ AudioConfigDialog::AudioConfigDialog(AudioOutRt *audioOut, QWidget *parent)
 {
     m_ui->setupUi(this);
 
+#if QT_VERSION >= 0x050000
+    m_ui->ctlDeviceNameEdit->setPlaceholderText(tr("Default device"));
+#endif
+
     m_ui->ctlLatency->setRange(
         BankEditor::audioMinimumLatency, BankEditor::audioMaximumLatency);
     m_ui->ctlLatencyEdit->setText(QString::number(m_ui->ctlLatency->value()));
@@ -77,7 +81,7 @@ void AudioConfigDialog::on_btnChooseDevice_clicked()
 
     std::vector<std::string> devices = m_audioOut->listCompatibleDevices();
 
-    action = menu.addAction(m_ui->ctlDeviceNameEdit->placeholderText());
+    action = menu.addAction(tr("Default device"));
 
     for (size_t i = 0, n = devices.size(); i < n; ++i) {
         if(i == 0)
