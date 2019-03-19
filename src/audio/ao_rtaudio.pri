@@ -11,6 +11,8 @@ INCLUDEPATH += $$PWD/external/rtaudio
 linux {
     DEFINES += __LINUX_ALSA__
     LIBS += -lasound
+    DEFINES += __LINUX_PULSE__
+    LIBS += -lpulse-simple -lpulse
 }
 win32 {
     DEFINES += __WINDOWS_DS__
