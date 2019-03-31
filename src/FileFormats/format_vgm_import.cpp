@@ -22,19 +22,83 @@
 
 #include <QSet>
 #include <QByteArray>
+#include <QBuffer>
+#include <zlib.h>
 #include <algorithm>
 #include <cstring>
 
 static void make_size_table(uint8_t *table, unsigned version);
+static gzFile gzopen_q(const QString &path, const char *mode);
 
 const char magic_vgm[4] = {0x56, 0x67, 0x6D, 0x20};
+const unsigned char magic_gzip[2] = {0x1F, 0x8B};
 
-bool VGM_Importer::detect(const QString &, char *magic)
+bool VGM_Importer::detect(const QString &filePath, char *magic)
 {
-    return (memcmp(magic_vgm, magic, 4) == 0);
+    if(memcmp(magic_vgm, magic, 4) == 0)
+        return true;
+
+    //Try as compressed VGM file
+    if(memcmp(magic_gzip, magic, 2) == 0)
+    {
+        gzFile vgz = gzopen_q(filePath, "rb");
+        if(!vgz)
+            return false;
+
+        char compMagic[4];
+        int count = (int)gzread(vgz, compMagic, 4);
+        gzclose(vgz);
+        if(count == 4 && memcmp(compMagic, magic_vgm, 4) == 0)
+            return true;
+    }
+
+    return false;
 }
 
 FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
+{
+    QFile file(filePath);
+    if(!file.open(QIODevice::ReadOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    char magic[4];
+    if(file.read(magic, 4) != 4)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    if(memcmp(magic_vgm, magic, 4) == 0)
+    {
+        file.seek(0);
+        return load(file, bank);
+    }
+
+    file.close();
+
+    //Try as compressed VGM file
+    if(memcmp(magic_gzip, magic, 2) == 0)
+    {
+        gzFile vgz = gzopen_q(filePath, "rb");
+        if(!vgz)
+            return FfmtErrCode::ERR_NOFILE;
+
+        QBuffer buffer;
+        buffer.open(QBuffer::ReadWrite);
+
+        int n;
+        char buf[1024];
+        while((n = (int)gzread(vgz, buf, sizeof(buf))) > 0)
+            buffer.write(buf, n);
+        if(n == -1)
+            return FfmtErrCode::ERR_BADFORMAT;
+        gzclose(vgz);
+
+        buffer.open(QIODevice::ReadOnly);
+        return load(buffer, bank);
+    }
+
+    return FfmtErrCode::ERR_BADFORMAT;
+}
+
+FfmtErrCode VGM_Importer::load(QIODevice &file, FmBank &bank)
 {
     RawYmf262ToWopi pseudoOpl2;
     RawYmf262ToWopi pseudoOpl3;
@@ -42,10 +106,6 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
 
     char    magic[4];
     uint8_t numb[4];
-
-    QFile file(filePath);
-    if(!file.open(QIODevice::ReadOnly))
-        return FfmtErrCode::ERR_NOFILE;
 
     bank.reset();
     if(file.read(magic, 4) != 4)
@@ -175,7 +235,7 @@ QString VGM_Importer::formatModuleName() const
 
 QString VGM_Importer::formatExtensionMask() const
 {
-    return "*.vgm";
+    return "*.vgm *.vgz";
 }
 
 BankFormats VGM_Importer::formatId() const
@@ -271,4 +331,13 @@ static void make_size_table(uint8_t *table, unsigned version)
         table[a] = 3;  // three operands, reserved for future use
     for(unsigned a = 0xE2; a <= 0xFF; ++a)
         table[a] = 4;  // three operands, reserved for future use
+}
+
+static gzFile gzopen_q(const QString &path, const char *mode)
+{
+#ifndef _WIN32
+    return gzopen(path.toStdString().c_str(), mode);
+#else
+    return gzopen_w(path.toStdWString().c_str(), mode);
+#endif
 }

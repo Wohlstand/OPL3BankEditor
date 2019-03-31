@@ -30,6 +30,7 @@ find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
 set(QWT_NAMES qwt-qt5 qwt) # find versions for Qt5 only
 find_package(Qwt)
+find_package(ZLIB REQUIRED)
 find_package(Threads REQUIRED)
 
 if(QWT_FOUND)
@@ -92,8 +93,8 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/ymf262_to_wopi.cpp"
   "src/FileFormats/wopl/wopl_file.c")
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
-target_include_directories(FileFormats PUBLIC "src")
-target_link_libraries(FileFormats PUBLIC Common)
+target_include_directories(FileFormats PUBLIC "src" PRIVATE ${ZLIB_INCLUDE_DIRS})
+target_link_libraries(FileFormats PUBLIC Common PRIVATE ${ZLIB_LIBRARIES})
 
 set(CHIPS_SOURCES
   "src/opl/chips/dosbox_opl3.cpp"
