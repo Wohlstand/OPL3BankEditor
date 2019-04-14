@@ -21,6 +21,8 @@
 
 #include "ffmt_base.h"
 
+class QIODevice;
+
 /**
  * @brief Import from VGM files
  */
@@ -34,6 +36,9 @@ public:
     QString     formatModuleName() const override;
     QString     formatExtensionMask() const override;
     BankFormats formatId() const override;
+
+private:
+    FfmtErrCode load(QIODevice &file, FmBank &bank);
 };
 
 #endif // VGM_IMPORT_H

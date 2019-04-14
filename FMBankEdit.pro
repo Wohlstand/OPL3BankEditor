@@ -45,6 +45,7 @@ win32 {
 CONFIG += rtmidi
 CONFIG += rtaudio
 #CONFIG += plots
+LIBS += -lz
 
 !macx:{
 QMAKE_CXXFLAGS += -fopenmp
