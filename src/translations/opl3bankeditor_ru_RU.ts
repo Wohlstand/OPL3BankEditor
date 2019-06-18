@@ -31,7 +31,7 @@
     <message>
         <location filename="../audio_config.ui" line="86"/>
         <source>Define the audio latency.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Указать аудиозадержку.</translation>
     </message>
     <message>
         <location filename="../audio_config.ui" line="127"/>
