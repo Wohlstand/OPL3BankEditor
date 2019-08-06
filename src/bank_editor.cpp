@@ -30,6 +30,7 @@
 #include "formats_sup.h"
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
+#include "operator_editor.h"
 #include "bank_comparison.h"
 #include "audio_config.h"
 #include "hardware.h"
@@ -135,6 +136,14 @@ BankEditor::BankEditor(QWidget *parent) :
 #ifndef ENABLE_HW_OPL_PROXY
     ui->actionHardware_OPL->setVisible(false);
 #endif
+
+    OperatorEditor *op_editors[4] = {ui->c1edit, ui->m1edit, ui->c2edit, ui->m2edit};
+    for(size_t i = 0; i < 4; i++)
+    {
+        OperatorEditor *ed = op_editors[i];
+        ed->setOperatorNumber(i);
+        connect(ed, SIGNAL(operatorChanged()), this, SLOT(onOperatorChanged()));
+    }
 
     ui->instruments->installEventFilter(this);
 
@@ -1156,57 +1165,9 @@ void BankEditor::loadInstrument()
     ui->am2->setChecked(m_curInst->connection2 == FmBank::Instrument::AM);
     ui->fm2->setChecked(m_curInst->connection2 == FmBank::Instrument::FM);
 
-    ui->op1_attack->setValue(m_curInst->OP[MODULATOR1].attack);
-    ui->op1_decay->setValue(m_curInst->OP[MODULATOR1].decay);
-    ui->op1_sustain->setValue(m_curInst->OP[MODULATOR1].sustain);
-    ui->op1_release->setValue(m_curInst->OP[MODULATOR1].release);
-    ui->op1_waveform->setCurrentIndex(m_curInst->OP[MODULATOR1].waveform);
-    ui->op1_freqmult->setValue(m_curInst->OP[MODULATOR1].fmult);
-    ui->op1_level->setValue(m_curInst->OP[MODULATOR1].level);
-    ui->op1_ksl->setValue(m_curInst->OP[MODULATOR1].ksl);
-    ui->op1_vib->setChecked(m_curInst->OP[MODULATOR1].vib);
-    ui->op1_am->setChecked(m_curInst->OP[MODULATOR1].am);
-    ui->op1_eg->setChecked(m_curInst->OP[MODULATOR1].eg);
-    ui->op1_ksr->setChecked(m_curInst->OP[MODULATOR1].ksr);
-
-    ui->op2_attack->setValue(m_curInst->OP[CARRIER1].attack);
-    ui->op2_decay->setValue(m_curInst->OP[CARRIER1].decay);
-    ui->op2_sustain->setValue(m_curInst->OP[CARRIER1].sustain);
-    ui->op2_release->setValue(m_curInst->OP[CARRIER1].release);
-    ui->op2_waveform->setCurrentIndex(m_curInst->OP[CARRIER1].waveform);
-    ui->op2_freqmult->setValue(m_curInst->OP[CARRIER1].fmult);
-    ui->op2_level->setValue(m_curInst->OP[CARRIER1].level);
-    ui->op2_ksl->setValue(m_curInst->OP[CARRIER1].ksl);
-    ui->op2_vib->setChecked(m_curInst->OP[CARRIER1].vib);
-    ui->op2_am->setChecked(m_curInst->OP[CARRIER1].am);
-    ui->op2_eg->setChecked(m_curInst->OP[CARRIER1].eg);
-    ui->op2_ksr->setChecked(m_curInst->OP[CARRIER1].ksr);
-
-    ui->op3_attack->setValue(m_curInst->OP[MODULATOR2].attack);
-    ui->op3_decay->setValue(m_curInst->OP[MODULATOR2].decay);
-    ui->op3_sustain->setValue(m_curInst->OP[MODULATOR2].sustain);
-    ui->op3_release->setValue(m_curInst->OP[MODULATOR2].release);
-    ui->op3_waveform->setCurrentIndex(m_curInst->OP[MODULATOR2].waveform);
-    ui->op3_freqmult->setValue(m_curInst->OP[MODULATOR2].fmult);
-    ui->op3_level->setValue(m_curInst->OP[MODULATOR2].level);
-    ui->op3_ksl->setValue(m_curInst->OP[MODULATOR2].ksl);
-    ui->op3_vib->setChecked(m_curInst->OP[MODULATOR2].vib);
-    ui->op3_am->setChecked(m_curInst->OP[MODULATOR2].am);
-    ui->op3_eg->setChecked(m_curInst->OP[MODULATOR2].eg);
-    ui->op3_ksr->setChecked(m_curInst->OP[MODULATOR2].ksr);
-
-    ui->op4_attack->setValue(m_curInst->OP[CARRIER2].attack);
-    ui->op4_decay->setValue(m_curInst->OP[CARRIER2].decay);
-    ui->op4_sustain->setValue(m_curInst->OP[CARRIER2].sustain);
-    ui->op4_release->setValue(m_curInst->OP[CARRIER2].release);
-    ui->op4_waveform->setCurrentIndex(m_curInst->OP[CARRIER2].waveform);
-    ui->op4_freqmult->setValue(m_curInst->OP[CARRIER2].fmult);
-    ui->op4_level->setValue(m_curInst->OP[CARRIER2].level);
-    ui->op4_ksl->setValue(m_curInst->OP[CARRIER2].ksl);
-    ui->op4_vib->setChecked(m_curInst->OP[CARRIER2].vib);
-    ui->op4_am->setChecked(m_curInst->OP[CARRIER2].am);
-    ui->op4_eg->setChecked(m_curInst->OP[CARRIER2].eg);
-    ui->op4_ksr->setChecked(m_curInst->OP[CARRIER2].ksr);
+    OperatorEditor *op_editors[4] = {ui->c1edit, ui->m1edit, ui->c2edit, ui->m2edit};
+    for(unsigned i = 0; i < 4; ++i)
+        op_editors[i]->loadDataFromInst(*m_curInst);
 
     m_lock = false;
 }

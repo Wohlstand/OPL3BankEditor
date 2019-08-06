@@ -525,57 +525,7 @@ private slots:
     void on_noteOffset1_valueChanged(int arg1);
     void on_noteOffset2_valueChanged(int arg1);
 
-    void on_op1_attack_valueChanged(int arg1);
-    void on_op1_sustain_valueChanged(int arg1);
-    void on_op1_decay_valueChanged(int arg1);
-    void on_op1_release_valueChanged(int arg1);
-    void on_op1_level_valueChanged(int arg1);
-    void on_op1_freqmult_valueChanged(int arg1);
-    void on_op1_ksl_valueChanged(int arg1);
-    void on_op1_waveform_currentIndexChanged(int index);
-    void on_op1_am_toggled(bool checked);
-    void on_op1_vib_toggled(bool checked);
-    void on_op1_eg_toggled(bool checked);
-    void on_op1_ksr_toggled(bool checked);
-
-    void on_op2_attack_valueChanged(int arg1);
-    void on_op2_sustain_valueChanged(int arg1);
-    void on_op2_decay_valueChanged(int arg1);
-    void on_op2_release_valueChanged(int arg1);
-    void on_op2_level_valueChanged(int arg1);
-    void on_op2_freqmult_valueChanged(int arg1);
-    void on_op2_ksl_valueChanged(int arg1);
-    void on_op2_waveform_currentIndexChanged(int index);
-    void on_op2_am_toggled(bool checked);
-    void on_op2_vib_toggled(bool checked);
-    void on_op2_eg_toggled(bool checked);
-    void on_op2_ksr_toggled(bool checked);
-
-    void on_op3_attack_valueChanged(int arg1);
-    void on_op3_sustain_valueChanged(int arg1);
-    void on_op3_decay_valueChanged(int arg1);
-    void on_op3_release_valueChanged(int arg1);
-    void on_op3_level_valueChanged(int arg1);
-    void on_op3_freqmult_valueChanged(int arg1);
-    void on_op3_ksl_valueChanged(int arg1);
-    void on_op3_waveform_currentIndexChanged(int index);
-    void on_op3_am_toggled(bool checked);
-    void on_op3_vib_toggled(bool checked);
-    void on_op3_eg_toggled(bool checked);
-    void on_op3_ksr_toggled(bool checked);
-
-    void on_op4_attack_valueChanged(int arg1);
-    void on_op4_sustain_valueChanged(int arg1);
-    void on_op4_decay_valueChanged(int arg1);
-    void on_op4_release_valueChanged(int arg1);
-    void on_op4_level_valueChanged(int arg1);
-    void on_op4_freqmult_valueChanged(int arg1);
-    void on_op4_ksl_valueChanged(int arg1);
-    void on_op4_waveform_currentIndexChanged(int index);
-    void on_op4_am_toggled(bool checked);
-    void on_op4_vib_toggled(bool checked);
-    void on_op4_eg_toggled(bool checked);
-    void on_op4_ksr_toggled(bool checked);
+    void onOperatorChanged();
 
     void on_velocityOffset_valueChanged(int arg1);
 
