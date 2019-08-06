@@ -28,6 +28,9 @@ class OperatorEditor : public QWidget
 {
     Q_OBJECT
 
+public slots:
+    void onLanguageChanged();
+
 public:
     explicit OperatorEditor(QWidget *parent = nullptr);
     ~OperatorEditor();

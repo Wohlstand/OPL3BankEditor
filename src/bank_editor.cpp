@@ -357,6 +357,12 @@ void BankEditor::onBankEditorShown()
 void BankEditor::onLanguageChanged()
 {
     ui->retranslateUi(this);
+    OperatorEditor *op_editors[4] = {ui->c1edit, ui->m1edit, ui->c2edit, ui->m2edit};
+    for(size_t i = 0; i < 4; i++)
+    {
+        OperatorEditor *ed = op_editors[i];
+        ed->onLanguageChanged();
+    }
     ui->currentFile->setText(m_currentFilePath);
     ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     reloadBanks();
@@ -1261,8 +1267,10 @@ void BankEditor::createLanguageChoices()
 
     QStringList languages;
     languages.push_back("en");  // generic english
-    foreach (const QString &entry, dir.entryList()) {
-        if (entry.startsWith(prefix, cs) && entry.endsWith(suffix, cs)) {
+    foreach(const QString &entry, dir.entryList())
+    {
+        if(entry.startsWith(prefix, cs) && entry.endsWith(suffix, cs))
+        {
             QString lang = entry.mid(
                 prefix.size(), entry.size() - prefix.size() - suffix.size());
             languages << lang;
@@ -1271,7 +1279,8 @@ void BankEditor::createLanguageChoices()
 
     QMenu *menuLanguage = ui->menuLanguage;
 
-    foreach (const QString &lang, languages) {
+    foreach(const QString &lang, languages)
+    {
         QLocale loc(lang);
 
         QString name;

@@ -43,6 +43,12 @@ OperatorEditor::~OperatorEditor()
 {
 }
 
+void OperatorEditor::onLanguageChanged()
+{
+    Ui::OperatorEditor &ui = *m_ui;
+    ui.retranslateUi(this);
+}
+
 unsigned OperatorEditor::operatorNumber() const
 {
     return m_operatorNumber;
