@@ -29,6 +29,15 @@ typedef unsigned short  uint16_t;
 
 static uint16_t   OPLBase = 0x388;
 
+DLLExport uint16_t STDCall chipType()
+{
+    /*
+    - 0 is OPL3
+    - 1 is OPL2
+    */
+    return 0;
+}
+
 DLLExport void STDCall chipInit(void)
 { /* Dummy */ }
 

@@ -153,6 +153,7 @@ public:
     void changeVolumeModel(int volmodel);
     void changeRhythmMode(bool enabled);
     void updateRegBD();
+    void updateChannelManager();
 
     const GeneratorDebugInfo &debugInfo() const
         { return m_debug; }
@@ -223,6 +224,7 @@ private:
     uint32_t    m_rate = 44100;
     struct OPLChipDelete { void operator()(OPLChipBase *); };
     std::unique_ptr<OPLChipBase, OPLChipDelete> chip;
+    OPLChipBase::ChipType m_chipType = OPLChipBase::CHIPTYPE_OPL3;
 
     OPL_PatchSetup m_patch;
     uint8_t     m_regBD;

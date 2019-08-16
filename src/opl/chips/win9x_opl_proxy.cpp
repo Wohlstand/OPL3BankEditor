@@ -23,6 +23,7 @@
 #   define CALL_chipPoke "chipPoke"
 #   define CALL_chipUnInit "chipUnInit"
 #   define CALL_chipSetPort "chipSetPort"
+#   define CALL_chipType "chipType"
 
 /* Some simulation of LoadLibrary WinAPI */
 #   define _stdcall
@@ -55,6 +56,7 @@ extern "C"
     typedef void (_stdcall *opl_init)(void);
     typedef void (_stdcall *opl_unInit)(void);
     typedef void (_stdcall *opl_setPort)(uint16_t port);
+    typedef uint16_t (_stdcall *opl_type)(void);
 }
 
 struct OPLProxyDriver
@@ -63,7 +65,9 @@ struct OPLProxyDriver
     opl_init     chip_oplInit = nullptr;
     opl_unInit   chip_oplUninit = nullptr;
     opl_setPort  chip_oplSetPort = nullptr;
+    opl_type     chip_oplType = nullptr;
     HINSTANCE    chip_lib = 0;
+    OPLChipBase::ChipType chip_type = OPLChipBase::CHIPTYPE_OPL3;
 };
 
 template<class FunkPtr>
@@ -102,8 +106,14 @@ void Win9x_OPL_Proxy::initChip()
             initOplFunction(chip_r->chip_lib, chip_r->chip_oplPoke,   CALL_chipPoke);
             initOplFunction(chip_r->chip_lib, chip_r->chip_oplUninit, CALL_chipUnInit);
             initOplFunction(chip_r->chip_lib, chip_r->chip_oplSetPort, CALL_chipSetPort, false);
+            initOplFunction(chip_r->chip_lib, chip_r->chip_oplType,   CALL_chipType, false);
+
             if(chip_r->chip_oplInit)
                 chip_r->chip_oplInit();
+            if(chip_r->chip_oplType)
+                chip_r->chip_type = static_cast<OPLChipBase::ChipType>(chip_r->chip_oplType());
+            else
+                chip_r->chip_type = OPLChipBase::CHIPTYPE_OPL3;
         }
     }
 }
@@ -116,11 +126,13 @@ void Win9x_OPL_Proxy::closeChip()
         if(chip_r->chip_oplUninit)
             chip_r->chip_oplUninit();
         FreeLibrary(chip_r->chip_lib);
+        chip_r->chip_type = OPLChipBase::CHIPTYPE_OPL3;
         chip_r->chip_lib = 0;
         chip_r->chip_oplInit = nullptr;
         chip_r->chip_oplPoke = nullptr;
         chip_r->chip_oplUninit = nullptr;
         chip_r->chip_oplSetPort = nullptr;
+        chip_r->chip_oplType = nullptr;
     }
 }
 
@@ -167,4 +179,10 @@ void Win9x_OPL_Proxy::nativeGenerate(int16_t *frame)
 const char *Win9x_OPL_Proxy::emulatorName()
 {
     return "OPL3 Proxy Driver";
+}
+
+OPLChipBase::ChipType Win9x_OPL_Proxy::chipType()
+{
+    OPLProxyDriver *chip_r = reinterpret_cast<OPLProxyDriver*>(m_chip);
+    return chip_r->chip_type;
 }

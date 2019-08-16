@@ -122,6 +122,11 @@ static const uint16_t g_Channels_pan[NUM_OF_CHANNELS] =
 #define USED_CHANNELS_2OP_PS4   9
 #define USED_CHANNELS_4OP       6
 
+// Channel ranges for OPL2
+#define USED_CHANNELS_2OP_OPL2       9
+#define USED_CHANNELS_2OP_PS4_OPL2   4
+
+
 //! Regular 2-operator channels map
 static const uint16_t g_channels2Map_2op[USED_CHANNELS_2OP] =
 {
@@ -247,18 +252,40 @@ void Generator::initChip()
         0x001, 32, 0x105, 1             // Enable wave, OPL3 extensions
     };
 
+    static const uint16_t data_opl2[] =
+    {
+        0x004, 96, 0x004, 128,          // Pulse timer
+        0x001, 32                       // Enable wave
+    };
+    uint32_t maxChans = 18;
+
+    m_chipType = chip->chipType();
+
+    if(m_chipType == OPLChipBase::CHIPTYPE_OPL2)
+        maxChans = 9;
+
     chip->setChipId(0);
     chip->setRate(m_rate);
 
-    for(uint32_t a = 0; a < 18; ++a)
+    for(uint32_t a = 0; a < maxChans; ++a)
         WriteReg(0xB0 + g_Channels[a], 0x00);
 
-    for(size_t a = 0; a < sizeof(data) / sizeof(*data); a += 2)
-        WriteReg(data[a], static_cast<uint8_t>(data[a + 1]));
+    if(m_chipType == OPLChipBase::CHIPTYPE_OPL3)
+    {
+        for(size_t a = 0; a < 14; a += 2)
+            WriteReg(data[a], static_cast<uint8_t>(data[a + 1]));
+    }
+    else
+    {
+        for(size_t a = 0; a < 6; a += 2)
+            WriteReg(data[a], static_cast<uint8_t>(data_opl2[a + 1]));
+    }
+
 
     updateRegBD();
     switch4op(m_4op_last_state, false);
     Silence();
+    updateChannelManager();
 }
 
 #ifdef ENABLE_HW_OPL_PROXY
@@ -687,6 +714,8 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
     //Shut up currently playing stuff
     for(uint32_t b = 0; b < NUM_OF_CHANNELS; ++b)
     {
+        if(m_chipType == OPLChipBase::CHIPTYPE_OPL2 && (b == 9))
+            b = 18;
         NoteOff(b);
         Touch_Real(b, 0);
     }
@@ -713,7 +742,7 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
         }
     }
 
-    if(enabled)
+    if(enabled && (m_chipType == OPLChipBase::CHIPTYPE_OPL3))
     {
         //Enable 4-operators mode
         WriteReg(0x104, 0xFF);
@@ -746,8 +775,8 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
     }
     else
     {
-        //Disable 4-operators mode
-        WriteReg(0x104, 0x00);
+        if(m_chipType == OPLChipBase::CHIPTYPE_OPL3)
+            WriteReg(0x104, 0x00);//Disable 4-operators mode
         for(uint32_t a = 0; a < 18; ++a)
             m_four_op_category[a] = 0;
     }
@@ -767,6 +796,8 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
     //Clear all operator registers from crap left from previous patches
     for(uint32_t b = 0; b < NUM_OF_CHANNELS; ++b)
     {
+        if(m_chipType == OPLChipBase::CHIPTYPE_OPL2 && (b == 9))
+            b = 18;
         Patch(b, 0);
         Pan(b, (rythmModePercussionMode == 0) ? 0x00 : 0x30);
         Touch_Real(b, 0);
@@ -999,13 +1030,7 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
             else
                 m_patch.flags |= OPL_PatchSetup::Flag_True4op;
         }
-
-        if(instrument.en_4op && instrument.en_pseudo4op)
-            m_noteManager.allocateChannels(USED_CHANNELS_2OP_PS4);
-        else if(instrument.en_4op)
-            m_noteManager.allocateChannels(USED_CHANNELS_4OP);
-        else
-            m_noteManager.allocateChannels(USED_CHANNELS_2OP);
+        updateChannelManager();
     }
 
     m_isInstrumentLoaded = true;//Mark instrument as loaded
@@ -1043,6 +1068,27 @@ void Generator::updateRegBD()
 {
     m_regBD = (deepTremoloMode * 0x80) + (deepVibratoMode * 0x40) + (rythmModePercussionMode * 0x20);
     WriteReg(0x0BD, m_regBD);
+}
+
+void Generator::updateChannelManager()
+{
+    int chan2ops = USED_CHANNELS_2OP;
+    int chanPs4ops = USED_CHANNELS_2OP_PS4;
+    bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
+    bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
+
+    if(m_chipType == OPLChipBase::CHIPTYPE_OPL2)
+    {
+        chan2ops = USED_CHANNELS_2OP_OPL2;
+        chanPs4ops = USED_CHANNELS_2OP_PS4_OPL2;
+    }
+
+    if(pseudo_4op)
+        m_noteManager.allocateChannels(chanPs4ops);
+    else if(natural_4op)
+        m_noteManager.allocateChannels(USED_CHANNELS_4OP);
+    else
+        m_noteManager.allocateChannels(chan2ops);
 }
 
 uint32_t Generator::getChipVolume(uint32_t vol, uint8_t ccvolume, uint8_t ccexpr, int volmodel)
