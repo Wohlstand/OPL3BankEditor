@@ -17,6 +17,7 @@
 #   define CALL_chipPoke "_chipPoke@8"
 #   define CALL_chipUnInit "_chipUnInit@0"
 #   define CALL_chipSetPort "_chipSetPort@4"
+#   define CALL_chipType "_chipType@0"
 #else
 #   include <dlfcn.h>
 #   define CALL_chipInit "chipInit"
