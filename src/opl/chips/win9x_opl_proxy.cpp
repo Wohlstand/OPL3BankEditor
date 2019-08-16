@@ -3,26 +3,51 @@
 #include "win9x_opl_proxy.h"
 
 #ifdef _WIN32
-#include <windows.h>
+#define OPLPROXY_LIBNAME "liboplproxy.dll"
+#elif __APPLE__
+#define OPLPROXY_LIBNAME "./liboplproxy.dylib"
 #else
-/* FAKE DUMMIES FOR ABILITY TO BUILD THIS CODE ON ANY OS */
-#define _stdcall
-typedef intptr_t HINSTANCE;
-void *GetProcAddress(HINSTANCE, const char *)
+#define OPLPROXY_LIBNAME "./liboplproxy.so"
+#endif
+
+
+#ifdef _WIN32
+#   include <windows.h>
+#   define CALL_chipInit "_chipInit@0"
+#   define CALL_chipPoke "_chipPoke@8"
+#   define CALL_chipUnInit "_chipUnInit@0"
+#   define CALL_chipSetPort "_chipSetPort@4"
+#else
+#   include <dlfcn.h>
+#   define CALL_chipInit "chipInit"
+#   define CALL_chipPoke "chipPoke"
+#   define CALL_chipUnInit "chipUnInit"
+#   define CALL_chipSetPort "chipSetPort"
+
+/* Some simulation of LoadLibrary WinAPI */
+#   define _stdcall
+typedef void* HINSTANCE;
+
+void *GetProcAddress(HINSTANCE lib, const char *call)
 {
-    return nullptr;
+    return dlsym(lib, call);
 }
+
 const char *GetLastError()
 {
-    return "Unsupported operating system!";
+    return "Library is incompatible or is not found!";
 }
-HINSTANCE LoadLibraryA(const char*)
+
+HINSTANCE LoadLibraryA(const char *path)
 {
-    return 0;
+    return dlopen(path, RTLD_LAZY);
 }
-void FreeLibrary(HINSTANCE)
-{}
-#endif
+
+void FreeLibrary(HINSTANCE lib)
+{
+    dlclose(lib);
+}
+#endif //_WIN32
 
 extern "C"
 {
@@ -54,7 +79,7 @@ void initOplFunction(HINSTANCE &chip_lib, FunkPtr &ptr, const char *procName, bo
     {
         shownWarning = true;
         QMessageBox::warning(nullptr,
-                             "liboplproxy.dll error",
+                             OPLPROXY_LIBNAME " error",
                              QString("Oops... I have failed to load %1 function:\n"
                                      "Error %2\n"
                                      "Continuing without FM sound.")
@@ -68,15 +93,15 @@ void Win9x_OPL_Proxy::initChip()
     OPLProxyDriver *chip_r = reinterpret_cast<OPLProxyDriver*>(m_chip);
     if(!chip_r->chip_lib)
     {
-        chip_r->chip_lib = LoadLibraryA("liboplproxy.dll");
+        chip_r->chip_lib = LoadLibraryA(OPLPROXY_LIBNAME);
         if(!chip_r->chip_lib)
-            QMessageBox::warning(nullptr, "liboplproxy.dll error", "Can't load liboplproxy.dll library");
+            QMessageBox::warning(nullptr, OPLPROXY_LIBNAME " error", "Can't load " OPLPROXY_LIBNAME " library");
         else
         {
-            initOplFunction(chip_r->chip_lib, chip_r->chip_oplInit,   "_chipInit@0");
-            initOplFunction(chip_r->chip_lib, chip_r->chip_oplPoke,   "_chipPoke@8");
-            initOplFunction(chip_r->chip_lib, chip_r->chip_oplUninit, "_chipUnInit@0");
-            initOplFunction(chip_r->chip_lib, chip_r->chip_oplSetPort, "_chipSetPort@4", false);
+            initOplFunction(chip_r->chip_lib, chip_r->chip_oplInit,   CALL_chipInit);
+            initOplFunction(chip_r->chip_lib, chip_r->chip_oplPoke,   CALL_chipPoke);
+            initOplFunction(chip_r->chip_lib, chip_r->chip_oplUninit, CALL_chipUnInit);
+            initOplFunction(chip_r->chip_lib, chip_r->chip_oplSetPort, CALL_chipSetPort, false);
             if(chip_r->chip_oplInit)
                 chip_r->chip_oplInit();
         }

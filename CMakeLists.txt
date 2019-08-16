@@ -96,6 +96,14 @@ add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
 target_include_directories(FileFormats PUBLIC "src" PRIVATE ${ZLIB_INCLUDE_DIRS})
 target_link_libraries(FileFormats PUBLIC Common PRIVATE ${ZLIB_LIBRARIES})
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  set(OPL3_PROXY_DEFAULT ON)
+else()
+  set(OPL3_PROXY_DEFAULT OFF)
+endif()
+
+OPTION(ENABLE_OPL3_PROXY "Enable OPL3 proxy support through 'liboplproxy' plugin" ${OPL3_PROXY_DEFAULT})
+
 set(CHIPS_SOURCES
   "src/opl/chips/dosbox_opl3.cpp"
   "src/opl/chips/java_opl3.cpp"
@@ -105,13 +113,17 @@ set(CHIPS_SOURCES
   "src/opl/chips/dosbox/dbopl.cpp"
   "src/opl/chips/nuked_opl3_v174.cpp"
   "src/opl/chips/nuked/nukedopl3_174.c")
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(ENABLE_OPL3_PROXY)
   list(APPEND CHIPS_SOURCES "src/opl/chips/win9x_opl_proxy.cpp")
 endif()
 add_library(Chips STATIC ${CHIPS_SOURCES})
 target_include_directories(Chips PUBLIC "src")
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(ENABLE_OPL3_PROXY)
+  target_link_libraries(Chips PUBLIC Qt5::Widgets)
   target_compile_definitions(Chips PUBLIC "-DENABLE_HW_OPL_PROXY")
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_link_libraries(Chips PUBLIC dl)
+  endif()
 endif()
 
 set(MEASURER_SOURCES
