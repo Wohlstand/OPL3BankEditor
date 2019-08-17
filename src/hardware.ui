@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>277</width>
-    <height>278</height>
+    <height>288</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,7 +46,7 @@
         <item>
          <widget class="QLineEdit" name="ctlAddressEdit">
           <property name="inputMask">
-           <string>hhhh</string>
+           <string notr="true">hhhh</string>
           </property>
          </widget>
         </item>
@@ -80,12 +80,16 @@
         <item row="0" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QLineEdit" name="serialPortEdit"/>
+           <widget class="QLineEdit" name="serialPortEdit">
+            <property name="inputMask">
+             <string notr="true"/>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QToolButton" name="serialPortButton">
             <property name="text">
-             <string>...</string>
+             <string notr="true">...</string>
             </property>
             <property name="icon">
              <iconset resource="resources/resources.qrc">
