@@ -30,6 +30,10 @@
 #include "chips/win9x_opl_proxy.h"
 #endif
 
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+#include "chips/opl_serial_port.h"
+#endif
+
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
       (byte & 0x80 ? '1' : '0'), \
@@ -240,6 +244,10 @@ void Generator::OPLChipDelete::operator()(OPLChipBase *x)
     if(x == &Generator::oplProxy())
         return;
 #endif
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+    if(x == &Generator::serialPortOpl())
+        return;
+#endif
     delete x;
 }
 
@@ -296,15 +304,28 @@ Win9x_OPL_Proxy &Generator::oplProxy()
 }
 #endif
 
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+OPL_SerialPort &Generator::serialPortOpl()
+{
+    static OPL_SerialPort serial;
+    return serial;
+}
+#endif
+
 void Generator::switchChip(Generator::OPL_Chips chipId)
 {
     switch(chipId)
     {
-    case CHIP_Win9xProxy:
 #ifdef ENABLE_HW_OPL_PROXY
+    case CHIP_Win9xProxy:
         chip.reset(&oplProxy());
-#endif
         break;
+#endif
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+    case CHIP_SerialPort:
+        chip.reset(&serialPortOpl());
+        break;
+#endif
     case CHIP_DosBox:
         chip.reset(new DosBoxOPL3());
         break;

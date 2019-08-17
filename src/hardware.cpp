@@ -18,14 +18,16 @@
 
 #include "hardware.h"
 #include "bank_editor.h"
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QLineEdit>
-#include <QLabel>
-#include <QDialogButtonBox>
+#include "ui_hardware.h"
+#include <QMenu>
+#include <QAction>
+#include <QDebug>
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+#include <QSerialPortInfo>
+#endif
 
 HardwareDialog::HardwareDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent), m_ui(new Ui::HardwareDialog)
 {
     setupUi();
 }
@@ -34,48 +36,114 @@ HardwareDialog::~HardwareDialog()
 {
 }
 
+void HardwareDialog::setSoundCardOptionsVisible(bool visible)
+{
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.soundCardGroup->setVisible(visible);
+    adjustSize();
+    setFixedSize(size());
+}
+
+void HardwareDialog::setSerialPortOptionsVisible(bool visible)
+{
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.serialPortGroup->setVisible(visible);
+    adjustSize();
+    setFixedSize(size());
+}
+
 unsigned HardwareDialog::oplAddress() const
 {
-    return m_ctlAddressEdit->text().toUInt(nullptr, 16);
+    Ui::HardwareDialog &ui = *m_ui;
+    return ui.ctlAddressEdit->text().toUInt(nullptr, 16);
 }
 
 void HardwareDialog::setOplAddress(unsigned address)
 {
-    m_ctlAddressEdit->setText(QString::number(address, 16));
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.ctlAddressEdit->setText(QString::number(address, 16));
 }
 
 void HardwareDialog::setCanChangeOplAddress(bool can)
 {
-    m_ctlAddressEdit->setEnabled(can);
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.ctlAddressEdit->setEnabled(can);
     updateInfoLabel();
+}
+
+QString HardwareDialog::serialPortName() const
+{
+    Ui::HardwareDialog &ui = *m_ui;
+    return ui.serialPortEdit->text();
+}
+
+void HardwareDialog::setSerialPortName(const QString &name) const
+{
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.serialPortEdit->setText(name);
+}
+
+unsigned HardwareDialog::serialBaudRate() const
+{
+    Ui::HardwareDialog &ui = *m_ui;
+    return ui.serialRateChoice->itemData(ui.serialRateChoice->currentIndex()).toUInt();
+}
+
+void HardwareDialog::setSerialBaudRate(unsigned rate)
+{
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.serialRateChoice->setCurrentIndex(ui.serialRateChoice->findData(rate));
+}
+
+void HardwareDialog::on_serialPortButton_triggered(QAction *)
+{
+    Ui::HardwareDialog &ui = *m_ui;
+
+    QMenu *menu = m_serialPortAction->menu();
+    menu->clear();
+
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+    for(const QSerialPortInfo &info : QSerialPortInfo::availablePorts())
+    {
+        QString name = info.portName();
+        QAction *act = new QAction(name, menu);
+        menu->addAction(act);
+        act->setData(name);
+        connect(act, SIGNAL(triggered()),
+                this, SLOT(onSerialPortChosen()));
+    }
+#endif
+
+    menu->exec(ui.serialPortButton->mapToGlobal(QPoint(0, ui.serialPortButton->height())));
+}
+
+void HardwareDialog::onSerialPortChosen()
+{
+    Ui::HardwareDialog &ui = *m_ui;
+    QAction *act = static_cast<QAction *>(sender());
+    ui.serialPortEdit->setText(act->data().toString());
 }
 
 void HardwareDialog::setupUi()
 {
-    setWindowTitle(tr("Hardware OPL"));
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.setupUi(this);
 
-    QVBoxLayout *vl = new QVBoxLayout;
-    setLayout(vl);
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+    for(unsigned rate : QSerialPortInfo::standardBaudRates())
+    {
+        if (rate >= 1200 && rate <= 115200)
+            ui.serialRateChoice->addItem(QString::number(rate), rate);
+    }
 
-    vl->addWidget(new QLabel(tr("Define the hardware address.")));
+    QAction *serialPortAction = m_serialPortAction = new QAction(
+        ui.serialPortButton->icon(), ui.serialPortButton->text(), this);
+    ui.serialPortButton->setDefaultAction(serialPortAction);
+    QMenu *midiInMenu = new QMenu(this);
+    serialPortAction->setMenu(midiInMenu);
+#endif
 
-    QLabel *infoLabel = m_infoLabel = new QLabel;
-    vl->addWidget(infoLabel);
     updateInfoLabel();
-
-    QHBoxLayout *ctlBox = new QHBoxLayout;
-    vl->addLayout(ctlBox);
-
-    ctlBox->addWidget(new QLabel(tr("Hexadecimal address: ")));
-
-    QLineEdit *ctlAddressEdit = m_ctlAddressEdit = new QLineEdit;
-    ctlBox->addWidget(ctlAddressEdit);
-    ctlAddressEdit->setInputMask("hhhh");
-
-    QDialogButtonBox *bbox = new QDialogButtonBox(QDialogButtonBox::Ok);
-    vl->addWidget(bbox);
-    connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(bbox, SIGNAL(rejected()), this, SLOT(reject()));
 
     adjustSize();
     setFixedSize(size());
@@ -83,9 +151,10 @@ void HardwareDialog::setupUi()
 
 void HardwareDialog::updateInfoLabel()
 {
-    if(m_ctlAddressEdit && m_ctlAddressEdit->isEnabled())
-        m_infoLabel->setText(tr("Usually $388, varies depending on card."));
+    Ui::HardwareDialog &ui = *m_ui;
+    if(ui.ctlAddressEdit && ui.ctlAddressEdit->isEnabled())
+        ui.infoLabel->setText(tr("Usually $388, varies depending on card."));
     else
-        m_infoLabel->setText(tr("Impossible to set the hardware address.\n"
-                                "Make sure you installed the latest OPL proxy."));
+        ui.infoLabel->setText(tr("Impossible to set the hardware address.\n"
+                                 "Make sure you installed the latest OPL proxy."));
 }

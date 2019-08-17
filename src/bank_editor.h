@@ -130,6 +130,12 @@ private:
     unsigned m_proxyOplAddress = 0x388;
 #endif
 
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+    OPL_SerialPort *m_serialPortOpl = nullptr;
+    QString m_serialPortName;
+    unsigned m_serialPortBaudRate = 115200;
+#endif
+
     /*!
      * \brief Initializes audio subsystem and FM generator
      */
@@ -485,7 +491,7 @@ private slots:
      * @brief Opens the audio configuration dialog
      */
     void on_actionAudioConfig_triggered();
-#ifdef ENABLE_HW_OPL_PROXY
+#if defined(ENABLE_HW_OPL_PROXY) || defined(ENABLE_HW_OPL_SERIAL_PORT)
     /**
      * @brief Opens the hardware OPL dialog
      */

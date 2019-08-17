@@ -96,6 +96,10 @@ win32||oplproxy: {
     include("src/opl/chips/win9x_opl_proxy.pri")
     DEFINES += ENABLE_HW_OPL_PROXY
 }
+greaterThan(QT_MAJOR_VERSION, 4):{
+    include("src/opl/chips/opl_serial_port.pri")
+    DEFINES += ENABLE_HW_OPL_SERIAL_PORT
+}
 
 win32 {
     lessThan(QT_MAJOR_VERSION, 4):{
@@ -222,7 +226,8 @@ FORMS += \
     src/bank_comparison.ui \
     src/formats_sup.ui \
     src/importer.ui \
-    src/audio_config.ui
+    src/audio_config.ui \
+    src/hardware.ui
 
 RESOURCES += \
     src/resources/resources.qrc

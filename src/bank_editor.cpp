@@ -42,6 +42,9 @@
 #ifdef ENABLE_HW_OPL_PROXY // to set hardware port
 #include "opl/chips/win9x_opl_proxy.h"
 #endif
+#ifdef ENABLE_HW_OPL_SERIAL_PORT // to set port and rate
+#include "opl/chips/opl_serial_port.h"
+#endif
 
 #include "FileFormats/ffmt_factory.h"
 #include "FileFormats/ffmt_enums.h"
@@ -126,6 +129,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorOpal, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorJava, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionSerialPortOPL, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
 #ifdef ENABLE_HW_OPL_PROXY
     m_proxyOpl = &Generator::oplProxy();
@@ -133,7 +137,13 @@ BankEditor::BankEditor(QWidget *parent) :
     ui->actionWin9xOPLProxy->setVisible(false);
 #endif
 
-#ifndef ENABLE_HW_OPL_PROXY
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+    m_serialPortOpl = &Generator::serialPortOpl();
+#else
+    ui->actionSerialPortOPL->setVisible(false);
+#endif
+
+#if !defined(ENABLE_HW_OPL_PROXY) && !defined(ENABLE_HW_OPL_SERIAL_PORT)
     ui->actionHardware_OPL->setVisible(false);
 #endif
 
@@ -228,6 +238,14 @@ void BankEditor::loadSettings()
     m_proxyOplAddress = setup.value("hw-opl-address", 0x388).toUInt();
     Win9x_OPL_Proxy &proxy = *m_proxyOpl;
     proxy.setOplAddress(m_proxyOplAddress);
+#endif
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+    m_serialPortName = setup.value("hw-opl-serial-port", QString()).toString();
+    m_serialPortBaudRate = setup.value("hw-opl-serial-baud-rate", 115200).toUInt();
+    OPL_SerialPort &serial = *m_serialPortOpl;
+    serial.connectPort(m_serialPortName, m_serialPortBaudRate);
+#endif
+#if defined(ENABLE_HW_OPL_PROXY) || defined(ENABLE_HW_OPL_SERIAL_PORT)
     initChip();
 #endif
 
@@ -241,6 +259,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
+    ui->actionSerialPortOPL->setChecked(false);
 
     switch(m_currentChip)
     {
@@ -260,6 +279,9 @@ void BankEditor::loadSettings()
     case Generator::CHIP_Win9xProxy:
         ui->actionWin9xOPLProxy->setChecked(true);
         break;
+    case Generator::CHIP_SerialPort:
+        ui->actionSerialPortOPL->setChecked(true);
+        break;
     }
 }
 
@@ -275,6 +297,10 @@ void BankEditor::saveSettings()
     setup.setValue("audio-device", m_audioDevice);
 #ifdef ENABLE_HW_OPL_PROXY
     setup.setValue("hw-opl-address", m_proxyOplAddress);
+#endif
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+    setup.setValue("hw-opl-serial-port", m_serialPortName);
+    setup.setValue("hw-opl-serial-baud-rate", m_serialPortBaudRate);
 #endif
 }
 
@@ -1071,6 +1097,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
+    ui->actionSerialPortOPL->setChecked(false);
 
     if(menuItem == ui->actionEmulatorNuked)
     {
@@ -1104,6 +1131,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionWin9xOPLProxy->setChecked(true);
         m_currentChip = Generator::CHIP_Win9xProxy;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionSerialPortOPL)
+    {
+        ui->actionSerialPortOPL->setChecked(true);
+        m_currentChip = Generator::CHIP_SerialPort;
         m_generator->ctl_switchChip(m_currentChip);
     }
 }
@@ -1342,17 +1376,33 @@ void BankEditor::on_actionAudioConfig_triggered()
     }
 }
 
-#ifdef ENABLE_HW_OPL_PROXY
+#if defined(ENABLE_HW_OPL_PROXY) || defined(ENABLE_HW_OPL_SERIAL_PORT)
 void BankEditor::on_actionHardware_OPL_triggered()
 {
+    HardwareDialog *dlg = new HardwareDialog;
+
+#if defined(ENABLE_HW_OPL_PROXY)
     Win9x_OPL_Proxy &proxy = *m_proxyOpl;
     bool supportsChangeAddress = proxy.canSetOplAddress();
-
-    HardwareDialog *dlg = new HardwareDialog;
     dlg->setOplAddress(m_proxyOplAddress);
     dlg->setCanChangeOplAddress(supportsChangeAddress);
+#else
+    dlg->setSoundCardOptionsVisible(false);
+#endif
+
+#if defined(ENABLE_HW_OPL_SERIAL_PORT)
+    OPL_SerialPort &serial = *m_serialPortOpl;
+    dlg->setSerialPortName(m_serialPortName);
+    dlg->setSerialBaudRate(m_serialPortBaudRate);
+#else
+    dlg->setSerialPortOptionsVisible(false);
+#endif
+
     dlg->exec();
 
+    bool mustReinitialize = false;
+
+#if defined(ENABLE_HW_OPL_PROXY)
     if(supportsChangeAddress)
     {
         unsigned newAddress = dlg->oplAddress();
@@ -1360,9 +1410,22 @@ void BankEditor::on_actionHardware_OPL_triggered()
         {
             proxy.setOplAddress(newAddress);
             m_proxyOplAddress = newAddress;
-            initChip();
-            sendPatch();
+            mustReinitialize = true;
         }
+    }
+#endif
+
+#if defined(ENABLE_HW_OPL_SERIAL_PORT)
+    m_serialPortName = dlg->serialPortName();
+    m_serialPortBaudRate = dlg->serialBaudRate();
+    serial.connectPort(m_serialPortName, m_serialPortBaudRate);
+    mustReinitialize = true;
+#endif
+
+    if(mustReinitialize)
+    {
+        initChip();
+        sendPatch();
     }
 
     delete dlg;

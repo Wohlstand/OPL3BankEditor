@@ -20,8 +20,9 @@
 #define HARDWARE_H
 
 #include <QDialog>
-class QLineEdit;
-class QLabel;
+#include <memory>
+
+namespace Ui { class HardwareDialog; }
 
 class HardwareDialog : public QDialog
 {
@@ -31,15 +32,28 @@ public:
     HardwareDialog(QWidget *parent = nullptr);
     ~HardwareDialog();
 
+    void setSoundCardOptionsVisible(bool visible);
+    void setSerialPortOptionsVisible(bool visible);
+
     unsigned oplAddress() const;
     void setOplAddress(unsigned address);
     void setCanChangeOplAddress(bool can);
 
+    QString serialPortName() const;
+    void setSerialPortName(const QString &name) const;
+    unsigned serialBaudRate() const;
+    void setSerialBaudRate(unsigned rate);
+
+public slots:
+    void on_serialPortButton_triggered(QAction *);
+    void onSerialPortChosen();
+
 private:
     void setupUi();
     void updateInfoLabel();
-    QLabel *m_infoLabel = nullptr;
-    QLineEdit *m_ctlAddressEdit = nullptr;
+
+    std::unique_ptr<Ui::HardwareDialog> m_ui;
+    QAction *m_serialPortAction = nullptr;
 };
 
 #endif // HARDWARE_H
