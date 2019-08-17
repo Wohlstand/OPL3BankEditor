@@ -220,7 +220,8 @@ FORMS += \
     src/bank_comparison.ui \
     src/formats_sup.ui \
     src/importer.ui \
-    src/audio_config.ui
+    src/audio_config.ui \
+    src/hardware.ui
 
 RESOURCES += \
     src/resources/resources.qrc

@@ -164,7 +164,8 @@ set(UIS
   "src/bank_comparison.ui"
   "src/formats_sup.ui"
   "src/importer.ui"
-  "src/audio_config.ui")
+  "src/audio_config.ui"
+  "src/hardware.ui")
 if(ENABLE_PLOTS)
   list(APPEND UIS
     "src/delay_analysis.ui")

@@ -20,8 +20,9 @@
 #define HARDWARE_H
 
 #include <QDialog>
-class QLineEdit;
-class QLabel;
+#include <memory>
+
+namespace Ui { class HardwareDialog; }
 
 class HardwareDialog : public QDialog
 {
@@ -38,8 +39,8 @@ public:
 private:
     void setupUi();
     void updateInfoLabel();
-    QLabel *m_infoLabel = nullptr;
-    QLineEdit *m_ctlAddressEdit = nullptr;
+
+    std::unique_ptr<Ui::HardwareDialog> m_ui;
 };
 
 #endif // HARDWARE_H

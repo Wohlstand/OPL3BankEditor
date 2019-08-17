@@ -18,14 +18,10 @@
 
 #include "hardware.h"
 #include "bank_editor.h"
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QLineEdit>
-#include <QLabel>
-#include <QDialogButtonBox>
+#include "ui_hardware.h"
 
 HardwareDialog::HardwareDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent), m_ui(new Ui::HardwareDialog)
 {
     setupUi();
 }
@@ -36,56 +32,38 @@ HardwareDialog::~HardwareDialog()
 
 unsigned HardwareDialog::oplAddress() const
 {
-    return m_ctlAddressEdit->text().toUInt(nullptr, 16);
+    Ui::HardwareDialog &ui = *m_ui;
+    return ui.ctlAddressEdit->text().toUInt(nullptr, 16);
 }
 
 void HardwareDialog::setOplAddress(unsigned address)
 {
-    m_ctlAddressEdit->setText(QString::number(address, 16));
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.ctlAddressEdit->setText(QString::number(address, 16));
 }
 
 void HardwareDialog::setCanChangeOplAddress(bool can)
 {
-    m_ctlAddressEdit->setEnabled(can);
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.ctlAddressEdit->setEnabled(can);
     updateInfoLabel();
 }
 
 void HardwareDialog::setupUi()
 {
-    setWindowTitle(tr("Hardware OPL"));
-
-    QVBoxLayout *vl = new QVBoxLayout;
-    setLayout(vl);
-
-    vl->addWidget(new QLabel(tr("Define the hardware address.")));
-
-    QLabel *infoLabel = m_infoLabel = new QLabel;
-    vl->addWidget(infoLabel);
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.setupUi(this);
     updateInfoLabel();
-
-    QHBoxLayout *ctlBox = new QHBoxLayout;
-    vl->addLayout(ctlBox);
-
-    ctlBox->addWidget(new QLabel(tr("Hexadecimal address: ")));
-
-    QLineEdit *ctlAddressEdit = m_ctlAddressEdit = new QLineEdit;
-    ctlBox->addWidget(ctlAddressEdit);
-    ctlAddressEdit->setInputMask("hhhh");
-
-    QDialogButtonBox *bbox = new QDialogButtonBox(QDialogButtonBox::Ok);
-    vl->addWidget(bbox);
-    connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(bbox, SIGNAL(rejected()), this, SLOT(reject()));
-
     adjustSize();
     setFixedSize(size());
 }
 
 void HardwareDialog::updateInfoLabel()
 {
-    if(m_ctlAddressEdit && m_ctlAddressEdit->isEnabled())
-        m_infoLabel->setText(tr("Usually $388, varies depending on card."));
+    Ui::HardwareDialog &ui = *m_ui;
+    if(ui.ctlAddressEdit && ui.ctlAddressEdit->isEnabled())
+        ui.infoLabel->setText(tr("Usually $388, varies depending on card."));
     else
-        m_infoLabel->setText(tr("Impossible to set the hardware address.\n"
-                                "Make sure you installed the latest OPL proxy."));
+        ui.infoLabel->setText(tr("Impossible to set the hardware address.\n"
+                                 "Make sure you installed the latest OPL proxy."));
 }
