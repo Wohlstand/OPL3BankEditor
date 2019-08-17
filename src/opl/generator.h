@@ -31,6 +31,10 @@
 class Win9x_OPL_Proxy;
 #endif
 
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+class OPL_SerialPort;
+#endif
+
 #define NUM_OF_CHANNELS         23
 #define MAX_OPLGEN_BUFFER_SIZE  4096
 
@@ -85,6 +89,7 @@ public:
         CHIP_Opal,
         CHIP_Java,
         CHIP_Win9xProxy,
+        CHIP_SerialPort,
         CHIP_END
     };
     Generator(uint32_t sampleRate, OPL_Chips initialChip);
@@ -163,6 +168,10 @@ public:
 
 #ifdef ENABLE_HW_OPL_PROXY
     static Win9x_OPL_Proxy &oplProxy();
+#endif
+
+#ifdef ENABLE_HW_OPL_SERIAL_PORT
+    static OPL_SerialPort &serialPortOpl();
 #endif
 
 private:

@@ -28,6 +28,7 @@ include(FindPkgConfig)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
+find_package(Qt5SerialPort)
 set(QWT_NAMES qwt-qt5 qwt) # find versions for Qt5 only
 find_package(Qwt)
 find_package(ZLIB REQUIRED)
@@ -37,6 +38,12 @@ if(QWT_FOUND)
   set(ENABLE_PLOTS ON)
 else()
   set(ENABLE_PLOTS OFF)
+endif()
+
+if(TARGET Qt5::SerialPort)
+  set(ENABLE_SERIAL_PORT ON)
+else()
+  set(ENABLE_SERIAL_PORT OFF)
 endif()
 
 message("!! Optional feature summary:")
@@ -57,6 +64,8 @@ if(ENABLE_PLOTS)
 endif()
 
 message("!!   Plots: ${ENABLE_PLOTS}")
+
+message("!!   Serial port: ${ENABLE_SERIAL_PORT}")
 
 include_directories("src")
 
@@ -116,6 +125,9 @@ set(CHIPS_SOURCES
 if(ENABLE_OPL3_PROXY)
   list(APPEND CHIPS_SOURCES "src/opl/chips/win9x_opl_proxy.cpp")
 endif()
+if(ENABLE_SERIAL_PORT)
+  list(APPEND CHIPS_SOURCES "src/opl/chips/opl_serial_port.cpp")
+endif()
 add_library(Chips STATIC ${CHIPS_SOURCES})
 target_include_directories(Chips PUBLIC "src")
 if(ENABLE_OPL3_PROXY)
@@ -124,6 +136,10 @@ if(ENABLE_OPL3_PROXY)
   if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(Chips PUBLIC dl)
   endif()
+endif()
+if(ENABLE_SERIAL_PORT)
+  target_link_libraries(Chips PUBLIC Qt5::SerialPort)
+  target_compile_definitions(Chips PUBLIC "-DENABLE_HW_OPL_SERIAL_PORT")
 endif()
 
 set(MEASURER_SOURCES

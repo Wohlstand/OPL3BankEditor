@@ -3561,6 +3561,7 @@ of second voice</string>
      <addaction name="actionEmulatorOpal"/>
      <addaction name="actionEmulatorJava"/>
      <addaction name="actionWin9xOPLProxy"/>
+     <addaction name="actionSerialPortOPL"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
     <addaction name="actionAudioConfig"/>
@@ -3840,6 +3841,14 @@ of second voice</string>
   <action name="actionCompareWith">
    <property name="text">
     <string>Compare with other bank...</string>
+   </property>
+  </action>
+  <action name="actionSerialPortOPL">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Serial port OPL interface</string>
    </property>
   </action>
  </widget>
