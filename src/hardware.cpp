@@ -86,7 +86,7 @@ void HardwareDialog::setSerialPortName(const QString &name) const
 unsigned HardwareDialog::serialBaudRate() const
 {
     Ui::HardwareDialog &ui = *m_ui;
-    return ui.serialRateChoice->currentData().toUInt();
+    return ui.serialRateChoice->itemData(ui.serialRateChoice->currentIndex()).toUInt();
 }
 
 void HardwareDialog::setSerialBaudRate(unsigned rate)
