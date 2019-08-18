@@ -22,13 +22,16 @@
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
 
 #include "opl_chip_base.h"
+#include <QString>
+#include <QObject>
 
 class QSerialPort;
-class QString;
 
 ///
-class OPL_SerialPort : public OPLChipBaseT<OPL_SerialPort>
+class OPL_SerialPort : public QObject, public OPLChipBaseT<OPL_SerialPort>
 {
+    Q_OBJECT
+
 public:
     OPL_SerialPort();
     ~OPL_SerialPort() override;
@@ -44,6 +47,9 @@ public:
     void nativeGenerate(int16_t *frame) override;
     const char *emulatorName() override;
     ChipType chipType() override;
+
+private slots:
+    void sendSerial(uint addr, uint data);
 
 private:
     QSerialPort *m_port;

@@ -45,15 +45,24 @@ bool OPL_SerialPort::connectPort(const QString &name, unsigned baudRate)
 
 void OPL_SerialPort::writeReg(uint16_t addr, uint8_t data)
 {
+    QMetaObject::invokeMethod(
+        this, "sendSerial", Qt::QueuedConnection, Q_ARG(uint, addr), Q_ARG(uint, data));
+}
+
+void OPL_SerialPort::sendSerial(uint addr, uint data)
+{
     QSerialPort *port = m_port;
-    if(!port || !port->isOpen())
-        return;
 
     // TODO support OPL2 only
     if(addr >= 0x100)
         return;
 
-    uint8_t sendBuffer[2] = {(uint8_t)addr, data};
+    ///
+    if(!port || !port->isOpen())
+        return;
+
+    ///
+    uint8_t sendBuffer[2] = {(uint8_t)addr, (uint8_t)data};
     port->write((char *)sendBuffer, 2);
 }
 
