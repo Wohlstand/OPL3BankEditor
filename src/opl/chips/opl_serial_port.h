@@ -30,6 +30,8 @@ class QSerialPort;
 ///
 class OPL_SerialPort : public QObject, public OPLChipBaseT<OPL_SerialPort>
 {
+    Q_OBJECT
+
 public:
     OPL_SerialPort();
     ~OPL_SerialPort() override;
@@ -46,8 +48,8 @@ public:
     const char *emulatorName() override;
     ChipType chipType() override;
 
-private:
-    void sendSerial(uint16_t addr, uint8_t data);
+private slots:
+    void sendSerial(uint addr, uint data);
 
 private:
     QSerialPort *m_port;
