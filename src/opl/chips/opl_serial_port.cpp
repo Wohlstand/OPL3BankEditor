@@ -23,7 +23,7 @@
 #include <QSerialPort>
 
 OPL_SerialPort::OPL_SerialPort()
-    : m_port(nullptr)
+    : m_port(nullptr), m_protocol(ProtocolUnknown)
 {
 }
 
@@ -33,10 +33,14 @@ OPL_SerialPort::~OPL_SerialPort()
     m_port = nullptr;
 }
 
-bool OPL_SerialPort::connectPort(const QString &name, unsigned baudRate)
+bool OPL_SerialPort::connectPort(const QString &name, unsigned baudRate, unsigned protocol)
 {
     delete m_port;
     m_port = nullptr;
+
+    // ensure audio thread reads protocol atomically and in order,
+    // so chipType() will be correct after the port is live
+    m_protocol.storeRelease(protocol);
 
     QSerialPort *port = m_port = new QSerialPort(name);
     port->setBaudRate(baudRate);
@@ -52,18 +56,23 @@ void OPL_SerialPort::writeReg(uint16_t addr, uint8_t data)
 void OPL_SerialPort::sendSerial(uint addr, uint data)
 {
     QSerialPort *port = m_port;
-
-    // TODO support OPL2 only
-    if(addr >= 0x100)
-        return;
-
-    ///
     if(!port || !port->isOpen())
         return;
 
-    ///
-    uint8_t sendBuffer[2] = {(uint8_t)addr, (uint8_t)data};
-    port->write((char *)sendBuffer, 2);
+    unsigned protocol = m_protocol.load();
+
+    switch(protocol)
+    {
+    // TODO support OPL2 only
+    default:
+    case ProtocolArduinoOPL2:
+    {
+        if(addr >= 0x100)
+            break;
+        uint8_t sendBuffer[2] = {(uint8_t)addr, (uint8_t)data};
+        port->write((char *)sendBuffer, 2);
+    }
+    }
 }
 
 void OPL_SerialPort::nativeGenerate(int16_t *frame)
@@ -79,8 +88,16 @@ const char *OPL_SerialPort::emulatorName()
 
 OPLChipBase::ChipType OPL_SerialPort::chipType()
 {
+    unsigned protocol = m_protocol.loadAcquire();
+
+    switch(protocol)
+    {
     // TODO support OPL2 only
-    return OPLChipBase::CHIPTYPE_OPL2;
+    default:
+    case ProtocolArduinoOPL2:
+        return OPLChipBase::CHIPTYPE_OPL2;
+    }
+
 }
 
 #endif // ENABLE_HW_OPL_SERIAL_PORT

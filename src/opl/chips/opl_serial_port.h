@@ -22,8 +22,9 @@
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
 
 #include "opl_chip_base.h"
-#include <QString>
 #include <QObject>
+#include <QString>
+#include <QAtomicInt>
 
 class QSerialPort;
 
@@ -36,7 +37,13 @@ public:
     OPL_SerialPort();
     ~OPL_SerialPort() override;
 
-    bool connectPort(const QString &name, unsigned baudRate);
+    enum Protocol
+    {
+        ProtocolUnknown,
+        ProtocolArduinoOPL2,
+    };
+
+    bool connectPort(const QString &name, unsigned baudRate, unsigned protocol);
 
     bool canRunAtPcmRate() const override { return false; }
     void setRate(uint32_t /*rate*/) override {}
@@ -53,6 +60,7 @@ private slots:
 
 private:
     QSerialPort *m_port;
+    QAtomicInt m_protocol;
 };
 
 #endif // ENABLE_HW_OPL_SERIAL_PORT

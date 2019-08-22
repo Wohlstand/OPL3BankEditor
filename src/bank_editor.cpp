@@ -242,8 +242,9 @@ void BankEditor::loadSettings()
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
     m_serialPortName = setup.value("hw-opl-serial-port", QString()).toString();
     m_serialPortBaudRate = setup.value("hw-opl-serial-baud-rate", 115200).toUInt();
+    m_serialPortProtocol = setup.value("hw-opl-serial-protocol", 0u).toUInt();
     OPL_SerialPort &serial = *m_serialPortOpl;
-    serial.connectPort(m_serialPortName, m_serialPortBaudRate);
+    serial.connectPort(m_serialPortName, m_serialPortBaudRate, m_serialPortProtocol);
 #endif
 #if defined(ENABLE_HW_OPL_PROXY) || defined(ENABLE_HW_OPL_SERIAL_PORT)
     initChip();
@@ -301,6 +302,7 @@ void BankEditor::saveSettings()
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
     setup.setValue("hw-opl-serial-port", m_serialPortName);
     setup.setValue("hw-opl-serial-baud-rate", m_serialPortBaudRate);
+    setup.setValue("hw-opl-serial-protocol", m_serialPortProtocol);
 #endif
 }
 
@@ -1394,6 +1396,7 @@ void BankEditor::on_actionHardware_OPL_triggered()
     OPL_SerialPort &serial = *m_serialPortOpl;
     dlg->setSerialPortName(m_serialPortName);
     dlg->setSerialBaudRate(m_serialPortBaudRate);
+    dlg->setSerialProtocol(m_serialPortProtocol);
 #else
     dlg->setSerialPortOptionsVisible(false);
 #endif
@@ -1418,7 +1421,8 @@ void BankEditor::on_actionHardware_OPL_triggered()
 #if defined(ENABLE_HW_OPL_SERIAL_PORT)
     m_serialPortName = dlg->serialPortName();
     m_serialPortBaudRate = dlg->serialBaudRate();
-    serial.connectPort(m_serialPortName, m_serialPortBaudRate);
+    m_serialPortProtocol = dlg->serialProtocol();
+    serial.connectPort(m_serialPortName, m_serialPortBaudRate, m_serialPortProtocol);
     mustReinitialize = true;
 #endif
 
