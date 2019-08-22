@@ -61,16 +61,27 @@ void OPL_SerialPort::sendSerial(uint addr, uint data)
 
     unsigned protocol = m_protocol.load();
 
+    uint8_t sendBuffer[3];
+
     switch(protocol)
     {
-    // TODO support OPL2 only
     default:
     case ProtocolArduinoOPL2:
     {
         if(addr >= 0x100)
             break;
-        uint8_t sendBuffer[2] = {(uint8_t)addr, (uint8_t)data};
+        sendBuffer[0] = (uint8_t)addr;
+        sendBuffer[1] = (uint8_t)data;
         port->write((char *)sendBuffer, 2);
+        break;
+    }
+    case ProtocolNukeYktOPL3:
+    {
+        sendBuffer[0] = (addr >> 6) | 0x80;
+        sendBuffer[1] = ((addr & 0x3f) << 1) | (data >> 7);
+        sendBuffer[2] = (data & 0x7f);
+        port->write((char *)sendBuffer, 3);
+        break;
     }
     }
 }
@@ -92,10 +103,11 @@ OPLChipBase::ChipType OPL_SerialPort::chipType()
 
     switch(protocol)
     {
-    // TODO support OPL2 only
     default:
     case ProtocolArduinoOPL2:
         return OPLChipBase::CHIPTYPE_OPL2;
+    case ProtocolNukeYktOPL3:
+        return OPLChipBase::CHIPTYPE_OPL3;
     }
 
 }
