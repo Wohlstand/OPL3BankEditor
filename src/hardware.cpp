@@ -23,6 +23,7 @@
 #include <QAction>
 #include <QDebug>
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
+#include "opl/chips/opl_serial_port.h"
 #include <QSerialPortInfo>
 #endif
 
@@ -95,6 +96,18 @@ void HardwareDialog::setSerialBaudRate(unsigned rate)
     ui.serialRateChoice->setCurrentIndex(ui.serialRateChoice->findData(rate));
 }
 
+unsigned HardwareDialog::serialProtocol() const
+{
+    Ui::HardwareDialog &ui = *m_ui;
+    return ui.serialProtocolChoice->itemData(ui.serialProtocolChoice->currentIndex()).toUInt();
+}
+
+void HardwareDialog::setSerialProtocol(unsigned protocol)
+{
+    Ui::HardwareDialog &ui = *m_ui;
+    ui.serialProtocolChoice->setCurrentIndex(ui.serialProtocolChoice->findData(protocol));
+}
+
 void HardwareDialog::on_serialPortButton_triggered(QAction *)
 {
     Ui::HardwareDialog &ui = *m_ui;
@@ -135,6 +148,11 @@ void HardwareDialog::setupUi()
         if (rate >= 1200 && rate <= 115200)
             ui.serialRateChoice->addItem(QString::number(rate), rate);
     }
+
+    ui.serialProtocolChoice->addItem(
+        tr("Arduino OPL2"), (unsigned)OPL_SerialPort::ProtocolArduinoOPL2);
+    ui.serialProtocolChoice->addItem(
+        tr("Nuke.YKT OPL3"), (unsigned)OPL_SerialPort::ProtocolNukeYktOPL3);
 
     QAction *serialPortAction = m_serialPortAction = new QAction(
         ui.serialPortButton->icon(), ui.serialPortButton->text(), this);

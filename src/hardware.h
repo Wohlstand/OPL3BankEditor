@@ -43,6 +43,8 @@ public:
     void setSerialPortName(const QString &name) const;
     unsigned serialBaudRate() const;
     void setSerialBaudRate(unsigned rate);
+    unsigned serialProtocol() const;
+    void setSerialProtocol(unsigned protocol);
 
 public slots:
     void on_serialPortButton_triggered(QAction *);
