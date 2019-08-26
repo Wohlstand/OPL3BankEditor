@@ -3,6 +3,8 @@
 #                             created 2017-07-27
 #--------------------------------------------------------------------------------
 
+language: cpp
+
 git:
   depth: 1
 
@@ -10,17 +12,44 @@ branches:
   only:
     - master
 
-language: cpp
-os: linux
-dist: trusty
+cache:
+  directories:
+    - download
 
-
-before_install:
- - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
- - sudo apt-get update -qq
- - sudo apt-get install qt5-default qtbase5-dev qt5-qmake qttools5-dev-tools libqt5concurrent5 libqt5test5 qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev
-
-script:
- - qmake CONFIG-=debug CONFIG+=release
- - make -s -j 4
-
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      env:
+        - _BUILD=linux
+      before_install:
+        - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+        - sudo apt-get update -qq
+        - sudo apt-get install qt5-default qtbase5-dev qt5-qmake qttools5-dev-tools libqt5concurrent5 libqt5test5 qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev
+      script:
+        - qmake CONFIG-=debug CONFIG+=release
+        - make -s -j 4
+    - os: osx
+      osx_image: xcode10.3
+      sudo: required
+      env:
+        - _BUILD=macos
+      before_install:
+        - mkdir -p download
+        - wget -c -O {download/,http://wohlsoft.ru/docs/Software/QtBuilds/}qt-5-12-4-static-macosx-10-14-5.tar.bz2
+        - wget -c -O {download/,http://wohlsoft.ru/docs/Software/QtBuilds/}qt-mac-serial-port-5.12-for-5.12.4.tar.gz
+      install:
+        - sudo mkdir -p /Users/StaticQt
+        - sudo chown -R travis /Users/StaticQt
+        - tar -x -j -f download/qt-5-12-4-static-macosx-10-14-5.tar.bz2 -C /Users/StaticQt
+        - tar -x -j -f download/qt-mac-serial-port-5.12-for-5.12.4.tar.gz -C /Users/StaticQt
+        - export QTDIR=/Users/StaticQt/5.12.4
+        - export PATH="$QTDIR"/bin:"$PATH"
+        - export QMAKESPEC="$QTDIR"/mkspecs/macx-clang
+      script:
+        - qmake CONFIG-=debug CONFIG+=release
+        - make -s -j 4
+        - lrelease FMBankEdit.pro
+        - mkdir -p bin-release/opl3_bank_editor.app/Contents/Resources/translations/
+        - cp src/translations/*.qm bin-release/opl3_bank_editor.app/Contents/Resources/translations/
