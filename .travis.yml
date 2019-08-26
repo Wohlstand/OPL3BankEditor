@@ -33,6 +33,11 @@ matrix:
     - os: osx
       osx_image: xcode10.3
       sudo: required
+      addons:
+        homebrew:
+          packages:
+            - lftp
+            - axel
       env:
         - _BUILD=macos
       before_install:
