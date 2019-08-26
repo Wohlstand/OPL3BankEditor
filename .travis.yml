@@ -58,8 +58,8 @@ matrix:
         - lrelease FMBankEdit.pro
         - mkdir -p bin-release/opl3_bank_editor.app/Contents/Resources/translations/
         - cp src/translations/*.qm bin-release/opl3_bank_editor.app/Contents/Resources/translations/
-        - cd bin-release; zip -r -X "opl3_bank_editor-macos.zip" opl3_bank_editor.app; cd ..
-        - cd utils/create-dmg; ./create-dmg.sh --volname "OPL3 Bank Editor" --window-size 800 600 --app-drop-link 450 320 ../../bin-release/opl3_bank_editor-macos.dmg ../../bin-release; cd ../..
-        - ./utils/ftp-upload.sh ./macosx/opl3-bank-editor/ ./bin-release/opl3_bank_editor-macos.zip
-        - ./utils/ftp-upload.sh ./macosx/opl3-bank-editor/ ./bin-release/opl3_bank_editor-macos.dmg
+        - cd bin-release; zip -r -X "../opl3_bank_editor-macos.zip" opl3_bank_editor.app; cd ..
+        - cd utils/create-dmg; ./create-dmg.sh --volname "OPL3 Bank Editor" --window-size 800 600 --app-drop-link 450 320 ../../opl3_bank_editor-macos.dmg ../../bin-release; cd ../..
+        - ./utils/ftp-upload.sh ./macosx/opl3-bank-editor/ ./opl3_bank_editor-macos.zip
+        - ./utils/ftp-upload.sh ./macosx/opl3-bank-editor/ ./opl3_bank_editor-macos.dmg
 
