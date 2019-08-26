@@ -23,6 +23,8 @@ Version 1.5
 - Added Public Domain Opal OPL3 emulator made by Reality (a team who originally made the Reality Adlib Tracker)
 - Added LGPL licensed JavaOPL3 emulator made by Robson Cozendey in Java and later rewritten into C++ for GZDoom (Thanks to Jean Pierre Cimalando for a work!)
 - Added banks comparison tool
+- Added support for OPL2 chips (when certain hardware does use of OPL2 than OPL3)
+- Added support for some hardware OPL2/OPL3 devices running via Serial Port
 
 Version 1.4.0.1
 - Added ability to re-calculate sounding delays for entire instruments set
