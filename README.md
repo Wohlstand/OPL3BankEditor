@@ -36,7 +36,7 @@ Linux | Windows | macOS
 * **Stable builds:** https://github.com/Wohlstand/OPL3BankEditor/releases
 * **Fresh dev builds:**
   * [Download for Windows x86 (XP/7/8/8.1/10 with Nuked OPL3 emulator)](http://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win32.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor))
-  * [Download for Windows x86 (98/ME with proxy to real OPL3 chip)](http://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win9x.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor-mn8v1))
+  * [Download for Windows x86 (98/ME with proxy to real OPL3 chip)](http://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win9x.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor))
   * [Download for macOS x64 (DMG)](http://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opl3-bank-editor/opl3_bank_editor-macos.dmg) (built by [Travis-CI](https://travis-ci.org/Wohlstand/OPL3BankEditor))
   * [Download for macOS x64 (ZIP)](http://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opl3-bank-editor/opl3_bank_editor-macos.zip) (built by [Travis-CI](https://travis-ci.org/Wohlstand/OPL3BankEditor))
   * CIs for other operating systems are coming soon... (However, it's easy to build it by yourself :wink:)
