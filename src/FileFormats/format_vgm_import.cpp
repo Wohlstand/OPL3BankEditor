@@ -204,6 +204,10 @@ FfmtErrCode VGM_Importer::load(QIODevice &file, FmBank &bank)
             file.seek(file.pos() + 2);
             file.read(char_p(numb), 4);
             pcm_offset = toUint32LE(numb);
+
+            // from ValleyBell's vgmtest.c: offset MSB is chip ID
+            pcm_offset &= 0x7fffffff;
+
             file.seek(file.pos() + pcm_offset);
             break;
         }
