@@ -35,22 +35,22 @@ bool FmBankFormatBase::detectInst(const QString &, char *)
 
 FfmtErrCode FmBankFormatBase::loadFile(QString, FmBank &)
 {
-    return FfmtErrCode::ERR_NOT_IMLEMENTED;
+    return FfmtErrCode::ERR_NOT_IMPLEMENTED;
 }
 
 FfmtErrCode FmBankFormatBase::saveFile(QString, FmBank &)
 {
-    return FfmtErrCode::ERR_NOT_IMLEMENTED;
+    return FfmtErrCode::ERR_NOT_IMPLEMENTED;
 }
 
 FfmtErrCode FmBankFormatBase::loadFileInst(QString, FmBank::Instrument &, bool *)
 {
-    return FfmtErrCode::ERR_NOT_IMLEMENTED;
+    return FfmtErrCode::ERR_NOT_IMPLEMENTED;
 }
 
 FfmtErrCode FmBankFormatBase::saveFileInst(QString, FmBank::Instrument &, bool)
 {
-    return FfmtErrCode::ERR_NOT_IMLEMENTED;
+    return FfmtErrCode::ERR_NOT_IMPLEMENTED;
 }
 
 int FmBankFormatBase::formatCaps() const

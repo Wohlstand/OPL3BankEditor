@@ -33,7 +33,7 @@ QString FileFormats::getErrorText(FfmtErrCode err)
         errText = QCoreApplication::translate(
             "FileFormats", "can't open file");
         break;
-    case FfmtErrCode::ERR_NOT_IMLEMENTED:
+    case FfmtErrCode::ERR_NOT_IMPLEMENTED:
         errText = QCoreApplication::translate(
             "FileFormats", "reading of this format is not implemented yet");
         break;

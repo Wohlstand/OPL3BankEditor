@@ -559,7 +559,7 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format)
         case FfmtErrCode::ERR_NOFILE:
             errText = tr("can't open file for write");
             break;
-        case FfmtErrCode::ERR_NOT_IMLEMENTED:
+        case FfmtErrCode::ERR_NOT_IMPLEMENTED:
             errText = tr("writing into this format is not implemented yet");
             break;
         case FfmtErrCode::ERR_UNSUPPORTED_FORMAT:
@@ -599,7 +599,7 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
         case FfmtErrCode::ERR_NOFILE:
             errText = tr("can't open file for write");
             break;
-        case FfmtErrCode::ERR_NOT_IMLEMENTED:
+        case FfmtErrCode::ERR_NOT_IMPLEMENTED:
             errText = tr("writing into this format is not implemented yet");
             break;
         case FfmtErrCode::ERR_UNSUPPORTED_FORMAT:

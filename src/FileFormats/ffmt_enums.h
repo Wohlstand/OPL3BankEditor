@@ -105,7 +105,7 @@ enum class FfmtErrCode
     //! File format is corrupted/invalid/damaged
     ERR_BADFORMAT,
     //! Reading or Writing operation is not implemented for this file format
-    ERR_NOT_IMLEMENTED,
+    ERR_NOT_IMPLEMENTED,
     //! Detected file format is not supported
     ERR_UNSUPPORTED_FORMAT,
     //! Any other error
