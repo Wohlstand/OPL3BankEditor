@@ -592,6 +592,7 @@ void Importer::on_doImport_clicked()
 
     m_main->reloadInstrumentNames();
     m_main->loadInstrument();
+    m_main->sendPatch();
 }
 
 void Importer::onLanguageChanged()
