@@ -7,13 +7,16 @@
     <x>0</x>
     <y>0</y>
     <width>286</width>
-    <height>210</height>
+    <height>227</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string notr="true">Operator</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetMinimumSize</enum>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -28,6 +31,9 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_2">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMinimumSize</enum>
+     </property>
      <item row="0" column="0">
       <widget class="QLabel" name="label_7">
        <property name="toolTip">
@@ -40,14 +46,23 @@
      </item>
      <item row="0" column="1">
       <widget class="QSpinBox" name="op_attack">
-       <property name="maximumSize">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
         <size>
-         <width>60</width>
-         <height>20</height>
+         <width>50</width>
+         <height>0</height>
         </size>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="correctionMode">
+        <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
        </property>
        <property name="maximum">
         <number>15</number>
@@ -66,14 +81,23 @@
      </item>
      <item row="0" column="4">
       <widget class="QSpinBox" name="op_decay">
-       <property name="maximumSize">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
         <size>
-         <width>60</width>
-         <height>20</height>
+         <width>50</width>
+         <height>0</height>
         </size>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="correctionMode">
+        <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
        </property>
        <property name="maximum">
         <number>15</number>
@@ -92,14 +116,23 @@
      </item>
      <item row="1" column="1">
       <widget class="QSpinBox" name="op_sustain">
-       <property name="maximumSize">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
         <size>
-         <width>60</width>
-         <height>20</height>
+         <width>50</width>
+         <height>0</height>
         </size>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and changes to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="correctionMode">
+        <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
        </property>
        <property name="maximum">
         <number>15</number>
@@ -118,14 +151,23 @@
      </item>
      <item row="1" column="4">
       <widget class="QSpinBox" name="op_release">
-       <property name="maximumSize">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
         <size>
-         <width>60</width>
-         <height>20</height>
+         <width>50</width>
+         <height>0</height>
         </size>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="correctionMode">
+        <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
        </property>
        <property name="maximum">
         <number>15</number>
@@ -162,6 +204,9 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMinimumSize</enum>
+     </property>
      <item>
       <widget class="QLabel" name="label_11">
        <property name="toolTip">
@@ -267,6 +312,9 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout_8">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMinimumSize</enum>
+     </property>
      <item row="0" column="0">
       <widget class="QCheckBox" name="op_am">
        <property name="maximumSize">
@@ -335,6 +383,18 @@
    </item>
    <item>
     <layout class="QFormLayout" name="formLayout_2">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMinimumSize</enum>
+     </property>
+     <property name="formAlignment">
+      <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
      <item row="0" column="0">
       <widget class="QLabel" name="label_29">
        <property name="toolTip">
@@ -347,14 +407,29 @@
      </item>
      <item row="0" column="1">
       <widget class="QSpinBox" name="op_level">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>60</width>
-         <height>20</height>
+         <height>16777215</height>
         </size>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="correctionMode">
+        <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
        </property>
        <property name="maximum">
         <number>63</number>
@@ -373,14 +448,29 @@
      </item>
      <item row="1" column="1">
       <widget class="QSpinBox" name="op_freqmult">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>60</width>
-         <height>20</height>
+         <height>16777215</height>
         </size>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator's frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator's frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="correctionMode">
+        <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
        </property>
        <property name="maximum">
         <number>15</number>
@@ -399,14 +489,29 @@
      </item>
      <item row="2" column="1">
       <widget class="QSpinBox" name="op_ksl">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>60</width>
-         <height>20</height>
+         <height>16777215</height>
         </size>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="correctionMode">
+        <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
        </property>
        <property name="maximum">
         <number>3</number>

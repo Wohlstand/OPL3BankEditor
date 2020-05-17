@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1117</width>
-    <height>846</height>
+    <width>1024</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -87,12 +87,6 @@
             <layout class="QVBoxLayout" name="verticalLayout_11">
              <item>
               <widget class="QFrame" name="bankListFrame">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>32</height>
-                </size>
-               </property>
                <property name="frameShape">
                 <enum>QFrame::NoFrame</enum>
                </property>
@@ -103,9 +97,6 @@
                 <number>0</number>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1000">
-                <property name="spacing">
-                 <number>8</number>
-                </property>
                 <property name="leftMargin">
                  <number>0</number>
                 </property>
@@ -119,13 +110,7 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QPushButton" name="bankRename">
-                  <property name="maximumSize">
-                   <size>
-                    <width>25</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
+                 <widget class="QToolButton" name="bankRename">
                   <property name="toolTip">
                    <string>Rename bank</string>
                   </property>
@@ -352,6 +337,9 @@
                 <string>Carrier 2 (Operator 4)</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_3">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
                 <property name="leftMargin">
                  <number>1</number>
                 </property>
@@ -716,6 +704,9 @@
                 <string>Modulator 1 (Operator 1)</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_2">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
                 <property name="leftMargin">
                  <number>1</number>
                 </property>
@@ -749,6 +740,9 @@
                 <string>Modulator 2 (Operator 3)</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_4">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
                 <property name="leftMargin">
                  <number>1</number>
                 </property>
@@ -779,6 +773,9 @@
                 <string>Carrier 1 (Operator 2)</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
                 <property name="leftMargin">
                  <number>1</number>
                 </property>
@@ -868,6 +865,9 @@
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
                 <property name="leftMargin">
                  <number>1</number>
                 </property>
@@ -889,6 +889,9 @@
                    </sizepolicy>
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_9">
+                   <property name="sizeConstraint">
+                    <enum>QLayout::SetMinimumSize</enum>
+                   </property>
                    <property name="leftMargin">
                     <number>0</number>
                    </property>
@@ -967,6 +970,9 @@
                    <set>Qt::AlignCenter</set>
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_2">
+                   <property name="sizeConstraint">
+                    <enum>QLayout::SetMinimumSize</enum>
+                   </property>
                    <property name="leftMargin">
                     <number>0</number>
                    </property>
@@ -1158,6 +1164,9 @@
           </sizepolicy>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_13">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -1175,7 +1184,6 @@
             <property name="font">
              <font>
               <family>Monospace</family>
-              <pointsize>7</pointsize>
               <stylestrategy>NoAntialias</stylestrategy>
              </font>
             </property>
@@ -1197,7 +1205,7 @@
             <property name="font">
              <font>
               <family>Monospace</family>
-              <pointsize>7</pointsize>
+              <underline>true</underline>
              </font>
             </property>
             <property name="text">
@@ -1220,6 +1228,9 @@
              <set>Qt::AlignCenter</set>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_19">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMinimumSize</enum>
+             </property>
              <property name="leftMargin">
               <number>1</number>
              </property>
@@ -1297,6 +1308,9 @@
              <set>Qt::AlignCenter</set>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMinimumSize</enum>
+             </property>
              <property name="leftMargin">
               <number>1</number>
              </property>
@@ -1462,6 +1476,9 @@
              <set>Qt::AlignCenter</set>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_9">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMinimumSize</enum>
+             </property>
              <property name="leftMargin">
               <number>1</number>
              </property>
@@ -1483,11 +1500,11 @@
              </item>
              <item>
               <widget class="QSpinBox" name="noteToTest">
-               <property name="maximumSize">
-                <size>
-                 <width>60</width>
-                 <height>20</height>
-                </size>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
                <property name="toolTip">
                 <string>Current note position (60 is a C of a first octave).
@@ -1503,12 +1520,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testNote">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a single note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1519,12 +1530,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testMajor">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a major triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1535,12 +1540,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testMinor">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a minor triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1551,12 +1550,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testAugmented">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a augmented triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1567,12 +1560,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testDiminished">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a diminished triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1583,12 +1570,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testMajor7">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a major seventh chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1599,12 +1580,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testMinor7">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a minor seventh chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1631,12 +1606,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="shutUp">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Mute all playing/sustaining notes in all channels</string>
                </property>
@@ -1922,8 +1891,8 @@ of second voice</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1117</width>
-     <height>19</height>
+     <width>1024</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

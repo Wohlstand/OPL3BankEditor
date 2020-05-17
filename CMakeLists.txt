@@ -233,7 +233,10 @@ target_link_libraries(OPL3BankEditor PRIVATE Qt5::Widgets ${CMAKE_THREAD_LIBS_IN
 if(ENABLE_PLOTS)
   target_link_libraries(OPL3BankEditor PRIVATE ${QWT_LIBRARIES})
 endif()
-install(TARGETS OPL3BankEditor DESTINATION "bin" RENAME "opl3_bank_editor")
+
+if(NOT APPLE)
+    install(TARGETS OPL3BankEditor DESTINATION "bin" RENAME "opl3_bank_editor")
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(ICON "${CMAKE_SOURCE_DIR}/src/resources/res.rc")
@@ -243,6 +246,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   set(ICON "${CMAKE_SOURCE_DIR}/src/resources/opl3.icns")
   set_source_files_properties("${ICON}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
   target_sources(OPL3BankEditor PRIVATE "${ICON}")
+  set_target_properties(OPL3BankEditor PROPERTIES OUTPUT_NAME "OPL3 Bank Editor")
 endif()
 
 if(USE_RTMIDI)
