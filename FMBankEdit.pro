@@ -48,12 +48,15 @@ CONFIG += rtaudio
 LIBS += -lz
 
 !macx:{
-QMAKE_CXXFLAGS += -fopenmp
+    QMAKE_CXXFLAGS += -fopenmp
 }
 
 TEMPLATE = app
 TARGET = opl3_bank_editor
 INCLUDEPATH += $$PWD/src
+
+# Better name look for an app bundle
+macx: TARGET = "OPL3 Bank Editor"
 
 android:{
     ARCH=android_arm
