@@ -38,6 +38,7 @@ matrix:
           packages:
             - lftp
             - axel
+          update: true
       env:
         - _BUILD=macos
       before_install:
