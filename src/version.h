@@ -25,7 +25,7 @@
 
 #define PROGRAM_NAME "OPL3 Bank Editor"
 
-#define VERSION "1.5"
+#define VERSION "1.5.1"
 
 #ifdef IS_QT_4
 #define COPYRIGHT_SIGN "(C)"
@@ -33,6 +33,6 @@
 #define COPYRIGHT_SIGN "©"
 #endif
 
-#define COPYRIGHT COPYRIGHT_SIGN " 2016-2019, Vitaly Novichkov \"Wohlstand\""
+#define COPYRIGHT COPYRIGHT_SIGN " 2016-2020, Vitaly Novichkov \"Wohlstand\""
 
 #endif // VERSION_H

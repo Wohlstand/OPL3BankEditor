@@ -1,3 +1,10 @@
+Version 1.5.1
+- Added an ability to set the audio device by user interface
+- Added support for VGZ importing
+- Added an ability to use OPL-Proxy plugin on any platform
+- Fixed some bugs in VGM import support
+- Fixed the look of UI overall
+
 Version 1.5
 - Added Adlib Gold file format
 - Added Real-Time MIDI support
@@ -25,6 +32,7 @@ Version 1.5
 - Added banks comparison tool
 - Added support for OPL2 chips (when certain hardware does use of OPL2 than OPL3)
 - Added support for some hardware OPL2/OPL3 devices running via Serial Port
+- Added support for VGM importing
 
 Version 1.4.0.1
 - Added ability to re-calculate sounding delays for entire instruments set
