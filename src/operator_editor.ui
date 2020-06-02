@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>286</width>
-    <height>227</height>
+    <width>243</width>
+    <height>225</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -382,12 +382,9 @@
     </layout>
    </item>
    <item>
-    <layout class="QFormLayout" name="formLayout_2">
+    <layout class="QGridLayout" name="gridLayout">
      <property name="sizeConstraint">
       <enum>QLayout::SetMinimumSize</enum>
-     </property>
-     <property name="formAlignment">
-      <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
      </property>
      <property name="leftMargin">
       <number>0</number>
@@ -402,6 +399,9 @@
        </property>
        <property name="text">
         <string>Level</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -444,6 +444,9 @@
        <property name="text">
         <string>Frequency multiplication</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
      <item row="1" column="1">
@@ -484,6 +487,9 @@
        </property>
        <property name="text">
         <string>Key Scale Level</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
