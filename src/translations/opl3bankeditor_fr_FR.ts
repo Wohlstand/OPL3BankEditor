@@ -1290,12 +1290,12 @@ Amplitude au point de coupure : %3</translation>
     <message>
         <location filename="../hardware.cpp" line="153"/>
         <source>Arduino OPL2</source>
-        <translation type="unfinished"></translation>
+        <translation>Arduino OPL2</translation>
     </message>
     <message>
         <location filename="../hardware.cpp" line="155"/>
         <source>Nuke.YKT OPL3</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuke.YKT OPL3</translation>
     </message>
     <message>
         <location filename="../hardware.cpp" line="174"/>
@@ -1618,19 +1618,19 @@ Please select target instrument in the main window and retry again!</source>
         <translation>Suivi de Clavier (KSR)</translation>
     </message>
     <message>
-        <location filename="../operator_editor.ui" line="401"/>
+        <location filename="../operator_editor.ui" line="398"/>
         <location filename="../operator_editor.ui" line="429"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Niveau de Sortie&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Atténue le niveau de sortie de l&apos;opérateur. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (en interne 0) correspond au niveau le plus élevé, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (en interne 0x3F) au plus faible. En synthèse additive, faire varier le niveau de sortie de tout opérateur fait varier le volume du canal correspondant. En synthèse FM, faire varier le niveau de sortie de la porteuse fait varier le volume du canal. Faire varier le niveau de la modulatrice modifie le spectre du signal produit par la porteuse.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../operator_editor.ui" line="404"/>
+        <location filename="../operator_editor.ui" line="401"/>
         <source>Level</source>
         <translation>Niveau</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="442"/>
-        <location filename="../operator_editor.ui" line="470"/>
+        <location filename="../operator_editor.ui" line="473"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator&apos;s frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator&apos;s frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Facteur de Multiplication de Fréquence (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;La fréquence de l&apos;opérateur est définie par F-Number*Facteur.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pour faire simple, ceci augmente la fréquence de l&apos;opérateur par le nombre donné d&apos;octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;F-Number est défini par la relation :&lt;/p&gt;&lt;p&gt;F-Number = Fréquence Musicale * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Où Block est un identifiant de bloc, qui détermine approximativement l&apos;octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
@@ -1640,13 +1640,13 @@ Please select target instrument in the main window and retry again!</source>
         <translation>Multiplicateur de Fréquence</translation>
     </message>
     <message>
-        <location filename="../operator_editor.ui" line="483"/>
-        <location filename="../operator_editor.ui" line="511"/>
+        <location filename="../operator_editor.ui" line="486"/>
+        <location filename="../operator_editor.ui" line="517"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Niveau de Suivi de Clavier.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Atténuation du niveau de sortie en relation avec la hauteur de note&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Atténuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../operator_editor.ui" line="486"/>
+        <location filename="../operator_editor.ui" line="489"/>
         <source>Key Scale Level</source>
         <translation>Niveau de Suivi de Clavier</translation>
     </message>

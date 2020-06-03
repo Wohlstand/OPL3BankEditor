@@ -1395,7 +1395,7 @@ Amplitude at breaking point: %3</source>
     <message>
         <location filename="../hardware.ui" line="115"/>
         <source>Protocol:</source>
-        <translation type="unfinished"></translation>
+        <translation>Протокол:</translation>
     </message>
     <message>
         <source>Hexadecimal address: </source>
@@ -1404,12 +1404,12 @@ Amplitude at breaking point: %3</source>
     <message>
         <location filename="../hardware.cpp" line="153"/>
         <source>Arduino OPL2</source>
-        <translation type="unfinished"></translation>
+        <translation>Arduino OPL2</translation>
     </message>
     <message>
         <location filename="../hardware.cpp" line="155"/>
         <source>Nuke.YKT OPL3</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuke.YKT OPL3</translation>
     </message>
     <message>
         <location filename="../hardware.cpp" line="174"/>
@@ -1750,19 +1750,19 @@ If audio glitches occur, you should reset this setting to a higher value.</sourc
         <translation>Масшт. огибающая (KSR)</translation>
     </message>
     <message>
-        <location filename="../operator_editor.ui" line="401"/>
+        <location filename="../operator_editor.ui" line="398"/>
         <location filename="../operator_editor.ui" line="429"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Output Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (internally 0) is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (internally 0x3F) is the softest. In additive synthesis, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Выходной уровень&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Определяет уровень выходного сигнала. &lt;span style=&quot; font-weight:600;&quot;&gt;63&lt;/span&gt; (на чипе 0) - самый громкий, &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; (на чипе 0x3F) - самый тихий. В случае аддитивного синтеза, изменение выходного уровня любого из операторов, изменит громкость соответствующих им каналов. При частотном синтезе, изменение выходного уровня носителя изменяет громкость канала. Однако изменение выходного уровня модулятора поменяет полученный спектр частот, который был произведён носителем.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../operator_editor.ui" line="404"/>
+        <location filename="../operator_editor.ui" line="401"/>
         <source>Level</source>
         <translation>Уровень</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="442"/>
-        <location filename="../operator_editor.ui" line="470"/>
+        <location filename="../operator_editor.ui" line="473"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator&apos;s frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator&apos;s frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Фактор умножения частоты (MULTI)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Частота оператора устанавливается произведением частоты (F-номер) и фактора.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Простыми словами, увеличивает частоту оператора на число октав.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Там где F-номер это:&lt;/p&gt;&lt;p&gt;F-номер = Музыкальная частота * 2^(20-блок) / 49716 Hz&lt;/p&gt;&lt;p&gt;Гле &quot;блок&quot; - номер блока, который округлённо определяет октаву.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
@@ -1772,13 +1772,13 @@ If audio glitches occur, you should reset this setting to a higher value.</sourc
         <translation>Множитель частоты</translation>
     </message>
     <message>
-        <location filename="../operator_editor.ui" line="483"/>
-        <location filename="../operator_editor.ui" line="511"/>
+        <location filename="../operator_editor.ui" line="486"/>
+        <location filename="../operator_editor.ui" line="517"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Тоновое масштабирование (KSL)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Устанавливает осбаление громкости звука в зависимости от высоты тона.&lt;br&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot;margin-top:0;margin-bottom:0;margin-left:0;margin-right:0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot;font-weight:600&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Ослабление&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 дБ/окт&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 дБ/окт&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 дБ/окт&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../operator_editor.ui" line="486"/>
+        <location filename="../operator_editor.ui" line="489"/>
         <source>Key Scale Level</source>
         <translation>Тоновое масштабирования</translation>
     </message>
