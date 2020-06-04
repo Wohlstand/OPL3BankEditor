@@ -103,7 +103,7 @@
     <message>
         <location filename="../bank_comparison.cpp" line="186"/>
         <source>(empty string)</source>
-        <translation>(pusta struna)</translation>
+        <translation>(pusty napis)</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="201"/>
@@ -118,7 +118,7 @@
     <message>
         <location filename="../bank_comparison.cpp" line="354"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation>&lt;Odwrócone %1&gt;</translation>
+        <translation>&lt;Zarezerwowany %1&gt;</translation>
     </message>
 </context>
 <context>
@@ -181,7 +181,7 @@
     <message>
         <location filename="../bank_editor.ui" line="337"/>
         <source>Carrier 2 (Operator 4)</source>
-        <translation>Przewoźnik 2 (Operator 4)</translation>
+        <translation>Fala nośna 2 (Operator 4)</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="370"/>
@@ -195,7 +195,7 @@
         <location filename="../bank_editor.ui" line="913"/>
         <location filename="../bank_editor.ui" line="932"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack Modulation Factor&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If 0, no feedback is present. If 1-7, operator 1 will send a portion of its output back into itself.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Factor&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;When in four-operator mode, the FeedBack value is used only by Operator 1, value of Operators 2, 3 and 4 is ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Współczynnik modulacji FeedBack&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Jeśli będzie 0, nastąpi brak jest informacji zwrotnej. Jeśli 1-7, operator 1 wyśle ​​część swoich wyników z powrotem do siebie.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Czynnik&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;W trybie czterech operatorów wartość FeedBack jest używana tylko przez Operatora 1, wartość Operatorów 2, 3 i 4 jest ignorowana.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Współczynnik modulacji FeedBack&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Przy wartości 0, nastąpi brak informacji zwrotnej. Przy wartościach 1-7, operator 1 wyśle ​​część swojego sygnału z powrotem do siebie.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Czynnik&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;W trybie czterech operatorów wartość FeedBack jest używana tylko przez Operatora 1, wartość Operatorów 2, 3 i 4 jest ignorowana.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="434"/>
@@ -254,7 +254,7 @@
     <message>
         <location filename="../bank_editor.ui" line="568"/>
         <source>Note offset 1</source>
-        <translation>Przesunięcie uwagi 1</translation>
+        <translation>Przesunięcie tonu 1</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="597"/>
@@ -265,7 +265,7 @@
         <location filename="../bank_editor.ui" line="620"/>
         <location filename="../bank_editor.ui" line="639"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Naprawiono numer nuty&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument zawsze gra tę samą nutę.&lt;/p&gt;&lt;p&gt;Zalecane użycie instrumentów perkusyjnych. Jeśli wartość wynosi 0 - tryb stałej częstotliwości jest wyłączony.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Naprawiono numer nuty&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument zawsze gra tę samą nutę.&lt;/p&gt;&lt;p&gt;Zalecane użycie w przypadku instrumentów perkusyjnych. Jeśli wartość wynosi 0 - tryb stałej częstotliwości jest wyłączony.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="623"/>
@@ -282,17 +282,17 @@ Bass-Perkusja/Werbel/TomTom/Talerz / Hi-hatt&lt;/span&gt;&lt;br/&gt;Włącza sta
         <location filename="../bank_editor.ui" line="659"/>
         <location filename="../bank_editor.ui" line="1401"/>
         <source>Generic</source>
-        <translation>Rodzajowy</translation>
+        <translation>Ogólny</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="664"/>
         <source>Bass</source>
-        <translation>Bassowy</translation>
+        <translation>Bęben basowy</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="669"/>
         <source>Snare</source>
-        <translation>Werblowy</translation>
+        <translation>Werbel</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="674"/>
@@ -302,7 +302,7 @@ Bass-Perkusja/Werbel/TomTom/Talerz / Hi-hatt&lt;/span&gt;&lt;br/&gt;Włącza sta
     <message>
         <location filename="../bank_editor.ui" line="679"/>
         <source>Cymbal</source>
-        <translation>Talerze</translation>
+        <translation>Talerz</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="684"/>
@@ -353,17 +353,17 @@ Bass-Perkusja/Werbel/TomTom/Talerz / Hi-hatt&lt;/span&gt;&lt;br/&gt;Włącza sta
     <message>
         <location filename="../bank_editor.ui" line="1074"/>
         <source>Note offset 2</source>
-        <translation>Przesunięcie uwagi 2</translation>
+        <translation>Przesunięcie tonu 2</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1114"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enables 4-operators mode of OPL3 chip&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(not supported on OPL2 chip, but &amp;quot;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices&lt;/span&gt;&amp;quot; can be used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Włącza tryb 4-operatorowy układu OPL3&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(nieobsługiwany w układzie OPL2, ale &amp;quot;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Para głosów 2 operatorów&lt;/span&gt;&amp;quot; może być użyty)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Włącza tryb 4-operatorowy układu OPL3&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(nieobsługiwany w układzie OPL2, ale &amp;quot;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Para głosów 2-operatorowych&lt;/span&gt;&amp;quot; może być użyty)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1117"/>
         <source>Enable 4-operator</source>
-        <translation>Aktywuj 4-operator</translation>
+        <translation>Aktywuj tryb 4-operatorów</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1133"/>
@@ -374,7 +374,7 @@ Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi t
     <message>
         <location filename="../bank_editor.ui" line="1136"/>
         <source>Pair of 2-operator voices mode</source>
-        <translation>Para trybów 2-głosowych</translation>
+        <translation>Tryb pary 2-operatorowych głosów</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1191"/>
@@ -424,12 +424,12 @@ Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi t
     <message>
         <location filename="../bank_editor.ui" line="1364"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Declares a volume scale formula that will set physical volume level from a MIDI volume.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic &lt;/span&gt;- linear volume scale&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPL3 Native&lt;/span&gt; - Logarithmic volume scale produced by OPL3 chip natively&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indexed table of volumes that sets OPL volume by MIDI volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogee&lt;/span&gt; - Logarithmic volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Win9x Driver&lt;/span&gt; - A short non-smooth indexed table, shorter in two times than possible OPL3 volume levels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deklaruje formułę skali głośności, która ustawi fizyczny poziom głośności na podstawie głośności MIDI.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Rodzajowy&lt;/span&gt;- liniowa skala głośności&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Natywny OPL3&lt;/span&gt; - Logarytmiczna skala objętości wytwarzana natywnie przez układ OPL3&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indeksowana tabela woluminów, która ustawia głośność OPL według objętości MIDI&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogeum&lt;/span&gt; - Objętość logarytmiczna&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sterownik Win9x&lt;/span&gt; - Krótka, nieładna tabela indeksowana, krótsza dwa razy niż możliwe poziomy głośności OPL3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deklaruje formułę skali głośności, która ustawi fizyczny poziom głośności na podstawie głośności MIDI.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generyczny&lt;/span&gt;- liniowa skala głośności&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Natywny OPL3&lt;/span&gt; - Logarytmiczna skala objętości wytwarzana natywnie przez układ OPL3&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indeksowana tabela poziomów głośności, która ustawia głośność OPL według objętości MIDI&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogeum&lt;/span&gt; - Objętość logarytmiczna&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sterownik Win9x&lt;/span&gt; - Krótka, nieładna tabela indeksowana, dwa razy krótsza niż możliwe poziomy głośności OPL3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1367"/>
         <source>Bank volume model</source>
-        <translation>Model wolumenu banku</translation>
+        <translation>Model głośności banku</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1406"/>
@@ -444,7 +444,7 @@ Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi t
     <message>
         <location filename="../bank_editor.ui" line="1416"/>
         <source>Apogee</source>
-        <translation>Apogeum</translation>
+        <translation>Apogee</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1421"/>
@@ -454,7 +454,7 @@ Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi t
     <message>
         <location filename="../bank_editor.ui" line="1473"/>
         <source>Testing</source>
-        <translation>Testuję</translation>
+        <translation>Testuj</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1497"/>
@@ -471,7 +471,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1524"/>
         <source>Play a single note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj pojedynczą nutę. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj pojedynczą nutę. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1527"/>
@@ -481,7 +481,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1534"/>
         <source>Play a major triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj główny akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj główny akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1537"/>
@@ -491,7 +491,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1544"/>
         <source>Play a minor triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj niewielki akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj niewielki akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1547"/>
@@ -501,7 +501,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1554"/>
         <source>Play a augmented triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj wzmocniony akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj wzmocniony akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1557"/>
@@ -511,7 +511,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1564"/>
         <source>Play a diminished triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj zmniejszony akord triady w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj zmniejszony akord triady w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1567"/>
@@ -521,7 +521,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1574"/>
         <source>Play a major seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj główny siódmy akord w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj główny siódmy akord w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1577"/>
@@ -531,7 +531,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1584"/>
         <source>Play a minor seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj niewielki siódmy akord w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj niewielki siódmy akord w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1587"/>
@@ -541,7 +541,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1610"/>
         <source>Mute all playing/sustaining notes in all channels</source>
-        <translation>Wycisz wszystkie dźwięki odtwarzania/podtrzymywania na wszystkich kanałach</translation>
+        <translation>Wycisz wszystkie odtwarzane/podtrzymywane dźwięki na wszystkich kanałach</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1613"/>
@@ -691,7 +691,7 @@ drugiego głosu</translation>
         <location filename="../bank_editor.ui" line="2084"/>
         <location filename="../bank_editor.ui" line="2087"/>
         <source>United view of all banks</source>
-        <translation>Zjednoczony widok wszystkich banków</translation>
+        <translation>Połączony widok wszystkich banków</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2090"/>
@@ -806,12 +806,12 @@ drugiego głosu</translation>
     <message>
         <location filename="../bank_editor.ui" line="2210"/>
         <source>Run delay analysis</source>
-        <translation>Uruchom opóźnienie analizy</translation>
+        <translation>Uruchom analizę opóźnienia</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2215"/>
         <source>Hardware OPL...</source>
-        <translation>Sprzęt OPL...</translation>
+        <translation>Sprzętowy OPL...</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2268"/>
@@ -831,7 +831,7 @@ drugiego głosu</translation>
     <message>
         <location filename="../bank_editor.cpp" line="502"/>
         <source>Save melodic-only bank file</source>
-        <translation>Zapisz plik bankowy zawierający tylko melodię</translation>
+        <translation>Zapisz bank zawierający tylko instrumenty melodyczne</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="503"/>
@@ -845,7 +845,7 @@ Czy chcesz kontynuować zapisywanie pliku?</translation>
     <message>
         <location filename="../bank_editor.cpp" line="516"/>
         <source>Save percussion-only bank file</source>
-        <translation>Zapisz plik bankowy zawierający tylko instrumenty perkusyjne</translation>
+        <translation>Zapisz bank zawierający tylko instrumenty perkusyjne</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="517"/>
@@ -886,13 +886,13 @@ Czy chcesz kontynuować zapisywanie pliku?</translation>
         <location filename="../bank_editor.cpp" line="563"/>
         <location filename="../bank_editor.cpp" line="603"/>
         <source>writing into this format is not implemented yet</source>
-        <translation>zapisywanie w tym formacie nie jest jeszcze zaimplementowane</translation>
+        <translation>zapis do tego formatu nie jest jeszcze zaimplementowany</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="566"/>
         <location filename="../bank_editor.cpp" line="606"/>
         <source>unsupported file format, please define file name extension to choice target file format</source>
-        <translation>nieobsługiwany format pliku, proszę zdefiniować rozszerzenie nazwy pliku do wyboru docelowego formatu pliku</translation>
+        <translation>nieobsługiwany format pliku, proszę zdefiniować rozszerzenie nazwy pliku aby wybrać docelowy formatu pliku</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="569"/>
@@ -903,7 +903,7 @@ Czy chcesz kontynuować zapisywanie pliku?</translation>
     <message>
         <location filename="../bank_editor.cpp" line="582"/>
         <source>Bank file &apos;%1&apos; has been saved!</source>
-        <translation>Plik bankowy &apos;%1&apos; został zapisany!</translation>
+        <translation>Plik banku &apos;%1&apos; został zapisany!</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="619"/>
@@ -938,7 +938,7 @@ Czy chcesz kontynuować zapisywanie pliku?</translation>
     <message>
         <location filename="../bank_editor.cpp" line="711"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation>&lt;Odwrócony %1&gt;</translation>
+        <translation>&lt;Zarezerwowany %1&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="926"/>
@@ -1037,7 +1037,7 @@ Licensed under GNU GPLv3
 
 Source code available on GitHub:
 %3</source>
-        <translation>Edytor Banków FM dla układu Yamaha OPN2, Wersja %1
+        <translation>Edytor Banków FM dla układów Yamaha OPL3/OPL2, Wersja %1
 
 %2
 
@@ -1050,7 +1050,7 @@ Licencja na podstawie GNU GPLv3
         <location filename="../bank_editor.cpp" line="1221"/>
         <location filename="../bank_editor.cpp" line="1224"/>
         <source>Delays on: %1, off: %2</source>
-        <translation>Opóźnienie włączone: %1, wyłączone: %2</translation>
+        <translation>Opóźnienie wł.: %1, wył.: %2</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1453"/>
@@ -1138,7 +1138,7 @@ Licencja na podstawie GNU GPLv3
     <message>
         <location filename="../bank_editor.cpp" line="1884"/>
         <source>Deletion of bank will cause offset of all next bank indexes. Suggested to use &apos;Clear bank&apos; action instead. Do you want continue deletion?</source>
-        <translation>Usunięcie banku spowoduje przesunięcie wszystkich kolejnych indeksów banków. Sugerowane użycie akcji: „Wyczyść bank”. Czy chcesz kontynuować usuwanie?</translation>
+        <translation>Usunięcie banku spowoduje przesunięcie wszystkich kolejnych indeksów banków. Sugerowane jest użycie akcji: „Wyczyść bank”. Czy chcesz kontynuować usuwanie?</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1935"/>
@@ -1166,7 +1166,7 @@ Licencja na podstawie GNU GPLv3
     <message>
         <location filename="../delay_analysis.ui" line="14"/>
         <source>Delay analysis</source>
-        <translation>Analizy opóźnienia</translation>
+        <translation>Analiza opóźnienia</translation>
     </message>
     <message>
         <location filename="../delay_analysis.ui" line="45"/>
@@ -1184,12 +1184,12 @@ Amplituda w punkcie przerwania: %3</translation>
     <message>
         <location filename="../delay_analysis.cpp" line="164"/>
         <source>Key-On Amplitude</source>
-        <translation>Amplituda Włączonego Klawisza</translation>
+        <translation>Amplituda naciśniętego klawisza</translation>
     </message>
     <message>
         <location filename="../delay_analysis.cpp" line="166"/>
         <source>Key-Off Amplitude</source>
-        <translation>Amplituda Wyłączonego Klawisza</translation>
+        <translation>Amplituda puszczonego klawisza</translation>
     </message>
     <message>
         <location filename="../delay_analysis.cpp" line="180"/>
@@ -1235,7 +1235,7 @@ Amplituda w punkcie przerwania: %3</translation>
     <message>
         <location filename="../hardware.ui" line="14"/>
         <source>Hardware OPL</source>
-        <translation>Sprzęt OPL</translation>
+        <translation>Sprzętowy OPL</translation>
     </message>
     <message>
         <location filename="../hardware.ui" line="20"/>
@@ -1361,7 +1361,7 @@ Upewnij się, że zainstalowałeś najnowszy serwer proxy OPL.</translation>
     <message>
         <location filename="../importer.ui" line="133"/>
         <source>Associated with instrument ID</source>
-        <translation>Powiązany z Identyfikatorem instrumentu</translation>
+        <translation>Powiązany z ID instrumentu</translation>
     </message>
     <message>
         <location filename="../importer.ui" line="143"/>
@@ -1401,7 +1401,7 @@ Upewnij się, że zainstalowałeś najnowszy serwer proxy OPL.</translation>
     <message>
         <location filename="../importer.ui" line="236"/>
         <source>Test Note</source>
-        <translation>Uwaga Dotycząca Testu</translation>
+        <translation>Testuj nutę</translation>
     </message>
     <message>
         <location filename="../importer.cpp" line="469"/>
@@ -1411,7 +1411,7 @@ Upewnij się, że zainstalowałeś najnowszy serwer proxy OPL.</translation>
     <message>
         <location filename="../importer.cpp" line="479"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation>&lt;Odwrócony %1&gt;</translation>
+        <translation>&lt;Zarezerwowany %1&gt;</translation>
     </message>
     <message>
         <location filename="../importer.cpp" line="529"/>
@@ -1455,7 +1455,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../opl/measurer.cpp" line="800"/>
         <location filename="../opl/measurer.cpp" line="827"/>
         <source>Sounding delay calculation</source>
-        <translation>Obliczanie opóźnienia dźwiękowania</translation>
+        <translation>Obliczanie opóźnienia dźwięku</translation>
     </message>
     <message>
         <location filename="../opl/measurer.cpp" line="745"/>
@@ -1468,7 +1468,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
     <message>
         <location filename="../opl/measurer.cpp" line="854"/>
         <source>Benchmarking emulators</source>
-        <translation>Emulatory analizy porównawczej</translation>
+        <translation>Analiza porównawcza emulatorów</translation>
     </message>
 </context>
 <context>
@@ -1477,7 +1477,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../operator_editor.ui" line="40"/>
         <location filename="../operator_editor.ui" line="62"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Wskaźnik Ataku.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa czas narastania dźwięku. Im wyższa wartość, tym szybszy atak.&lt;/p&gt;&lt;p&gt;Zakres od 0 do 31. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Wspólczynnik Ataku.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa czas narastania dźwięku. Im wyższa wartość, tym szybszy atak.&lt;/p&gt;&lt;p&gt;Zakres od 0 do 31. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="43"/>
@@ -1488,18 +1488,18 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../operator_editor.ui" line="75"/>
         <location filename="../operator_editor.ui" line="97"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;Range from 0 to 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Szybkość Pierwszego Rozkładu.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa malejący czas dla dźwięku. Im wyższa wartość, tym krótszy rozkład.&lt;/p&gt;&lt;p&gt;Jest to szybkość zaniku amplitudy początkowego stopnia.&lt;/p&gt;&lt;p&gt;Zasięg od 0 do 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Szybkość Opadania.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa malejący czas dla dźwięku. Im wyższa wartość, tym krótszy opadanie.&lt;/p&gt;&lt;p&gt;Jest to szybkość zaniku amplitudy początkowego stopnia.&lt;/p&gt;&lt;p&gt;Zasięg od 0 do 15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="78"/>
         <source>Decay</source>
-        <translation>Rozkład</translation>
+        <translation>Opadanie</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="110"/>
         <location filename="../operator_editor.ui" line="132"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and changes to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Podtrzymanie Poziomu.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa punkt, w którym dźwięk przestaje zanikać i zmienia się w dźwięk o stałym poziomie. Poziom podtrzymania jest wyrażony jako ułamek maksymalnego poziomu. 0 to najcichszy, a 15 to najgłośniejszy poziom podtrzymania. Zauważ, że ma flagę podtrzymania, aby to zadziałało.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Podtrzymanie Poziomu.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa punkt, w którym dźwięk przestaje zanikać i zmienia się w dźwięk o stałym poziomie. Poziom podtrzymania jest wyrażony jako ułamek maksymalnego poziomu. 0 to najcichszy, a 15 to najgłośniejszy poziom podtrzymania. Zauważ, że należy zaznaczyć flagę podtrzymania, aby to zadziałało.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="113"/>
@@ -1510,7 +1510,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../operator_editor.ui" line="145"/>
         <location filename="../operator_editor.ui" line="167"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Szybkość Zwolnienia.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa szybkość zanikania dźwięku po Wyłączeniu Klawisza. Im wyższa wartość, tym krótsze zwolnienie.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Szybkość Zwolnienia.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa szybkość zanikania dźwięku po puszczeniu klawisza. Im wyższa wartość, tym krótsze zwolnienie.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="148"/>
@@ -1521,27 +1521,27 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../operator_editor.ui" line="213"/>
         <location filename="../operator_editor.ui" line="235"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Waveform Select&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Wave which will be generated by operator.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(waveforms from 4 to 7 not supported on OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sine wave&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Half-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Abs-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Pulse-Sine&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Abs-Sine - even periods only&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;7 - Derived Square&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Wybierz Przebieg&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Fala, która będzie generowana przez operatora.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(przebiegi od 4 do 7 nie są obsługiwane w OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sinusoida&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Pół Sinusa&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Sinus Abs&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Puls Sinusoidalny&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sinus - tylko okresy&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Abs sinusoidalny tylko okresowy&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Kwadrat&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Wyprowadzony Kwadrat&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Wybierz Przebieg Fali&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium;&quot;&gt;Fala, która będzie generowana przez operatora.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:medium; text-decoration: underline;&quot;&gt;(przebiegi od 4 do 7 nie są obsługiwane w OPL2)&lt;/span&gt;&lt;/p&gt;&lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave0.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;0 - Sinusoida&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave1.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;1 - Pół-sinusoida&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave2.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;2 - Moduł sinusoidy&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave3.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;3 - Puls Sinusoidalny&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave4.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;4 - Sinusoida - tylko równe okresy&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave5.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;5 - Moduł Sinusoidy - tylko równe okresy&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave6.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Kwadrat&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;&lt;img src=&quot;:/waves/wave7.png&quot; style=&quot;vertical-align: middle;&quot;/&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle; padding-left:5; padding-right:5; padding-top:5; padding-bottom:5;&quot;&gt;&lt;p&gt;6 - Pochodna Kwadratu&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="216"/>
         <source>Waveform select:</source>
-        <translation>Wybierz przebieg:</translation>
+        <translation>Wybierz przebieg fali:</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="239"/>
         <source>0 - Sine</source>
-        <translation>0 - Sinus</translation>
+        <translation>0 - Sinusoida</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="248"/>
         <source>1 - Half-Sine</source>
-        <translation>1 - Pół Sinus</translation>
+        <translation>1 - Pół-sinusoida</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="257"/>
         <source>2 - Absolute Sine</source>
-        <translation>3 - Absolutny Sinus</translation>
+        <translation>3 - Moduł sinusoidy</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="266"/>
@@ -1551,12 +1551,12 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
     <message>
         <location filename="../operator_editor.ui" line="275"/>
         <source>4 - Sine - even periods only</source>
-        <translation>4 - Sinus - tylko okresy</translation>
+        <translation>4 - Sinusoida - tylko równe okresy</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="284"/>
         <source>5 - Abs-Sine - even periods only</source>
-        <translation>5 - Abs-Sinus - tylko okresy</translation>
+        <translation>5 - Moduł Sinusoidy - tylko równe okresy</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="293"/>
@@ -1566,7 +1566,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
     <message>
         <location filename="../operator_editor.ui" line="302"/>
         <source>7 - Derived Square</source>
-        <translation>7 - Wyprowadzony Kwadrat</translation>
+        <translation>7 - Pochodna Kwadratu</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="327"/>
@@ -1581,12 +1581,12 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
     <message>
         <location filename="../operator_editor.ui" line="343"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sound Sustaining&lt;/span&gt;&lt;/p&gt;&lt;p&gt;When toggled on, operator&apos;s output level will be held at its sustain level until a KEY-OFF is done.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Utrzymanie Dźwięku&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Po włączeniu poziom wyjściowy operatora będzie utrzymywany na poziomie podtrzymania do momentu Wyłączenia Klawisza.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Podtrzymanie Dźwięku&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Po włączeniu poziom wyjściowy operatora będzie utrzymywany na poziomie podtrzymania do momentu Wyłączenia Klawisza.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="346"/>
         <source>Sustaining voice (EG)</source>
-        <translation>Głos podtrzymujący (EG)</translation>
+        <translation>Podtrzymanie glosu (EG)</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="359"/>
@@ -1606,7 +1606,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
     <message>
         <location filename="../operator_editor.ui" line="378"/>
         <source>Envelope scale (KSR)</source>
-        <translation>Skala powłoki (KSR)</translation>
+        <translation>Skala obwiedni (KSR)</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="398"/>
@@ -1628,18 +1628,18 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
     <message>
         <location filename="../operator_editor.ui" line="445"/>
         <source>Frequency multiplication</source>
-        <translation>Mnożenie częstotliwości</translation>
+        <translation>Mnożnik częstotliwości</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="486"/>
         <location filename="../operator_editor.ui" line="517"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Key Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Poziom Skali Klucza.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Tłumi poziom wyjściowy w kierunku wyższego tonu&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tłumienie&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/okt&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/okt &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/okt &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Poziom Skali Klawisza.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Tłumi poziom wyjściowy w kierunku wyższego tonu&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;KSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tłumienie&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/okt&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/okt &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/okt &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="489"/>
         <source>Key Scale Level</source>
-        <translation>Poziom Skali Klucza</translation>
+        <translation>Poziom Skali Klawisza</translation>
     </message>
 </context>
 <context>
