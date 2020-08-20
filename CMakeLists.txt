@@ -196,6 +196,7 @@ qt5_add_resources(RESOURCES
 
 qt5_add_translation(TRANSLATIONS
   "src/translations/opl3bankeditor_fr_FR.ts"
+  "src/translations/opl3bankeditor_pl_PL.ts"
   "src/translations/opl3bankeditor_ru_RU.ts")
 add_custom_target(OPL3BankEditor_translations ALL
   DEPENDS ${TRANSLATIONS})
