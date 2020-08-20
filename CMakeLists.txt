@@ -24,6 +24,7 @@ set(USE_RTAUDIO "ON" CACHE STRING "Use RtAudio")
 OPTION(DEBUG_WRITE_AMPLITUDE_PLOT "Write the captured result of sounding measurer into the apmplitudes plot" OFF)
 
 include(FindPkgConfig)
+include(CheckCXXCompilerFlag)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
@@ -33,6 +34,19 @@ set(QWT_NAMES qwt-qt5 qwt) # find versions for Qt5 only
 find_package(Qwt)
 find_package(ZLIB REQUIRED)
 find_package(Threads REQUIRED)
+
+if(NOT WIN32 AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX))
+    check_cxx_compiler_flag("-no-pie" HAS_NO_PIE)
+endif()
+
+function(pge_set_nopie _target)
+    set_target_properties(${_target} PROPERTIES
+        POSITION_INDEPENDENT_CODE False
+    )
+    if(HAS_NO_PIE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX))
+        set_property(TARGET ${_target} APPEND_STRING PROPERTY LINK_FLAGS " -no-pie")
+    endif()
+endfunction()
 
 if(QWT_FOUND)
   set(ENABLE_PLOTS ON)
@@ -234,6 +248,7 @@ target_link_libraries(OPL3BankEditor PRIVATE Qt5::Widgets ${CMAKE_THREAD_LIBS_IN
 if(ENABLE_PLOTS)
   target_link_libraries(OPL3BankEditor PRIVATE ${QWT_LIBRARIES})
 endif()
+pge_set_nopie(OPL3BankEditor)
 
 if(NOT APPLE)
     install(TARGETS OPL3BankEditor DESTINATION "bin" RENAME "opl3_bank_editor")
@@ -316,3 +331,4 @@ add_executable(measurer_tool
   "utils/measurer/measurer-tool.cpp")
 set_target_properties(measurer_tool PROPERTIES OUTPUT_NAME "measurer")
 target_link_libraries(measurer_tool PRIVATE FileFormats Measurer)
+pge_set_nopie(measurer_tool)
