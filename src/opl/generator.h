@@ -115,7 +115,7 @@ public:
      */
     void NoteOff(uint32_t c);
 
-    void Touch_Real(uint32_t c, uint32_t volume);
+    void Touch_Real(uint32_t c, uint32_t volume, uint32_t brightness = 127);
     void Touch(uint32_t c, uint32_t volume);
     void Patch(uint32_t c, uint32_t i);
     void Pan(uint32_t c, uint32_t value);

@@ -443,20 +443,42 @@ void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz, bool voice2ps4op)
     }
 }
 
-void Generator::Touch_Real(uint32_t c, uint32_t volume)
+void Generator::Touch_Real(uint32_t c, uint32_t volume, uint32_t brightness)
 {
-    if(volume > 63)
-        volume = 63;
-
     uint16_t /*card = c/23,*/ cc = c % 23;
     uint16_t i = m_ins[c],
             o1 = g_Operators[cc * 2 + 0],
             o2 = g_Operators[cc * 2 + 1];
     uint16_t x = m_patch.OPS[i].modulator_40,
              y = m_patch.OPS[i].carrier_40;
-    bool do_modulator;
-    bool do_carrier;
+    bool do_modulator = false;
+    bool do_carrier = false;
     uint32_t mode = 1; // 2-op AM
+
+    static const bool do_ops[10][2] =
+    {
+        { false, true },  /* 2 op FM */
+        { true,  true },  /* 2 op AM */
+        { false, false }, /* 4 op FM-FM ops 1&2 */
+        { true,  false }, /* 4 op AM-FM ops 1&2 */
+        { false, true  }, /* 4 op FM-AM ops 1&2 */
+        { true,  false }, /* 4 op AM-AM ops 1&2 */
+        { false, true  }, /* 4 op FM-FM ops 3&4 */
+        { false, true  }, /* 4 op AM-FM ops 3&4 */
+        { false, true  }, /* 4 op FM-AM ops 3&4 */
+        { true,  true  }  /* 4 op AM-AM ops 3&4 */
+    };
+
+    uint_fast32_t kslMod = x & 0xC0;
+    uint_fast32_t kslCar = y & 0xC0;
+    uint_fast32_t tlMod = x & 63;
+    uint_fast32_t tlCar = y & 63;
+
+    uint_fast32_t modulator;
+    uint_fast32_t carrier;
+
+    if(volume > 63)
+        volume = 63;
 
     if(m_four_op_category[c] == ChanCat_Regular ||
        m_four_op_category[c] == ChanCat_Rhythm_Bass)
@@ -483,26 +505,52 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
         mode += (m_patch.OPS[i0].feedconn & 1) + (m_patch.OPS[i1].feedconn & 1) * 2;
     }
 
-    static const bool do_ops[10][2] =
+    if(m_volmodel == VOLUME_DMX && mode <= 1)
     {
-        { false, true },  /* 2 op FM */
-        { true,  true },  /* 2 op AM */
-        { false, false }, /* 4 op FM-FM ops 1&2 */
-        { true,  false }, /* 4 op AM-FM ops 1&2 */
-        { false, true  }, /* 4 op FM-AM ops 1&2 */
-        { true,  false }, /* 4 op AM-AM ops 1&2 */
-        { false, true  }, /* 4 op FM-FM ops 3&4 */
-        { false, true  }, /* 4 op AM-FM ops 3&4 */
-        { false, true  }, /* 4 op FM-AM ops 3&4 */
-        { true,  true  }  /* 4 op AM-AM ops 3&4 */
-    };
-    do_modulator = do_ops[ mode ][ 0 ];
-    do_carrier   = do_ops[ mode ][ 1 ];
+        do_modulator = do_ops[mode][ 0 ];
+
+        tlCar = (63 - volume);
+
+        if(do_modulator)
+        {
+            if(tlMod < tlCar)
+                tlMod = tlCar;
+        }
+
+        if(brightness != 127)
+        {
+            brightness = static_cast<uint8_t>(::round(127.0 * ::sqrt((static_cast<double>(brightness)) * (1.0 / 127.0))) / 2.0);
+            if(!do_modulator)
+                tlMod = 63 - brightness + (brightness * tlMod) / 63;
+        }
+    }
+    else
+    {
+        do_modulator = do_ops[ mode ][ 0 ];
+        do_carrier   = do_ops[ mode ][ 1 ];
+
+        if(do_modulator)
+            tlMod = 63 - volume + (volume * tlMod) / 63;
+        if(do_carrier)
+            tlCar = 63 - volume + (volume * tlCar) / 63;
+
+        if(brightness != 127)
+        {
+            brightness = static_cast<uint8_t>(::round(127.0 * ::sqrt((static_cast<double>(brightness)) * (1.0 / 127.0))) / 2.0);
+            if(!do_modulator)
+                tlMod = 63 - brightness + (brightness * tlMod) / 63;
+            if(!do_carrier)
+                tlCar = 63 - brightness + (brightness * tlCar) / 63;
+        }
+    }
+
+    modulator = (kslMod & 0xC0) | (tlMod & 63);
+    carrier = (kslCar & 0xC0) | (tlCar & 63);
 
     if(o1 != 0xFFF)
-        WriteReg(0x40 + o1, static_cast<uint8_t>(do_modulator ? (x | 63) - volume + volume * (x & 63) / 63 : x));
+        WriteReg(0x40 + o1, static_cast<uint8_t>(modulator));
     if(o2 != 0xFFF)
-        WriteReg(0x40 + o2, static_cast<uint8_t>(do_carrier   ? (y | 63) - volume + volume * (y & 63) / 63 : y));
+        WriteReg(0x40 + o2, static_cast<uint8_t>(carrier));
 
     // Correct formula (ST3, AdPlug):
     //   63-((63-(instrvol))/63)*chanvol
@@ -1028,13 +1076,7 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     {
         if(instrument.en_4op && instrument.en_pseudo4op)
         {
-            m_patch.voice2_fine_tune = (double(instrument.fine_tune) * 15.625) / 1000.0;
-
-            if(instrument.fine_tune == 1)
-                m_patch.voice2_fine_tune =  0.000025;
-            else if(instrument.fine_tune == -1)
-                m_patch.voice2_fine_tune = -0.000025;
-
+            m_patch.voice2_fine_tune = (double)((((int)instrument.fine_tune + 128) >> 1) - 64) / 32.0;
             m_patch.OPS[0].finetune = static_cast<int8_t>(instrument.note_offset1);
             m_patch.OPS[1].finetune = static_cast<int8_t>(instrument.note_offset2);
         }
@@ -1138,9 +1180,9 @@ uint32_t Generator::getChipVolume(uint32_t vol, uint8_t ccvolume, uint8_t ccexpr
 
     case VOLUME_DMX:
     {
-        volume = 2 * ((ccvolume * ccexpr) * 127 / 16129) + 1;
-        //volume = 2 * ccvolume + 1;
-        volume = ((uint32_t)g_DMX_volume_mapping_table[(vol < 128) ? vol : 127] * volume) >> 9;
+        volume = (ccvolume * ccexpr * 127) / 16129;
+        volume = (g_DMX_volume_mapping_table[volume] + 1) << 1;
+        volume = (g_DMX_volume_mapping_table[(vol < 128) ? vol : 127] * volume) >> 9;
     }
     break;
 
