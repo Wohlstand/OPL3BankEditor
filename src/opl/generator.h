@@ -163,8 +163,7 @@ public:
     const GeneratorDebugInfo &debugInfo() const
         { return m_debug; }
 
-    static uint32_t getChipVolume(
-        uint32_t volume, uint8_t ccvolume, uint8_t ccexpr, int volmodel);
+    static uint32_t getChipVolume(uint32_t velocity, uint8_t ccvolume, uint8_t ccexpr, int volmodel);
 
 #ifdef ENABLE_HW_OPL_PROXY
     static Win9x_OPL_Proxy &oplProxy();

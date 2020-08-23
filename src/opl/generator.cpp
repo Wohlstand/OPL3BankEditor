@@ -1154,7 +1154,7 @@ void Generator::updateChannelManager()
         m_noteManager.allocateChannels(chan2ops);
 }
 
-uint32_t Generator::getChipVolume(uint32_t vol, uint8_t ccvolume, uint8_t ccexpr, int volmodel)
+uint32_t Generator::getChipVolume(uint32_t velocity, uint8_t ccvolume, uint8_t ccexpr, int volmodel)
 {
     uint32_t volume;
 
@@ -1163,17 +1163,25 @@ uint32_t Generator::getChipVolume(uint32_t vol, uint8_t ccvolume, uint8_t ccexpr
     default:
     case VOLUME_Generic:
     {
-        volume = vol * ccvolume * ccexpr;
         // The formula below: SOLVE(V=127^3 * 2^( (A-63.49999) / 8), A)
-        volume = volume > 8725 ? static_cast<uint32_t>(std::log(static_cast<double>(volume)) * 11.541561 + (0.5 - 104.22845)) : 0;
-        // The incorrect formula below: SOLVE(V=127^3 * (2^(A/63)-1), A)
-        //volume = volume>11210 ? 91.61112 * std::log(4.8819E-7*volume + 1.0)+0.5 : 0;
+        volume = velocity * ccvolume * ccexpr * 127;
+        const double c1 = 11.541560327111707;
+        const double c2 = 1.601379199767093e+02;
+        uint_fast32_t minVolume = 8725 * 127;
+
+        if(volume > minVolume)
+        {
+            double lv = std::log(static_cast<double>(volume));
+            volume = static_cast<uint_fast32_t>(lv * c1 - c2);
+        }
+        else
+            volume = 0;
     }
     break;
 
     case VOLUME_CMF:
     {
-        volume = vol * ccvolume * ccexpr;
+        volume = velocity * ccvolume * ccexpr;
         volume = volume * 127 / (127 * 127 * 127) / 2;
     }
     break;
@@ -1182,23 +1190,22 @@ uint32_t Generator::getChipVolume(uint32_t vol, uint8_t ccvolume, uint8_t ccexpr
     {
         volume = (ccvolume * ccexpr * 127) / 16129;
         volume = (g_DMX_volume_mapping_table[volume] + 1) << 1;
-        volume = (g_DMX_volume_mapping_table[(vol < 128) ? vol : 127] * volume) >> 9;
+        volume = (g_DMX_volume_mapping_table[(velocity < 128) ? velocity : 127] * volume) >> 9;
     }
     break;
 
     case VOLUME_APOGEE:
     {
         volume = ((ccvolume * ccexpr) * 127 / 16129);
-        volume = ((64 * (vol + 0x80)) * volume) >> 15;
+        volume = ((64 * (velocity + 0x80)) * volume) >> 15;
         //volume = ((63 * (vol + 0x80)) * ccvolume) >> 15;
     }
     break;
 
     case VOLUME_9X:
     {
-        //volume = 63 - W9X_volume_mapping_table[(((vol * ccvolume /** ccexpr*/) * 127 / 16129 /*2048383*/) >> 2)];
-        volume = 63 - g_W9X_volume_mapping_table[(((vol * ccvolume * ccexpr) * 127 / 2048383) >> 2)];
-        //volume = W9X_volume_mapping_table[vol >> 2] + volume;
+        volume = velocity * ccvolume * ccexpr * 127;
+        volume = 63 - g_W9X_volume_mapping_table[(volume / 2048383) >> 2];
     }
     break;
     }
