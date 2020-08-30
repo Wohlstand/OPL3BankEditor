@@ -32,6 +32,9 @@ Version | What's new
         | (March 26, 2018)
         | Change: Added rhythm-mode drum type three-bit number
         | (May 29, 2018)
+        | Change: Added two new volume scaling models: DMX and Apogee with
+        | fixed AM voices
+        | (August 31, 2020)
 -------------------------------------------------------------------------------
 
 ===============================================================================
@@ -146,6 +149,8 @@ Bytes-Lenght      |      Description
                   |     2 - DMX volume model
                   |     3 - Apogee Sound System's volume model
                   |     4 - Windows 9x driver like volume model
+                  |     5 - DMX volume model with fixed AM voices
+                  |     6 - Apogee Sound System volume model with fixed AM voices
 --VERSION >= 2---Melodic bank meta-data-----
 (repeat MBanks times)
     32            | Name of melodic bank null-terminated string
@@ -168,6 +173,4 @@ InsSize:
     InsSize * 128 * PBanks  | 128 [Single-instrument entries] per each bank,
                             |     look at top of this text file
 --------------------------------------------
-
-
 
