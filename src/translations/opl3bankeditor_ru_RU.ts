@@ -563,7 +563,16 @@
 &lt;p&gt;&lt;b&gt;DMX (Fixed AM)&lt;/b&gt; - The DMX volume model with a correct AM voices processing.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Apogee (Fixed AM)&lt;/b&gt; - The Apogee volume model with a correct AM voices processing.&lt;/p&gt;
 </source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Определяет формулу преобразования громкости, которая установит физический уровень громкости из MIDI-громкости.&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Общий&lt;/b&gt; - Линеализация логарифмической громкости чипа.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Встроенная OPL3&lt;/b&gt; - Логарифмическая шкала громкости, реалезуемая самим чипом OPL3 напрямую.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX&lt;/b&gt; - Индексированная таблица, которая устанавливает громкость OPL из MIDI-громкости. Повторяет баг движка DMX, который неправильно работает с АМ-голосами. Громкость голоса-носителя всегда 63.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee&lt;/b&gt; - Подкорректированная логарифмическая шкала. Воспроизводит баг движка Apogee Sound System, который неправильно работает с АМ-голосами.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Win9x Driver&lt;/b&gt; - Сокращённая неровная индексная таблица, короче в два раза чем позволяет диапазон чипа OPL3.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX (Fixed AM)&lt;/b&gt; - Модель DMX с корректной обработкой АМ-голосов.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee (Fixed AM)&lt;/b&gt; - Модель Apogee с корректной обработкой АМ-голосов.&lt;/p&gt;
+</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1430"/>
@@ -573,12 +582,12 @@
     <message>
         <location filename="../bank_editor.ui" line="1435"/>
         <source>DMX (Fixed AM)</source>
-        <translation type="unfinished"></translation>
+        <translation>DMX (Исправная АМ)</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1440"/>
         <source>Apogee (Fixed AM)</source>
-        <translation type="unfinished"></translation>
+        <translation>Apogee (Исправная АМ)</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1492"/>
