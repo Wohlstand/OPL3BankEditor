@@ -280,7 +280,7 @@ Bass-Perkusja/Werbel/TomTom/Talerz / Hi-hatt&lt;/span&gt;&lt;br/&gt;Włącza sta
     </message>
     <message>
         <location filename="../bank_editor.ui" line="659"/>
-        <location filename="../bank_editor.ui" line="1401"/>
+        <location filename="../bank_editor.ui" line="1410"/>
         <source>Generic</source>
         <translation>Ogólny</translation>
     </message>
@@ -422,404 +422,425 @@ Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi t
         <translation>Głębokie Vibrato</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1364"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Declares a volume scale formula that will set physical volume level from a MIDI volume.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic &lt;/span&gt;- linear volume scale&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPL3 Native&lt;/span&gt; - Logarithmic volume scale produced by OPL3 chip natively&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indexed table of volumes that sets OPL volume by MIDI volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogee&lt;/span&gt; - Logarithmic volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Win9x Driver&lt;/span&gt; - A short non-smooth indexed table, shorter in two times than possible OPL3 volume levels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deklaruje formułę skali głośności, która ustawi fizyczny poziom głośności na podstawie głośności MIDI.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generyczny&lt;/span&gt;- liniowa skala głośności&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Natywny OPL3&lt;/span&gt; - Logarytmiczna skala objętości wytwarzana natywnie przez układ OPL3&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indeksowana tabela poziomów głośności, która ustawia głośność OPL według objętości MIDI&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogeum&lt;/span&gt; - Objętość logarytmiczna&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sterownik Win9x&lt;/span&gt; - Krótka, nieładna tabela indeksowana, dwa razy krótsza niż możliwe poziomy głośności OPL3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deklaruje formułę skali głośności, która ustawi fizyczny poziom głośności na podstawie głośności MIDI.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generyczny&lt;/span&gt;- liniowa skala głośności&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Natywny OPL3&lt;/span&gt; - Logarytmiczna skala objętości wytwarzana natywnie przez układ OPL3&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indeksowana tabela poziomów głośności, która ustawia głośność OPL według objętości MIDI&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogeum&lt;/span&gt; - Objętość logarytmiczna&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sterownik Win9x&lt;/span&gt; - Krótka, nieładna tabela indeksowana, dwa razy krótsza niż możliwe poziomy głośności OPL3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1367"/>
+        <location filename="../bank_editor.ui" line="1376"/>
         <source>Bank volume model</source>
         <translation>Model głośności banku</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1406"/>
+        <location filename="../bank_editor.ui" line="1415"/>
         <source>OPL3 Native</source>
         <translation>Natywny OPL3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1411"/>
         <source>DMX</source>
-        <translation>DMX</translation>
+        <translation type="vanished">DMX</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1416"/>
         <source>Apogee</source>
-        <translation>Apogee</translation>
+        <translation type="vanished">Apogee</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1421"/>
+        <location filename="../bank_editor.ui" line="1364"/>
+        <source>&lt;p&gt;Declares a volume scale formula that will set physical volume level from a MIDI volume.&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Generic&lt;/b&gt; - linear volume scale&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;OPL3 Native&lt;/b&gt; - Logarithmic volume scale produced by OPL3 chip natively&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX&lt;/b&gt; - Indexed table of volumes that sets OPL volume by MIDI volume. Reproduces a bug of DMX that has an incorrect AM voices processing. Carrier voice has always 63.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee&lt;/b&gt; - Tuned logarithmic volume. Reproduces a bug of Apogee Sound System that has an incorrect AM voices processing.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Win9x Driver&lt;/b&gt; - A short non-smooth indexed table, shorter in two times than possible OPL3 volume levels.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX (Fixed AM)&lt;/b&gt; - The DMX volume model with a correct AM voices processing.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee (Fixed AM)&lt;/b&gt; - The Apogee volume model with a correct AM voices processing.&lt;/p&gt;
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1430"/>
         <source>Win9x Driver</source>
         <translation>Sterownik Win9x</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1473"/>
+        <location filename="../bank_editor.ui" line="1435"/>
+        <source>DMX (Fixed AM)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1440"/>
+        <source>Apogee (Fixed AM)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1492"/>
         <source>Testing</source>
         <translation>Testuj</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1497"/>
+        <location filename="../bank_editor.ui" line="1516"/>
         <source>Test note #(0...127)</source>
         <translation>Testuj nutę #(0...127)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1510"/>
+        <location filename="../bank_editor.ui" line="1529"/>
         <source>Current note position (60 is a C of a first octave).
 Available from 0 to 127</source>
         <translation>Obecna pozycja nuty (60 to C pierwszej oktawy).
 Dostępne od 0 do 127</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1524"/>
+        <location filename="../bank_editor.ui" line="1543"/>
         <source>Play a single note. Hold button to play sound, release button to off note.</source>
         <translation>Zagraj pojedynczą nutę. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1527"/>
+        <location filename="../bank_editor.ui" line="1546"/>
         <source>Play Note</source>
         <translation>Zagraj Pojedynczą Nutę</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1534"/>
+        <location filename="../bank_editor.ui" line="1553"/>
         <source>Play a major triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Zagraj główny akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1537"/>
+        <location filename="../bank_editor.ui" line="1556"/>
         <source>Major chord</source>
         <translation>Akord główny</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1544"/>
+        <location filename="../bank_editor.ui" line="1563"/>
         <source>Play a minor triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Zagraj niewielki akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1547"/>
+        <location filename="../bank_editor.ui" line="1566"/>
         <source>Minor chord</source>
         <translation>Minor chord</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1554"/>
+        <location filename="../bank_editor.ui" line="1573"/>
         <source>Play a augmented triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Zagraj wzmocniony akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1557"/>
+        <location filename="../bank_editor.ui" line="1576"/>
         <source>Augmented chord</source>
         <translation>Wzmocniony akord</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1564"/>
+        <location filename="../bank_editor.ui" line="1583"/>
         <source>Play a diminished triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Zagraj zmniejszony akord triady w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1567"/>
+        <location filename="../bank_editor.ui" line="1586"/>
         <source>Diminished chord</source>
         <translation>Zmniejszony akord</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1574"/>
+        <location filename="../bank_editor.ui" line="1593"/>
         <source>Play a major seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Zagraj główny siódmy akord w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1577"/>
+        <location filename="../bank_editor.ui" line="1596"/>
         <source>Major 7-chord</source>
         <translation>Główny 7-my akord</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1584"/>
+        <location filename="../bank_editor.ui" line="1603"/>
         <source>Play a minor seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Zagraj niewielki siódmy akord w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1587"/>
+        <location filename="../bank_editor.ui" line="1606"/>
         <source>Minor 7-chord</source>
         <translation>Niewielki 7-my akord</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1610"/>
+        <location filename="../bank_editor.ui" line="1629"/>
         <source>Mute all playing/sustaining notes in all channels</source>
         <translation>Wycisz wszystkie odtwarzane/podtrzymywane dźwięki na wszystkich kanałach</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1613"/>
+        <location filename="../bank_editor.ui" line="1632"/>
         <source>Shut up!</source>
         <translation>Zamknij się!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1623"/>
-        <location filename="../bank_editor.ui" line="1639"/>
+        <location filename="../bank_editor.ui" line="1642"/>
+        <location filename="../bank_editor.ui" line="1658"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Note velocity offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Offsets MIDI velocity (range from -127 to 127)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Uwaga przesunięcie prędkości&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Przesuwa prędkość MIDI (zakres od -127 do 127)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1626"/>
+        <location filename="../bank_editor.ui" line="1645"/>
         <source>Velocity offset</source>
         <translation>Przesunięcie prędkości</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1655"/>
-        <location filename="../bank_editor.ui" line="1675"/>
+        <location filename="../bank_editor.ui" line="1674"/>
+        <location filename="../bank_editor.ui" line="1694"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Detune second voice pitch&lt;br/&gt;(0 is don&apos;t detune.&lt;br/&gt;Range from -127 to 127)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw drugi ton głosu&lt;br/&gt;(0 to nie jest ostrojone.&lt;br/&gt; Zakres od -127 do 127)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Tylko para głosów z 2 operatorami&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1658"/>
+        <location filename="../bank_editor.ui" line="1677"/>
         <source>Fine tuning
 of second voice</source>
         <translation>Strojenie
 drugiego głosu</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1794"/>
+        <location filename="../bank_editor.ui" line="1813"/>
         <source>Hold</source>
         <translation>Wstrzymaj</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1797"/>
+        <location filename="../bank_editor.ui" line="1816"/>
         <source>H</source>
         <translation>H</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1841"/>
+        <location filename="../bank_editor.ui" line="1860"/>
         <source>Pitch bend</source>
         <translation>Wychylenie się wysokości tonu</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1900"/>
+        <location filename="../bank_editor.ui" line="1919"/>
         <source>File</source>
         <translation>Plik</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1914"/>
+        <location filename="../bank_editor.ui" line="1933"/>
         <source>Help</source>
         <translation>Pomoc</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1918"/>
+        <location filename="../bank_editor.ui" line="1937"/>
         <source>Language</source>
         <translation>Język</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1930"/>
+        <location filename="../bank_editor.ui" line="1949"/>
         <source>Edit</source>
         <translation>Edytuj</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1934"/>
+        <location filename="../bank_editor.ui" line="1953"/>
         <source>Paste one voice</source>
         <translation>Wklej jeden głos</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1943"/>
+        <location filename="../bank_editor.ui" line="1962"/>
         <source>Preferred MIDI standard</source>
         <translation>Preferowany standard MIDI</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1978"/>
+        <location filename="../bank_editor.ui" line="1997"/>
         <source>Settings</source>
         <translation>Ustawienia</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1982"/>
+        <location filename="../bank_editor.ui" line="2001"/>
         <source>Choose chip emulator</source>
         <translation>Wybierz emulator układu</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2003"/>
+        <location filename="../bank_editor.ui" line="2022"/>
         <source>Open</source>
         <translation>Otwórz</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2011"/>
+        <location filename="../bank_editor.ui" line="2030"/>
         <source>Save bank as...</source>
         <translation>Zapisz bank jako...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2016"/>
+        <location filename="../bank_editor.ui" line="2035"/>
         <source>Exit</source>
         <translation>Wyjdź</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2024"/>
+        <location filename="../bank_editor.ui" line="2043"/>
         <source>About</source>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2029"/>
+        <location filename="../bank_editor.ui" line="2048"/>
         <source>New</source>
         <translation>Nowy</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2034"/>
+        <location filename="../bank_editor.ui" line="2053"/>
         <source>Copy current instrument</source>
         <translation>Kopiuj obecny instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2042"/>
+        <location filename="../bank_editor.ui" line="2061"/>
         <source>Paste instrument</source>
         <translation>Wklej instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2050"/>
+        <location filename="../bank_editor.ui" line="2069"/>
         <source>Reset current instrument</source>
         <translation>Resetuj obecny instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2058"/>
+        <location filename="../bank_editor.ui" line="2077"/>
         <source>Import instruments...</source>
         <translation>Importuj instrumenty...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2063"/>
+        <location filename="../bank_editor.ui" line="2082"/>
         <source>Add instrument</source>
         <translation>Dodaj instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2068"/>
+        <location filename="../bank_editor.ui" line="2087"/>
         <source>Delete current instrument</source>
         <translation>Usuń obecny instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2073"/>
+        <location filename="../bank_editor.ui" line="2092"/>
         <source>Save current instrument as...</source>
         <translation>Zapisz obecny instrument jako...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2084"/>
-        <location filename="../bank_editor.ui" line="2087"/>
+        <location filename="../bank_editor.ui" line="2103"/>
+        <location filename="../bank_editor.ui" line="2106"/>
         <source>United view of all banks</source>
         <translation>Połączony widok wszystkich banków</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2090"/>
+        <location filename="../bank_editor.ui" line="2109"/>
         <source>Show all instruments without separating them into 128-instrument banks</source>
         <translation>Pokaż wszystkie instrumenty bez dzielenia ich na banki z 128 instrumentami</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2095"/>
+        <location filename="../bank_editor.ui" line="2114"/>
         <source>Add bank</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2100"/>
+        <location filename="../bank_editor.ui" line="2119"/>
         <source>Delete bank</source>
         <translation>Usuń bank</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2105"/>
+        <location filename="../bank_editor.ui" line="2124"/>
         <source>Clone bank</source>
         <translation>Klonuj bank</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2110"/>
+        <location filename="../bank_editor.ui" line="2129"/>
         <source>Clear instrument</source>
         <translation>Wyczyść instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2115"/>
+        <location filename="../bank_editor.ui" line="2134"/>
         <source>Clear bank</source>
         <translation>Wyczyść bank</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2120"/>
+        <location filename="../bank_editor.ui" line="2139"/>
         <source>Supported formats...</source>
         <translation>Wspierane formaty...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2125"/>
+        <location filename="../bank_editor.ui" line="2144"/>
         <source>Swap two voices</source>
         <translation>Zamień dwa głosy</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2133"/>
+        <location filename="../bank_editor.ui" line="2152"/>
         <source>Paste voice 1 as voice 1</source>
         <translation>Wklej głos 1 jako głos 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2138"/>
+        <location filename="../bank_editor.ui" line="2157"/>
         <source>Paste voice 1 as voice 2</source>
         <translation>Wklej głos 1 jako głos 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2143"/>
+        <location filename="../bank_editor.ui" line="2162"/>
         <source>Paste voice 2 as voice 1</source>
         <translation>Wklej głos 2 jako głos 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2148"/>
+        <location filename="../bank_editor.ui" line="2167"/>
         <source>Paste voice 2 as voice 2</source>
         <translation>Wklej głos 2 jako głos 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2153"/>
+        <location filename="../bank_editor.ui" line="2172"/>
         <source>Re-Calculate all sounding delays</source>
         <translation>Ponownie oblicz wszystkie opóźnienia dźwiękowe</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2161"/>
+        <location filename="../bank_editor.ui" line="2180"/>
         <source>Nuked OPL3</source>
         <translation>Nuked OPL3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2169"/>
+        <location filename="../bank_editor.ui" line="2188"/>
         <source>DosBox 0.74</source>
         <translation>DosBox 0.74</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2174"/>
+        <location filename="../bank_editor.ui" line="2193"/>
         <source>Run emulators benchmark</source>
         <translation>Uruchom test emulatorów</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2179"/>
+        <location filename="../bank_editor.ui" line="2198"/>
         <source>Save bank...</source>
         <translation>Zapisz bank...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2182"/>
+        <location filename="../bank_editor.ui" line="2201"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2190"/>
+        <location filename="../bank_editor.ui" line="2209"/>
         <source>Proxy to the real OPL3 chip</source>
         <translation>Proxy do prawdziwego układu OPL3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2195"/>
+        <location filename="../bank_editor.ui" line="2214"/>
         <source>Audio &amp;configuration</source>
         <translation>Audio &amp;konfiguracja</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2200"/>
+        <location filename="../bank_editor.ui" line="2219"/>
         <source>System default</source>
         <translation>Domyślne ustawienie systemowe</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2205"/>
+        <location filename="../bank_editor.ui" line="2224"/>
         <source>Re-Calculate sounding delays of instrument</source>
         <translation>Ponownie oblicz opóźnienia sondowania instrumentu</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2210"/>
+        <location filename="../bank_editor.ui" line="2229"/>
         <source>Run delay analysis</source>
         <translation>Uruchom analizę opóźnienia</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2215"/>
+        <location filename="../bank_editor.ui" line="2234"/>
         <source>Hardware OPL...</source>
         <translation>Sprzętowy OPL...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2268"/>
+        <location filename="../bank_editor.ui" line="2287"/>
         <source>Compare with other bank...</source>
         <translation>Porównaj z innym bankiem...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2276"/>
+        <location filename="../bank_editor.ui" line="2295"/>
         <source>Serial port OPL interface</source>
         <translation>Interfejs OPL portu szeregowego</translation>
     </message>
