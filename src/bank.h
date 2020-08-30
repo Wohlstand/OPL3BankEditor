@@ -320,7 +320,9 @@ public:
         VOLUME_CMF,
         VOLUME_DMX,
         VOLUME_APOGEE,
-        VOLUME_9X
+        VOLUME_9X,
+        VOLUME_DMX_FIXED,
+        VOLUME_APOGEE_FIXED
     };
     uint8_t volume_model    = (uint8_t)VOLUME_Generic;
 

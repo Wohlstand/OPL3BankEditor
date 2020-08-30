@@ -1361,7 +1361,16 @@
           <item>
            <widget class="QGroupBox" name="groupBox_4">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Declares a volume scale formula that will set physical volume level from a MIDI volume.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic &lt;/span&gt;- linear volume scale&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPL3 Native&lt;/span&gt; - Logarithmic volume scale produced by OPL3 chip natively&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indexed table of volumes that sets OPL volume by MIDI volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogee&lt;/span&gt; - Logarithmic volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Win9x Driver&lt;/span&gt; - A short non-smooth indexed table, shorter in two times than possible OPL3 volume levels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;p&gt;Declares a volume scale formula that will set physical volume level from a MIDI volume.&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Generic&lt;/b&gt; - linear volume scale&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;OPL3 Native&lt;/b&gt; - Logarithmic volume scale produced by OPL3 chip natively&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX&lt;/b&gt; - Indexed table of volumes that sets OPL volume by MIDI volume. Reproduces a bug of DMX that has an incorrect AM voices processing. Carrier voice has always 63.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee&lt;/b&gt; - Tuned logarithmic volume. Reproduces a bug of Apogee Sound System that has an incorrect AM voices processing.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Win9x Driver&lt;/b&gt; - A short non-smooth indexed table, shorter in two times than possible OPL3 volume levels.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX (Fixed AM)&lt;/b&gt; - The DMX volume model with a correct AM voices processing.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee (Fixed AM)&lt;/b&gt; - The Apogee volume model with a correct AM voices processing.&lt;/p&gt;
+</string>
             </property>
             <property name="title">
              <string>Bank volume model</string>
@@ -1408,17 +1417,27 @@
                </item>
                <item>
                 <property name="text">
-                 <string>DMX</string>
+                 <string notr="true">DMX</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Apogee</string>
+                 <string notr="true">Apogee</string>
                 </property>
                </item>
                <item>
                 <property name="text">
                  <string>Win9x Driver</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>DMX (Fixed AM)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Apogee (Fixed AM)</string>
                 </property>
                </item>
               </widget>
@@ -1892,7 +1911,7 @@ of second voice</string>
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>22</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

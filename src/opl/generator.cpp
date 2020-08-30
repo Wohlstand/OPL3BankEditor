@@ -443,7 +443,11 @@ void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz, bool voice2ps4op)
     }
 }
 
-void Generator::Touch_Real(uint32_t c, uint32_t volume, uint32_t brightness)
+void Generator::touchNote(uint32_t c,
+                          uint32_t velocity,
+                          uint8_t ccvolume,
+                          uint8_t ccexpr,
+                          uint32_t brightness)
 {
     uint16_t /*card = c/23,*/ cc = c % 23;
     uint16_t i = m_ins[c],
@@ -454,6 +458,17 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume, uint32_t brightness)
     bool do_modulator = false;
     bool do_carrier = false;
     uint32_t mode = 1; // 2-op AM
+
+    uint_fast32_t kslMod = x & 0xC0;
+    uint_fast32_t kslCar = y & 0xC0;
+    uint_fast32_t tlMod = x & 63;
+    uint_fast32_t tlCar = y & 63;
+
+    uint_fast32_t modulator;
+    uint_fast32_t carrier;
+
+    uint32_t volume = 0;
+    uint32_t midiVolume = 0;
 
     static const bool do_ops[10][2] =
     {
@@ -469,16 +484,64 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume, uint32_t brightness)
         { true,  true  }  /* 4 op AM-AM ops 3&4 */
     };
 
-    uint_fast32_t kslMod = x & 0xC0;
-    uint_fast32_t kslCar = y & 0xC0;
-    uint_fast32_t tlMod = x & 63;
-    uint_fast32_t tlCar = y & 63;
+    switch(m_volmodel)
+    {
+    default:
+    case VOLUME_Generic:
+    {
+        // The formula below: SOLVE(V=127^3 * 2^( (A-63.49999) / 8), A)
+        volume = velocity * ccvolume * ccexpr * 127;
+        const double c1 = 11.541560327111707;
+        const double c2 = 1.601379199767093e+02;
+        uint_fast32_t minVolume = 8725 * 127;
 
-    uint_fast32_t modulator;
-    uint_fast32_t carrier;
+        if(volume > minVolume)
+        {
+            double lv = std::log(static_cast<double>(volume));
+            volume = static_cast<uint_fast32_t>(lv * c1 - c2);
+        }
+        else
+            volume = 0;
+    }
+    break;
+
+    case VOLUME_CMF:
+    {
+        volume = velocity * ccvolume * ccexpr;
+        volume = volume * 127 / (127 * 127 * 127) / 2;
+    }
+    break;
+
+    case VOLUME_DMX:
+    case VOLUME_DMX_FIXED:
+    {
+        volume = (ccvolume * ccexpr * 127) / 16129;
+        volume = (g_DMX_volume_mapping_table[volume] + 1) << 1;
+        volume = (g_DMX_volume_mapping_table[(velocity < 128) ? velocity : 127] * volume) >> 9;
+    }
+    break;
+
+    case VOLUME_APOGEE:
+    case VOLUME_APOGEE_FIXED:
+    {
+        volume = 0;
+        midiVolume = (ccvolume * ccexpr * 127 / 16129);
+    }
+    break;
+
+    case VOLUME_9X:
+    {
+        volume = velocity * ccvolume * ccexpr * 127;
+        volume = 63 - g_W9X_volume_mapping_table[(volume / 2048383) >> 2];
+    }
+    break;
+    }
 
     if(volume > 63)
         volume = 63;
+
+    if(midiVolume > 127)
+        midiVolume = 127;
 
     if(m_four_op_category[c] == ChanCat_Regular ||
        m_four_op_category[c] == ChanCat_Rhythm_Bass)
@@ -505,7 +568,42 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume, uint32_t brightness)
         mode += (m_patch.OPS[i0].feedconn & 1) + (m_patch.OPS[i1].feedconn & 1) * 2;
     }
 
-    if(m_volmodel == VOLUME_DMX && mode <= 1)
+    if((m_volmodel == VOLUME_APOGEE ||
+        m_volmodel == VOLUME_APOGEE_FIXED) &&
+        mode <= 1)
+    {
+        do_modulator = do_ops[mode][ 0 ];
+
+        tlCar = 63 - tlCar;
+
+        tlCar *= velocity + 0x80;
+        tlCar = (midiVolume * tlCar) >> 15;
+        tlCar = tlCar ^ 63;
+
+        if(do_modulator)
+        {
+            tlMod = 63 - tlMod;
+            tlMod *= velocity + 0x80;
+            // NOTE: Here is a bug of Apogee Sound System that makes modulator
+            // to not work properly on AM instruments
+            // The fix of this bug is just replacing of tlCar with tmMod
+            // in this formula
+            if(m_volmodel == VOLUME_APOGEE_FIXED)
+                tlMod = (midiVolume * tlMod) >> 15;
+            else
+                tlMod = (midiVolume * tlCar) >> 15;
+
+            tlMod ^= 63;
+        }
+
+        if(brightness != 127)
+        {
+            brightness = static_cast<uint8_t>(::round(127.0 * ::sqrt((static_cast<double>(brightness)) * (1.0 / 127.0))) / 2.0);
+            if(!do_modulator)
+                tlMod = 63 - brightness + (brightness * tlMod) / 63;
+        }
+    }
+    else if(m_volmodel == VOLUME_DMX && mode <= 1)
     {
         do_modulator = do_ops[mode][ 0 ];
 
@@ -558,14 +656,6 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume, uint32_t brightness)
     //   63 - chanvol + chanvol*instrvol/63
     // Also (slower, floats):
     //   63 + chanvol * (instrvol / 63.0 - 1)
-}
-
-void Generator::Touch(uint32_t c, uint32_t volume) // Volume maxes at 127*127*127
-{
-    // The formula below: SOLVE(V=127^3 * 2^( (A-63.49999) / 8), A)
-    Touch_Real(c, static_cast<uint32_t>(volume > 8725  ? std::log(volume) * 11.541561 + (0.5 - 104.22845) : 0));
-    // The incorrect formula below: SOLVE(V=127^3 * (2^(A/63)-1), A)
-    //Touch_Real(c, volume>11210 ? 91.61112 * std::log(4.8819E-7*volume + 1.0)+0.5 : 0);
 }
 
 void Generator::Patch(uint32_t c, uint32_t i)
@@ -686,12 +776,10 @@ void Generator::PlayNoteCh(int ch)
     if(pseudo_4op || natural_4op)
         Pan(adlchannel[1], 0x30);
 
-    uint32_t chipvolume = getChipVolume(channel.volume, channel.ccvolume, channel.ccexpr, m_volmodel);
-
-    Touch_Real(adlchannel[0], chipvolume);
+    touchNote(adlchannel[0], channel.volume, channel.ccvolume, channel.ccexpr);
 
     if(pseudo_4op || natural_4op)
-        Touch_Real(adlchannel[1], chipvolume);
+        touchNote(adlchannel[1], channel.volume, channel.ccvolume, channel.ccexpr);
 
     bend  = m_bend + m_patch.OPS[i[0]].finetune;
     NoteOn(adlchannel[0], adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
@@ -770,7 +858,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     uint32_t adlchannel = OPL3_CHANNELS_RHYTHM_BASE + drum;
     // Patch(adlchannel, 0);
     Pan(adlchannel, 0x30);
-    Touch_Real(adlchannel, 63);
+    touchNote(adlchannel, 127, 127, 127);
     double bend = 0.0;
     double phase = 0.0;
     bend  = 0.0 + m_patch.OPS[0].finetune;
@@ -786,7 +874,7 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
         if(m_chipType == OPLChipBase::CHIPTYPE_OPL2 && (b == 9))
             b = 18;
         NoteOff(b);
-        Touch_Real(b, 0);
+        touchNote(b, 0, 0, 0);
     }
 
     updateRegBD();
@@ -869,7 +957,7 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
             b = 18;
         Patch(b, 0);
         Pan(b, (rythmModePercussionMode == 0) ? 0x00 : 0x30);
-        Touch_Real(b, 0);
+        touchNote(b, 0, 0, 0);
     }
 }
 
@@ -878,7 +966,7 @@ void Generator::Silence()
     for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
     {
         NoteOff(c);
-        Touch_Real(c, 0);
+        touchNote(c, 0, 0, 0);
     }
 
     m_noteManager.clearNotes();
@@ -1152,65 +1240,6 @@ void Generator::updateChannelManager()
         m_noteManager.allocateChannels(USED_CHANNELS_4OP);
     else
         m_noteManager.allocateChannels(chan2ops);
-}
-
-uint32_t Generator::getChipVolume(uint32_t velocity, uint8_t ccvolume, uint8_t ccexpr, int volmodel)
-{
-    uint32_t volume;
-
-    switch(volmodel)
-    {
-    default:
-    case VOLUME_Generic:
-    {
-        // The formula below: SOLVE(V=127^3 * 2^( (A-63.49999) / 8), A)
-        volume = velocity * ccvolume * ccexpr * 127;
-        const double c1 = 11.541560327111707;
-        const double c2 = 1.601379199767093e+02;
-        uint_fast32_t minVolume = 8725 * 127;
-
-        if(volume > minVolume)
-        {
-            double lv = std::log(static_cast<double>(volume));
-            volume = static_cast<uint_fast32_t>(lv * c1 - c2);
-        }
-        else
-            volume = 0;
-    }
-    break;
-
-    case VOLUME_CMF:
-    {
-        volume = velocity * ccvolume * ccexpr;
-        volume = volume * 127 / (127 * 127 * 127) / 2;
-    }
-    break;
-
-    case VOLUME_DMX:
-    {
-        volume = (ccvolume * ccexpr * 127) / 16129;
-        volume = (g_DMX_volume_mapping_table[volume] + 1) << 1;
-        volume = (g_DMX_volume_mapping_table[(velocity < 128) ? velocity : 127] * volume) >> 9;
-    }
-    break;
-
-    case VOLUME_APOGEE:
-    {
-        volume = ((ccvolume * ccexpr) * 127 / 16129);
-        volume = ((64 * (velocity + 0x80)) * volume) >> 15;
-        //volume = ((63 * (vol + 0x80)) * ccvolume) >> 15;
-    }
-    break;
-
-    case VOLUME_9X:
-    {
-        volume = velocity * ccvolume * ccexpr * 127;
-        volume = 63 - g_W9X_volume_mapping_table[(volume / 2048383) >> 2];
-    }
-    break;
-    }
-
-    return volume;
 }
 
 void Generator::generate(int16_t *frames, unsigned nframes)

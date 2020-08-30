@@ -115,8 +115,12 @@ public:
      */
     void NoteOff(uint32_t c);
 
-    void Touch_Real(uint32_t c, uint32_t volume, uint32_t brightness = 127);
-    void Touch(uint32_t c, uint32_t volume);
+    void touchNote(uint32_t c,
+                   uint32_t velocity,
+                   uint8_t ccvolume,
+                   uint8_t ccexpr,
+                   uint32_t brightness = 127);
+
     void Patch(uint32_t c, uint32_t i);
     void Pan(uint32_t c, uint32_t value);
     void PlayNoteF(int noteID, uint32_t volume = 127, uint8_t ccvolume = 100, uint8_t ccexpr = 127);
@@ -132,7 +136,9 @@ public:
         VOLUME_CMF,
         VOLUME_DMX,
         VOLUME_APOGEE,
-        VOLUME_9X
+        VOLUME_9X,
+        VOLUME_DMX_FIXED,
+        VOLUME_APOGEE_FIXED
     };
 
 public:
@@ -162,8 +168,6 @@ public:
 
     const GeneratorDebugInfo &debugInfo() const
         { return m_debug; }
-
-    static uint32_t getChipVolume(uint32_t velocity, uint8_t ccvolume, uint8_t ccexpr, int volmodel);
 
 #ifdef ENABLE_HW_OPL_PROXY
     static Win9x_OPL_Proxy &oplProxy();
