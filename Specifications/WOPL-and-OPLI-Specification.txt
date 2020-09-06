@@ -127,7 +127,7 @@ multiple sets with 128-instruments which is needed to store
 GS and XG instrument sets which are have more than standard 128
 instruments with a single bank.
 
-Total data lenght is sum of: 19 + (62*128*MBanks) + (62*128*PBanks) bytes
+Total data length is sum of: 19 + (62*128*MBanks) + (62*128*PBanks) bytes
 
 Bytes-Lenght      |      Description
 ---------------Header-----------------------
