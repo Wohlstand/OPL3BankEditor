@@ -575,9 +575,8 @@
 </translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1430"/>
         <source>Win9x Driver</source>
-        <translation>Драйвер Win9x</translation>
+        <translation type="vanished">Драйвер Win9x</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1435"/>
@@ -590,349 +589,349 @@
         <translation>Apogee (Исправная АМ)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1492"/>
+        <location filename="../bank_editor.ui" line="1507"/>
         <source>Testing</source>
         <translation>Проверка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1516"/>
+        <location filename="../bank_editor.ui" line="1531"/>
         <source>Test note #(0...127)</source>
         <translation>Проверить ноту №(0...127)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1529"/>
+        <location filename="../bank_editor.ui" line="1544"/>
         <source>Current note position (60 is a C of a first octave).
 Available from 0 to 127</source>
         <translation>Текущая позиция ноты (60 это До (C) первой октавы).
 Возможные значения между от 0 до 127</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1543"/>
+        <location filename="../bank_editor.ui" line="1558"/>
         <source>Play a single note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть одиночную ноту. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1546"/>
+        <location filename="../bank_editor.ui" line="1561"/>
         <source>Play Note</source>
         <translation>Сыграть ноту</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1553"/>
+        <location filename="../bank_editor.ui" line="1568"/>
         <source>Play a major triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть мажорный аккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1556"/>
+        <location filename="../bank_editor.ui" line="1571"/>
         <source>Major chord</source>
         <translation>Маж. аккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1563"/>
+        <location filename="../bank_editor.ui" line="1578"/>
         <source>Play a minor triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть минорный аккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1566"/>
+        <location filename="../bank_editor.ui" line="1581"/>
         <source>Minor chord</source>
         <translation>Мин. аккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1573"/>
+        <location filename="../bank_editor.ui" line="1588"/>
         <source>Play a augmented triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть увеличенный аккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1576"/>
+        <location filename="../bank_editor.ui" line="1591"/>
         <source>Augmented chord</source>
         <translation>Увл. аккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1583"/>
+        <location filename="../bank_editor.ui" line="1598"/>
         <source>Play a diminished triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть уменьшенный аккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1586"/>
+        <location filename="../bank_editor.ui" line="1601"/>
         <source>Diminished chord</source>
         <translation>Умен. аккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1593"/>
+        <location filename="../bank_editor.ui" line="1608"/>
         <source>Play a major seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть мажорный септаккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1596"/>
+        <location filename="../bank_editor.ui" line="1611"/>
         <source>Major 7-chord</source>
         <translation>Маж. септаккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1603"/>
+        <location filename="../bank_editor.ui" line="1618"/>
         <source>Play a minor seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть минорный септаккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1606"/>
+        <location filename="../bank_editor.ui" line="1621"/>
         <source>Minor 7-chord</source>
         <translation>Мин. септаккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1629"/>
+        <location filename="../bank_editor.ui" line="1644"/>
         <source>Mute all playing/sustaining notes in all channels</source>
         <translation>Заглушить все играющие/зависшие ноты по всем каналам</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1632"/>
+        <location filename="../bank_editor.ui" line="1647"/>
         <source>Shut up!</source>
         <translation>Заткнись!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1642"/>
-        <location filename="../bank_editor.ui" line="1658"/>
+        <location filename="../bank_editor.ui" line="1657"/>
+        <location filename="../bank_editor.ui" line="1673"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Note velocity offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Offsets MIDI velocity (range from -127 to 127)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Смещение силы ноты&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Смещение силы ноты MIDI (диапазон от -127 до 127)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1645"/>
+        <location filename="../bank_editor.ui" line="1660"/>
         <source>Velocity offset</source>
         <translation>Смещение силы</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1674"/>
-        <location filename="../bank_editor.ui" line="1694"/>
+        <location filename="../bank_editor.ui" line="1689"/>
+        <location filename="../bank_editor.ui" line="1709"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Detune second voice pitch&lt;br/&gt;(0 is don&apos;t detune.&lt;br/&gt;Range from -127 to 127)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Точная настройка высоты второго голоса&lt;br/&gt;(0 - исходная частота.&lt;br/&gt;Диапазон от -127 до 127)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Только для режима пары 2-операторных голосов&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1677"/>
+        <location filename="../bank_editor.ui" line="1692"/>
         <source>Fine tuning
 of second voice</source>
         <translation>Точная настройка
 второго голоса</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1813"/>
+        <location filename="../bank_editor.ui" line="1828"/>
         <source>Hold</source>
         <translation>Зажать педаль</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1816"/>
+        <location filename="../bank_editor.ui" line="1831"/>
         <source>H</source>
         <translation>П</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1860"/>
+        <location filename="../bank_editor.ui" line="1875"/>
         <source>Pitch bend</source>
         <translation>Смещение высоты тона (Pitch bend)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1919"/>
+        <location filename="../bank_editor.ui" line="1934"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1933"/>
+        <location filename="../bank_editor.ui" line="1948"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1937"/>
+        <location filename="../bank_editor.ui" line="1952"/>
         <source>Language</source>
         <translation>Язык</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1949"/>
+        <location filename="../bank_editor.ui" line="1964"/>
         <source>Edit</source>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1953"/>
+        <location filename="../bank_editor.ui" line="1968"/>
         <source>Paste one voice</source>
         <translation>Вставить один голос</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1962"/>
+        <location filename="../bank_editor.ui" line="1977"/>
         <source>Preferred MIDI standard</source>
         <translation>Предпочтительный MIDI-стандарт</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1997"/>
+        <location filename="../bank_editor.ui" line="2012"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2001"/>
+        <location filename="../bank_editor.ui" line="2016"/>
         <source>Choose chip emulator</source>
         <translation>Выбрать эмулятор чипа</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2022"/>
+        <location filename="../bank_editor.ui" line="2037"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2030"/>
+        <location filename="../bank_editor.ui" line="2045"/>
         <source>Save bank as...</source>
         <translation>Сохранить банк как...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2035"/>
+        <location filename="../bank_editor.ui" line="2050"/>
         <source>Exit</source>
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2043"/>
+        <location filename="../bank_editor.ui" line="2058"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2048"/>
+        <location filename="../bank_editor.ui" line="2063"/>
         <source>New</source>
         <translation>Новый</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2053"/>
+        <location filename="../bank_editor.ui" line="2068"/>
         <source>Copy current instrument</source>
         <translation>Копировать текущий инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2061"/>
+        <location filename="../bank_editor.ui" line="2076"/>
         <source>Paste instrument</source>
         <translation>Вставить инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2069"/>
+        <location filename="../bank_editor.ui" line="2084"/>
         <source>Reset current instrument</source>
         <translation>Сбросить текущий инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2077"/>
+        <location filename="../bank_editor.ui" line="2092"/>
         <source>Import instruments...</source>
         <translation>Импортировать инструменты...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2082"/>
+        <location filename="../bank_editor.ui" line="2097"/>
         <source>Add instrument</source>
         <translation>Добавить инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2087"/>
+        <location filename="../bank_editor.ui" line="2102"/>
         <source>Delete current instrument</source>
         <translation>Удалить выбранный инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2092"/>
+        <location filename="../bank_editor.ui" line="2107"/>
         <source>Save current instrument as...</source>
         <translation>Сохранить текущий инструмент как...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2103"/>
-        <location filename="../bank_editor.ui" line="2106"/>
+        <location filename="../bank_editor.ui" line="2118"/>
+        <location filename="../bank_editor.ui" line="2121"/>
         <source>United view of all banks</source>
         <translation>Объединённый вид всех банков</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2109"/>
+        <location filename="../bank_editor.ui" line="2124"/>
         <source>Show all instruments without separating them into 128-instrument banks</source>
         <translation>Показать все инструменты без разделения на банки по 128 инструментов</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2114"/>
+        <location filename="../bank_editor.ui" line="2129"/>
         <source>Add bank</source>
         <translation>Добавить банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2119"/>
+        <location filename="../bank_editor.ui" line="2134"/>
         <source>Delete bank</source>
         <translation>Удалить банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2124"/>
+        <location filename="../bank_editor.ui" line="2139"/>
         <source>Clone bank</source>
         <translation>Клонировать банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2129"/>
+        <location filename="../bank_editor.ui" line="2144"/>
         <source>Clear instrument</source>
         <translation>Очистить инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2134"/>
+        <location filename="../bank_editor.ui" line="2149"/>
         <source>Clear bank</source>
         <translation>Очистить банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2139"/>
+        <location filename="../bank_editor.ui" line="2154"/>
         <source>Supported formats...</source>
         <translation>Поддерживаемые форматы...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2144"/>
+        <location filename="../bank_editor.ui" line="2159"/>
         <source>Swap two voices</source>
         <translation>Поменять два голоса</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2152"/>
+        <location filename="../bank_editor.ui" line="2167"/>
         <source>Paste voice 1 as voice 1</source>
         <translation>Вставить голос 1 как голос 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2157"/>
+        <location filename="../bank_editor.ui" line="2172"/>
         <source>Paste voice 1 as voice 2</source>
         <translation>Вставить голос 1 как голос 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2162"/>
+        <location filename="../bank_editor.ui" line="2177"/>
         <source>Paste voice 2 as voice 1</source>
         <translation>Вставить голос 2 как голос 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2167"/>
+        <location filename="../bank_editor.ui" line="2182"/>
         <source>Paste voice 2 as voice 2</source>
         <translation>Вставить голос 2 как голос 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2172"/>
+        <location filename="../bank_editor.ui" line="2187"/>
         <source>Re-Calculate all sounding delays</source>
         <translation>Пересчитать все длительности звучания</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2180"/>
+        <location filename="../bank_editor.ui" line="2195"/>
         <source>Nuked OPL3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2188"/>
+        <location filename="../bank_editor.ui" line="2203"/>
         <source>DosBox 0.74</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2193"/>
+        <location filename="../bank_editor.ui" line="2208"/>
         <source>Run emulators benchmark</source>
         <translation>Запустить тест эмуляторов</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2198"/>
+        <location filename="../bank_editor.ui" line="2213"/>
         <source>Save bank...</source>
         <translation>Сохранить банк...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2201"/>
+        <location filename="../bank_editor.ui" line="2216"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2209"/>
+        <location filename="../bank_editor.ui" line="2224"/>
         <source>Proxy to the real OPL3 chip</source>
         <translation>Проброс настоящего чипа OPL3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2214"/>
+        <location filename="../bank_editor.ui" line="2229"/>
         <source>Audio &amp;configuration</source>
         <translation>&amp;Настройка аудио</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2295"/>
+        <location filename="../bank_editor.ui" line="2310"/>
         <source>Serial port OPL interface</source>
         <translation>OPL-интерфейс через COM-порт</translation>
     </message>
@@ -941,27 +940,27 @@ of second voice</source>
         <translation type="vanished">&amp;Задержка аудио...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2219"/>
+        <location filename="../bank_editor.ui" line="2234"/>
         <source>System default</source>
         <translation>По-умолчанию в системе</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2224"/>
+        <location filename="../bank_editor.ui" line="2239"/>
         <source>Re-Calculate sounding delays of instrument</source>
         <translation>Пересчитать длительности звучания инструмента</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2229"/>
+        <location filename="../bank_editor.ui" line="2244"/>
         <source>Run delay analysis</source>
         <translation>Запустить анализ длительностей</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2234"/>
+        <location filename="../bank_editor.ui" line="2249"/>
         <source>Hardware OPL...</source>
         <translation>Аппаратный OPL...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2287"/>
+        <location filename="../bank_editor.ui" line="2302"/>
         <source>Compare with other bank...</source>
         <translation>Сравнить с другим банком...</translation>
     </message>
@@ -1845,7 +1844,7 @@ If audio glitches occur, you should reset this setting to a higher value.</sourc
         <translation>Не возможно сохранить файл %1 потому что %2.</translation>
     </message>
     <message>
-        <location filename="../opl/generator.cpp" line="183"/>
+        <location filename="../opl/generator.cpp" line="215"/>
         <source>Channels:
 2-op: %1, Ps-4op: %2
 4-op: %3</source>
