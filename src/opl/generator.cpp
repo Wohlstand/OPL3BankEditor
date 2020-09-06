@@ -149,7 +149,7 @@ static const uint16_t g_channelsMap1_4op[USED_CHANNELS_4OP] = {0,  1,  2,  9,  1
 static const uint16_t g_channelsMap2_4op[USED_CHANNELS_4OP] = {3,  4,  5,  12, 13, 14};
 
 //! Mapping from MIDI volume level to OPL level value.
-static const uint8_t g_DMX_volume_mapping_table[128] =
+static const uint_fast32_t g_dmx_volume_model[128] =
 {
     0,  1,  3,  5,  6,  8,  10, 11,
     13, 14, 16, 17, 19, 20, 22, 23,
@@ -170,13 +170,45 @@ static const uint8_t g_DMX_volume_mapping_table[128] =
 };
 
 //! Mapping from MIDI volume level to OPL level value.
-static const uint8_t g_W9X_volume_mapping_table[32] =
+static const uint_fast32_t s_w9x_sb16_volume_model[32] =
 {
     63, 63, 40, 36, 32, 28, 23, 21,
     19, 17, 15, 14, 13, 12, 11, 10,
     9,  8,  7,  6,  5,  5,  4,  4,
     3,  3,  2,  2,  1,  1,  0,  0
 };
+
+static const uint_fast32_t s_w9x_generic_fm_volume_model[32] =
+{
+    40, 36, 32, 28, 23, 21, 19, 17,
+    15, 14, 13, 12, 11, 10, 9,  8,
+    7,  6,  5,  5,  4,  4,  3,  3,
+    2,  2,  1,  1,  1,  0,  0,  0
+};
+
+static const uint_fast32_t s_ail_vel_graph[16] =
+{
+    82,   85,  88,  91,  94,  97, 100, 103,
+    106, 109, 112, 115, 118, 121, 124, 127
+};
+
+//! a VERY APROXIMAL HMI volume model, TODO: Research accurate one!
+static const uint_fast32_t s_hmi_volume_table[128] =
+{
+    0x3f, 0x3f, 0x3a, 0x35, 0x35, 0x30, 0x30, 0x2c, 0x2c, 0x29, 0x29,
+    0x25, 0x25, 0x24, 0x24, 0x23, 0x23, 0x22, 0x21, 0x21, 0x20, 0x20,
+    0x1f, 0x1f, 0x1e, 0x1e, 0x1d, 0x1d, 0x1c, 0x1c, 0x1b, 0x1b, 0x1a,
+    0x1a, 0x1a, 0x19, 0x19, 0x19, 0x18, 0x18, 0x18, 0x17, 0x17, 0x17,
+    0x16, 0x16, 0x16, 0x15, 0x15, 0x15, 0x14, 0x14, 0x14, 0x14, 0x13,
+    0x13, 0x13, 0x13, 0x12, 0x12, 0x12, 0x12, 0x11, 0x11, 0x11, 0x10,
+    0x10, 0x10, 0x0f, 0x0f, 0x0f, 0x0e, 0x0e, 0x0e, 0x0d, 0x0d, 0x0d,
+    0x0c, 0x0c, 0x0c, 0x0b, 0x0b, 0x0b, 0x0b, 0x0a, 0x0a, 0x0a, 0x0a,
+    0x09, 0x09, 0x09, 0x09, 0x08, 0x08, 0x08, 0x08, 0x07, 0x07, 0x07,
+    0x07, 0x06, 0x06, 0x06, 0x06, 0x05, 0x05, 0x05, 0x05, 0x04, 0x04,
+    0x04, 0x04, 0x03, 0x03, 0x03, 0x03, 0x03, 0x02, 0x02, 0x02, 0x02,
+    0x02, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00
+};
+
 
 QString GeneratorDebugInfo::toStr()
 {
@@ -443,6 +475,13 @@ void Generator::NoteOn(uint32_t c1, uint32_t c2, double hertz, bool voice2ps4op)
     }
 }
 
+static inline uint_fast32_t brightnessToOPL(uint_fast32_t brightness)
+{
+    double b = static_cast<double>(brightness);
+    double ret = ::round(127.0 * ::sqrt(b * (1.0 / 127.0))) / 2.0;
+    return static_cast<uint_fast32_t>(ret);
+}
+
 void Generator::touchNote(uint32_t c,
                           uint32_t velocity,
                           uint8_t ccvolume,
@@ -453,16 +492,16 @@ void Generator::touchNote(uint32_t c,
     uint16_t i = m_ins[c],
             o1 = g_Operators[cc * 2 + 0],
             o2 = g_Operators[cc * 2 + 1];
-    uint16_t x = m_patch.OPS[i].modulator_40,
-             y = m_patch.OPS[i].carrier_40;
+    uint16_t srcMod = m_patch.OPS[i].modulator_40,
+             srcCar = m_patch.OPS[i].carrier_40;
     bool do_modulator = false;
     bool do_carrier = false;
     uint32_t mode = 1; // 2-op AM
 
-    uint_fast32_t kslMod = x & 0xC0;
-    uint_fast32_t kslCar = y & 0xC0;
-    uint_fast32_t tlMod = x & 63;
-    uint_fast32_t tlCar = y & 63;
+    uint_fast32_t kslMod = srcMod & 0xC0;
+    uint_fast32_t kslCar = srcCar & 0xC0;
+    uint_fast32_t tlMod = srcMod & 63;
+    uint_fast32_t tlCar = srcCar & 63;
 
     uint_fast32_t modulator;
     uint_fast32_t carrier;
@@ -483,6 +522,9 @@ void Generator::touchNote(uint32_t c,
         { false, true  }, /* 4 op FM-AM ops 3&4 */
         { true,  true  }  /* 4 op AM-AM ops 3&4 */
     };
+
+
+    // ------ Mix volumes and compute average ------
 
     switch(m_volmodel)
     {
@@ -516,8 +558,8 @@ void Generator::touchNote(uint32_t c,
     case VOLUME_DMX_FIXED:
     {
         volume = (ccvolume * ccexpr * 127) / 16129;
-        volume = (g_DMX_volume_mapping_table[volume] + 1) << 1;
-        volume = (g_DMX_volume_mapping_table[(velocity < 128) ? velocity : 127] * volume) >> 9;
+        volume = (g_dmx_volume_model[volume] + 1) << 1;
+        volume = (g_dmx_volume_model[(velocity < 128) ? velocity : 127] * volume) >> 9;
     }
     break;
 
@@ -531,8 +573,44 @@ void Generator::touchNote(uint32_t c,
 
     case VOLUME_9X:
     {
-        volume = velocity * ccvolume * ccexpr * 127;
-        volume = 63 - g_W9X_volume_mapping_table[(volume / 2048383) >> 2];
+        volume = (ccvolume * ccexpr * 127) / 16129;
+        volume = s_w9x_sb16_volume_model[volume >> 2];
+    }
+    break;
+
+    case VOLUME_9X_GENERIC_FM:
+    {
+        volume = (ccvolume * ccexpr * 127) / 16129;
+        volume = s_w9x_generic_fm_volume_model[volume >> 2];
+    }
+    break;
+
+    case VOLUME_AIL:
+    {
+        midiVolume = (ccvolume * ccexpr) * 2;
+        midiVolume >>= 8;
+        if(midiVolume != 0)
+            midiVolume++;
+
+        velocity = (velocity & 0x7F) >> 3;
+        velocity = s_ail_vel_graph[velocity];
+
+        midiVolume = (midiVolume * velocity) * 2;
+        midiVolume >>= 8;
+        if(midiVolume != 0)
+            midiVolume++;
+
+        /*if(m_masterVolume < 127)
+            midiVolume = (midiVolume * m_masterVolume) / 127;*/
+    }
+    break;
+
+    case VOLUME_HMI:
+    {
+        /* Temporarily copying DMX volume model. TODO: Reverse-engine the actual HMI volume model! */
+        volume = (ccvolume * ccexpr * 127) / 16129;
+        volume = (((velocity < 128) ? velocity : 127) * volume) / 127;
+        volume = 63 - s_hmi_volume_table[volume];
     }
     break;
     }
@@ -568,45 +646,44 @@ void Generator::touchNote(uint32_t c,
         mode += (m_patch.OPS[i0].feedconn & 1) + (m_patch.OPS[i1].feedconn & 1) * 2;
     }
 
+    do_modulator = do_ops[ mode ][ 0 ];
+    do_carrier   = do_ops[ mode ][ 1 ];
+
+    // ------ Compute the total level register output data ------
+
     if((m_volmodel == VOLUME_APOGEE ||
         m_volmodel == VOLUME_APOGEE_FIXED) &&
         mode <= 1)
     {
-        do_modulator = do_ops[mode][ 0 ];
-
-        tlCar = 63 - tlCar;
-
-        tlCar *= velocity + 0x80;
-        tlCar = (midiVolume * tlCar) >> 15;
-        tlCar = tlCar ^ 63;
+        if(do_carrier)
+        {
+            tlCar = 63 - tlCar;
+            tlCar *= velocity + 0x80;
+            tlCar = (midiVolume * tlCar) >> 15;
+            tlCar = tlCar ^ 63;
+        }
 
         if(do_modulator)
         {
+            uint_fast32_t mod = tlCar;
+
             tlMod = 63 - tlMod;
             tlMod *= velocity + 0x80;
+
+            if(m_volmodel == VOLUME_APOGEE_FIXED || mode > 1)
+                mod = tlMod; // Fix the AM voices bug
+
             // NOTE: Here is a bug of Apogee Sound System that makes modulator
-            // to not work properly on AM instruments
-            // The fix of this bug is just replacing of tlCar with tmMod
-            // in this formula
-            if(m_volmodel == VOLUME_APOGEE_FIXED)
-                tlMod = (midiVolume * tlMod) >> 15;
-            else
-                tlMod = (midiVolume * tlCar) >> 15;
+            // to not work properly on AM instruments. The fix of this bug, you
+            // need to replace the tlCar with tmMod in this formula.
+            // Don't do the bug on 4-op voices.
+            tlMod = (midiVolume * mod) >> 15;
 
             tlMod ^= 63;
-        }
-
-        if(brightness != 127)
-        {
-            brightness = static_cast<uint8_t>(::round(127.0 * ::sqrt((static_cast<double>(brightness)) * (1.0 / 127.0))) / 2.0);
-            if(!do_modulator)
-                tlMod = 63 - brightness + (brightness * tlMod) / 63;
         }
     }
     else if(m_volmodel == VOLUME_DMX && mode <= 1)
     {
-        do_modulator = do_ops[mode][ 0 ];
-
         tlCar = (63 - volume);
 
         if(do_modulator)
@@ -614,32 +691,59 @@ void Generator::touchNote(uint32_t c,
             if(tlMod < tlCar)
                 tlMod = tlCar;
         }
+    }
+    else if(m_volmodel == VOLUME_9X)
+    {
+        if(do_carrier)
+            tlCar += volume + s_w9x_sb16_volume_model[velocity >> 2];
+        if(do_modulator)
+            tlMod += volume + s_w9x_sb16_volume_model[velocity >> 2];
 
-        if(brightness != 127)
-        {
-            brightness = static_cast<uint8_t>(::round(127.0 * ::sqrt((static_cast<double>(brightness)) * (1.0 / 127.0))) / 2.0);
-            if(!do_modulator)
-                tlMod = 63 - brightness + (brightness * tlMod) / 63;
-        }
+        if(tlCar > 0x3F)
+            tlCar = 0x3F;
+        if(tlMod > 0x3F)
+            tlMod = 0x3F;
+    }
+    else if(m_volmodel == VOLUME_9X_GENERIC_FM)
+    {
+        if(do_carrier)
+            tlCar += volume + s_w9x_generic_fm_volume_model[velocity >> 2];
+        if(do_modulator)
+            tlMod += volume + s_w9x_generic_fm_volume_model[velocity >> 2];
+
+        if(tlCar > 0x3F)
+            tlCar = 0x3F;
+        if(tlMod > 0x3F)
+            tlMod = 0x3F;
+    }
+    else if(m_volmodel == VOLUME_AIL)
+    {
+        uint_fast32_t v0_val = (~srcMod) & 0x3f;
+        uint_fast32_t v1_val = (~srcCar) & 0x3f;
+
+        if(do_modulator)
+            v0_val = (v0_val * midiVolume) / 127;
+        if(do_carrier)
+            v1_val = (v1_val * midiVolume) / 127;
+
+        tlMod = (~v0_val) & 0x3F;
+        tlCar = (~v1_val) & 0x3F;
     }
     else
     {
-        do_modulator = do_ops[ mode ][ 0 ];
-        do_carrier   = do_ops[ mode ][ 1 ];
-
         if(do_modulator)
             tlMod = 63 - volume + (volume * tlMod) / 63;
         if(do_carrier)
             tlCar = 63 - volume + (volume * tlCar) / 63;
+    }
 
-        if(brightness != 127)
-        {
-            brightness = static_cast<uint8_t>(::round(127.0 * ::sqrt((static_cast<double>(brightness)) * (1.0 / 127.0))) / 2.0);
-            if(!do_modulator)
-                tlMod = 63 - brightness + (brightness * tlMod) / 63;
-            if(!do_carrier)
-                tlCar = 63 - brightness + (brightness * tlCar) / 63;
-        }
+    if(brightness != 127)
+    {
+        brightness = brightnessToOPL(brightness);
+        if(!do_modulator)
+            tlMod = 63 - brightness + (brightness * tlMod) / 63;
+        if(!do_carrier)
+            tlCar = 63 - brightness + (brightness * tlCar) / 63;
     }
 
     modulator = (kslMod & 0xC0) | (tlMod & 63);

@@ -138,7 +138,10 @@ public:
         VOLUME_APOGEE,
         VOLUME_9X,
         VOLUME_DMX_FIXED,
-        VOLUME_APOGEE_FIXED
+        VOLUME_APOGEE_FIXED,
+        VOLUME_AIL,
+        VOLUME_9X_GENERIC_FM,
+        VOLUME_HMI
     };
 
 public:

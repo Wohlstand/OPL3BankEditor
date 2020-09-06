@@ -134,7 +134,10 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
             ver_min = dataS[1];
 
     if((ver_maj == 0) && (ver_min == 0))
+    {
         isHMI = true;
+        bank.volume_model = FmBank::VOLUME_HMI;
+    }
 
     //uint16_t  totalInsUsed = 0;
     uint16_t    totalIns = 0;

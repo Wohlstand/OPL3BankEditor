@@ -1422,12 +1422,12 @@
                </item>
                <item>
                 <property name="text">
-                 <string notr="true">Apogee</string>
+                 <string notr="true">Apogee Sound System</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Win9x Driver</string>
+                 <string notr="true">Win9x SB16</string>
                 </property>
                </item>
                <item>
@@ -1438,6 +1438,21 @@
                <item>
                 <property name="text">
                  <string>Apogee (Fixed AM)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">Audio Interfaces Library</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">Win9x Generic FM</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">HMI Sound Operating System</string>
                 </property>
                </item>
               </widget>
