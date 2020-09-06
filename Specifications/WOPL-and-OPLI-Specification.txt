@@ -35,6 +35,9 @@ Version | What's new
         | Change: Added two new volume scaling models: DMX and Apogee with
         | fixed AM voices
         | (August 31, 2020)
+        | Change: Added three new volume scaling models: Audio Interfaces
+        | Library, Win9x Generic FM, and HMI Sound Operating System
+        | (September 6, 2020)
 -------------------------------------------------------------------------------
 
 ===============================================================================
@@ -148,9 +151,12 @@ Bytes-Lenght      |      Description
                   |     1 - Native OPL3's logariphmic volume model
                   |     2 - DMX volume model
                   |     3 - Apogee Sound System's volume model
-                  |     4 - Windows 9x driver like volume model
+                  |     4 - Windows 9x SB16 driver volume model
                   |     5 - DMX volume model with fixed AM voices
-                  |     6 - Apogee Sound System volume model with fixed AM voices
+                  |     6 - Apogee Sound System volume model with fixed AM voc.
+                  |     7 - Audio Interfaces Library volume model
+                  |     8 - Windows 9x Generic FM driver volume model
+                  |     9 - HMI Sound Operating System volume model
 --VERSION >= 2---Melodic bank meta-data-----
 (repeat MBanks times)
     32            | Name of melodic bank null-terminated string
