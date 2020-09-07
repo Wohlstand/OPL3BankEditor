@@ -275,7 +275,7 @@
     <message>
         <location filename="../bank_editor.ui" line="655"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Drum instrument mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic (a.k.a. Melodic) mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a mode where are percussions are playing in the regular melodic channels without any limits. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Is highly recommended to use&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bass-Drum/Snare/TomTom/Cymbal/Hi-hat&lt;/span&gt;&lt;br/&gt;Enables legacy percussion mode where are five restricted channels. This mode is restricts a playing more than one sound of every type. For example, in this mode is impossible playing multiple snares or multiple bass-drums. &lt;span style=&quot; text-decoration: underline;&quot;&gt;This mode is available only on some special bank formats (for example, IBK, SBI). Other bank formats are supports a generic mode only&lt;/span&gt;!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Tryb instrumentu perkusyjnego&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Rodzajowy (a.k.a Melodyczny) tryb&lt;/span&gt;&lt;/p&gt;&lt;p&gt;To tryb, w którym perkusje grają w zwykłych kanałach melodycznych bez żadnych ograniczeń. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Zaleca się stosowanie&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Tryb instrumentu perkusyjnego&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Ogólny (a.k.a Melodyczny) tryb&lt;/span&gt;&lt;/p&gt;&lt;p&gt;To tryb, w którym perkusje grają w zwykłych kanałach melodycznych bez żadnych ograniczeń. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Zaleca się stosowanie&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;
 Bass-Perkusja/Werbel/TomTom/Talerz / Hi-hatt&lt;/span&gt;&lt;br/&gt;Włącza starszy tryb perkusyjny, w którym jest pięć kanałów z ograniczeniami. Ten tryb ogranicza odtwarzanie więcej niż jednego dźwięku każdego typu. Na przykład w tym trybie nie można grać na wielu werbelach lub na wielu bębnach basowych. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Ten tryb jest dostępny tylko w niektórych specjalnych formatach banków (na przykład IBK, SBI). Inne formaty banków obsługują tylko tryb ogólny&lt;/span&gt;!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
@@ -348,7 +348,7 @@ Bass-Perkusja/Werbel/TomTom/Talerz / Hi-hatt&lt;/span&gt;&lt;br/&gt;Włącza sta
         <location filename="../bank_editor.ui" line="1071"/>
         <location filename="../bank_editor.ui" line="1090"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset second voice to one semi-tone (octave is 12 semi-tones) &lt;br/&gt;(0 is don&apos;t offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesunięcie drugiego głosu na jeden półton (oktawa to 12 półtonów) &lt;br/&gt;(0 nie jest odsuniętą nutą. Zakres wartości od -127 do 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;W parze głosów 2-operatorowych jest to przesunięcie pierwszego głosu&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesunięcie drugiego głosu o jeden półton (oktawa to 12 półtonów) &lt;br/&gt;(0 nie jest odsuniętą nutą. Zakres wartości od -127 do 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;W parze głosów 2-operatorowych jest to przesunięcie pierwszego głosu&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1074"/>
@@ -369,7 +369,7 @@ Bass-Perkusja/Werbel/TomTom/Talerz / Hi-hatt&lt;/span&gt;&lt;br/&gt;Włącza sta
         <location filename="../bank_editor.ui" line="1133"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enables pseudo 4-operators mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;It&apos;s a pair of 2-operator voices which work independently from each other.&lt;br/&gt;Is possible to detune second voice and play both voices with different tones.&lt;/p&gt;&lt;p&gt;Mainly used in DMX OP2 files.&lt;br/&gt;This was needed for OPL2 chip which does not support 4 operators mode.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Włącza tryb pseudo 4 operatorów&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Jest to para głosów składających się z dwóch operatorów, które działają niezależnie od siebie.&lt;br/&gt;
-Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi tonami.&lt;/p&gt;&lt;p&gt;Używany głównie w plikach DMX OP2.&lt;br/&gt;Było to potrzebne w przypadku układu OPL2, który nie obsługuje trybu 4 operatorów.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+Możliwe jest rozstrojenie drugiego głosu i odtwarzanie obu głosów różnymi tonami.&lt;/p&gt;&lt;p&gt;Używany głównie w plikach DMX OP2.&lt;br/&gt;Było to potrzebne w przypadku układu OPL2, który nie obsługuje trybu 4 operatorów.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1136"/>
@@ -379,7 +379,7 @@ Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi t
     <message>
         <location filename="../bank_editor.ui" line="1191"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Recently used channel ID&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(from 0 to N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Two-operators mode (2-op):&lt;/span&gt;&lt;br/&gt;Totally 18 two-operator channels available on OPL3 chip.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pseudo four-operators mode (Ps-4-op):&lt;/span&gt;&lt;br/&gt;Using of pairs of two-operator channels, in result we are have 9 double-voice channels&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Four-operators mode (4-op):&lt;/span&gt;&lt;br/&gt;Totally 6 four-operator channels available on OPL3 chip.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Ostatnio używany Indentyfikator kanału&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(od 0 do N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Tryb dwóch operatorów (2 operacje):&lt;/span&gt;&lt;br/&gt;Całkowicie 18 kanałów dwóch operatorów dostępnych na chipie OPL3.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Tryb pseudo czterech operatorów (Ps-4-op):&lt;/span&gt;&lt;br/&gt;Wykorzystując pary kanałów dwóch operatorów, w rezultacie mamy 9 kanałów z podwójnym głosem.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Tryb czterech operatorów (4 operacje):&lt;/span&gt;&lt;br/&gt;Całkowicie 6 kanałów czterech operatorów dostępnych na chipie OPL3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Ostatnio używany Indentyfikator kanału&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(od 0 do N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Tryb dwóch operatorów:&lt;/span&gt;&lt;br/&gt;Łącznie 18 kanałów dwóch operatorów dostępnych na chipie OPL3.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Tryb pseudo czterech operatorów (Ps-4-op):&lt;/span&gt;&lt;br/&gt;Wykorzystując pary kanałów dwóch operatorów, w rezultacie mamy 9 kanałów z podwójnym głosem.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Tryb czterech operatorów:&lt;/span&gt;&lt;br/&gt;Łącznie 6 kanałów czterech operatorów dostępnych na chipie OPL3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1225"/>
@@ -423,7 +423,7 @@ Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi t
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Declares a volume scale formula that will set physical volume level from a MIDI volume.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic &lt;/span&gt;- linear volume scale&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPL3 Native&lt;/span&gt; - Logarithmic volume scale produced by OPL3 chip natively&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indexed table of volumes that sets OPL volume by MIDI volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogee&lt;/span&gt; - Logarithmic volume&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Win9x Driver&lt;/span&gt; - A short non-smooth indexed table, shorter in two times than possible OPL3 volume levels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deklaruje formułę skali głośności, która ustawi fizyczny poziom głośności na podstawie głośności MIDI.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generyczny&lt;/span&gt;- liniowa skala głośności&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Natywny OPL3&lt;/span&gt; - Logarytmiczna skala objętości wytwarzana natywnie przez układ OPL3&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Indeksowana tabela poziomów głośności, która ustawia głośność OPL według objętości MIDI&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogeum&lt;/span&gt; - Objętość logarytmiczna&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sterownik Win9x&lt;/span&gt; - Krótka, nieładna tabela indeksowana, dwa razy krótsza niż możliwe poziomy głośności OPL3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deklaruje formułę skali głośności, która ustawi fizyczny poziom głośności na podstawie głośności MIDI.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Ogólny&lt;/span&gt;- liniowa skala głośności&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Natywny dla OPL3&lt;/span&gt; - Logarytmiczna skala głośności wytwarzana wewnętrznie przez układ OPL3&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - zindeksowana tabela poziomów głośności, która ustawia głośność OPL według głośności MIDI&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogee&lt;/span&gt; - Zmodyfikowana, logarytmiczna skala głośności&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sterownik Win9x&lt;/span&gt; - Krótka, nieliniowa tabela zindeksowana, dwukrotnia krótsza niż pełna skala OPL3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1376"/>
@@ -433,7 +433,7 @@ Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi t
     <message>
         <location filename="../bank_editor.ui" line="1415"/>
         <source>OPL3 Native</source>
-        <translation>Natywny OPL3</translation>
+        <translation>Natywny dla OPL3</translation>
     </message>
     <message>
         <source>DMX</source>
@@ -455,7 +455,15 @@ Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi t
 &lt;p&gt;&lt;b&gt;DMX (Fixed AM)&lt;/b&gt; - The DMX volume model with a correct AM voices processing.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Apogee (Fixed AM)&lt;/b&gt; - The Apogee volume model with a correct AM voices processing.&lt;/p&gt;
 </source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Określa formułę skalowania głośności która przypisze fizyczny poziom głośności do odpowiednich wartości MIDI.&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Ogólny&lt;/b&gt; - liniowa skala głośności&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Natywny dla OPL3&lt;/b&gt; - Logarytmyczna skala głośności wytwarzana wewnętrznie przez układ OPL3&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX&lt;/b&gt; - Zindeksowana tablica głośności która ustawia głośność układu OPL według glośności MIDI. Emuluje błąd DMX który niepoprawnie przetwarza głosy AM, gdzie głośność fali nośnej wynosiła zawsze 63.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee&lt;/b&gt; - Zmodyfikowana, logarytmiczna skala głośności. Emuluje błąd Apogee Sound System który niepoprawnie przetwarza głosy AM.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Sterownik Win9x&lt;/b&gt; - Krótka, nieliniowa tablica zindeksowana, dwukrotnia krótsza niż pełna skala OPL3.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX (Naprawiona synteza AM)&lt;/b&gt; - Model głośności DMX z poprawnym przetwarzaniem głosów AM.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee (Naprawiona synteza AM)&lt;/b&gt; - Model głośności Apogee z poprawnym przetwarzaniem głosów AM.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Win9x Driver</source>
@@ -464,12 +472,12 @@ Możliwe jest odstrojenie drugiego głosu i odtwarzanie obu głosów różnymi t
     <message>
         <location filename="../bank_editor.ui" line="1435"/>
         <source>DMX (Fixed AM)</source>
-        <translation type="unfinished"></translation>
+        <translation>DMX (Naprawiona synteza AM)</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1440"/>
         <source>Apogee (Fixed AM)</source>
-        <translation type="unfinished"></translation>
+        <translation>Apogee (Naprawiona synteza AM)</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1507"/>
@@ -1561,7 +1569,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
     <message>
         <location filename="../operator_editor.ui" line="257"/>
         <source>2 - Absolute Sine</source>
-        <translation>3 - Moduł sinusoidy</translation>
+        <translation>2 - Moduł sinusoidy</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="266"/>
