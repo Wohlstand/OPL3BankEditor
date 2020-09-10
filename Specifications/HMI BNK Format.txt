@@ -1,0 +1,91 @@
+                    HMI Sound Operating System FM bank
+--------------------------------------------------------------------------------
+This bank format is directly based on AdLib BNK format, however, it's different
+and incompatible. HMI does use a separate files for melodic and for percussion.
+
+--------------------------------------------------------------------------------
+                       Quote from the ModdingWiki
+--------------------------------------------------------------------------------
+
+The version of this format associated with HMP/HMI files is altered and
+incompatible with most tools that work with BNK files.
+
+Known differences include:
+- The major and minor version numbers in the header are both zero.
+- The flags byte in the instrument names list may have values other than 0 or 1,
+and a null flags byte might not be indicative of an unused sample.
+
+The header and names list otherwise appear to follow the format spec. The
+instrument data itself has not yet been inspected for differences.
+
+Known examples of games that include files of this version include two possibly
+standardized file names: DRUMS.BNK and MELODIC.BNK. Dark Legions also includes
+a BNKDRUM.BNK. All of the known "version 0.0" files are 5,404 bytes in length,
+with 128 instrument records reported in the header, but have differing contents.
+
+
+--------------------------------------------------------------------------------
+Notes:
+- offsets marked with "+" - relative offsets for each array entry
+- fields, marked as [????] may have different meaning than known
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Offset | Length | Data type      | Description
+--------------------------------------------------------------------------------
+                                  Header
+--------------------------------------------------------------------------------
+   0   |    1   |  uint8_t       |  Major version, always 0
+   1   |    1   |  uint8_t       |  Minor version, always 0
+   2   |    6   |  char          |  Magic word, 6 ASCII-letters "ADLIB-"
+--------------------------------------------------------------------------------
+   8   |    2   |  uint16_t LE   |  Number of used instruments, always 128
+  10   |    2   |  uint16_t LE   |  Number of stored instruments in a bank,
+       |        |                |   always 128
+  12   |    4   |  uint32_t LE   |  Offset of names list, always 28
+  16   |    4   |  uint32_t LE   |  Offset of instruments data, always 1564
+       |        |                |   [28+(12*128)]
+  20   |    8   |  uint8_t       |  Padding
+--------------------------------------------------------------------------------
+
+                  Instrument names list (12-bytes each entry)
+===[Repeat-128-times]===========================================================
+  +0   |    2   |  uint16_t LE   |  Index of instrument
+  +2   |    1   |  uint8_t       |  Percussion note number
+  +3   |    9   |  char          |  Null-terminated 8-symbol name of instrument
+================================================================================
+
+                     Instrument data (30-bytes each entry)
+===[Repeat-128-times]===========================================================
+  +0   |    1   |  uint8_t       |  unused
+  +1   |    1   |  uint8_t       |  unused
+  +2   |    1   |  uint8_t       |  Modulator's KSL
+  +3   |    1   |  uint8_t       |  Modulator's frequency multiplicator
+  +4   |    1   |  uint8_t       |  Feedback
+  +5   |    1   |  uint8_t       |  Modulator's attack
+  +6   |    1   |  uint8_t       |  Modulator's sustain
+  +7   |    1   |  uint8_t       |  Modulator's "sustaing voice" flag
+  +8   |    1   |  uint8_t       |  Modulator's decay
+  +9   |    1   |  uint8_t       |  Modulator's release
+ +10   |    1   |  uint8_t       |  Modulator's total-level
+ +11   |    1   |  uint8_t       |  Modulator's Tremolo flag
+ +12   |    1   |  uint8_t       |  Modulator's Vibrato flag
+ +13   |    1   |  uint8_t       |  Modulator's KSR
+ +14   |    1   |  uint8_t       |  Instrument's connection: 0 - AM, 1 - FM
+ +15   |    1   |  uint8_t       |  Carrier's KSL
+ +16   |    1   |  uint8_t       |  Carrier's frequency multiplicator
+ +17   |    1   |  uint8_t       |  unused
+ +18   |    1   |  uint8_t       |  Carrier's attack
+ +19   |    1   |  uint8_t       |  Carrier's sustain
+ +20   |    1   |  uint8_t       |  Carrier's "sustaing voice" flag
+ +21   |    1   |  uint8_t       |  Carrier's decay
+ +22   |    1   |  uint8_t       |  Carrier's relase
+ +23   |    1   |  uint8_t       |  Carrier's total-level
+ +24   |    1   |  uint8_t       |  Carrier's Tremolo flag
+ +25   |    1   |  uint8_t       |  Carrier's Vibrato flag
+ +26   |    1   |  uint8_t       |  Carrier's KSR
+ +27   |    1   |  uint8_t       |  unused
+ +28   |    1   |  uint8_t       |  Modulator's waveform
+ +29   |    1   |  uint8_t       |  Carrier's's waveform
+================================================================================
+
