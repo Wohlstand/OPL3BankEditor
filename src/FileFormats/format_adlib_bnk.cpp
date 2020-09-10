@@ -482,13 +482,23 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
         //    uint8_t con;
         //} __attribute__((__packed__));
 
+        uint8_t buff;
         //struct BNK_Instrument
         //{
-        //    uint8_t   is_percusive;
-        uint8_t buff = isHMI ? 0 : uint8_t(isDrum);
-        file.write(char_p(&buff), 1);
-        //    uint8_t   voicenum;
-        file.write(char_p(&Ins.adlib_drum_number), 1);
+        if(isHMI)
+        {
+            buff = 0; // Two unused bytes
+            file.write(char_p(&buff), 1);
+            file.write(char_p(&buff), 1);
+        }
+        else
+        {
+            //    uint8_t   is_percusive;
+            buff = uint8_t(isDrum);
+            file.write(char_p(&buff), 1);
+            //    uint8_t   voicenum;
+            file.write(char_p(&Ins.adlib_drum_number), 1);
+        }
         //BNK_OPLRegs oplModulator;
         //struct BNK_OPLRegs
         //{
