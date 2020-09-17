@@ -30,7 +30,7 @@ public:
     enum DmxFlags
     {
         Dmx_FixedPitch  = 0x0001,
-        Dmx_Unknown     = 0x0002,
+        Dmx_DelayedVib  = 0x0002,
         Dmx_DoubleVoice = 0x0004
     };
     bool detect(const QString &filePath, char* magic) override;
