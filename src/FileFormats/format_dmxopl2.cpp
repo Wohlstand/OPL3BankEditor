@@ -78,10 +78,11 @@ FfmtErrCode DmxOPL2::loadFile(QString filePath, FmBank &bank)
             return FfmtErrCode::ERR_BADFORMAT;
         }
 
+        ins.is_fixed_note = (flags & Dmx_FixedPitch) != 0;
         ins.fine_tune = char(int(fine_tuning) - 128);
         ins.en_pseudo4op = ((flags & Dmx_DoubleVoice) != 0);
         ins.en_4op = ins.en_pseudo4op;
-        ins.percNoteNum = ((flags & Dmx_FixedPitch) != 0) ? note_number : 60;
+        ins.percNoteNum = ins.is_fixed_note ? note_number : 60;
 
         ins.setAVEKM(MODULATOR1,    idata[0]);
         ins.setAtDec(MODULATOR1,    idata[1]);
@@ -161,7 +162,7 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
         uint8_t     fine_tuning = 0;
         uint8_t     note_number = 0;
         uint8_t     odata[32];
-        bool        fixedPitch = (isDrum && ins.percNoteNum != 60) || (!isDrum && ins.percNoteNum != 0);
+        bool        fixedPitch = (isDrum && ins.percNoteNum != 60) || (!isDrum && ins.is_fixed_note);
         memset(odata, 0, 32);
 
         fine_tuning = uint8_t(int16_t(ins.fine_tune) + 128);

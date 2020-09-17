@@ -169,6 +169,8 @@ public:
         uint16_t ms_sound_koff;
         //! Is instrument blank
         bool     is_blank;
+        //! Is fixed note like drum? (when a melodic instrument)
+        bool     is_fixed_note;
 
         /* ******** OPL3 merged values ******** */
 
