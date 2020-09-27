@@ -16,23 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSION_H
-#define VERSION_H
+#ifndef SMAFIMPORTER_H
+#define SMAFIMPORTER_H
 
-#define COMPANY "WohlSoft"
+#include "ffmt_base.h"
 
-#define PGE_URL "wohlsoft.ru"
+class SMAF_Importer final : public FmBankFormatBase
+{
+public:
+    bool        detect(const QString &filePath, char* magic) override;
+    FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
+    int         formatCaps() const override;
+    QString     formatName() const override;
+    QString     formatModuleName() const override;
+    QString     formatExtensionMask() const override;
+    BankFormats formatId() const override;
+};
 
-#define PROGRAM_NAME "OPL3 Bank Editor"
-
-#define VERSION "1.5.2"
-
-#ifdef IS_QT_4
-#define COPYRIGHT_SIGN "(C)"
-#else
-#define COPYRIGHT_SIGN "©"
-#endif
-
-#define COPYRIGHT COPYRIGHT_SIGN " 2016-2020, Vitaly Novichkov \"Wohlstand\""
-
-#endif // VERSION_H
+#endif // SMAFIMPORTER_H

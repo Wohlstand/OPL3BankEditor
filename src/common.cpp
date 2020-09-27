@@ -119,6 +119,15 @@ uint32_t toUint32LE(const uint8_t *arr)
     return num;
 }
 
+uint32_t toUint32BE(const uint8_t *arr)
+{
+    uint32_t num = arr[3];
+    num |= (static_cast<uint32_t>(arr[2] << 8)  & 0x0000FF00);
+    num |= (static_cast<uint32_t>(arr[1] << 16) & 0x00FF0000);
+    num |= (static_cast<uint32_t>(arr[0] << 24) & 0xFF000000);
+    return num;
+}
+
 
 void fromSint16LE(int16_t in, uint8_t *arr)
 {
@@ -189,3 +198,4 @@ void ErrMessageS(QWidget *parent, QString errStr, bool isBank)
                          QMessageBox::Ok);
 }
 #endif
+

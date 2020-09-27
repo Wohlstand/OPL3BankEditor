@@ -50,7 +50,7 @@ FfmtErrCode CMF_Importer::loadFile(QString filePath, FmBank &bank)
     if(file.read(char_p(&version), 2) != 2)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    if((version[1] != 1) && ((version[0] != 1) || (version[0] != 0)))
+    if((version[1] != 1) && (version[0] > 2))
         return FfmtErrCode::ERR_BADFORMAT;
 
     bank.Ins_Melodic_box.clear();

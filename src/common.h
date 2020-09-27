@@ -101,11 +101,18 @@ uint16_t toUint16BE(const uint8_t *arr);
 int16_t toSint16BE(const uint8_t *arr);
 
 /*!
- * \brief Convers array of big endian bytes into int
+ * \brief Convers array of little endian bytes into int
  * \param arr Source array of bytes
  * \return Resulted number
  */
 uint32_t toUint32LE(const uint8_t *arr);
+
+/*!
+ * \brief Convers array of big endian bytes into int
+ * \param arr Source array of bytes
+ * \return Resulted number
+ */
+uint32_t toUint32BE(const uint8_t *arr);
 
 
 /*!

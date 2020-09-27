@@ -108,6 +108,7 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_sb_ibk.cpp"
   "src/FileFormats/format_dro_importer.cpp"
   "src/FileFormats/format_vgm_import.cpp"
+  "src/FileFormats/format_smaf_importer.cpp"
   "src/FileFormats/format_misc_sgi.cpp"
   "src/FileFormats/format_misc_cif.cpp"
   "src/FileFormats/format_misc_hsc.cpp"

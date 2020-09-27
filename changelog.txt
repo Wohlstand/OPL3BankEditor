@@ -1,3 +1,7 @@
+Version 1.5.2
+- Fixed a small bug at the importer
+- Added voice importing from SMAF v1 and v2 (they are partially compatible with OPL synth, so, can be imported)
+
 Version 1.5.1
 - Added an ability to set the audio device by user interface
 - Added support for VGZ importing

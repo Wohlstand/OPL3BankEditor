@@ -111,6 +111,7 @@ win32 {
 }
 
 SOURCES += \
+    src/FileFormats/format_smaf_importer.cpp \
     src/audio.cpp \
     src/bank.cpp \
     src/bank_editor.cpp \
@@ -164,6 +165,7 @@ SOURCES += \
     src/opl/chips/nuked/nukedopl3_174.c
 
 HEADERS += \
+    src/FileFormats/format_smaf_importer.h \
     src/bank_editor.h \
     src/operator_editor.h \
     src/bank_comparison.h \

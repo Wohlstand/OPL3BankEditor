@@ -37,6 +37,7 @@
 #include "format_sb_ibk.h"
 #include "format_dro_importer.h"
 #include "format_vgm_import.h"
+#include "format_smaf_importer.h"
 #include "format_misc_sgi.h"
 #include "format_misc_cif.h"
 #include "format_misc_hsc.h"
@@ -114,6 +115,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new RAD_Importer());
     registerBankFormat(new DRO_Importer());
     registerBankFormat(new VGM_Importer());
+    registerBankFormat(new SMAF_Importer());
 
     //Flatbuffer
     registerBankFormat(new FlatbufferOpl3());
