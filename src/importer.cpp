@@ -66,6 +66,9 @@ bool Importer::openFile(QString filePath, bool isBank, FfmtErrCode *errp)
     ui->melodic->setEnabled(true);
     ui->percussion->setEnabled(true);
 
+    ui->instruments->clearSelection();
+    ui->instruments->setCurrentItem(NULL);
+
     if(isBank)
         err = FmBankFormatFactory::ImportBankFile(filePath, m_bank, &format);
     else
