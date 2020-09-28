@@ -107,7 +107,7 @@ public:
      * @param voice2ps4op where it is the second voice of a pseudo-4op instrument
      * @param hertz Tone frequency
      */
-    void NoteOn(uint32_t c1, uint32_t c2, double hertz, bool voice2ps4op = false);
+    void NoteOn(uint32_t c1, uint32_t c2, double tone, bool voice2ps4op = false);
 
     /**
      * @brief Turn the note off
@@ -119,7 +119,8 @@ public:
                    uint32_t velocity,
                    uint8_t ccvolume,
                    uint8_t ccexpr,
-                   uint32_t brightness = 127);
+                   uint32_t brightness = 127,
+                   bool isDrum = false);
 
     void Patch(uint32_t c, uint32_t i);
     void Pan(uint32_t c, uint32_t value);
@@ -141,7 +142,8 @@ public:
         VOLUME_APOGEE_FIXED,
         VOLUME_AIL,
         VOLUME_9X_GENERIC_FM,
-        VOLUME_HMI
+        VOLUME_HMI,
+        VOLUME_HMI_OLD
     };
 
 public:
@@ -229,7 +231,7 @@ private:
     double      m_bend = 0.0;
     double      m_bendsense = 2.0 / 8192;
     bool        m_hold = false;
-    int         m_volmodel = VOLUME_Generic;
+    int         m_volumeScale = VOLUME_Generic;
     bool        m_isInstrumentLoaded = false;
     bool        m_4op_last_state;
     uint8_t     deepTremoloMode;
