@@ -651,10 +651,20 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
 {
     FmBank::Instrument &in = *in_p;
     DurationInfo result;
-    ComputeDurations(&in, &result, chip);
-    in.ms_sound_kon = (uint16_t)result.ms_sound_kon;
-    in.ms_sound_koff = (uint16_t)result.ms_sound_koff;
-    in.is_blank = result.nosound;
+
+    if(in_p->adlib_drum_number == 0)
+    {
+        ComputeDurations(&in, &result, chip);
+        in.ms_sound_kon = (uint16_t)result.ms_sound_kon;
+        in.ms_sound_koff = (uint16_t)result.ms_sound_koff;
+        in.is_blank = result.nosound;
+    }
+    else // Rhyth-mode percussion
+    {
+        in.ms_sound_kon = 1;
+        in.ms_sound_koff = 1;
+        in.is_blank = false;
+    }
 }
 
 static void MeasureDurationsDefault(FmBank::Instrument *in_p)
@@ -721,7 +731,11 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
         FmBank::Instrument &ins1 = bank.Ins_Melodic_box[i];
         FmBank::Instrument &ins2 = bankBackup.Ins_Melodic_box[i];
         if(forceReset || (ins1.ms_sound_kon == 0) || (memcmp(&ins1, &ins2, sizeof(FmBank::Instrument)) != 0))
+        {
+            ins1.adlib_drum_number = 0;
+            ins2.adlib_drum_number = 0; // Just in a case, be sure this value is zero for all melodic instruments
             insertOrBlank(ins1, blank, tasks);
+        }
     }
     for(; i < bank.Ins_Melodic_box.size(); i++)
         insertOrBlank(bank.Ins_Melodic_box[i], blank, tasks);

@@ -1179,6 +1179,13 @@ void BankEditor::loadInstrument()
         m_lock = false;
         return;
     }
+
+    if(ui->melodic->isChecked())
+    {
+        m_curInst->percNoteNum = 0; // Don't pass drum-specific data to melodic
+        m_curInst->adlib_drum_number = 0;
+    }
+
     ui->editzone->setEnabled(true);
     ui->editzone2->setEnabled(true);
     ui->testNoteBox->setEnabled(true);
