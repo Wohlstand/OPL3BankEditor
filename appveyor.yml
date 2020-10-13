@@ -35,6 +35,11 @@ environment:
       WINXX_ARCH: win32
       COMPILER: C:\Qt\Tools\mingw530_32\bin
       QT_DIR: C:\Qt\5.7\mingw53_32\bin # Qt since 5.8 no more supports Windows XP, Keep support for Windows XP yet
+    - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2019"
+      PLATFORM: Win64
+      WINXX_ARCH: win64
+      COMPILER: C:\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\bin
+      QT_DIR: C:\Qt\5.15\mingw81_64\bin
     - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2015"
       PLATFORM: Win9x
       WINXX_ARCH: win9x
