@@ -12,7 +12,7 @@ lrelease FMBankEdit.pro
 qmake FMBankEdit.pro CONFIG+=release CONFIG-=debug
 IF ERRORLEVEL 1 goto error
 
-mingw32-make
+mingw32-make -j 4
 IF ERRORLEVEL 1 goto error
 
 md opl3-bank-editor
