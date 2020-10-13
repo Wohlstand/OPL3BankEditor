@@ -30,7 +30,7 @@ IF NOT -%1-==-win9x- (
     cd ..
 )
 
-SET DEST_ARCHIVE=opl3-bank-editor-dev-win32.zip
+SET DEST_ARCHIVE=opl3-bank-editor-dev-%WINXX_ARCH%.zip
 SET DEPLOY_FILES=.\bin-release\*
 IF -%1-==-win9x- (
     SET DEPLOY_FILES=%DEPLOY_FILES% .\opl_proxy\win9x\liboplproxy.dll
