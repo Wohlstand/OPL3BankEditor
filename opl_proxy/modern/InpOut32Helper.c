@@ -30,7 +30,7 @@ static FILE *hwlog;
 BOOL OpenInpOut32(void)
 {
 #if defined(_X86_)
-	hInpOutDll = LoadLibraryW ( L"InpOut32.DLL" ) ;	//The 32bit DLL. If we are building x64 C++ 
+	hInpOutDll = LoadLibraryW ( L"InpOut32.DLL" ) ;	//The 32bit DLL. If we are building x64 C++
 	//applicaiton then use InpOutx64.dll
 #elif defined(_AMD64_)
 	hInpOutDll = LoadLibraryW ( L"InpOutX64.DLL" ) ;
@@ -44,10 +44,12 @@ BOOL OpenInpOut32(void)
 
 		if (gfpIsInpOutDriverOpen())
 #ifdef _DEBUG
-		hwlog = fopen("C:\\OPLSynth\\hwlog.log", "a");
-		fprintf(hwlog, "Opened driver\n");
+		{
+			hwlog = fopen("C:\\OPLSynth\\hwlog.log", "a");
+			fprintf(hwlog, "Opened driver\n");
+		}
 #endif
-		return FALSE; 
+		return FALSE;
 	}
 
 #if defined(_X86_)
