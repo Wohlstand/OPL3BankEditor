@@ -792,6 +792,8 @@ OPL3::~OPL3()
 
 
 void OPL3::initOperators() {
+    memset(registers, 0, sizeof(registers));
+
     int baseAddress;
     // The YMF262 has 36 operators:
 	memset(operators, 0, sizeof(operators));
@@ -1002,7 +1004,7 @@ static double EnvelopeFromDB(double db)
 
 Channel::Channel (int baseAddress, double startvol) {
 	channelBaseAddress = baseAddress;
-	fnuml = fnumh = kon = block = fb = cnt = 0;
+	fnuml = fnumh = kon = block = fb = cha = chb = cnt = 0;
 	feedback[0] = feedback[1] = 0;
 	leftPan = rightPan = startvol;
 }
@@ -1230,7 +1232,7 @@ const double Operator::noModulator = 0;
 Operator::Operator(int baseAddress) {
 	operatorBaseAddress = baseAddress;
 
-	envelope = 0;
+	envelope = phase = 0;
 	am = vib = ksr = egt = mult = ksl = tl = ar = dr = sl = rr = ws = 0;
 	keyScaleNumber = f_number = block = 0;
 }
@@ -1641,6 +1643,8 @@ double TopCymbalOperator::getOperatorOutput(OPL3 *OPL3, double modulator) {
 // Conversely, this method is also used through inheritance by the HighHatOperator, 
 // now with the TopCymbalOperator phase as the externalPhase.
 double TopCymbalOperator::getOperatorOutput(OPL3 *OPL3, double modulator, double externalPhase) {
+	(void)modulator;
+
 	double envelopeInDB = envelopeGenerator.getEnvelope(OPL3, egt, am);
 	envelope = EnvelopeFromDB(envelopeInDB);
 	
@@ -1661,8 +1665,6 @@ double TopCymbalOperator::getOperatorOutput(OPL3 *OPL3, double modulator, double
 	if( chopped > 0.1) carrierOutput = 0;
 	
 	return carrierOutput*2;  
-
-	(void)modulator;
 }
 
 HighHatOperator::HighHatOperator()
