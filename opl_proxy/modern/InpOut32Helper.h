@@ -2,7 +2,9 @@
 #ifndef INPOUT32_HELPER_H
 #define INPOUT32_HELPER_H
 
+#ifdef _DEBUG
 #include <stdio.h>
+#endif
 #include <windows.h>
 
 BOOL OpenInpOut32(void);

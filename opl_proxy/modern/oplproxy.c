@@ -30,6 +30,11 @@ typedef unsigned short  uint16_t;
 
 static uint16_t   OPLBase = 0x388;
 
+DLLExport BOOL WINAPI DllMain(HINSTANCE const instance, DWORD const reason, LPVOID const reserved)
+{
+	return TRUE;
+}
+
 DLLExport void STDCall chipInit(void)
 { OpenInpOut32(); }
 

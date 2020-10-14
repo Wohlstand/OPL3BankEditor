@@ -2,7 +2,9 @@
 #include <cstring>
 #include "win9x_opl_proxy.h"
 
-#ifdef _WIN32
+#if defined _WIN64
+#define OPLPROXY_LIBNAME "liboplproxy64.dll"
+#elif defined _WIN32
 #define OPLPROXY_LIBNAME "liboplproxy.dll"
 #elif __APPLE__
 #define OPLPROXY_LIBNAME "./liboplproxy.dylib"

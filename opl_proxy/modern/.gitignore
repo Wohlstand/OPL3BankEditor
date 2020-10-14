@@ -1,5 +1,8 @@
 *.lib
 !liboplproxy.dll
+!liboplproxy64.dll
+!inpout32.dll
+!inpoutx64.dll
 *.map
 *.lk1
 *.mk1

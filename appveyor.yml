@@ -30,6 +30,11 @@ clone_depth:  3  # clone entire repository history if not defined
 
 environment:
   matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2019"
+      PLATFORM: Win64
+      WINXX_ARCH: win64
+      COMPILER: C:\Qt\Tools\mingw810_64\bin
+      QT_DIR: C:\Qt\5.15\mingw81_64\bin
     - APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2013"
       PLATFORM: Win32
       WINXX_ARCH: win32
