@@ -2096,6 +2096,9 @@ of second voice</string>
    <property name="text">
     <string>Import instruments...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
   </action>
   <action name="actionAddInst">
    <property name="text">
@@ -2199,6 +2202,9 @@ of second voice</string>
   <action name="actionReMeasure">
    <property name="text">
     <string>Re-Calculate all sounding delays</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+G</string>
    </property>
   </action>
   <action name="actionEmulatorNuked">
