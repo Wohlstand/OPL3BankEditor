@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>900</height>
+    <width>920</width>
+    <height>812</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -1930,7 +1930,7 @@ of second voice</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
+     <width>920</width>
      <height>19</height>
     </rect>
    </property>
@@ -2133,10 +2133,16 @@ of second voice</string>
    <property name="text">
     <string>Add bank</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
   </action>
   <action name="actionDeleteBank">
    <property name="text">
     <string>Delete bank</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Del</string>
    </property>
   </action>
   <action name="actionCloneBank">
@@ -2147,6 +2153,9 @@ of second voice</string>
   <action name="actionClearInstrument">
    <property name="text">
     <string>Clear instrument</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
    </property>
   </action>
   <action name="actionClearBank">
@@ -2242,6 +2251,9 @@ of second voice</string>
   <action name="actionReMeasureOne">
    <property name="text">
     <string>Re-Calculate sounding delays of instrument</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
    </property>
   </action>
   <action name="actionDelayAnalysis">
