@@ -111,6 +111,7 @@ win32 {
 }
 
 SOURCES += \
+    src/FileFormats/format_adlib_tracker.cpp \
     src/FileFormats/format_smaf_importer.cpp \
     src/audio.cpp \
     src/bank.cpp \
@@ -165,6 +166,8 @@ SOURCES += \
     src/opl/chips/nuked/nukedopl3_174.c
 
 HEADERS += \
+    src/FileFormats/at_misc/adt2pack.hpp \
+    src/FileFormats/format_adlib_tracker.h \
     src/FileFormats/format_smaf_importer.h \
     src/bank_editor.h \
     src/operator_editor.h \

@@ -97,6 +97,7 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_adlib_bnk.cpp"
   "src/FileFormats/format_adlib_tim.cpp"
   "src/FileFormats/format_adlibgold_bnk2.cpp"
+  "src/FileFormats/format_adlib_tracker.cpp"
   "src/FileFormats/format_ail2_gtl.cpp"
   "src/FileFormats/format_apogeetmb.cpp"
   "src/FileFormats/format_bisqwit.cpp"
