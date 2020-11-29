@@ -921,6 +921,7 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
     {
 #ifdef ENABLE_HW_OPL_PROXY
     case CHIP_Win9xProxy:
+        oplProxy().startChip();
         chip.reset(&oplProxy());
         break;
 #endif

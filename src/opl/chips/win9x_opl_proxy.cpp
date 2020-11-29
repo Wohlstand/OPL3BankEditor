@@ -158,7 +158,6 @@ Win9x_OPL_Proxy::Win9x_OPL_Proxy()
 {
     m_chip = new OPLProxyDriver;
     std::memset(m_chip, 0, sizeof(OPLProxyDriver));
-    initChip();
 }
 
 Win9x_OPL_Proxy::~Win9x_OPL_Proxy()
@@ -166,6 +165,11 @@ Win9x_OPL_Proxy::~Win9x_OPL_Proxy()
     closeChip();
     OPLProxyDriver *chip_r = reinterpret_cast<OPLProxyDriver*>(m_chip);
     delete chip_r;
+}
+
+void Win9x_OPL_Proxy::startChip()
+{
+    initChip();
 }
 
 void Win9x_OPL_Proxy::writeReg(uint16_t addr, uint8_t data)
