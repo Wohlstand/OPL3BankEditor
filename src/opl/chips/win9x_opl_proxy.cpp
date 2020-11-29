@@ -12,24 +12,20 @@
 #define OPLPROXY_LIBNAME "./liboplproxy.so"
 #endif
 
-
-#ifdef _WIN32
-#   include <windows.h>
-#   define CALL_chipInit "_chipInit@0"
-#   define CALL_chipPoke "_chipPoke@8"
-#   define CALL_chipUnInit "_chipUnInit@0"
-#   define CALL_chipSetPort "_chipSetPort@4"
-#   define CALL_chipType "_chipType@0"
-#else
-#   include <dlfcn.h>
 #   define CALL_chipInit "chipInit"
 #   define CALL_chipPoke "chipPoke"
 #   define CALL_chipUnInit "chipUnInit"
 #   define CALL_chipSetPort "chipSetPort"
 #   define CALL_chipType "chipType"
 
+#ifdef _WIN32
+#   include <windows.h>
+#else
+#   include <dlfcn.h>
+
 /* Some simulation of LoadLibrary WinAPI */
 #   define _stdcall
+#   define _cdecl
 typedef void* HINSTANCE;
 
 void *GetProcAddress(HINSTANCE lib, const char *call)
@@ -53,13 +49,19 @@ void FreeLibrary(HINSTANCE lib)
 }
 #endif //_WIN32
 
+#ifdef ENABLE_WIN9X_OPL_PROXY
+#define OplProxyCallConv _stdcall
+#else
+#define OplProxyCallConv _cdecl
+#endif
+
 extern "C"
 {
-    typedef void (_stdcall *opl_poke)(uint16_t index, uint16_t value);
-    typedef void (_stdcall *opl_init)(void);
-    typedef void (_stdcall *opl_unInit)(void);
-    typedef void (_stdcall *opl_setPort)(uint16_t port);
-    typedef uint16_t (_stdcall *opl_type)(void);
+    typedef void (OplProxyCallConv *opl_poke)(uint16_t index, uint16_t value);
+    typedef void (OplProxyCallConv *opl_init)(void);
+    typedef void (OplProxyCallConv *opl_unInit)(void);
+    typedef void (OplProxyCallConv *opl_setPort)(uint16_t port);
+    typedef uint16_t (OplProxyCallConv *opl_type)(void);
 }
 
 struct OPLProxyDriver
