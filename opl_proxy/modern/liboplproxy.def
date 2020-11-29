@@ -1,0 +1,6 @@
+LIBRARY      liboplproxy
+EXPORTS
+	chipInit
+	chipSetPort
+	chipUnInit
+	chipPoke
