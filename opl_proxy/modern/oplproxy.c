@@ -25,7 +25,7 @@
 #include "InpOut32Helper.h"
 
 #define DLLExport       __declspec(dllexport)
-#define STDCall         __stdcall
+#define STDCall         __cdecl
 typedef unsigned short  uint16_t;
 
 static uint16_t   OPLBase = 0x388;

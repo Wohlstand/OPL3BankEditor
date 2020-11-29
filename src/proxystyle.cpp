@@ -78,17 +78,24 @@ int BankEditor_ProxyStyle::styleHint(QStyle::StyleHint hint, const QStyleOption 
 
                 for(int i=0; i < j; ++i)
                 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+                    const int textWidth = qMax(
+                                fontMetrics1.horizontalAdvance(combo->itemText(i) + "WW"),
+                                fontMetrics2.horizontalAdvance(combo->itemText(i) + "WW")
+                                );
+#else
                     const int textWidth = qMax(
                                 fontMetrics1.width(combo->itemText(i) + "WW"),
                                 fontMetrics2.width(combo->itemText(i) + "WW")
                                 );
+#endif
                     if(combo->itemIcon(i).isNull())
                         width = qMax(width, textWidth);
                     else
                         width = qMax(width, textWidth + iconSize);
                 }
 
-                view->setFixedWidth(width);
+                view->setMinimumWidth(width);
             }
         } /*fallthrough*/
         //Combobox fix end

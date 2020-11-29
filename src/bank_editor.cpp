@@ -1577,40 +1577,41 @@ void BankEditor::setDrums()
 
 void BankEditor::reloadInstrumentNames()
 {
-    QList<QListWidgetItem *> items = ui->instruments->findItems("*", Qt::MatchWildcard);
     if(ui->percussion->isChecked())
     {
-        if(items.size() != m_bank.Ins_Percussion_box.size())
+        if(ui->instruments->count() != m_bank.Ins_Percussion_box.size())
             setDrums();//Completely rebuild an instruments list
         else
         {
             //Change instrument names of existing entries
-            for(int i = 0; i < items.size(); i++)
+            for(int i = 0; i < ui->instruments->count(); i++)
             {
-                int index = items[i]->data(Qt::UserRole).toInt();
-                items[i]->setText(m_bank.Ins_Percussion[index].name[0] != '\0' ?
-                                  QString::fromUtf8(m_bank.Ins_Percussion[index].name) :
-                                  getInstrumentName(index, false, true));
-                items[i]->setForeground(m_bank.Ins_Percussion[i].is_blank ?
-                                        Qt::gray : Qt::black);
+                auto *it = ui->instruments->item(i);
+                int index = it->data(Qt::UserRole).toInt();
+                it->setText(m_bank.Ins_Percussion[index].name[0] != '\0' ?
+                            QString::fromUtf8(m_bank.Ins_Percussion[index].name) :
+                            getInstrumentName(index, false, true));
+                it->setForeground(m_bank.Ins_Percussion[i].is_blank ?
+                                  Qt::gray : Qt::black);
             }
         }
     }
     else
     {
-        if(items.size() != m_bank.Ins_Melodic_box.size())
+        if(ui->instruments->count() != m_bank.Ins_Melodic_box.size())
             setMelodic();//Completely rebuild an instruments list
         else
         {
             //Change instrument names of existing entries
-            for(int i = 0; i < items.size(); i++)
+            for(int i = 0; i < ui->instruments->count(); i++)
             {
-                int index = items[i]->data(Qt::UserRole).toInt();
-                items[i]->setText(m_bank.Ins_Melodic[index].name[0] != '\0' ?
-                                  QString::fromUtf8(m_bank.Ins_Melodic[index].name) :
-                                  getInstrumentName(index, false, false));
-                items[i]->setForeground(m_bank.Ins_Melodic[i].is_blank ?
-                                        Qt::gray : Qt::black);
+                auto *it = ui->instruments->item(i);
+                int index = it->data(Qt::UserRole).toInt();
+                it->setText(m_bank.Ins_Melodic[index].name[0] != '\0' ?
+                            QString::fromUtf8(m_bank.Ins_Melodic[index].name) :
+                            getInstrumentName(index, false, false));
+                it->setForeground(m_bank.Ins_Melodic[i].is_blank ?
+                                  Qt::gray : Qt::black);
             }
         }
     }
