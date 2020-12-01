@@ -1,30 +1,4 @@
-Microsoft (R) COFF/PE Dumper Version 14.00.24215.1
-Copyright (C) Microsoft Corporation.  All rights reserved.
 
-
-Dump of file liboplproxy.dll
-
-File Type: DLL
-
-  Section contains the following exports for liboplproxy.dll
-
-    00000000 characteristics
-           0 time date stamp
-        0.00 version
-           1 ordinal base
-           3 number of functions
-           3 number of names
-
-    ordinal hint RVA      name
-
-          1    0 00001010 _chipInit@0
-          3    1 0000104A _chipPoke@8
-          2    2 0000102D _chipUnInit@0
-
-  Summary
-
-        1000 .edata
-        1000 .idata
-        1000 .reloc
-        6000 AUTO
-        3000 DGROUP
+chipInit.'LIBOPLPROXY.DLL'.1
+chipPoke.'LIBOPLPROXY.DLL'.3
+chipUnInit.'LIBOPLPROXY.DLL'.2

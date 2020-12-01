@@ -8,9 +8,12 @@ class Win9x_OPL_Proxy : public OPLChipBaseT<Win9x_OPL_Proxy>
     void *m_chip;
     void initChip();
     void closeChip();
+
 public:
     Win9x_OPL_Proxy();
     virtual ~Win9x_OPL_Proxy() override;
+
+    void startChip();
 
     bool canSetOplAddress() const;
     void setOplAddress(uint16_t address);
