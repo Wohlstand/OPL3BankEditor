@@ -214,6 +214,7 @@ void BankEditor::loadSettings()
     QApplication::setOrganizationDomain(PGE_URL);
     QApplication::setApplicationName("OPL FM Banks Editor");
 
+    int preferredMidiStandard = 3;
     int defaultChip = Generator::CHIP_Nuked;
     #ifdef ENABLE_WIN9X_OPL_PROXY
         defaultChip = Generator::CHIP_Win9xProxy;
@@ -234,11 +235,13 @@ void BankEditor::loadSettings()
     m_language = setup.value("language").toString();
     m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
     m_audioDevice = setup.value("audio-device", QString()).toString();
+
 #ifdef ENABLE_HW_OPL_PROXY
     m_proxyOplAddress = setup.value("hw-opl-address", 0x388).toUInt();
     Win9x_OPL_Proxy &proxy = *m_proxyOpl;
     proxy.setOplAddress(m_proxyOplAddress);
 #endif
+
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
     m_serialPortName = setup.value("hw-opl-serial-port", QString()).toString();
     m_serialPortBaudRate = setup.value("hw-opl-serial-baud-rate", 115200).toUInt();
@@ -246,6 +249,9 @@ void BankEditor::loadSettings()
     OPL_SerialPort &serial = *m_serialPortOpl;
     serial.connectPort(m_serialPortName, m_serialPortBaudRate, m_serialPortProtocol);
 #endif
+
+    preferredMidiStandard = setup.value("preferred-midi-standard", 3).toInt();
+
 #if defined(ENABLE_HW_OPL_PROXY) || defined(ENABLE_HW_OPL_SERIAL_PORT)
     initChip();
 #endif
@@ -284,6 +290,24 @@ void BankEditor::loadSettings()
         ui->actionSerialPortOPL->setChecked(true);
         break;
     }
+
+    switch(preferredMidiStandard)
+    {
+    case 0: // GM
+        ui->actionStandardGM->setChecked(true);
+        break;
+
+    case 1: // GM2
+        ui->actionStandardGM2->setChecked(true);
+        break;
+
+    case 2: // GS
+        ui->actionStandardGS->setChecked(true);
+        break;
+    default:
+    case 3: // XG, initially set by default
+        break;
+    }
 }
 
 void BankEditor::saveSettings()
@@ -296,14 +320,27 @@ void BankEditor::saveSettings()
     setup.setValue("language", m_language);
     setup.setValue("audio-latency", m_audioLatency);
     setup.setValue("audio-device", m_audioDevice);
+
 #ifdef ENABLE_HW_OPL_PROXY
     setup.setValue("hw-opl-address", m_proxyOplAddress);
 #endif
+
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
     setup.setValue("hw-opl-serial-port", m_serialPortName);
     setup.setValue("hw-opl-serial-baud-rate", m_serialPortBaudRate);
     setup.setValue("hw-opl-serial-protocol", m_serialPortProtocol);
 #endif
+
+    int preferredMidiStandard = 3;
+    if(ui->actionStandardGM->isChecked())
+        preferredMidiStandard = 0;
+    else if(ui->actionStandardGM2->isChecked())
+        preferredMidiStandard = 1;
+    else if(ui->actionStandardGS->isChecked())
+        preferredMidiStandard = 2;
+    else if(ui->actionStandardXG->isChecked())
+        preferredMidiStandard = 3;
+    setup.setValue("preferred-midi-standard", preferredMidiStandard);
 }
 
 
