@@ -24,6 +24,7 @@
 #include <QUrl>
 #include <QMimeData>
 #include <QClipboard>
+#include <QActionGroup>
 #include <QtDebug>
 
 #include "importer.h"

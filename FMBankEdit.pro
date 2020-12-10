@@ -99,7 +99,7 @@ win32||oplproxy: {
     include("src/opl/chips/win9x_opl_proxy.pri")
     DEFINES += ENABLE_HW_OPL_PROXY
 }
-greaterThan(QT_MAJOR_VERSION, 4):{
+greaterThan(QT_MAJOR_VERSION, 4):lessThan(QT_MAJOR_VERSION, 6) {
     include("src/opl/chips/opl_serial_port.pri")
     DEFINES += ENABLE_HW_OPL_SERIAL_PORT
 }

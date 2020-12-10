@@ -290,7 +290,7 @@ void RawYmf262ToWopi::doAnalyzeState()
         {
             std::snprintf(ins.name, 32,
                           "Ins %d, channel %u",
-                          insdata.caughtInstruments.size(),
+                          (int)insdata.caughtInstruments.size(),
                           chno);
             insdata.caughtInstruments.push_back(ins);
             insdata.cache.insert(insRaw);

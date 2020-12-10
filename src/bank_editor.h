@@ -35,7 +35,11 @@
 #ifdef NO_NATIVE_OPEN_DIALOGS
 #define FILE_OPEN_DIALOG_OPTIONS QFileDialog::DontUseNativeDialog
 #else
-#define FILE_OPEN_DIALOG_OPTIONS 0
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#   define FILE_OPEN_DIALOG_OPTIONS QFileDialog::Options()
+#else
+#   define FILE_OPEN_DIALOG_OPTIONS 0
+#endif
 #endif
 
 namespace Ui
