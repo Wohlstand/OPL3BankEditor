@@ -17,9 +17,10 @@ linux {
 win32 {
     DEFINES += __WINDOWS_DS__
     LIBS += -ldsound -lole32
-    greaterThan(QT_MAJOR_VERSION, 4):{
+    greaterThan(QT_MAJOR_VERSION, 4): !DISABLE_WASAPI:{
         DEFINES += __WINDOWS_WASAPI__
-        LIBS += -lksguid
+        LIBS += -lole32 -lksguid
+        LIBS += -lmfplat -lmfuuid -lwmcodecdspuuid # TODO: Verify will this break Windows XP compatibility or not
         DEFINES += __WINDOWS_ASIO__
         INCLUDEPATH += $$PWD/external/rtaudio/include
         SOURCES += \
