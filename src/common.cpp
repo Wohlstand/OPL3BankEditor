@@ -36,10 +36,10 @@ qint64 readLE(QFile &file, uint32_t &out)
 {
     uint8_t bytes[4] = {0, 0, 0, 0};
     qint64 len = file.read(char_p(bytes), 4);
-    out = (quint32(bytes[0] << 0) & 0x000000FF)
+    out =    (quint32(bytes[0]  << 0) & 0x000000FF)
           | ((quint32(bytes[1]) << 8)  & 0x0000FF00)
           | ((quint32(bytes[2]) << 16) & 0x00FF0000)
-          | ((quint32(bytes[2]) << 24) & 0xFF000000);
+          | ((quint32(bytes[3]) << 24) & 0xFF000000);
     return len;
 }
 
