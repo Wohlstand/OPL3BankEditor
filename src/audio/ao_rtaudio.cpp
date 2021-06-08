@@ -23,13 +23,33 @@
 #include "ao_rtaudio.h"
 #include "../opl/generator_realtime.h"
 
-AudioOutRt::AudioOutRt(double latency, const std::string &device_name, QObject *parent)
+AudioOutRt::AudioOutRt(double latency, const std::string &device_name, const std::string &driver_name, QObject *parent)
     : QObject(parent)
 {
-    RtAudio *audioOut = new RtAudio(RtAudio::Api::UNSPECIFIED);
+    RtAudio *audioOut = nullptr;
+
+    try {
+        RtAudio::Api api = RtAudio::UNSPECIFIED;
+        if (!driver_name.empty()) {
+            api = RtAudio::getCompiledApiByName(driver_name);
+            if (api == RtAudio::UNSPECIFIED)
+                fprintf(stderr, "Unknown RtAudio driver from settings: %s\n", device_name.c_str());
+        }
+        if (api != RtAudio::UNSPECIFIED) {
+            fprintf(stderr, "Trying RtAudio driver from settings: %s\n", device_name.c_str());
+            audioOut = new RtAudio(api);
+        }
+    }
+    catch (RtAudioError &error) {
+        fprintf(stderr, "Failed to use RtAudio driver from settings, using default\n");
+    }
+
+    if (!audioOut)
+        audioOut = new RtAudio(RtAudio::Api::UNSPECIFIED);
+
     m_audioOut.reset(audioOut);
 
-    fprintf(stderr, "Using RtAudio API %d\n", audioOut->getCurrentApi());
+    fprintf(stderr, "Using RtAudio driver: %s\n", RtAudio::getApiName(audioOut->getCurrentApi()).c_str());
 
     unsigned num_audio_devices = audioOut->getDeviceCount();
     if (num_audio_devices == 0) {
@@ -115,6 +135,20 @@ std::vector<std::string> AudioOutRt::listCompatibleDevices()
     }
 
     return list;
+}
+
+std::vector<std::string> AudioOutRt::listDrivers()
+{
+    std::vector<RtAudio::Api> apis;
+    RtAudio::getCompiledApi(apis);
+
+    std::vector<std::string> drivers;
+    drivers.reserve(apis.size());
+
+    for (RtAudio::Api api : apis)
+        drivers.push_back(RtAudio::getApiName(api));
+
+    return drivers;
 }
 
 int AudioOutRt::process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata)

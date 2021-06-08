@@ -38,6 +38,9 @@ public:
     QString deviceName() const;
     void setDeviceName(const QString &deviceName);
 
+    QString driverName() const;
+    void setDriverName(const QString &driverName);
+
 private:
     AudioOutRt *m_audioOut = nullptr;
     std::unique_ptr<Ui::AudioConfigDialog> m_ui;
@@ -46,6 +49,7 @@ private slots:
     void on_ctlLatency_valueChanged(int value);
     void on_ctlLatencyEdit_editingFinished();
     void on_btnChooseDevice_clicked();
+    void on_btnChooseDriver_clicked();
 };
 
 #endif // LATENCY_H

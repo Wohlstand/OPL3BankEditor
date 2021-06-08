@@ -28,6 +28,7 @@ AudioConfigDialog::AudioConfigDialog(AudioOutRt *audioOut, QWidget *parent)
 
 #if QT_VERSION >= 0x050000
     m_ui->ctlDeviceNameEdit->setPlaceholderText(tr("Default device"));
+    m_ui->ctlDriverNameEdit->setPlaceholderText(tr("Default driver"));
 #endif
 
     m_ui->ctlLatency->setRange(
@@ -60,6 +61,16 @@ QString AudioConfigDialog::deviceName() const
 void AudioConfigDialog::setDeviceName(const QString &deviceName)
 {
     m_ui->ctlDeviceNameEdit->setText(deviceName);
+}
+
+QString AudioConfigDialog::driverName() const
+{
+    return m_ui->ctlDriverNameEdit->text();
+}
+
+void AudioConfigDialog::setDriverName(const QString &driverName)
+{
+    m_ui->ctlDriverNameEdit->setText(driverName);
 }
 
 void AudioConfigDialog::on_ctlLatency_valueChanged(int value)
@@ -95,5 +106,31 @@ void AudioConfigDialog::on_btnChooseDevice_clicked()
     if (choice) {
         QString device = choice->data().toString();
         m_ui->ctlDeviceNameEdit->setText(device);
+    }
+}
+
+
+void AudioConfigDialog::on_btnChooseDriver_clicked()
+{
+    QToolButton *button = m_ui->btnChooseDriver;
+    QMenu menu;
+    QAction *action;
+
+    std::vector<std::string> drivers = m_audioOut->listDrivers();
+
+    action = menu.addAction(tr("Default driver"));
+
+    for (size_t i = 0, n = drivers.size(); i < n; ++i) {
+        if(i == 0)
+            menu.addSeparator();
+        QString driverName = QString::fromStdString(drivers[i]);
+        action = menu.addAction(driverName);
+        action->setData(driverName);
+    }
+
+    QAction *choice = menu.exec(button->mapToGlobal(button->rect().bottomLeft()));
+    if (choice) {
+        QString driver = choice->data().toString();
+        m_ui->ctlDriverNameEdit->setText(driver);
     }
 }

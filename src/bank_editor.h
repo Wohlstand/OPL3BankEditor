@@ -71,6 +71,8 @@ private:
     double m_audioLatency;
     //! Name of the audio device
     QString m_audioDevice;
+    //! Name of the audio driver
+    QString m_audioDriver;
 
 public:
     //! Audio latency constants (ms)
@@ -116,7 +118,8 @@ private:
     InstFormats     m_recentInstFormat;
 
     /* ********** Audio output stuff ********** */
-    AudioOutRt    *m_audioOut = nullptr;
+    typedef AudioOutRt AudioOutDefault;
+    AudioOutDefault *m_audioOut = nullptr;
 
     /* ********** MIDI input stuff ********** */
     #ifdef ENABLE_MIDI

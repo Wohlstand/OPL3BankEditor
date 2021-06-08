@@ -236,6 +236,7 @@ void BankEditor::loadSettings()
     m_language = setup.value("language").toString();
     m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
     m_audioDevice = setup.value("audio-device", QString()).toString();
+    m_audioDriver = setup.value("audio-driver", QString()).toString();
 
 #ifdef ENABLE_HW_OPL_PROXY
     m_proxyOplAddress = setup.value("hw-opl-address", 0x388).toUInt();
@@ -321,6 +322,7 @@ void BankEditor::saveSettings()
     setup.setValue("language", m_language);
     setup.setValue("audio-latency", m_audioLatency);
     setup.setValue("audio-device", m_audioDevice);
+    setup.setValue("audio-driver", m_audioDriver);
 
 #ifdef ENABLE_HW_OPL_PROXY
     setup.setValue("hw-opl-address", m_proxyOplAddress);
@@ -1416,10 +1418,12 @@ void BankEditor::on_actionAudioConfig_triggered()
     AudioConfigDialog dlg(m_audioOut, this);
     dlg.setLatency(m_audioLatency);
     dlg.setDeviceName(m_audioDevice);
+    dlg.setDriverName(m_audioDriver);
     if(dlg.exec() == QDialog::Accepted)
     {
         m_audioLatency = dlg.latency();
         m_audioDevice = dlg.deviceName();
+        m_audioDriver = dlg.driverName();
     }
 }
 
