@@ -29,7 +29,7 @@ AudioOutRt::AudioOutRt(double latency, const std::string &device_name, const std
     RtAudio *audioOut = nullptr;
 
     try {
-        RtAudio::Api api = RtAudio::getCompiledApiByName(driver_name);
+        RtAudio::Api api = RtAudio::UNSPECIFIED;
         if (!driver_name.empty()) {
             api = RtAudio::getCompiledApiByName(driver_name);
             if (api == RtAudio::UNSPECIFIED)
