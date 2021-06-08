@@ -1995,6 +1995,9 @@ void Generator::updateChannelManager()
 void Generator::generate(int16_t *frames, unsigned nframes)
 {
     chip->generate(frames, nframes);
+    // 2x Gain by default
+    for(size_t i = 0; i < nframes * 2; ++i)
+        frames[i] *= 2;
 }
 
 Generator::NotesManager::NotesManager()
