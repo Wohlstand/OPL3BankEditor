@@ -332,16 +332,19 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
     case MSG_CtlHold:
         gen.Hold(*(bool *)data);
         break;
-    case MSG_CtlPlayChord: {
+    case MSG_CtlPlayChord:
+    {
+        const MidiChannelInfo &ch = m_midichan[0];
+        const uint8_t vel = 127;
         ChordMessage msg = *(ChordMessage *)data;
         gen.changeNote(msg.note);
         switch(msg.chord) {
-        case ChordType::Major: gen.PlayMajorChord(); break;
-        case ChordType::Minor: gen.PlayMinorChord(); break;
-        case ChordType::Augmented: gen.PlayAugmentedChord(); break;
-        case ChordType::Diminished: gen.PlayDiminishedChord(); break;
-        case ChordType::Major7: gen.PlayMajor7Chord(); break;
-        case ChordType::Minor7: gen.PlayMinor7Chord(); break;
+        case ChordType::Major: gen.PlayMajorChord(msg.note, vel, ch.volume, ch.expression); break;
+        case ChordType::Minor: gen.PlayMinorChord(msg.note, vel, ch.volume, ch.expression); break;
+        case ChordType::Augmented: gen.PlayAugmentedChord(msg.note, vel, ch.volume, ch.expression); break;
+        case ChordType::Diminished: gen.PlayDiminishedChord(msg.note, vel, ch.volume, ch.expression); break;
+        case ChordType::Major7: gen.PlayMajor7Chord(msg.note, vel, ch.volume, ch.expression); break;
+        case ChordType::Minor7: gen.PlayMinor7Chord(msg.note, vel, ch.volume, ch.expression); break;
         }
         break;
     }

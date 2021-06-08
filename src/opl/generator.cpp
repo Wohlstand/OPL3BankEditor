@@ -1769,54 +1769,54 @@ void Generator::PlayNote(uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
         PlayNoteF(note, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMajorChord()
+void Generator::PlayMajorChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 4);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 4, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMinorChord()
+void Generator::PlayMinorChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 3);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 3, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayAugmentedChord()
+void Generator::PlayAugmentedChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 4);
-    PlayNoteF(note - 4);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 4, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 4, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayDiminishedChord()
+void Generator::PlayDiminishedChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 3);
-    PlayNoteF(note - 6);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 3, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 6, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMajor7Chord()
+void Generator::PlayMajor7Chord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note - 2);
-    PlayNoteF(note);
-    PlayNoteF(note + 4);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 2, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 4, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMinor7Chord()
+void Generator::PlayMinor7Chord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note - 2);
-    PlayNoteF(note);
-    PlayNoteF(note + 3);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 2, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 3, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
 void Generator::StopNote()

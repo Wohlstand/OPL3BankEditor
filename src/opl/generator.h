@@ -151,12 +151,12 @@ public:
     void NoteOffAllChans();
 
     void PlayNote(uint32_t volume = 127, uint8_t ccvolume = 100, uint8_t ccexpr = 127);
-    void PlayMajorChord();
-    void PlayMinorChord();
-    void PlayAugmentedChord();
-    void PlayDiminishedChord();
-    void PlayMajor7Chord();
-    void PlayMinor7Chord();
+    void PlayMajorChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayMinorChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayAugmentedChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayDiminishedChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayMajor7Chord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayMinor7Chord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
     void StopNote();
     void PitchBend(int bend);
     void PitchBendSensitivity(int cents);
