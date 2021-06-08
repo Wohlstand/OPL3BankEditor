@@ -27,11 +27,13 @@ class AudioOutRt : public QObject
 public:
     explicit AudioOutRt(double latency,
                         const std::string &device_name = std::string(),
+                        const std::string &driver_name = std::string(),
                         QObject *parent = nullptr);
     unsigned sampleRate() const;
     void start(IRealtimeProcess &rt);
     void stop();
     std::vector<std::string> listCompatibleDevices();
+    static std::vector<std::string> listDrivers();
 private:
     static int process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
     static void errorCallback(RtAudioError::Type type, const std::string &errorText);
