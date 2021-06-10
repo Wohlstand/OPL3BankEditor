@@ -145,6 +145,7 @@ static void raw2sbi(FmBank::Instrument &ins, uint8_t *idata, bool fourOp = false
 
         //        BYTE dpitch;    /* percussion pitch: MIDI Note 0 - 127        : JWO */
         ins.percNoteNum  = idata[13];//49
+        ins.is_fixed_note = (ins.adlib_drum_number != 0x00);
     }
     //            BYTE rsv[2];    /* unsused - so far */
     //            } SBTIMBRE;

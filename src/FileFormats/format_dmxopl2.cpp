@@ -82,7 +82,7 @@ FfmtErrCode DmxOPL2::loadFile(QString filePath, FmBank &bank)
         ins.fine_tune = char(int(fine_tuning) - 128);
         ins.en_pseudo4op = ((flags & Dmx_DoubleVoice) != 0);
         ins.en_4op = ins.en_pseudo4op;
-        ins.percNoteNum = ins.is_fixed_note ? note_number : 60;
+        ins.percNoteNum = note_number;
 
         ins.setAVEKM(MODULATOR1,    idata[0]);
         ins.setAtDec(MODULATOR1,    idata[1]);
@@ -162,12 +162,13 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
         uint8_t     fine_tuning = 0;
         uint8_t     note_number = 0;
         uint8_t     odata[32];
-        bool        fixedPitch = (isDrum && ins.percNoteNum != 60) || (!isDrum && ins.is_fixed_note);
+        // Old way, was a workaround for absencing way to set the "is_fixed_note" flag that was been implemented
+        // bool        fixedPitch = (isDrum && ins.percNoteNum != 60) || (!isDrum && ins.is_fixed_note);
         memset(odata, 0, 32);
 
         fine_tuning = uint8_t(int16_t(ins.fine_tune) + 128);
         flags |= (ins.en_4op && ins.en_pseudo4op) ? Dmx_DoubleVoice : 0;
-        flags |= (fixedPitch) ? Dmx_FixedPitch : 0;
+        flags |= (ins.is_fixed_note) ? Dmx_FixedPitch : 0;
         flags |= (i == 65) ? Dmx_DelayedVib : 0;
         note_number = ins.percNoteNum;
 

@@ -101,6 +101,8 @@ void FmBank::reset()
     size = sizeof(MidiBank) * banksnum;
     memset(Banks_Melodic.data(), 0, size);
     memset(Banks_Percussion.data(), 0, size);
+    for(auto &i : Ins_Percussion_box)
+        i.is_fixed_note = true;
     deep_vibrato = false;
     deep_tremolo = false;
 }
@@ -121,6 +123,8 @@ void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
     memset(Banks_Melodic.data(), 0, size);
     size = sizeof(MidiBank) * percussion_banks;
     memset(Banks_Percussion.data(), 0, size);
+    for(auto &i : Ins_Percussion_box)
+        i.is_fixed_note = true;
     deep_vibrato = false;
     deep_tremolo = false;
 }
@@ -165,10 +169,11 @@ FmBank::Instrument FmBank::emptyInst()
     return inst;
 }
 
-FmBank::Instrument FmBank::blankInst()
+FmBank::Instrument FmBank::blankInst(bool fixedNote)
 {
     FmBank::Instrument inst = emptyInst();
     inst.is_blank = true;
+    inst.is_fixed_note = fixedNote;
     return inst;
 }
 

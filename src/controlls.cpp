@@ -129,6 +129,14 @@ void BankEditor::on_perc_noteNum_valueChanged(int arg1)
     afterChangeControlValue();
 }
 
+void BankEditor::on_fixedNote_clicked(bool checked)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->is_fixed_note = checked;
+    afterChangeControlValue();
+}
+
 void BankEditor::on_feedback2_valueChanged(int arg1)
 {
     if(m_lock) return;

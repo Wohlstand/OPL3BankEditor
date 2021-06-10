@@ -92,7 +92,7 @@ BankEditor::BankEditor(QWidget *parent) :
     this->setWindowIcon(makeWindowIcon());
     m_recentMelodicNote = ui->noteToTest->value();
     m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
-    m_bank.Ins_Percussion_box.fill(FmBank::blankInst());
+    m_bank.Ins_Percussion_box.fill(FmBank::blankInst(true));
 
     QActionGroup *actionGroupStandard = new QActionGroup(this);
     m_actionGroupStandard = actionGroupStandard;
@@ -824,6 +824,8 @@ void BankEditor::on_actionNew_triggered()
     m_currentFileFormat = BankFormats::FORMAT_UNKNOWN;
     ui->instruments->clearSelection();
     m_bank.reset();
+    m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
+    m_bank.Ins_Percussion_box.fill(FmBank::blankInst(true));
     m_bankBackup.reset();
     on_instruments_currentItemChanged(NULL, NULL);
     reloadInstrumentNames();
@@ -1222,7 +1224,8 @@ void BankEditor::loadInstrument()
 
     if(ui->melodic->isChecked())
     {
-        m_curInst->percNoteNum = 0; // Don't pass drum-specific data to melodic
+        // m_curInst->is_fixed_note = false;
+        // m_curInst->percNoteNum = 0; // Don't pass drum-specific data to melodic
         m_curInst->adlib_drum_number = 0;
     }
 
@@ -1233,6 +1236,7 @@ void BankEditor::loadInstrument()
     ui->insName->setEnabled(true);
     m_lock = true;
     ui->insName->setText(QString::fromUtf8(m_curInst->name));
+    ui->fixedNote->setChecked(m_curInst->is_fixed_note);
     ui->perc_noteNum->setValue(m_curInst->percNoteNum);
     ui->percMode->setCurrentIndex(m_curInst->adlib_drum_number > 0 ? (m_curInst->adlib_drum_number - 5) : 0);
     ui->op4mode->setChecked(m_curInst->en_4op);

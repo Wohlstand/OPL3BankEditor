@@ -1902,7 +1902,7 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     m_patch.tone    = 0;
     m_patch.voice2_fine_tune = 0.0;
 
-    if(isDrum)
+    if(isDrum || instrument.is_fixed_note)
         m_patch.tone = instrument.percNoteNum;
 
     if(isRhythmMode)// Rhythm-mode percussion instrument

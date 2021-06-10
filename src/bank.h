@@ -341,7 +341,7 @@ public:
      * @brief Get blank instrument entry
      * @return blank instrument entry
      */
-    static Instrument blankInst();
+    static Instrument blankInst(bool fixedNote = false);
 
     /**
      * @brief Get empty bank meta-data entry
