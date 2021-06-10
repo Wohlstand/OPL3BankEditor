@@ -81,7 +81,7 @@ void BankEditor::initAudio()
 #else
     connect(ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
     connect(ui->piano, SIGNAL(pressed()),   m_generator,    SLOT(ctl_playNote()));
-    connect(ui->piano, SIGNAL(released()),  m_generator,    SLOT(ctl_noteOffAllChans()));
+    connect(ui->piano, SIGNAL(released()),  m_generator,    SLOT(ctl_stopNote()));
 #endif
     //Piano on the importer dialog pressed
     m_importer->connect(m_importer->ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));

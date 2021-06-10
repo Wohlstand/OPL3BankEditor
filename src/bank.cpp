@@ -87,6 +87,7 @@ bool FmBank::operator!=(const FmBank &fb)
 
 void FmBank::reset()
 {
+    // FIXME: Remove this and call reset(1, 1) instead of this damned duplicate
     size_t insnum = 128;
     size_t banksnum = insnum / 128;
     size_t size = sizeof(Instrument) * insnum;

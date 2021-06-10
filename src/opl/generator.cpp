@@ -1713,6 +1713,7 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
 
 void Generator::Silence()
 {
+    //Shutup!
     for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
     {
         NoteOff(c);

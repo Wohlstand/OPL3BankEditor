@@ -238,7 +238,9 @@ private:
     uint8_t     deepVibratoMode;
     uint8_t     rythmModePercussionMode;
     uint8_t     testDrum;
+
     uint32_t    m_rate = 44100;
+
     struct OPLChipDelete { void operator()(OPLChipBase *); };
     std::unique_ptr<OPLChipBase, OPLChipDelete> chip;
     OPLChipBase::ChipType m_chipType = OPLChipBase::CHIPTYPE_OPL3;

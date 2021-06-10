@@ -90,6 +90,7 @@ BankEditor::BankEditor(QWidget *parent) :
     m_recentPerc    = false;
     ui->setupUi(this);
     this->setWindowIcon(makeWindowIcon());
+    ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     m_recentMelodicNote = ui->noteToTest->value();
     m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
     m_bank.Ins_Percussion_box.fill(FmBank::blankInst(true));
@@ -217,9 +218,9 @@ void BankEditor::loadSettings()
 
     int preferredMidiStandard = 3;
     int defaultChip = Generator::CHIP_Nuked;
-    #ifdef ENABLE_WIN9X_OPL_PROXY
-        defaultChip = Generator::CHIP_Win9xProxy;
-    #endif
+#ifdef ENABLE_WIN9X_OPL_PROXY
+    defaultChip = Generator::CHIP_Win9xProxy;
+#endif
 
     QSettings setup;
     ui->deepTremolo->setChecked(setup.value("deep-tremolo", false).toBool());

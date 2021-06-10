@@ -44,6 +44,7 @@ namespace Ui
 }
 
 class Importer;
+class TextFormat;
 class QActionGroup;
 
 /**
