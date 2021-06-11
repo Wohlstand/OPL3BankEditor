@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -341,7 +341,7 @@ public:
      * @brief Get blank instrument entry
      * @return blank instrument entry
      */
-    static Instrument blankInst();
+    static Instrument blankInst(bool fixedNote = false);
 
     /**
      * @brief Get empty bank meta-data entry

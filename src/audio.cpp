@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 void BankEditor::initAudio()
 {
     qDebug() << "Init audioOut...";
-    m_audioOut = new AudioOutRt(m_audioLatency * 1e-3, m_audioDevice.toStdString(), this);
+    m_audioOut = new AudioOutDefault(m_audioLatency * 1e-3, m_audioDevice.toStdString(), m_audioDriver.toStdString(), this);
     qDebug() << "Init Generator...";
     std::shared_ptr<Generator> generator(
         new Generator(uint32_t(m_audioOut->sampleRate()), m_currentChip));
@@ -81,7 +81,7 @@ void BankEditor::initAudio()
 #else
     connect(ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
     connect(ui->piano, SIGNAL(pressed()),   m_generator,    SLOT(ctl_playNote()));
-    connect(ui->piano, SIGNAL(released()),  m_generator,    SLOT(ctl_noteOffAllChans()));
+    connect(ui->piano, SIGNAL(released()),  m_generator,    SLOT(ctl_stopNote()));
 #endif
     //Piano on the importer dialog pressed
     m_importer->connect(m_importer->ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));

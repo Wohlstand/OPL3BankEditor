@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -151,12 +151,12 @@ public:
     void NoteOffAllChans();
 
     void PlayNote(uint32_t volume = 127, uint8_t ccvolume = 100, uint8_t ccexpr = 127);
-    void PlayMajorChord();
-    void PlayMinorChord();
-    void PlayAugmentedChord();
-    void PlayDiminishedChord();
-    void PlayMajor7Chord();
-    void PlayMinor7Chord();
+    void PlayMajorChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayMinorChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayAugmentedChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayDiminishedChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayMajor7Chord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayMinor7Chord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
     void StopNote();
     void PitchBend(int bend);
     void PitchBendSensitivity(int cents);
@@ -238,7 +238,9 @@ private:
     uint8_t     deepVibratoMode;
     uint8_t     rythmModePercussionMode;
     uint8_t     testDrum;
+
     uint32_t    m_rate = 44100;
+
     struct OPLChipDelete { void operator()(OPLChipBase *); };
     std::unique_ptr<OPLChipBase, OPLChipDelete> chip;
     OPLChipBase::ChipType m_chipType = OPLChipBase::CHIPTYPE_OPL3;

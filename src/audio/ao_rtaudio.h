@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2018-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2018-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,11 +27,13 @@ class AudioOutRt : public QObject
 public:
     explicit AudioOutRt(double latency,
                         const std::string &device_name = std::string(),
+                        const std::string &driver_name = std::string(),
                         QObject *parent = nullptr);
     unsigned sampleRate() const;
     void start(IRealtimeProcess &rt);
     void stop();
     std::vector<std::string> listCompatibleDevices();
+    static std::vector<std::string> listDrivers();
 private:
     static int process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
     static void errorCallback(RtAudioError::Type type, const std::string &errorText);

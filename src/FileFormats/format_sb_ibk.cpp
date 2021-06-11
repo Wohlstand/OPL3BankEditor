@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -145,6 +145,7 @@ static void raw2sbi(FmBank::Instrument &ins, uint8_t *idata, bool fourOp = false
 
         //        BYTE dpitch;    /* percussion pitch: MIDI Note 0 - 127        : JWO */
         ins.percNoteNum  = idata[13];//49
+        ins.is_fixed_note = (ins.adlib_drum_number != 0x00);
     }
     //            BYTE rsv[2];    /* unsused - so far */
     //            } SBTIMBRE;

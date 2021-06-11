@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include <QUrl>
 #include <QMimeData>
 #include <QClipboard>
+#include <QActionGroup>
 #include <QtDebug>
 
 #include "importer.h"
@@ -89,9 +90,10 @@ BankEditor::BankEditor(QWidget *parent) :
     m_recentPerc    = false;
     ui->setupUi(this);
     this->setWindowIcon(makeWindowIcon());
+    ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     m_recentMelodicNote = ui->noteToTest->value();
     m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
-    m_bank.Ins_Percussion_box.fill(FmBank::blankInst());
+    m_bank.Ins_Percussion_box.fill(FmBank::blankInst(true));
 
     QActionGroup *actionGroupStandard = new QActionGroup(this);
     m_actionGroupStandard = actionGroupStandard;
@@ -214,10 +216,11 @@ void BankEditor::loadSettings()
     QApplication::setOrganizationDomain(PGE_URL);
     QApplication::setApplicationName("OPL FM Banks Editor");
 
+    int preferredMidiStandard = 3;
     int defaultChip = Generator::CHIP_Nuked;
-    #ifdef ENABLE_WIN9X_OPL_PROXY
-        defaultChip = Generator::CHIP_Win9xProxy;
-    #endif
+#ifdef ENABLE_WIN9X_OPL_PROXY
+    defaultChip = Generator::CHIP_Win9xProxy;
+#endif
 
     QSettings setup;
     ui->deepTremolo->setChecked(setup.value("deep-tremolo", false).toBool());
@@ -234,11 +237,14 @@ void BankEditor::loadSettings()
     m_language = setup.value("language").toString();
     m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
     m_audioDevice = setup.value("audio-device", QString()).toString();
+    m_audioDriver = setup.value("audio-driver", QString()).toString();
+
 #ifdef ENABLE_HW_OPL_PROXY
     m_proxyOplAddress = setup.value("hw-opl-address", 0x388).toUInt();
     Win9x_OPL_Proxy &proxy = *m_proxyOpl;
     proxy.setOplAddress(m_proxyOplAddress);
 #endif
+
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
     m_serialPortName = setup.value("hw-opl-serial-port", QString()).toString();
     m_serialPortBaudRate = setup.value("hw-opl-serial-baud-rate", 115200).toUInt();
@@ -246,6 +252,9 @@ void BankEditor::loadSettings()
     OPL_SerialPort &serial = *m_serialPortOpl;
     serial.connectPort(m_serialPortName, m_serialPortBaudRate, m_serialPortProtocol);
 #endif
+
+    preferredMidiStandard = setup.value("preferred-midi-standard", 3).toInt();
+
 #if defined(ENABLE_HW_OPL_PROXY) || defined(ENABLE_HW_OPL_SERIAL_PORT)
     initChip();
 #endif
@@ -284,6 +293,24 @@ void BankEditor::loadSettings()
         ui->actionSerialPortOPL->setChecked(true);
         break;
     }
+
+    switch(preferredMidiStandard)
+    {
+    case 0: // GM
+        ui->actionStandardGM->setChecked(true);
+        break;
+
+    case 1: // GM2
+        ui->actionStandardGM2->setChecked(true);
+        break;
+
+    case 2: // GS
+        ui->actionStandardGS->setChecked(true);
+        break;
+    default:
+    case 3: // XG, initially set by default
+        break;
+    }
 }
 
 void BankEditor::saveSettings()
@@ -296,14 +323,28 @@ void BankEditor::saveSettings()
     setup.setValue("language", m_language);
     setup.setValue("audio-latency", m_audioLatency);
     setup.setValue("audio-device", m_audioDevice);
+    setup.setValue("audio-driver", m_audioDriver);
+
 #ifdef ENABLE_HW_OPL_PROXY
     setup.setValue("hw-opl-address", m_proxyOplAddress);
 #endif
+
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
     setup.setValue("hw-opl-serial-port", m_serialPortName);
     setup.setValue("hw-opl-serial-baud-rate", m_serialPortBaudRate);
     setup.setValue("hw-opl-serial-protocol", m_serialPortProtocol);
 #endif
+
+    int preferredMidiStandard = 3;
+    if(ui->actionStandardGM->isChecked())
+        preferredMidiStandard = 0;
+    else if(ui->actionStandardGM2->isChecked())
+        preferredMidiStandard = 1;
+    else if(ui->actionStandardGS->isChecked())
+        preferredMidiStandard = 2;
+    else if(ui->actionStandardXG->isChecked())
+        preferredMidiStandard = 3;
+    setup.setValue("preferred-midi-standard", preferredMidiStandard);
 }
 
 
@@ -784,6 +825,8 @@ void BankEditor::on_actionNew_triggered()
     m_currentFileFormat = BankFormats::FORMAT_UNKNOWN;
     ui->instruments->clearSelection();
     m_bank.reset();
+    m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
+    m_bank.Ins_Percussion_box.fill(FmBank::blankInst(true));
     m_bankBackup.reset();
     on_instruments_currentItemChanged(NULL, NULL);
     reloadInstrumentNames();
@@ -1182,7 +1225,8 @@ void BankEditor::loadInstrument()
 
     if(ui->melodic->isChecked())
     {
-        m_curInst->percNoteNum = 0; // Don't pass drum-specific data to melodic
+        // m_curInst->is_fixed_note = false;
+        // m_curInst->percNoteNum = 0; // Don't pass drum-specific data to melodic
         m_curInst->adlib_drum_number = 0;
     }
 
@@ -1193,6 +1237,7 @@ void BankEditor::loadInstrument()
     ui->insName->setEnabled(true);
     m_lock = true;
     ui->insName->setText(QString::fromUtf8(m_curInst->name));
+    ui->fixedNote->setChecked(m_curInst->is_fixed_note);
     ui->perc_noteNum->setValue(m_curInst->percNoteNum);
     ui->percMode->setCurrentIndex(m_curInst->adlib_drum_number > 0 ? (m_curInst->adlib_drum_number - 5) : 0);
     ui->op4mode->setChecked(m_curInst->en_4op);
@@ -1378,10 +1423,12 @@ void BankEditor::on_actionAudioConfig_triggered()
     AudioConfigDialog dlg(m_audioOut, this);
     dlg.setLatency(m_audioLatency);
     dlg.setDeviceName(m_audioDevice);
+    dlg.setDriverName(m_audioDriver);
     if(dlg.exec() == QDialog::Accepted)
     {
         m_audioLatency = dlg.latency();
         m_audioDevice = dlg.deviceName();
+        m_audioDriver = dlg.driverName();
     }
 }
 

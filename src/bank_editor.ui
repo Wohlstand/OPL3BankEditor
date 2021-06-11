@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>920</width>
-    <height>812</height>
+    <width>978</width>
+    <height>833</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -627,22 +627,6 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="2">
-                    <widget class="QSpinBox" name="perc_noteNum">
-                     <property name="maximumSize">
-                      <size>
-                       <width>60</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="maximum">
-                      <number>127</number>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="0" column="0">
                     <widget class="QComboBox" name="percMode">
                      <property name="maximumSize">
@@ -684,6 +668,32 @@
                        <string>Hi-Hat</string>
                       </property>
                      </item>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QSpinBox" name="perc_noteNum">
+                     <property name="maximumSize">
+                      <size>
+                       <width>60</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="maximum">
+                      <number>127</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <widget class="QCheckBox" name="fixedNote">
+                     <property name="toolTip">
+                      <string>Fixed note tone</string>
+                     </property>
+                     <property name="text">
+                      <string notr="true"/>
+                     </property>
                     </widget>
                    </item>
                   </layout>
@@ -1930,8 +1940,8 @@ of second voice</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>920</width>
-     <height>19</height>
+     <width>978</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2350,6 +2360,7 @@ of second voice</string>
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="resources/resources.qrc"/>
   <include location="resources/resources.qrc"/>
  </resources>
  <connections>

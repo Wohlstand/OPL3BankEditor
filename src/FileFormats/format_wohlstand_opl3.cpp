@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,6 +125,7 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
     out.velocity_offset = in.midi_velocity_offset;
     out.fine_tune = in.second_voice_detune;
     out.percNoteNum = in.percussion_key_number;
+    out.is_fixed_note = (out.percNoteNum > 0);
     out.en_4op          = (in.inst_flags & WOPL_Ins_4op) != 0;
     out.en_pseudo4op    = (in.inst_flags & WOPL_Ins_Pseudo4op) != 0;
     out.is_blank        = (in.inst_flags & WOPL_Ins_IsBlank) != 0;
@@ -167,14 +168,14 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
     }
 }
 
-static void cvt_FMIns_to_WOPLI(FmBank::Instrument &in, WOPLInstrument &out)
+static void cvt_FMIns_to_WOPLI(FmBank::Instrument &in, WOPLInstrument &out, bool isDrum = false)
 {
     strncpy(out.inst_name, in.name, 32);
     out.note_offset1 = in.note_offset1;
     out.note_offset2 = in.note_offset2;
     out.midi_velocity_offset = in.velocity_offset;
     out.second_voice_detune = in.fine_tune;
-    out.percussion_key_number = in.percNoteNum;
+    out.percussion_key_number = (in.is_fixed_note || isDrum) ? in.percNoteNum : 0;
     out.inst_flags = (in.en_4op ? WOPL_Ins_4op : 0) |
                      (in.en_pseudo4op ? WOPL_Ins_Pseudo4op : 0) |
                      (in.is_blank ? WOPL_Ins_IsBlank : 0);
@@ -310,6 +311,7 @@ FfmtErrCode WohlstandOPL3::loadFile(QString filePath, FmBank &bank)
 
     for(int ss = 0; ss < 2; ss++)
     {
+        bool isDrum = (ss == 1);
         for(int i = 0; i < slots_counts[ss]; i++)
         {
             strncpy(slots_banks[ss][i].name, slots_src_ins[ss][i].bank_name, 32);
@@ -320,6 +322,7 @@ FfmtErrCode WohlstandOPL3::loadFile(QString filePath, FmBank &bank)
                 FmBank::Instrument &ins = slots_ins[ss][(size_t(i) * 128) + size_t(j)];
                 WOPLInstrument &inIns = slots_src_ins[ss][i].ins[j];
                 cvt_WOPLI_to_FMIns(ins, inIns);
+                ins.is_fixed_note |= isDrum;
             }
         }
     }
@@ -352,6 +355,7 @@ FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
 
     for(int ss = 0; ss < 2; ss++)
     {
+        bool isDrum = (ss == 1);
         for(int i = 0; i < slots_counts[ss]; i++)
         {
             strncpy(slots_dst_ins[ss][i].bank_name, slots_src_banks[ss][i].name, 32);
@@ -364,7 +368,7 @@ FfmtErrCode WohlstandOPL3::saveFile(QString filePath, FmBank &bank)
                     break;
                 FmBank::Instrument &ins = slots_src_ins[ss][ins_index];
                 WOPLInstrument &inIns = slots_dst_ins[ss][i].ins[j];
-                cvt_FMIns_to_WOPLI(ins, inIns);
+                cvt_FMIns_to_WOPLI(ins, inIns, isDrum);
             }
         }
     }

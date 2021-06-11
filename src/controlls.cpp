@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -126,6 +126,14 @@ void BankEditor::on_perc_noteNum_valueChanged(int arg1)
     m_curInst->percNoteNum = uint8_t(arg1);
     if(ui->percussion->isChecked())
         ui->noteToTest->setValue(arg1);
+    afterChangeControlValue();
+}
+
+void BankEditor::on_fixedNote_clicked(bool checked)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->is_fixed_note = checked;
     afterChangeControlValue();
 }
 

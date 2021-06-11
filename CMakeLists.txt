@@ -23,6 +23,10 @@ set(USE_RTAUDIO "ON" CACHE STRING "Use RtAudio")
 
 OPTION(DEBUG_WRITE_AMPLITUDE_PLOT "Write the captured result of sounding measurer into the apmplitudes plot" OFF)
 
+if(WIN32)
+	OPTION(USE_RTAUDIO_WASAPI "Enable WASAPI support on RtAudio (breaks Windows XP compatibility)" ON)
+endif()
+
 include(FindPkgConfig)
 include(CheckCXXCompilerFlag)
 
@@ -307,7 +311,10 @@ if(USE_RTAUDIO)
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(RtAudio PUBLIC "__WINDOWS_DS__")
     target_link_libraries(RtAudio PUBLIC "dsound" "ole32")
-    target_compile_definitions(RtAudio PUBLIC "__WINDOWS_WASAPI__")
+    if(USE_RTAUDIO_WASAPI)
+      target_compile_definitions(RtAudio PUBLIC "__WINDOWS_WASAPI__")
+      target_link_libraries(RtAudio PUBLIC "mfplat" "mfuuid" "wmcodecdspuuid")
+    endif()
     target_link_libraries(RtAudio PUBLIC "ksguid")
     target_compile_definitions(RtAudio PUBLIC "__WINDOWS_ASIO__")
     target_include_directories(RtAudio PRIVATE

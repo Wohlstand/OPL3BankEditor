@@ -1,6 +1,6 @@
 #----------------------------------------------------------------------------
 # OPL Bank Editor by Wohlstand, a free tool for music bank editing
-# Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+# Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -99,7 +99,7 @@ win32||oplproxy: {
     include("src/opl/chips/win9x_opl_proxy.pri")
     DEFINES += ENABLE_HW_OPL_PROXY
 }
-greaterThan(QT_MAJOR_VERSION, 4):{
+greaterThan(QT_MAJOR_VERSION, 4):lessThan(QT_MAJOR_VERSION, 6) {
     include("src/opl/chips/opl_serial_port.pri")
     DEFINES += ENABLE_HW_OPL_SERIAL_PORT
 }

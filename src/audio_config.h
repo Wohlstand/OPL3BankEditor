@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2018-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2018-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,9 @@ public:
     QString deviceName() const;
     void setDeviceName(const QString &deviceName);
 
+    QString driverName() const;
+    void setDriverName(const QString &driverName);
+
 private:
     AudioOutRt *m_audioOut = nullptr;
     std::unique_ptr<Ui::AudioConfigDialog> m_ui;
@@ -46,6 +49,7 @@ private slots:
     void on_ctlLatency_valueChanged(int value);
     void on_ctlLatencyEdit_editingFinished();
     void on_btnChooseDevice_clicked();
+    void on_btnChooseDriver_clicked();
 };
 
 #endif // LATENCY_H

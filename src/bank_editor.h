@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,9 +33,9 @@
 #include "FileFormats/ffmt_base.h"
 
 #ifdef NO_NATIVE_OPEN_DIALOGS
-#define FILE_OPEN_DIALOG_OPTIONS QFileDialog::DontUseNativeDialog
+#   define FILE_OPEN_DIALOG_OPTIONS QFileDialog::DontUseNativeDialog
 #else
-#define FILE_OPEN_DIALOG_OPTIONS 0
+#   define FILE_OPEN_DIALOG_OPTIONS QFileDialog::Options()
 #endif
 
 namespace Ui
@@ -44,6 +44,7 @@ namespace Ui
 }
 
 class Importer;
+class TextFormat;
 class QActionGroup;
 
 /**
@@ -71,6 +72,8 @@ private:
     double m_audioLatency;
     //! Name of the audio device
     QString m_audioDevice;
+    //! Name of the audio driver
+    QString m_audioDriver;
 
 public:
     //! Audio latency constants (ms)
@@ -116,7 +119,8 @@ private:
     InstFormats     m_recentInstFormat;
 
     /* ********** Audio output stuff ********** */
-    AudioOutRt    *m_audioOut = nullptr;
+    typedef AudioOutRt AudioOutDefault;
+    AudioOutDefault *m_audioOut = nullptr;
 
     /* ********** MIDI input stuff ********** */
     #ifdef ENABLE_MIDI
@@ -519,6 +523,7 @@ private slots:
 
     void on_percMode_currentIndexChanged(int index);
     void on_perc_noteNum_valueChanged(int arg1);
+    void on_fixedNote_clicked(bool checked);
 
     void on_feedback2_valueChanged(int arg1);
     void on_am2_clicked(bool checked);

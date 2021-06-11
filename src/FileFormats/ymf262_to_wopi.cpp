@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -290,7 +290,7 @@ void RawYmf262ToWopi::doAnalyzeState()
         {
             std::snprintf(ins.name, 32,
                           "Ins %d, channel %u",
-                          insdata.caughtInstruments.size(),
+                          (int)insdata.caughtInstruments.size(),
                           chno);
             insdata.caughtInstruments.push_back(ins);
             insdata.cache.insert(insRaw);

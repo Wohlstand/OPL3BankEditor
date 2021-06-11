@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2020 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1713,6 +1713,7 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
 
 void Generator::Silence()
 {
+    //Shutup!
     for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
     {
         NoteOff(c);
@@ -1769,54 +1770,54 @@ void Generator::PlayNote(uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
         PlayNoteF(note, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMajorChord()
+void Generator::PlayMajorChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 4);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 4, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMinorChord()
+void Generator::PlayMinorChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 3);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 3, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayAugmentedChord()
+void Generator::PlayAugmentedChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 4);
-    PlayNoteF(note - 4);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 4, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 4, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayDiminishedChord()
+void Generator::PlayDiminishedChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 3);
-    PlayNoteF(note - 6);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 3, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 6, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMajor7Chord()
+void Generator::PlayMajor7Chord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note - 2);
-    PlayNoteF(note);
-    PlayNoteF(note + 4);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 2, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 4, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMinor7Chord()
+void Generator::PlayMinor7Chord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note - 2);
-    PlayNoteF(note);
-    PlayNoteF(note + 3);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 2, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 3, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
 void Generator::StopNote()
@@ -1902,7 +1903,7 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     m_patch.tone    = 0;
     m_patch.voice2_fine_tune = 0.0;
 
-    if(isDrum)
+    if(isDrum || instrument.is_fixed_note)
         m_patch.tone = instrument.percNoteNum;
 
     if(isRhythmMode)// Rhythm-mode percussion instrument
@@ -1995,6 +1996,9 @@ void Generator::updateChannelManager()
 void Generator::generate(int16_t *frames, unsigned nframes)
 {
     chip->generate(frames, nframes);
+    // 2x Gain by default
+    for(size_t i = 0; i < nframes * 2; ++i)
+        frames[i] *= 2;
 }
 
 Generator::NotesManager::NotesManager()
