@@ -315,14 +315,14 @@ if(USE_RTAUDIO)
       target_link_libraries(RtAudio PUBLIC "mfplat" "mfuuid" "wmcodecdspuuid")
     endif()
     target_link_libraries(RtAudio PUBLIC "ksguid")
-    target_compile_definitions(RtAudio PUBLIC "__WINDOWS_ASIO__")
+    # target_compile_definitions(RtAudio PUBLIC "__WINDOWS_ASIO__")
     target_include_directories(RtAudio PRIVATE
       "src/audio/external/rtaudio/include")
-    target_sources(RtAudio PRIVATE
-      "src/audio/external/rtaudio/include/asio.cpp"
-      "src/audio/external/rtaudio/include/asiodrivers.cpp"
-      "src/audio/external/rtaudio/include/asiolist.cpp"
-      "src/audio/external/rtaudio/include/iasiothiscallresolver.cpp")
+      #target_sources(RtAudio PRIVATE
+      #  "src/audio/external/rtaudio/include/asio.cpp"
+      #  "src/audio/external/rtaudio/include/asiodrivers.cpp"
+      #  "src/audio/external/rtaudio/include/asiolist.cpp"
+      #  "src/audio/external/rtaudio/include/iasiothiscallresolver.cpp")
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     target_compile_definitions(RtAudio PUBLIC "__MACOSX_CORE__")
     find_library(COREAUDIO_LIBRARY "CoreAudio")
