@@ -2,6 +2,9 @@
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
  * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
+ * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
+ * Copyright (c) 2017-2021 Vitaly Novichkov <admin@wohlnet.ru>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -148,7 +151,7 @@ void fromSint16BE(int16_t in, uint8_t *arr);
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromUint32LE(int32_t in, uint8_t *arr);
+void fromUint32LE(uint32_t in, uint8_t *arr);
 
 /*!
  * \brief Reads some bytes from begin of the file
