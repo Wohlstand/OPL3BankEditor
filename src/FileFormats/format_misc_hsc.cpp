@@ -87,6 +87,11 @@ QString Misc_HSC::formatInstExtensionMask() const
     return "*.ins";
 }
 
+QString Misc_HSC::formatInstDefaultExtension() const
+{
+    return "ins";
+}
+
 InstFormats Misc_HSC::formatInstId() const
 {
     return InstFormats::FORMAT_INST_HSC;

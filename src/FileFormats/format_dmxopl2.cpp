@@ -258,6 +258,11 @@ QString DmxOPL2::formatExtensionMask() const
     return "*.op2 *.htc *.hxn";
 }
 
+QString DmxOPL2::formatDefaultExtension() const
+{
+    return "op2";
+}
+
 BankFormats DmxOPL2::formatId() const
 {
     return BankFormats::FORMAT_DMX_OP2;

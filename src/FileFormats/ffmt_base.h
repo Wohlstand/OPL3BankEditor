@@ -45,12 +45,14 @@ public:
     virtual QString     formatName() const;
     virtual QString     formatModuleName() const;
     virtual QString     formatExtensionMask() const;
+    virtual QString     formatDefaultExtension() const;
     virtual BankFormats formatId() const;
 
     virtual int         formatInstCaps() const;
     virtual QString     formatInstName() const;
     virtual QString     formatInstModuleName() const;
     virtual QString     formatInstExtensionMask() const;
+    virtual QString     formatInstDefaultExtension() const;
     virtual InstFormats formatInstId() const;
 };
 

@@ -225,6 +225,11 @@ QString AdLibTimbre::formatExtensionMask() const
     return "*.snd *.tim";
 }
 
+QString AdLibTimbre::formatDefaultExtension() const
+{
+    return "tim";
+}
+
 BankFormats AdLibTimbre::formatId() const
 {
     return BankFormats::FORMAT_ADLIB_TIM;

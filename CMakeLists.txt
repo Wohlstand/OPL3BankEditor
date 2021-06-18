@@ -26,7 +26,7 @@ set(USE_VENDORED_RTAUDIO "OFF" CACHE STRING "Use vendored RtAudio instead of sys
 OPTION(DEBUG_WRITE_AMPLITUDE_PLOT "Write the captured result of sounding measurer into the apmplitudes plot" OFF)
 
 if(WIN32)
-	OPTION(USE_RTAUDIO_WASAPI "Enable WASAPI support on RtAudio (breaks Windows XP compatibility)" ON)
+    OPTION(USE_RTAUDIO_WASAPI "Enable WASAPI support on RtAudio (breaks Windows XP compatibility)" ON)
 endif()
 
 include(FindPkgConfig)

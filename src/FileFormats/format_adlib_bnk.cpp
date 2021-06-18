@@ -814,6 +814,11 @@ QString AdLibAndHmiBnk_reader::formatInstExtensionMask() const
     return "*.ins";
 }
 
+QString AdLibAndHmiBnk_reader::formatInstDefaultExtension() const
+{
+    return "ins";
+}
+
 InstFormats AdLibAndHmiBnk_reader::formatInstId() const
 {
     return InstFormats::FORMAT_INST_ADLIB_INS;
@@ -846,6 +851,11 @@ QString AdLibBnk_writer::formatModuleName() const
 QString AdLibBnk_writer::formatExtensionMask() const
 {
     return "*.bnk";
+}
+
+QString AdLibBnk_writer::formatDefaultExtension() const
+{
+    return "bnk";
 }
 
 BankFormats AdLibBnk_writer::formatId() const
@@ -884,6 +894,11 @@ QString HmiBnk_writer::formatExtensionMask() const
     return "*.bnk";
 }
 
+QString HmiBnk_writer::formatDefaultExtension() const
+{
+    return "bnk";
+}
+
 BankFormats HmiBnk_writer::formatId() const
 {
     return BankFormats::FORMAT_ADLIB_BKNHMI;
@@ -916,6 +931,11 @@ QString HmiBnk_Drums_writer::formatModuleName() const
 QString HmiBnk_Drums_writer::formatExtensionMask() const
 {
     return "*.bnk";
+}
+
+QString HmiBnk_Drums_writer::formatDefaultExtension() const
+{
+    return "bnk";
 }
 
 BankFormats HmiBnk_Drums_writer::formatId() const

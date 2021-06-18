@@ -567,6 +567,11 @@ QString SbIBK_DOS::formatExtensionMask() const
     return "*.ibk";
 }
 
+QString SbIBK_DOS::formatDefaultExtension() const
+{
+    return "ibk";
+}
+
 BankFormats SbIBK_DOS::formatId() const
 {
     return BankFormats::FORMAT_IBK;
@@ -605,6 +610,11 @@ QString SbIBK_DOS::formatInstModuleName() const
 QString SbIBK_DOS::formatInstExtensionMask() const
 {
     return "*.sbi";
+}
+
+QString SbIBK_DOS::formatInstDefaultExtension() const
+{
+    return "sbi";
 }
 
 InstFormats SbIBK_DOS::formatInstId() const
@@ -776,6 +786,11 @@ QString SbIBK_UNIX_READ::formatInstExtensionMask() const
     return "*.sbi";
 }
 
+QString SbIBK_UNIX_READ::formatInstDefaultExtension() const
+{
+    return "sbi";
+}
+
 InstFormats SbIBK_UNIX_READ::formatInstId() const
 {
     return InstFormats::FORMAT_INST_SBIex;
@@ -811,6 +826,11 @@ QString SbIBK_UNIX2OP_SAVE::formatExtensionMask() const
     return "*.sb";
 }
 
+QString SbIBK_UNIX2OP_SAVE::formatDefaultExtension() const
+{
+    return "sb";
+}
+
 BankFormats SbIBK_UNIX2OP_SAVE::formatId() const
 {
     return BankFormats::FORMAT_SB2OP;
@@ -843,6 +863,11 @@ QString SbIBK_UNIX2OP_DRUMS_SAVE::formatModuleName() const
 QString SbIBK_UNIX2OP_DRUMS_SAVE::formatExtensionMask() const
 {
     return "*.sb";
+}
+
+QString SbIBK_UNIX2OP_DRUMS_SAVE::formatDefaultExtension() const
+{
+    return "sb";
 }
 
 BankFormats SbIBK_UNIX2OP_DRUMS_SAVE::formatId() const
@@ -880,6 +905,11 @@ QString SbIBK_UNIX4OP_SAVE::formatExtensionMask() const
     return "*.o3";
 }
 
+QString SbIBK_UNIX4OP_SAVE::formatDefaultExtension() const
+{
+    return "o3";
+}
+
 BankFormats SbIBK_UNIX4OP_SAVE::formatId() const
 {
     return BankFormats::FORMAT_SB4OP;
@@ -911,6 +941,11 @@ QString SbIBK_UNIX4OP_DRUMS_SAVE::formatModuleName() const
 QString SbIBK_UNIX4OP_DRUMS_SAVE::formatExtensionMask() const
 {
     return "*.o3";
+}
+
+QString SbIBK_UNIX4OP_DRUMS_SAVE::formatDefaultExtension() const
+{
+    return "o3";
 }
 
 BankFormats SbIBK_UNIX4OP_DRUMS_SAVE::formatId() const

@@ -34,6 +34,7 @@ public:
     int         formatCaps() const override;
     QString     formatName() const override;
     QString     formatExtensionMask() const override;
+    QString     formatDefaultExtension() const override;
     BankFormats formatId() const override;
 
     FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0) override;
@@ -41,6 +42,7 @@ public:
     int         formatInstCaps() const override;
     QString     formatInstName() const override;
     QString     formatInstExtensionMask() const override;
+    QString     formatInstDefaultExtension() const override;
     InstFormats formatInstId() const override;
 };
 
@@ -55,6 +57,7 @@ public:
     QString formatName() const override;
     QString formatModuleName() const override;
     QString formatExtensionMask() const override;
+    QString formatDefaultExtension() const override;
     BankFormats formatId() const override;
 };
 

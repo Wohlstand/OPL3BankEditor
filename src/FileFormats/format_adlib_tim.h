@@ -34,6 +34,7 @@ public:
     QString formatName() const override;
     QString formatModuleName() const override;
     QString formatExtensionMask() const override;
+    QString formatDefaultExtension() const override;
     BankFormats formatId() const override;
 };
 

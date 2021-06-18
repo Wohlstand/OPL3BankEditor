@@ -310,6 +310,11 @@ QString FlatbufferOpl3::formatExtensionMask() const
     return "*.fbop3";
 }
 
+QString FlatbufferOpl3::formatDefaultExtension() const
+{
+    return "fbop3";
+}
+
 BankFormats FlatbufferOpl3::formatId() const
 {
     return BankFormats::FORMAT_FLATBUFFER_OPL3;

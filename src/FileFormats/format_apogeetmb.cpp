@@ -142,6 +142,11 @@ QString ApogeeTMB::formatExtensionMask() const
     return "*.tmb";
 }
 
+QString ApogeeTMB::formatDefaultExtension() const
+{
+    return "tmb";
+}
+
 BankFormats ApogeeTMB::formatId() const
 {
     return BankFormats::FORMAT_APOGEE;

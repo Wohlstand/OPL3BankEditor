@@ -271,6 +271,11 @@ QString AdLibGoldBnk2_reader::formatExtensionMask() const
     return "*.bnk";
 }
 
+QString AdLibGoldBnk2_reader::formatDefaultExtension() const
+{
+    return "bnk";
+}
+
 BankFormats AdLibGoldBnk2_reader::formatId() const
 {
     return BankFormats::FORMAT_ADLIBGOLD_BNK2;

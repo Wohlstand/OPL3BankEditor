@@ -169,6 +169,11 @@ QString BisqwitBank::formatExtensionMask() const
     return "*.adlraw";
 }
 
+QString BisqwitBank::formatDefaultExtension() const
+{
+    return "adlraw";
+}
+
 BankFormats BisqwitBank::formatId() const
 {
     return BankFormats::FORMAT_BISQWIT;

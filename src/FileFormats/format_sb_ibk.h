@@ -30,6 +30,7 @@ public:
     int     formatCaps() const override;
     QString formatName() const override;
     QString formatExtensionMask() const override;
+    QString formatDefaultExtension() const override;
     BankFormats formatId() const override;
 
     bool        detectInst(const QString &filePath, char *magic) override;
@@ -39,6 +40,7 @@ public:
     QString     formatInstName() const override;
     QString     formatInstModuleName() const override;
     QString     formatInstExtensionMask() const override;
+    QString     formatInstDefaultExtension() const override;
     InstFormats formatInstId() const override;
 };
 
@@ -61,6 +63,7 @@ public:
     QString     formatInstName() const override;
     QString     formatInstModuleName() const override;
     QString     formatInstExtensionMask() const override;
+    QString     formatInstDefaultExtension() const override;
     InstFormats formatInstId() const override;
 };
 
@@ -73,6 +76,7 @@ public:
     QString formatName() const override;
     QString formatModuleName() const override;
     QString formatExtensionMask() const override;
+    QString formatDefaultExtension() const override;
     BankFormats formatId() const override;
 };
 
@@ -84,6 +88,7 @@ public:
     QString formatName() const override;
     QString formatModuleName() const override;
     QString formatExtensionMask() const override;
+    QString formatDefaultExtension() const override;
     BankFormats formatId() const override;
 };
 
@@ -95,6 +100,7 @@ public:
     QString formatName() const override;
     QString formatModuleName() const override;
     QString formatExtensionMask() const override;
+    QString formatDefaultExtension() const override;
     BankFormats formatId() const override;
 };
 
@@ -106,6 +112,7 @@ public:
     QString formatName() const override;
     QString formatModuleName() const override;
     QString formatExtensionMask() const override;
+    QString formatDefaultExtension() const override;
     BankFormats formatId() const override;
 };
 

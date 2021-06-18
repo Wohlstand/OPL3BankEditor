@@ -407,6 +407,11 @@ QString WohlstandOPL3::formatExtensionMask() const
     return "*.wopl";
 }
 
+QString WohlstandOPL3::formatDefaultExtension() const
+{
+    return "wopl";
+}
+
 BankFormats WohlstandOPL3::formatId() const
 {
     return BankFormats::FORMAT_WOHLSTAND_OPL3;
@@ -475,6 +480,11 @@ QString WohlstandOPL3::formatInstExtensionMask() const
     return "*.opli";
 }
 
+QString WohlstandOPL3::formatInstDefaultExtension() const
+{
+    return "opli";
+}
+
 InstFormats WohlstandOPL3::formatInstId() const
 {
     return InstFormats::FORMAT_INST_WOPL3;
@@ -518,6 +528,11 @@ QString WohlstandOPL3_GM::formatModuleName() const
 QString WohlstandOPL3_GM::formatExtensionMask() const
 {
     return "*.wopl";
+}
+
+QString WohlstandOPL3_GM::formatDefaultExtension() const
+{
+    return "wopl";
 }
 
 BankFormats WohlstandOPL3_GM::formatId() const

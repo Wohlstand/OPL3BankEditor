@@ -236,6 +236,11 @@ QString JunleVizion::formatExtensionMask() const
     return "*.op3";
 }
 
+QString JunleVizion::formatDefaultExtension() const
+{
+    return "op3";
+}
+
 BankFormats JunleVizion::formatId() const
 {
     return BankFormats::FORMAT_JUNGLEVIZION;

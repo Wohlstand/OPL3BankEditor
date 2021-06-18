@@ -381,6 +381,11 @@ QString AIL_GTL::formatExtensionMask() const
     return "*.opl *.ad";
 }
 
+QString AIL_GTL::formatDefaultExtension() const
+{
+    return "opl";
+}
+
 BankFormats AIL_GTL::formatId() const
 {
     return BankFormats::FORMAT_AIL2;
