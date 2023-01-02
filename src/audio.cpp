@@ -1,9 +1,9 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2022 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2016-2023 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2017-2022 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2017-2023 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,8 +32,7 @@ void BankEditor::initAudio()
     qDebug() << "Init audioOut...";
     m_audioOut = new AudioOutDefault(m_audioLatency * 1e-3, m_audioDevice.toStdString(), m_audioDriver.toStdString(), this);
     qDebug() << "Init Generator...";
-    std::shared_ptr<Generator> generator(
-        new Generator(uint32_t(m_audioOut->sampleRate()), m_currentChip));
+    std::shared_ptr<Generator> generator(new Generator(uint32_t(m_audioOut->sampleRate()), m_currentChip));
     qDebug() << "Init Rt-Generator...";
     RealtimeGenerator *rtgenerator = new RealtimeGenerator(generator, this);
     qDebug() << "Seting pointer of RT Generator...";
