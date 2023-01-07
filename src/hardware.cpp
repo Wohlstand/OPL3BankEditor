@@ -153,6 +153,8 @@ void HardwareDialog::setupUi()
         tr("Arduino OPL2"), (unsigned)OPL_SerialPort::ProtocolArduinoOPL2);
     ui.serialProtocolChoice->addItem(
         tr("Nuke.YKT OPL3"), (unsigned)OPL_SerialPort::ProtocolNukeYktOPL3);
+    ui.serialProtocolChoice->addItem(
+        tr("RetroWave OPL3"), (unsigned)OPL_SerialPort::ProtocolRetroWaveOPL3);
 
     QAction *serialPortAction = m_serialPortAction = new QAction(
         ui.serialPortButton->icon(), ui.serialPortButton->text(), this);
