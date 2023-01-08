@@ -32,10 +32,10 @@ static size_t retrowave_protocol_serial_pack(const uint8_t *buf_in, size_t len_i
 
     uint8_t shift_count = 0;
 
-    while (in_cursor < len_in)
+    while(in_cursor < len_in)
     {
         uint8_t cur_byte_out = buf_in[in_cursor] >> shift_count;
-        if (in_cursor > 0)
+        if(in_cursor > 0)
             cur_byte_out |= (buf_in[in_cursor - 1] << (8 - shift_count));
 
         cur_byte_out |= 0x01;
@@ -44,14 +44,14 @@ static size_t retrowave_protocol_serial_pack(const uint8_t *buf_in, size_t len_i
         shift_count += 1;
         in_cursor += 1;
         out_cursor += 1;
-        if (shift_count > 7)
+        if(shift_count > 7)
         {
-	    shift_count = 0;
-	    in_cursor -= 1;
+            shift_count = 0;
+            in_cursor -= 1;
         }
     }
 
-    if (shift_count)
+    if(shift_count)
     {
         buf_out[out_cursor] = buf_in[in_cursor - 1] << (8 - shift_count);
         buf_out[out_cursor] |= 0x01;
@@ -66,8 +66,7 @@ static size_t retrowave_protocol_serial_pack(const uint8_t *buf_in, size_t len_i
 
 OPL_SerialPort::OPL_SerialPort()
     : m_port(nullptr), m_protocol(ProtocolUnknown)
-{
-}
+{}
 
 OPL_SerialPort::~OPL_SerialPort()
 {
@@ -91,13 +90,14 @@ bool OPL_SerialPort::connectPort(const QString &name, unsigned baudRate, unsigne
 
 void OPL_SerialPort::writeReg(uint16_t addr, uint8_t data)
 {
-    QMetaObject::invokeMethod(
-        this, "sendSerial", Qt::QueuedConnection, Q_ARG(uint, addr), Q_ARG(uint, data));
+    QMetaObject::invokeMethod(this, "sendSerial",
+                              Qt::QueuedConnection, Q_ARG(uint, addr), Q_ARG(uint, data));
 }
 
 void OPL_SerialPort::sendSerial(uint addr, uint data)
 {
     QSerialPort *port = m_port;
+
     if(!port || !port->isOpen())
         return;
 
@@ -128,8 +128,13 @@ void OPL_SerialPort::sendSerial(uint addr, uint data)
     case ProtocolRetroWaveOPL3:
     {
         bool port1 = (addr & 0x100) != 0;
-        uint8_t buf[8] = {0x21 << 1, 0x12, (uint8_t)(port1 ? 0xe5 : 0xe1), (uint8_t)(addr & 0xff),
-                            (uint8_t)(port1 ? 0xe7 : 0xe3), (uint8_t)data, 0xfb, (uint8_t)data};
+        uint8_t buf[8] =
+        {
+            static_cast<uint8_t>(0x21 << 1), 0x12,
+            static_cast<uint8_t>(port1 ? 0xe5 : 0xe1), static_cast<uint8_t>(addr & 0xff),
+            static_cast<uint8_t>(port1 ? 0xe7 : 0xe3), static_cast<uint8_t>(data),
+            0xfb, static_cast<uint8_t>(data)
+        };
         size_t packed_len = retrowave_protocol_serial_pack(buf, sizeof(buf), sendBuffer);
         port->write((char *)sendBuffer, (qint64)packed_len);
         break;
