@@ -42,6 +42,7 @@ public:
         ProtocolUnknown,
         ProtocolArduinoOPL2,
         ProtocolNukeYktOPL3,
+	ProtocolRetroWaveOPL3,
     };
 
     bool connectPort(const QString &name, unsigned baudRate, unsigned protocol);
