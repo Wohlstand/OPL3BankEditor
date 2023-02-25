@@ -115,7 +115,7 @@ FfmtErrCode ApogeeTMB::saveFile(QString filePath, FmBank &bank)
         if(i < 128)
             sodata[11] = int8_t(ins.note_offset1);
         else
-            odata[11] = ins.percNoteNum;
+            odata[11] = clip_u8(ins.percNoteNum + ins.note_offset1, 0, 127);
 
         sodata[12] = ins.velocity_offset;
 

@@ -182,6 +182,16 @@ bool hasExt(const QString &file, const char *ext)
     return file.endsWith(ext, Qt::CaseInsensitive);
 }
 
+uint8_t clip_u8(int i, int min, int max)
+{
+    if(i < min)
+        return min;
+    else if(i > max)
+        return max;
+    else
+        return static_cast<uint8_t>(i);
+}
+
 #if defined(IS_QT_4) || defined(QT_GUI_LIB)
 void ErrMessageO(QWidget *parent, QString errStr, bool isBank)
 {

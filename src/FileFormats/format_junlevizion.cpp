@@ -181,7 +181,7 @@ FfmtErrCode JunleVizion::saveFile(QString filePath, FmBank &bank)
         //Operators mode: 0 - 2-op, 1 - 4-op
         odata[0] = uint8_t(ins.en_4op);
         //NoteNum
-        odata[1] = ins.percNoteNum;
+        odata[1] = clip_u8(ins.percNoteNum + ins.note_offset1, 0, 127);
 
         //OP1
         odata[2]  = ins.getAVEKM(MODULATOR1);

@@ -414,7 +414,7 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
         inst.index = ins;
         /*YES, IT'S "USED"! (I see no reasons to keep junk data in the file)*/ /*(char)isDrum*/
         //NOTE: in HMI it's a "Percussive note number"
-        inst.flags = isHMI ? (hmiIsDrum ? Ins.percNoteNum : 0) : 0x01;
+        inst.flags = isHMI ? (hmiIsDrum ? clip_u8(Ins.percNoteNum + Ins.note_offset1, 1, 127) : 0) : 0x01;
 
         QString key_s = QString::fromLatin1(inst.name).toLower();
         QString key = key_s;

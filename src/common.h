@@ -169,6 +169,15 @@ void getMagic(QString filePath, char* bytes, int count);
  */
 bool hasExt(const QString &file, const char*ext);
 
+/*!
+ * \brief Clips the input value to minimum and maximum
+ * \param i Input value
+ * \param min Minimum value
+ * \param max Maximum value
+ * \return Final result
+ */
+uint8_t clip_u8(int i, int min, int max);
+
 #if defined(IS_QT_4) || defined(QT_GUI_LIB)
 void ErrMessageO(QWidget *parent, QString errStr, bool isBank = true);
 

@@ -320,7 +320,7 @@ FfmtErrCode AIL_GTL::saveFile(QString filePath, FmBank &bank)
 //        //NoteNum
 //        ins.percNoteNum  = (gmPatchId < 128) ? 0 : idata[0];
 //        ins.note_offset1 = (gmPatchId < 128) ? static_cast<char>(idata[0]) : 0;
-        odata[0] = h.bank == 0x7F ? ins.percNoteNum : uint8_t(ins.note_offset1);
+        odata[0] = h.bank == 0x7F ? clip_u8(ins.percNoteNum + ins.note_offset1, 0, 127) : uint8_t(ins.note_offset1);
 //        //OP1
         odata[1] = ins.getAVEKM(MODULATOR1);
         odata[2] = ins.getKSLL(MODULATOR1);
