@@ -96,8 +96,10 @@ static bool s_readInstrumentMA1(uint8_t *pBuf, FmBank::Instrument &inst)
             else
                 bRR = 5;
         }
+
         if(i != 0)
             bFL = 0;
+
         bDR = s_table_d[bDR];
         bAR = s_table_a[bAR];
 
@@ -204,6 +206,7 @@ static bool s_readInstrumentMA2(uint8_t *pBuf, FmBank::Instrument &inst)
             bSR = bRR;
         else
             bSR = 0;
+
         if(bSUS != 0)
             bRR = 4;
 

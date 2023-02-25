@@ -318,8 +318,10 @@ static void make_size_table(uint8_t *table, unsigned version)
     table[0xD6] = 3;  // ES5506, write value aadd to register pp
     table[0xE0] = 4;  // Seek to offset dddddddd (Intel byte order) in PCM data bank of data block type 0 (YM2612).
     table[0xE1] = 4;  // C352, write value aadd to register mmll
+
     for(unsigned a = 0x30; a <= 0x3F; ++a)
         table[a] = 1;  // one operand, reserved for future use
+
     for(unsigned a = 0x40; a <= 0x4E; ++a)
     {
         if(version >= 0x160)
@@ -327,12 +329,16 @@ static void make_size_table(uint8_t *table, unsigned version)
         else
             table[a] = 1;  // was one operand only til v1.60
     }
+
     for(unsigned a = 0xA1; a <= 0xAF; ++a)
         table[a] = 2;  // two operands, reserved for future use
+
     for(unsigned a = 0xC9; a <= 0xCF; ++a)
         table[a] = 3;  // three operands, reserved for future use
+
     for(unsigned a = 0xD7; a <= 0xDF; ++a)
         table[a] = 3;  // three operands, reserved for future use
+
     for(unsigned a = 0xE2; a <= 0xFF; ++a)
         table[a] = 4;  // three operands, reserved for future use
 }

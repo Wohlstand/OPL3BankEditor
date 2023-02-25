@@ -80,6 +80,7 @@ FfmtErrCode IMF_Importer::loadFile(QString filePath, FmBank &bank)
 
     imfLen -= 4;
     imfLen -= imfLen % 4;
+
     while((imfLen > 0) && !file.atEnd())
     {
         imfLen -= 4;
@@ -137,9 +138,9 @@ FfmtErrCode IMF_Importer::loadFile(QString filePath, FmBank &bank)
                     dec = 63 - std::max({olevels[MODULATOR1], olevels[CARRIER1]});
                     ins.OP[MODULATOR1].level= olevels[MODULATOR1] + dec;
                     ins.OP[CARRIER1].level  = olevels[CARRIER1] + dec;
-                } else {
-                    ins.OP[CARRIER1].level = 63;
                 }
+                else
+                    ins.OP[CARRIER1].level = 63;
 
                 insRaw.append((char)ins.getAVEKM(MODULATOR1));
                 insRaw.append((char)ins.getAVEKM(CARRIER1));

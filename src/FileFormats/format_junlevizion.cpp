@@ -68,6 +68,7 @@ FfmtErrCode JunleVizion::loadFile(QString filePath, FmBank &bank)
         return FfmtErrCode::ERR_BADFORMAT;
     if((count_percusive + startAt_percusive) > 128)
         return FfmtErrCode::ERR_BADFORMAT;
+
     uint16_t total = count_melodic + count_percusive;
     for(uint16_t i = 0; i < total; i++)
     {

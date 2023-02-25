@@ -20,38 +20,43 @@
 #include "../common.h"
 #include <QFileInfo>
 
-static const char *CIF_magic = "<CUD-FM-Instrument>\x1a";
+static const char* CIF_magic = "<CUD-FM-Instrument>\x1a";
 
-bool Misc_CIF::detectInst(const QString &filePath, char* magic)
+bool Misc_CIF::detectInst(const QString& filePath, char* magic)
 {
     Q_UNUSED(filePath);
     return memcmp(magic, CIF_magic, 20) == 0;
 }
 
-FfmtErrCode Misc_CIF::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+FfmtErrCode Misc_CIF::loadFileInst(QString filePath, FmBank::Instrument& inst, bool* isDrum)
 {
     Q_UNUSED(isDrum);
     QFile file(filePath);
+
     if(!file.open(QIODevice::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;
 
     char magic[20];
-    if(file.read((char *)magic, 20) != 20 || memcmp(magic, CIF_magic, 20) != 0)
+
+    if(file.read((char*)magic, 20) != 20 || memcmp(magic, CIF_magic, 20) != 0)
         return FfmtErrCode::ERR_BADFORMAT;
 
     uint8_t idata[12];
-    if(file.read((char *)idata, 12) != 12)
+
+    if(file.read((char*)idata, 12) != 12)
         return FfmtErrCode::ERR_BADFORMAT;
 
     file.read(inst.name, 20);
 
-    for (int op = 0; op < 2; ++op) {
+    for(int op = 0; op < 2; ++op)
+    {
         inst.setAVEKM(op, idata[0 + op]);
         inst.setKSLL(op, idata[2 + op]);
         inst.setAtDec(op, idata[4 + op]);
         inst.setSusRel(op, idata[6 + op]);
         inst.setWaveForm(op, idata[9 + op]);
     }
+
     inst.setFBConn1(idata[8]);
 
     return FfmtErrCode::ERR_OK;
@@ -60,7 +65,7 @@ FfmtErrCode Misc_CIF::loadFileInst(QString filePath, FmBank::Instrument &inst, b
 int Misc_CIF::formatInstCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_OPEN |
-        (int)FormatCaps::FORMAT_CAPS_IMPORT;
+           (int)FormatCaps::FORMAT_CAPS_IMPORT;
 }
 
 QString Misc_CIF::formatInstName() const

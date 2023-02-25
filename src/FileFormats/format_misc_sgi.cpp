@@ -20,7 +20,7 @@
 #include "../common.h"
 #include <QFileInfo>
 
-bool Misc_SGI::detectInst(const QString &filePath, char* magic)
+bool Misc_SGI::detectInst(const QString& filePath, char* magic)
 {
     (void)magic;
 
@@ -31,24 +31,28 @@ bool Misc_SGI::detectInst(const QString &filePath, char* magic)
     //By file size :-P
     QFileInfo f(filePath);
     uint64_t size = f.size();
+
     if(size == 26)
         return true;
 
     return false;
 }
 
-FfmtErrCode Misc_SGI::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+FfmtErrCode Misc_SGI::loadFileInst(QString filePath, FmBank::Instrument& inst, bool* isDrum)
 {
     Q_UNUSED(isDrum);
     QFile file(filePath);
+
     if(!file.open(QIODevice::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;
 
     uint8_t idata[26];
-    if(file.read((char *)idata, 26) != 26)
+
+    if(file.read((char*)idata, 26) != 26)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    for(unsigned op = 0; op < 2; ++op) {
+    for(unsigned op = 0; op < 2; ++op)
+    {
         // FmBank::Operator &o = inst.OP[op];
         unsigned i = 12 * (op ^ 1);
         inst.setAtDec(op, (idata[i + 1] & 0xf) | ((idata[i + 0] & 0xf) << 4));
@@ -59,6 +63,7 @@ FfmtErrCode Misc_SGI::loadFileInst(QString filePath, FmBank::Instrument &inst, b
                       ((idata[i + 11] & 1) << 5) | ((idata[i + 10] & 1) << 6) |
                       ((idata[i + 9]  & 1) << 7));
     }
+
     inst.setFBConn1((idata[25] & 1) | ((idata[24] & 7) << 1));
 
     std::string name = QFileInfo(filePath).baseName().toStdString();
@@ -72,7 +77,7 @@ FfmtErrCode Misc_SGI::loadFileInst(QString filePath, FmBank::Instrument &inst, b
 int Misc_SGI::formatInstCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_OPEN |
-        (int)FormatCaps::FORMAT_CAPS_IMPORT;
+           (int)FormatCaps::FORMAT_CAPS_IMPORT;
 }
 
 QString Misc_SGI::formatInstName() const

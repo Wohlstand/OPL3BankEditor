@@ -20,53 +20,61 @@
 #include "../common.h"
 #include <QFileInfo>
 
-bool Misc_HSC::detectInst(const QString &filePath, char* )
+bool Misc_HSC::detectInst(const QString& filePath, char*)
 {
     return filePath.endsWith(".ins", Qt::CaseInsensitive) &&
-        QFileInfo(filePath).size() == 12;
+           QFileInfo(filePath).size() == 12;
 }
 
-FfmtErrCode Misc_HSC::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+FfmtErrCode Misc_HSC::loadFileInst(QString filePath, FmBank::Instrument& inst, bool* isDrum)
 {
     Q_UNUSED(isDrum);
     QFile file(filePath);
+
     if(!file.open(QIODevice::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;
 
     uint8_t idata[12];
-    if(file.read((char *)idata, 12) != 12)
+
+    if(file.read((char*)idata, 12) != 12)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    for (int op = 0; op < 2; ++op) {
+    for(int op = 0; op < 2; ++op)
+    {
         inst.setAVEKM(op, idata[0 + op]);
         inst.setKSLL(op, idata[2 + op]);
         inst.setAtDec(op, idata[4 + op]);
         inst.setSusRel(op, idata[6 + op]);
         inst.setWaveForm(op, idata[9 + op]);
     }
+
     inst.setFBConn1(idata[8]);
 
     return FfmtErrCode::ERR_OK;
 }
 
-FfmtErrCode Misc_HSC::saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum)
+FfmtErrCode Misc_HSC::saveFileInst(QString filePath, FmBank::Instrument& inst, bool isDrum)
 {
     Q_UNUSED(isDrum);
     QFile file(filePath);
+
     if(!file.open(QIODevice::WriteOnly))
         return FfmtErrCode::ERR_NOFILE;
 
     uint8_t idata[12];
-    for (int op = 0; op < 2; ++op) {
+
+    for(int op = 0; op < 2; ++op)
+    {
         idata[0 + op] = inst.getAVEKM(op);
         idata[2 + op] = inst.getKSLL(op);
         idata[4 + op] = inst.getAtDec(op);
         idata[6 + op] = inst.getSusRel(op);
         idata[9 + op] = inst.getWaveForm(op);
     }
+
     idata[8] = inst.getFBConn1();
 
-    if(file.write((char *)idata, 12) != 12 || !file.flush())
+    if(file.write((char*)idata, 12) != 12 || !file.flush())
         return FfmtErrCode::ERR_BADFORMAT;
 
     return FfmtErrCode::ERR_OK;
