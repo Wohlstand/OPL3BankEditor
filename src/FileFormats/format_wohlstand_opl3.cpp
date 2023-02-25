@@ -75,26 +75,26 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     ins.en_4op          = (flags & WOPL_Ins_4op) != 0;
     ins.en_pseudo4op    = (flags & WOPL_Ins_Pseudo4op) != 0;
     ins.is_blank        = (flags & WOPL_Ins_IsBlank) != 0;
-    ins.adlib_drum_number = 0;
+    ins.rhythm_drum_type = 0;
     if((flags & WOPL_RhythmModeMask) != 0)
     {
         uint8_t rm = flags & WOPL_RhythmModeMask;
         switch(rm)
         {
         case WOPL_RM_BassDrum:
-            ins.adlib_drum_number = 6;
+            ins.rhythm_drum_type = 6;
             break;
         case WOPL_RM_Snare:
-            ins.adlib_drum_number = 7;
+            ins.rhythm_drum_type = 7;
             break;
         case WOPL_RM_TomTom:
-            ins.adlib_drum_number = 8;
+            ins.rhythm_drum_type = 8;
             break;
         case WOPL_RM_Cymbal:
-            ins.adlib_drum_number = 9;
+            ins.rhythm_drum_type = 9;
             break;
         case WOPL_RM_HiHat:
-            ins.adlib_drum_number = 10;
+            ins.rhythm_drum_type = 10;
             break;
         }
     }
@@ -129,7 +129,7 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
     out.en_4op          = (in.inst_flags & WOPL_Ins_4op) != 0;
     out.en_pseudo4op    = (in.inst_flags & WOPL_Ins_Pseudo4op) != 0;
     out.is_blank        = (in.inst_flags & WOPL_Ins_IsBlank) != 0;
-    out.adlib_drum_number = 0;
+    out.rhythm_drum_type = 0;
     out.setFBConn1(in.fb_conn1_C0);
     out.setFBConn2(in.fb_conn2_C0);
     out.ms_sound_kon = in.delay_on_ms;
@@ -150,19 +150,19 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
         switch(rm)
         {
         case WOPL_RM_BassDrum:
-            out.adlib_drum_number = 6;
+            out.rhythm_drum_type = 6;
             break;
         case WOPL_RM_Snare:
-            out.adlib_drum_number = 7;
+            out.rhythm_drum_type = 7;
             break;
         case WOPL_RM_TomTom:
-            out.adlib_drum_number = 8;
+            out.rhythm_drum_type = 8;
             break;
         case WOPL_RM_Cymbal:
-            out.adlib_drum_number = 9;
+            out.rhythm_drum_type = 9;
             break;
         case WOPL_RM_HiHat:
-            out.adlib_drum_number = 10;
+            out.rhythm_drum_type = 10;
             break;
         }
     }
@@ -179,9 +179,9 @@ static void cvt_FMIns_to_WOPLI(FmBank::Instrument &in, WOPLInstrument &out, bool
     out.inst_flags = (in.en_4op ? WOPL_Ins_4op : 0) |
                      (in.en_pseudo4op ? WOPL_Ins_Pseudo4op : 0) |
                      (in.is_blank ? WOPL_Ins_IsBlank : 0);
-    if(in.adlib_drum_number != 0)
+    if(in.rhythm_drum_type != 0)
     {
-        switch (in.adlib_drum_number)
+        switch (in.rhythm_drum_type)
         {
         case 6:
             out.inst_flags |= WOPL_RM_BassDrum;
@@ -228,9 +228,9 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
     odata[39] = (ins.en_4op ? WOPL_Ins_4op : 0) |
                 (ins.en_pseudo4op ? WOPL_Ins_Pseudo4op : 0) |
                 (ins.is_blank ? WOPL_Ins_IsBlank : 0);
-    if(ins.adlib_drum_number != 0)
+    if(ins.rhythm_drum_type != 0)
     {
-        switch (ins.adlib_drum_number)
+        switch (ins.rhythm_drum_type)
         {
         case 6:
             odata[39] |= WOPL_RM_BassDrum;

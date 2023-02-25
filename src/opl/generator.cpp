@@ -1878,10 +1878,10 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     m_bend = 0.0;
     m_bendsense = 2.0 / 8192;
     //m_hold = false;
-    bool isRhythmMode = isDrum && (instrument.adlib_drum_number >= 6);
+    bool isRhythmMode = isDrum && (instrument.rhythm_drum_type >= 6);
 
     changeRhythmMode(isRhythmMode);
-    switch4op(instrument.en_4op && !instrument.en_pseudo4op && (instrument.adlib_drum_number == 0));
+    switch4op(instrument.en_4op && !instrument.en_pseudo4op && (instrument.rhythm_drum_type == 0));
 
     m_patch.OPS[0].modulator_E862   = instrument.getDataE862(MODULATOR1);
     m_patch.OPS[0].modulator_20     = instrument.getAVEKM(MODULATOR1);
@@ -1908,7 +1908,7 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 
     if(isRhythmMode)// Rhythm-mode percussion instrument
     {
-        testDrum = instrument.adlib_drum_number - 6;
+        testDrum = instrument.rhythm_drum_type - 6;
         Patch(OPL3_CHANNELS_RHYTHM_BASE + testDrum, 0);
     }
     else // Melodic or Generic percussion instrument

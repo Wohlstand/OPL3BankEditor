@@ -228,7 +228,7 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
         strncpy(ins.name, dataS + name_address + 3, 8);
         try
         {
-            ins.adlib_drum_number       = dataU[ins_address + 1];
+            ins.rhythm_drum_type        = dataU[ins_address + 1];
 
             ins.OP[MODULATOR1].ksl      = dataU[ins_address + 2] & 0x03;
 
@@ -497,7 +497,7 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
             buff = uint8_t(isDrum);
             file.write(char_p(&buff), 1);
             //    uint8_t   voicenum;
-            file.write(char_p(&Ins.adlib_drum_number), 1);
+            file.write(char_p(&Ins.rhythm_drum_type), 1);
         }
         //BNK_OPLRegs oplModulator;
         //struct BNK_OPLRegs

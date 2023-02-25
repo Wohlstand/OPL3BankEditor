@@ -56,7 +56,7 @@ static const MetaParameter MP_instrument[] =
 
     {"4op", G(ins.en_4op), 0, 1, MP_None},
     {"ps4op", G(ins.en_pseudo4op), 0, 1, MP_4OpOnly},
-    {"rhy", G(ins.adlib_drum_number ? (ins.adlib_drum_number - 5) : 0), 0, 5, MP_None},
+    {"rhy", G(ins.rhythm_drum_type ? (ins.rhythm_drum_type - 5) : 0), 0, 5, MP_None},
     {"con1", G(ins.connection1), 0, 1, MP_None},
     {"fb1", G(ins.feedback1), 0, 7, MP_None},
     {"con2", G(ins.connection2), 0, 1, MP_4OpOnly},

@@ -110,10 +110,10 @@ void BankEditor::on_percMode_currentIndexChanged(int index)
     switch(index)
     {
     case 0:
-        m_curInst->adlib_drum_number = 0;
+        m_curInst->rhythm_drum_type = 0;
         break;
     default:
-        m_curInst->adlib_drum_number = uint8_t(5 + index);
+        m_curInst->rhythm_drum_type = uint8_t(5 + index);
         break;
     }
     afterChangeControlValue();

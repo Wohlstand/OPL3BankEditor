@@ -1227,7 +1227,7 @@ void BankEditor::loadInstrument()
     {
         // m_curInst->is_fixed_note = false;
         // m_curInst->percNoteNum = 0; // Don't pass drum-specific data to melodic
-        m_curInst->adlib_drum_number = 0;
+        m_curInst->rhythm_drum_type = 0;
     }
 
     ui->editzone->setEnabled(true);
@@ -1239,7 +1239,7 @@ void BankEditor::loadInstrument()
     ui->insName->setText(QString::fromUtf8(m_curInst->name));
     ui->fixedNote->setChecked(m_curInst->is_fixed_note);
     ui->perc_noteNum->setValue(m_curInst->percNoteNum);
-    ui->percMode->setCurrentIndex(m_curInst->adlib_drum_number > 0 ? (m_curInst->adlib_drum_number - 5) : 0);
+    ui->percMode->setCurrentIndex(m_curInst->rhythm_drum_type > 0 ? (m_curInst->rhythm_drum_type - 5) : 0);
     ui->op4mode->setChecked(m_curInst->en_4op);
     ui->doubleVoice->setEnabled(m_curInst->en_4op);
     ui->doubleVoice->setChecked(m_curInst->en_pseudo4op);

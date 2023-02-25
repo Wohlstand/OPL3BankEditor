@@ -652,7 +652,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPLChipBase *chip)
     FmBank::Instrument &in = *in_p;
     DurationInfo result;
 
-    if(in_p->adlib_drum_number == 0)
+    if(in_p->rhythm_drum_type == 0)
     {
         ComputeDurations(&in, &result, chip);
         in.ms_sound_kon = (uint16_t)result.ms_sound_kon;
@@ -732,8 +732,8 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
         FmBank::Instrument &ins2 = bankBackup.Ins_Melodic_box[i];
         if(forceReset || (ins1.ms_sound_kon == 0) || (memcmp(&ins1, &ins2, sizeof(FmBank::Instrument)) != 0))
         {
-            ins1.adlib_drum_number = 0;
-            ins2.adlib_drum_number = 0; // Just in a case, be sure this value is zero for all melodic instruments
+            ins1.rhythm_drum_type = 0;
+            ins2.rhythm_drum_type = 0; // Just in a case, be sure this value is zero for all melodic instruments
             insertOrBlank(ins1, blank, tasks);
         }
     }

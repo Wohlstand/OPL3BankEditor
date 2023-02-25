@@ -233,7 +233,7 @@ void RawYmf262ToWopi::doAnalyzeState()
             ops[CARRIER2] = ch.buddy->pair[1];
         }
         else if (cat != ChanCat_2op)
-            ins.adlib_drum_number = (cat - ChanCat_RhythmBD) + 6;
+            ins.rhythm_drum_type = (cat - ChanCat_RhythmBD) + 6;
 
         ins.setFBConn1(ch.regC0 & 15);
         insRaw.push_back((char)ins.getFBConn1());

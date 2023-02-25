@@ -161,8 +161,8 @@ public:
         int16_t note_offset2;
         //! Note velocity offset (TMB-Specific)
         int8_t velocity_offset;
-        //! AdLib specific parameter: Drum Number
-        uint8_t adlib_drum_number;
+        //! Rhythm-mode drum type (0 - Melodic, 6 - Bass drum, 7 - Snare, 8 - Tom, 9- Cymbal, 10 - HiHat)
+        uint8_t rhythm_drum_type;
         //! Number of milliseconds of produced sound while sustaining
         uint16_t ms_sound_kon;
         //! Number of milliseconds of produced sound while release

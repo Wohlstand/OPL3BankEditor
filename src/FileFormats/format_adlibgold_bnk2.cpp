@@ -66,19 +66,19 @@ static void convertInstrument(
     switch(is_perc ? perc : -1)
     {
     case 0:
-        dst.adlib_drum_number = 6;
+        dst.rhythm_drum_type = 6;
         break;
     case 1:
-        dst.adlib_drum_number = 7;
+        dst.rhythm_drum_type = 7;
         break;
     case 2:
-        dst.adlib_drum_number = 8;
+        dst.rhythm_drum_type = 8;
         break;
     case 3:
-        dst.adlib_drum_number = 9;
+        dst.rhythm_drum_type = 9;
         break;
     case 4:
-        dst.adlib_drum_number = 10;
+        dst.rhythm_drum_type = 10;
         break;
     }
 }

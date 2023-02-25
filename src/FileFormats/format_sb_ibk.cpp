@@ -138,14 +138,14 @@ static void raw2sbi(FmBank::Instrument &ins, uint8_t *idata, bool fourOp = false
     if(!fourOp && hasSbiExtraFields)
     {
         //        BYTE percvoc;   /* Percussion voice number                    : JWO */
-        ins.adlib_drum_number  = idata[11];//47 //58
+        ins.rhythm_drum_type  = idata[11];//47 //58
 
         //        char transpos;  /* Number of notes to transpose timbre, signed: JWO */
         ins.note_offset1 = char_p(idata)[12];//48   //59
 
         //        BYTE dpitch;    /* percussion pitch: MIDI Note 0 - 127        : JWO */
         ins.percNoteNum  = idata[13];//49
-        ins.is_fixed_note = (ins.adlib_drum_number != 0x00);
+        ins.is_fixed_note = (ins.rhythm_drum_type != 0x00);
     }
     //            BYTE rsv[2];    /* unsused - so far */
     //            } SBTIMBRE;
@@ -171,7 +171,7 @@ static void sbi2raw(uint8_t *odata, FmBank::Instrument &ins, bool fourOp = false
     else
         odata[10] = ins.getFBConn1();
 
-    odata[11] = ins.adlib_drum_number;
+    odata[11] = ins.rhythm_drum_type;
     char *sodata = char_p(odata);
 
     if(fourOp)
@@ -268,7 +268,7 @@ FfmtErrCode SbIBK_impl::saveFileIBK(QString filePath, FmBank &bank)
 
     for(uint16_t i = 0; i < 128; i++)
     {
-        drumFlags[i] = (tmp.insPercussion[i].adlib_drum_number != 0);
+        drumFlags[i] = (tmp.insPercussion[i].rhythm_drum_type != 0);
         FmBank::Instrument &ins = drumFlags[i] ?
                                   tmp.insPercussion[i] :
                                   tmp.insMelodic[i];
