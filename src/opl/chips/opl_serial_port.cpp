@@ -101,7 +101,11 @@ void OPL_SerialPort::sendSerial(uint addr, uint data)
     if(!port || !port->isOpen())
         return;
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    unsigned protocol = m_protocol.loadRelaxed();
+#else
     unsigned protocol = m_protocol.load();
+#endif
 
     uint8_t sendBuffer[16];
 
