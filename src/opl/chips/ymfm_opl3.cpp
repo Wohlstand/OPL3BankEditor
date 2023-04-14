@@ -55,7 +55,14 @@ void YmFmOPL3::reset()
 
 void YmFmOPL3::writeReg(uint16_t addr, uint8_t data)
 {
-    m_queue.push_back(std::make_pair(addr, data));
+    Reg &back = m_queue[m_headPos++];
+    back.addr = addr;
+    back.data = data;
+
+    if(m_headPos >= c_queueSize)
+        m_headPos = 0;
+
+    ++m_queueCount;
 }
 
 void YmFmOPL3::writePan(uint16_t addr, uint8_t data)
@@ -73,14 +80,18 @@ void YmFmOPL3::nativeGenerate(int16_t *frame)
     uint8_t data1 = 0, data2 = 0;
 
     // see if there is data to be written; if so, extract it and dequeue
-    if(!m_queue.empty())
+    if(m_queueCount > 0)
     {
-        auto front = m_queue.front();
-        addr1 = 0 + 2 * ((front.first >> 8) & 3);
-        data1 = front.first & 0xff;
+        const Reg &front = m_queue[m_tailPos++];
+
+        if(m_tailPos >= c_queueSize)
+            m_tailPos = 0;
+        --m_queueCount;
+
+        addr1 = 0 + 2 * ((front.addr >> 8) & 3);
+        data1 = front.addr & 0xff;
         addr2 = addr1 + 1;
-        data2 = front.second;
-        m_queue.erase(m_queue.begin());
+        data2 = front.data;
     }
 
     // write to the chip
