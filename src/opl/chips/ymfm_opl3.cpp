@@ -108,7 +108,7 @@ void YmFmOPL3::nativeGenerate(int16_t *frame)
 
 const char *YmFmOPL3::emulatorName()
 {
-    return "YMFM OPL3)";
+    return "YMFM OPL3";
 }
 
 OPLChipBase::ChipType YmFmOPL3::chipType()
