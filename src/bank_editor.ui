@@ -1499,6 +1499,9 @@
                 </item>
                 <item>
                  <widget class="QSlider" name="volumeSlider">
+                  <property name="toolTip">
+                   <string>MIDI volume</string>
+                  </property>
                   <property name="maximum">
                    <number>127</number>
                   </property>
@@ -2034,6 +2037,7 @@ of second voice</string>
      <addaction name="actionEmulatorDosBox"/>
      <addaction name="actionEmulatorOpal"/>
      <addaction name="actionEmulatorJava"/>
+     <addaction name="actionEmulatorYmFm"/>
      <addaction name="actionWin9xOPLProxy"/>
      <addaction name="actionSerialPortOPL"/>
     </widget>
@@ -2343,6 +2347,20 @@ of second voice</string>
     <string>Serial port OPL interface</string>
    </property>
   </action>
+  <action name="actionEmulatorYmFm">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">YMFM OPL3</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">YMFM OPL3</string>
+   </property>
+   <property name="toolTip">
+    <string notr="true">YMFM OPL3</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -2360,7 +2378,6 @@ of second voice</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="resources/resources.qrc"/>
   <include location="resources/resources.qrc"/>
  </resources>
  <connections>

@@ -88,6 +88,7 @@ public:
         CHIP_DosBox,
         CHIP_Opal,
         CHIP_Java,
+        CHIP_YmFm,
         CHIP_Win9xProxy,
         CHIP_SerialPort,
         CHIP_END

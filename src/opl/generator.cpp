@@ -26,6 +26,10 @@
 #include "chips/opal_opl3.h"
 #include "chips/java_opl3.h"
 
+#ifdef ENABLE_YMFM_EMULATOR
+#include "chips/ymfm_opl3.h"
+#endif
+
 #ifdef ENABLE_HW_OPL_PROXY
 #include "chips/win9x_opl_proxy.h"
 #endif
@@ -923,6 +927,11 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
     case CHIP_Win9xProxy:
         oplProxy().startChip();
         chip.reset(&oplProxy());
+        break;
+#endif
+#ifdef ENABLE_YMFM_EMULATOR
+    case CHIP_YmFm:
+        chip.reset(new YmFmOPL3());
         break;
 #endif
 #ifdef ENABLE_HW_OPL_SERIAL_PORT

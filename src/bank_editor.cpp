@@ -130,6 +130,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorDosBox, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorOpal, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorJava, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorYmFm, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionSerialPortOPL, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
@@ -137,6 +138,10 @@ BankEditor::BankEditor(QWidget *parent) :
     m_proxyOpl = &Generator::oplProxy();
 #else
     ui->actionWin9xOPLProxy->setVisible(false);
+#endif
+
+#ifndef ENABLE_YMFM_EMULATOR
+    ui->actionEmulatorYmFm->setVisible(false);
 #endif
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
@@ -268,6 +273,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorDosBox->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
+    ui->actionEmulatorYmFm->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
     ui->actionSerialPortOPL->setChecked(false);
 
@@ -285,6 +291,9 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_Java:
         ui->actionEmulatorJava->setChecked(true);
+        break;
+    case Generator::CHIP_YmFm:
+        ui->actionEmulatorYmFm->setChecked(true);
         break;
     case Generator::CHIP_Win9xProxy:
         ui->actionWin9xOPLProxy->setChecked(true);
@@ -1141,6 +1150,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorDosBox->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
+    ui->actionEmulatorYmFm->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
     ui->actionSerialPortOPL->setChecked(false);
 
@@ -1169,6 +1179,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorJava->setChecked(true);
         m_currentChip = Generator::CHIP_Java;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorYmFm)
+    {
+        ui->actionEmulatorYmFm->setChecked(true);
+        m_currentChip = Generator::CHIP_YmFm;
         m_generator->ctl_switchChip(m_currentChip);
     }
     else

@@ -45,6 +45,9 @@
 #include "chips/dosbox_opl3.h"
 #include "chips/opal_opl3.h"
 #include "chips/java_opl3.h"
+#ifdef ENABLE_YMFM_EMULATOR
+#include "chips/ymfm_opl3.h"
+#endif
 
 //typedef NukedOPL3 DefaultOPL3;
 typedef DosBoxOPL3 DefaultOPL3;
@@ -694,6 +697,9 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
         std::shared_ptr<OPLChipBase>(new DosBoxOPL3),
         std::shared_ptr<OPLChipBase>(new OpalOPL3),
         std::shared_ptr<OPLChipBase>(new JavaOPL3)
+#ifdef ENABLE_YMFM_EMULATOR
+        , std::shared_ptr<OPLChipBase>(new YmFmOPL3)
+#endif
     };
     for(std::shared_ptr<OPLChipBase> &p : emuls)
         MeasureDurationsBenchmark(in_p, p.get(), result);
