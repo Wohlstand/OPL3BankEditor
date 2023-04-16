@@ -26,7 +26,15 @@ QT += core gui
 greaterThan(QT_MAJOR_VERSION, 4):{
     QT += widgets concurrent
     DEFINES += ENABLE_AUDIO_TESTING
-    CONFIG += c++11
+    load(configure)
+    if(qtCompileTest(cpp14)) {
+        CONFIG += c++14
+        CONFIG += enable_ymfm
+        message("TEST: С++14 support presented, YMFM will be ENABLED!")
+    } else {
+        CONFIG += c++11
+        message("TEST: С++14 was not found, YMFM will be DISABLED!")
+    }
 } else {
     QMAKE_CXXFLAGS += -std=c++11
     DEFINES += IS_QT_4
@@ -110,6 +118,8 @@ win32 {
     }
 }
 
+include(src/opl/chips/chipset.pri)
+
 SOURCES += \
     src/FileFormats/format_smaf_importer.cpp \
     src/audio.cpp \
@@ -154,15 +164,7 @@ SOURCES += \
     src/opl/realtime/ring_buffer.cpp \
     src/piano.cpp \
     src/opl/measurer.cpp \
-    src/opl/chips/dosbox_opl3.cpp \
-    src/opl/chips/java_opl3.cpp \
-    src/opl/chips/nuked_opl3.cpp \
-    src/opl/chips/opal_opl3.cpp \
-    src/opl/chips/nuked/nukedopl3.c \
-    src/opl/chips/dosbox/dbopl.cpp \
-    src/FileFormats/wopl/wopl_file.c \
-    src/opl/chips/nuked_opl3_v174.cpp \
-    src/opl/chips/nuked/nukedopl3_174.c
+    src/FileFormats/wopl/wopl_file.c
 
 HEADERS += \
     src/FileFormats/format_smaf_importer.h \
@@ -210,20 +212,7 @@ HEADERS += \
     src/piano.h \
     src/version.h \
     src/opl/measurer.h \
-    src/opl/chips/opl_chip_base.h \
-    src/opl/chips/opl_chip_base.tcc \
-    src/opl/chips/dosbox_opl3.h \
-    src/opl/chips/java_opl3.h \
-    src/opl/chips/nuked_opl3.h \
-    src/opl/chips/opal_opl3.h \
-    src/opl/chips/opl_chip_base.h \
-    src/opl/chips/java/JavaOPL3.hpp \
-    src/opl/chips/nuked/nukedopl3.h \
-    src/opl/chips/opal/opal.hpp \
-    src/opl/chips/dosbox/dbopl.h \
-    src/FileFormats/wopl/wopl_file.h \
-    src/opl/chips/nuked_opl3_v174.h \
-    src/opl/chips/nuked/nukedopl3_174.h
+    src/FileFormats/wopl/wopl_file.h
 
 FORMS += \
     src/bank_editor.ui \
