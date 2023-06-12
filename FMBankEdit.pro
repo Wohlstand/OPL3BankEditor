@@ -152,6 +152,7 @@ SOURCES += \
     src/FileFormats/format_misc_hsc.cpp \
     src/FileFormats/format_wohlstand_opl3.cpp \
     src/FileFormats/format_flatbuffer_opl3.cpp \
+    src/FileFormats/format_patch_fm4.cpp \
     src/FileFormats/ymf262_to_wopi.cpp \
     src/formats_sup.cpp \
     src/importer.cpp \
@@ -196,6 +197,7 @@ HEADERS += \
     src/FileFormats/format_misc_hsc.h \
     src/FileFormats/format_wohlstand_opl3.h \
     src/FileFormats/format_flatbuffer_opl3.h \
+    src/FileFormats/format_patch_fm4.h \
     src/FileFormats/ymf262_to_wopi.h \
     src/formats_sup.h \
     src/importer.h \

@@ -1,0 +1,162 @@
+------------------------- RIFF FM4 PATCH bank format ---------------------------
+This is the format for the .PAT file used by the Windows NT4 for it's OPL3
+driver (you may find the "synth.pat" file at the C:\Windows\system32 of NT4: so,
+it's that file which is described here).
+
+This bank file is able to store 128 melodic and 128 percussion instruments.
+
+The used volume mode: Generic Windows FM model.
+
+Supported instrument types:
+- Two-operator
+- Four-operator
+- Dual two-operator (pseudo-four-operator)
+
+== File format ==
+File has the 20-byte of header that starts with the "RIFF" magic number,
+then 4-bytes little-endian file size without 8 after it, then two magic values,
+and then, the file size without 20 (total size of the header):
+
+Offset bytes |   Type     | Content/explanation
+==============================================================================
+   0         |   CHAR[4]  | "RIFF" magic
+   4         |  Uint32-LE | The size of the file with subtracted 8
+             |            | (I.e. without the size of RIFF header)
+   8         |   CHAR[4]  | "Ptch" magic
+   12        |   CHAR[4]  | "fm4 " magic
+   16        |  Uint32-LE | The size of the file data with subtracted 20
+             |            | (I.e. without the size of entire header)
+==============================================================================
+
+After the header, the sequence of 256 instruments is followed
+(total size of every instrument entry is 28 bytes):
+
+Instruments were defined by these C structures:
+
+--------------------------------------------------------
+struct Fm4Op
+{
+    uint8_t reg20;
+    uint8_t reg40;
+    uint8_t reg60;
+    uint8_t reg80;
+    uint8_t regE0;
+};
+
+struct Fm4Inst
+{
+    Fm4Op op[4]; /* 5 x 4 = 20 */
+    uint8_t regA0[2];
+    uint8_t regB0[2];
+    uint8_t regC0[2];
+    uint8_t opType;
+    uint8_t reserved;
+}; /* 28 bytes */
+
+--------------------------------------------------------
+
+The full specification for every byte of every single instrument entry:
+
+
+Data type | Name     | OPL base register | Description
+==============================================================================
+
+         Operator 1:
+==============================================================================
+UINT8     | reg20    | 0x20              | Modulator characteristic
+          |          |                   | (Mult, KSR, EG, VIB and AM flags)
+------------------------------------------------------------------------------
+UINT8     | reg40    | 0x40              | Modulator key scaling/output level
+------------------------------------------------------------------------------
+UINT8     | reg60    | 0x60              | Modulator attack/decay level
+------------------------------------------------------------------------------
+UINT8     | reg80    | 0x80              | Modulator sustain/release level
+------------------------------------------------------------------------------
+UINT8     | regE0    | 0xE0              | Modulator wave select
+==============================================================================
+
+         Operator 2:
+==============================================================================
+UINT8     | reg20    | 0x23              | Carrier characteristic
+          |          |                   | (Mult, KSR, EG, VIB and AM flags)
+------------------------------------------------------------------------------
+UINT8     | reg40    | 0x43              | Carrier key scaling/output level
+------------------------------------------------------------------------------
+UINT8     | reg60    | 0x63              | Carrier attack/decay level
+------------------------------------------------------------------------------
+UINT8     | reg80    | 0x83              | Carrier sustain/release level
+------------------------------------------------------------------------------
+UINT8     | regE0    | 0xE3              | Carrier wave select
+==============================================================================
+
+         Operator 3: (Operator 1 of second voice)
+==============================================================================
+UINT8     | reg20    | 0x20              | Modulator characteristic
+          |          |                   | (Mult, KSR, EG, VIB and AM flags)
+------------------------------------------------------------------------------
+UINT8     | reg40    | 0x40              | Modulator key scaling/output level
+------------------------------------------------------------------------------
+UINT8     | reg60    | 0x60              | Modulator attack/decay level
+------------------------------------------------------------------------------
+UINT8     | reg80    | 0x80              | Modulator sustain/release level
+------------------------------------------------------------------------------
+UINT8     | regE0    | 0xE0              | Modulator wave select
+==============================================================================
+
+         Operator 4: (Operator 2 of second voice)
+==============================================================================
+UINT8     | reg20    | 0x23              | Carrier characteristic
+          |          |                   | (Mult, KSR, EG, VIB and AM flags)
+------------------------------------------------------------------------------
+UINT8     | reg40    | 0x43              | Carrier key scaling/output level
+------------------------------------------------------------------------------
+UINT8     | reg60    | 0x63              | Carrier attack/decay level
+------------------------------------------------------------------------------
+UINT8     | reg80    | 0x83              | Carrier sustain/release level
+------------------------------------------------------------------------------
+UINT8     | regE0    | 0xE3              | Carrier wave select
+==============================================================================
+
+------------------------------------------------------------------------------
+UINT8     | regA0    | 0xA0              | Frequency number (De-Facto unused)
+UINT8     | regA0    | 0xA0              | Frequency number (De-Facto unused)
+------------------------------------------------------------------------------
+UINT8     | regB0    | 0xB0              | The note offset for 1'st pair
+UINT8     | regB0    | 0xB0              | The note offset for 2'st pair
+          |          |                   | (See below how to decode)
+------------------------------------------------------------------------------
+UINT8     | Feedback | 0xC0              | Feedback/connection for 1'st op pair
+UINT8     | Feedback | 0xC0              | Feedback/connection for 2'nd op pair
+------------------------------------------------------------------------------
+UINT8     | opType   | N/A               | Type of the voice:
+          |          |                   | 0 - Two-op voice (second pair unused)
+          |          |                   | 1 - Pair of two-operator voices
+          |          |                   | 2 - Four-operator voice
+------------------------------------------------------------------------------
+UINT8     | reserved | N/A               | Unused byte
+==============================================================================
+
+* regB0 explanation:
+This byte contains the note offset for one of operator pairs.
+
+Content of this byte has an equivalent format for the
+"KeyOn/Block Number / FreqNumber-HI" OPL3 register. However, here it's used for
+the 3-bit signed octave offset (other bits around are unused):
+
+## Getting note offset:
+- Shift to right by 2 bytes
+- Mask by & 0x07
+- Convert to signed integer and subtract 4
+- Multiply by 12
+
+The full formula:
+    N = 12 * (((regB0 >> 2) & 0x07) - 4)
+
+## Writing value back:
+- Divide the note offset by 12
+- Add 4
+- Clamp it to 0...7 range
+- Mask by & 0x07
+- Shift to right by 2 bytes
+
+-------------------------

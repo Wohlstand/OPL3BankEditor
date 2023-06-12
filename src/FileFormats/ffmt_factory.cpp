@@ -36,6 +36,7 @@
 #include "format_dmxopl2.h"
 #include "format_imf_importer.h"
 #include "format_junlevizion.h"
+#include "format_patch_fm4.h"
 #include "format_rad_importer.h"
 #include "format_sb_ibk.h"
 #include "format_dro_importer.h"
@@ -94,6 +95,8 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new ApogeeTMB());
     //AIL
     registerBankFormat(new AIL_GTL());
+    // WinNT4 Patch FM4
+    registerBankFormat(new PatchFm4());
 
     //SB IBK DOS
     registerBankFormat(new SbIBK_DOS());

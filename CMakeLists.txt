@@ -136,6 +136,8 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_misc_hsc.cpp"
   "src/FileFormats/format_wohlstand_opl3.cpp"
   "src/FileFormats/format_flatbuffer_opl3.cpp"
+  "src/FileFormats/format_patch_fm4.h"
+  "src/FileFormats/format_patch_fm4.cpp"
   "src/FileFormats/ymf262_to_wopi.cpp"
   "src/FileFormats/wopl/wopl_file.c")
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
