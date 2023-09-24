@@ -211,23 +211,26 @@ void RawYmf262ToWopi::doAnalyzeState()
             continue;
 
         bool keyOn;
-        if (cat < ChanCat_RhythmBD)
+        if(cat < ChanCat_RhythmBD)
             keyOn = (ch.regB0 & 32) != 0;
-        else {
+        else
+        {
             unsigned nthPerc = cat - ChanCat_RhythmBD;
             keyOn = (m_regBD & (1 << (4 - nthPerc))) != 0;
         }
+
         if(!keyOn)
             continue; //Skip if key is not pressed
 
         QByteArray insRaw; //Raw instrument
         FmBank::Instrument ins = FmBank::emptyInst();
 
-        Operator *ops[4];
+        Operator *ops[4] = {0, 0, 0, 0};
         ops[MODULATOR1] = ch.pair[0];
         ops[CARRIER1] = ch.pair[1];
 
-        if (cat == ChanCat_4opMaster) {
+        if(cat == ChanCat_4opMaster)
+        {
             ins.en_4op = true;
             ops[MODULATOR2] = ch.buddy->pair[0];
             ops[CARRIER2] = ch.buddy->pair[1];
@@ -243,12 +246,13 @@ void RawYmf262ToWopi::doAnalyzeState()
             insRaw.push_back((char)ins.getFBConn2());
         }
 
-        for (unsigned pairno = 0; pairno < (ins.en_4op ? 2 : 1); ++pairno)
+        for(unsigned pairno = 0; pairno < (ins.en_4op ? 2 : 1); ++pairno)
         {
             for(unsigned i = 0; i < 2; ++i)
             {
                 unsigned opno = 2 * pairno + i;
                 Operator *src = ops[opno];
+                Q_ASSERT(src);
 
                 ins.setAVEKM(opno, src->reg20);
                 ins.setKSLL(opno, src->reg40);
@@ -259,20 +263,21 @@ void RawYmf262ToWopi::doAnalyzeState()
         }
 
         unsigned maxLevel = 0;
-        for (unsigned opno = 0; opno < (ins.en_4op ? 4 : 2); ++opno)
+        for(unsigned opno = 0; opno < (ins.en_4op ? 4 : 2); ++opno)
         {
             bool modulator = operatorRole(opno, ins.en_4op, ins.connection1, ins.connection2);
             if(!modulator)
                 maxLevel = std::max((unsigned)ins.OP[opno].level, maxLevel);
         }
-        for (unsigned opno = 0; opno < (ins.en_4op ? 4 : 2); ++opno)
+
+        for(unsigned opno = 0; opno < (ins.en_4op ? 4 : 2); ++opno)
         {
             bool modulator = operatorRole(opno, ins.en_4op, ins.connection1, ins.connection2);
             if(!modulator)
                 ins.OP[opno].level += 63 - maxLevel;
         }
 
-        for (unsigned pairno = 0; pairno < (ins.en_4op ? 2 : 1); ++pairno)
+        for(unsigned pairno = 0; pairno < (ins.en_4op ? 2 : 1); ++pairno)
         {
             for(unsigned i = 0; i < 2; ++i)
             {

@@ -88,11 +88,18 @@ BankFormats DRO_Importer::formatId() const
     return BankFormats::FORMAT_DRO_IMPORTER;
 }
 
-enum OplMode
+enum OplModeV1
 {
-    OplMode2,
-    OplMode2x2,
-    OplMode3
+    DRO1_OplMode2,
+    DRO1_OplMode3,
+    DRO1_OplMode2x2
+};
+
+enum OplModeV2
+{
+    DRO2_OplMode2,
+    DRO2_OplMode2x2,
+    DRO2_OplMode3
 };
 
 FfmtErrCode DRO_Importer::loadFileV1(QFile &file, FmBank &bank)
@@ -116,7 +123,7 @@ FfmtErrCode DRO_Importer::loadFileV1(QFile &file, FmBank &bank)
 
     RawYmf262ToWopi chip[2];
     unsigned nchip = 1;
-    if(oplMode == OplMode2x2)
+    if(oplMode == DRO1_OplMode2x2)
     {
         nchip = 2;
         chip[1].shareInstruments(chip[0]);
@@ -164,9 +171,9 @@ FfmtErrCode DRO_Importer::loadFileV1(QFile &file, FmBank &bank)
                 chip[0].passReg(reg, data[0]);
             else
             {
-                if(oplMode == OplMode2x2)
+                if(oplMode == DRO1_OplMode2x2)
                     chip[1].passReg(reg, data[0]);
-                else if(oplMode == OplMode3)
+                else if(oplMode == DRO1_OplMode3)
                     chip[0].passReg(reg | 0x100u, data[0]);
             }
         }
@@ -215,7 +222,7 @@ FfmtErrCode DRO_Importer::loadFileV2(QFile &file, FmBank &bank)
 
     RawYmf262ToWopi chip[2];
     unsigned nchip = 1;
-    if(hardwareType == OplMode2x2)
+    if(hardwareType == DRO2_OplMode2x2)
     {
         nchip = 2;
         chip[1].shareInstruments(chip[0]);
@@ -229,7 +236,7 @@ FfmtErrCode DRO_Importer::loadFileV2(QFile &file, FmBank &bank)
 
         if(data[0] == shortDelayCode || data[0] == longDelayCode)
         {
-            for (unsigned c = 0; c < nchip; ++c)
+            for(unsigned c = 0; c < nchip; ++c)
                 chip[c].doAnalyzeState();
         }
         else
@@ -243,16 +250,17 @@ FfmtErrCode DRO_Importer::loadFileV2(QFile &file, FmBank &bank)
             uint8_t reg = codeMap[regIndex];
             uint8_t val = data[1];
 
-            if(chipSelect && hardwareType == OplMode2x2)
+            if(chipSelect && hardwareType == DRO2_OplMode2x2)
                 chip[1].passReg(reg, val);
-            else if(chipSelect && hardwareType == OplMode3)
+            else if(chipSelect && hardwareType == DRO2_OplMode3)
                 chip[0].passReg(reg | 0x100u, val);
             else if(!chipSelect)
                 chip[0].passReg(reg, val);
+
         }
     }
 
-    for (unsigned c = 0; c < nchip; ++c)
+    for(unsigned c = 0; c < nchip; ++c)
         chip[c].doAnalyzeState();
 
     bank.reset();
