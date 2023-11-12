@@ -1,0 +1,63 @@
+Adlib Patch Resource Format Specification
+
+Revision 1
+Ravi I.
+Mar. 11, 2002
+
+
+Preface
+
+The Adlib patch resource defines instruments for the Yamaha OPL2 FM synthesis chip. Other cards, including the original SoundBlasters, that had the same or compatible chips also used the Adlib patch. The patch is traditionally numbered PATCH.003 or 3.PAT.
+
+Sierra does not seem to have changed the format of its Adlib patch resource through the entire life of SCI. This file format applies to all IBM games.
+
+You can contact me personally at ravi.i@softhome.net, but I would prefer that SCI messages be posted on the webboard so everyone can see them.
+File Format
+
+The first two bytes of an extracted patch file contain the bytes 89h 00h identifying a patch resource. These are not actually part of the resource data.
+
+Patch files contain a block of 48 instrument definitions followed optionally by the magic number ABh CDh (CDABh when read into a little endian machine) and 48 more definitions. Each instrument definition is 28 bytes containing data for an Adlib channel composed of two operators.
+
+
+Instrument Definitions
+
+An instrument definition has the following fields, each 1 byte long:
+
+offset 		description 					values
+0h 			op 1 key scaling 				0 - 3
+1h 			op 1 frequency modulation 		0 - 15
+2h 			channel feedback 				0 - 7
+3h 			op 1 attack rate 				0 - 15
+4h 			op 1 sustain level 				0 - 15
+5h 			op 1 envelope generator 		true, false
+6h 			op 1 decay rate 				0 - 15
+7h 			op 1 release rate 				0 - 15
+8h 			op 1 amplitude 					0 - 63
+9h 			op 1 amplitude modulation 		true, false
+Ah 			op 1 vibrato 					true. false
+Bh 			op 1 keyboard scale rate 		true, false
+Ch 			algorithm (reversed) 			0, 1
+Dh 			op 2 key scaling 				0 - 3
+Eh 			op 2 frequency modulation 		0 - 15
+Fh 			unused 	 
+10h 		op 2 attack rate 				0 - 15
+11h 		op 2 sustain level 				0 - 15
+12h 		op 2 envelope generator 		true, false
+13h 		op 2 decay rate 				0 - 15
+14h 		op 2 release rate 				0 - 15
+15h 		op 2 amplitude 					0 - 63
+16h 		op 2 amplitude modulation 		true, false
+17h 		op 2 vibrato 					true. false
+18h 		op 2 keyboard scale rate 		true, false
+19h 		unused 	 
+1Ah 		op 1 waveform 					0 - 3
+1Bh 		op 2 waveform 					0 - 3
+
+Note that the sense of the algorithm field is switched. A value of 0 means that the two operators are in synthesis while a value of 1 means that operator 1 modulates operator 2.
+
+
+Revision history
+
+Revision 1 - Mar. 11, 2002
+
+    First release of the specification
