@@ -62,8 +62,7 @@ void Ymf262LLEOPL3::writePan(uint16_t addr, uint8_t data)
 
 void Ymf262LLEOPL3::nativeGenerate(int16_t *frame)
 {
-    fmopl3_t *chip_r = reinterpret_cast<fmopl3_t*>(m_chip);
-    nopl3_getsample(chip_r, frame, 1);
+    nopl3_getsample(m_chip, frame, 1);
 }
 
 const char *Ymf262LLEOPL3::emulatorName()

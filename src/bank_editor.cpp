@@ -131,6 +131,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorOpal, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorJava, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorYmFm, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorYMF262LLC, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionSerialPortOPL, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
@@ -274,6 +275,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
     ui->actionEmulatorYmFm->setChecked(false);
+    ui->actionEmulatorYMF262LLC->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
     ui->actionSerialPortOPL->setChecked(false);
 
@@ -294,6 +296,9 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_YmFm:
         ui->actionEmulatorYmFm->setChecked(true);
+        break;
+    case Generator::CHIP_YMF262LLC:
+        ui->actionEmulatorYMF262LLC->setChecked(true);
         break;
     case Generator::CHIP_Win9xProxy:
         ui->actionWin9xOPLProxy->setChecked(true);
@@ -1151,6 +1156,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
     ui->actionEmulatorYmFm->setChecked(false);
+    ui->actionEmulatorYMF262LLC->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
     ui->actionSerialPortOPL->setChecked(false);
 
@@ -1186,6 +1192,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorYmFm->setChecked(true);
         m_currentChip = Generator::CHIP_YmFm;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorYMF262LLC)
+    {
+        ui->actionEmulatorYMF262LLC->setChecked(true);
+        m_currentChip = Generator::CHIP_YMF262LLC;
         m_generator->ctl_switchChip(m_currentChip);
     }
     else

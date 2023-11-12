@@ -89,6 +89,7 @@ public:
         CHIP_Opal,
         CHIP_Java,
         CHIP_YmFm,
+        CHIP_YMF262LLC,
         CHIP_Win9xProxy,
         CHIP_SerialPort,
         CHIP_END

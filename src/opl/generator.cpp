@@ -25,6 +25,7 @@
 #include "chips/dosbox_opl3.h"
 #include "chips/opal_opl3.h"
 #include "chips/java_opl3.h"
+#include "chips/ymf262_lle.h"
 
 #ifdef ENABLE_YMFM_EMULATOR
 #include "chips/ymfm_opl3.h"
@@ -939,6 +940,9 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
         chip.reset(&serialPortOpl());
         break;
 #endif
+    case CHIP_YMF262LLC:
+        chip.reset(new Ymf262LLEOPL3());
+        break;
     case CHIP_DosBox:
         chip.reset(new DosBoxOPL3());
         break;

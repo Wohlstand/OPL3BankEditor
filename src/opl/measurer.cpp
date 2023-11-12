@@ -45,6 +45,7 @@
 #include "chips/dosbox_opl3.h"
 #include "chips/opal_opl3.h"
 #include "chips/java_opl3.h"
+#include "chips/ymf262_lle.h"
 #ifdef ENABLE_YMFM_EMULATOR
 #include "chips/ymfm_opl3.h"
 #endif
@@ -696,7 +697,8 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
         std::shared_ptr<OPLChipBase>(new NukedOPL3),
         std::shared_ptr<OPLChipBase>(new DosBoxOPL3),
         std::shared_ptr<OPLChipBase>(new OpalOPL3),
-        std::shared_ptr<OPLChipBase>(new JavaOPL3)
+        std::shared_ptr<OPLChipBase>(new JavaOPL3),
+        std::shared_ptr<OPLChipBase>(new Ymf262LLEOPL3)
 #ifdef ENABLE_YMFM_EMULATOR
         , std::shared_ptr<OPLChipBase>(new YmFmOPL3)
 #endif
