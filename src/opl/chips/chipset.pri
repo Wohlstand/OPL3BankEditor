@@ -6,9 +6,9 @@ SOURCES+= \
     $$PWD/nuked/nukedopl3.c \
     $$PWD/dosbox/dbopl.cpp \
     $$PWD/nuked_opl3_v174.cpp \
-    $$PWD/nuked/nukedopl3_174.c
-    $$PWD/ymf262_lle.cpp
-    $$PWD/ymf262_lle/nuked_fmopl3.c
+    $$PWD/nuked/nukedopl3_174.c \
+    $$PWD/ymf262_lle.cpp \
+    $$PWD/ymf262_lle/nuked_fmopl3.c \
     $$PWD/ymf262_lle/nopl3.c
 
 HEADERS+= \
@@ -24,9 +24,9 @@ HEADERS+= \
     $$PWD/opal/opal.hpp \
     $$PWD/dosbox/dbopl.h \
     $$PWD/nuked_opl3_v174.h \
-    $$PWD/nuked/nukedopl3_174.h
-    $$PWD/ymf262_lle.h
-    $$PWD/ymf262_lle/nuked_fmopl3.h
+    $$PWD/nuked/nukedopl3_174.h \
+    $$PWD/ymf262_lle.h \
+    $$PWD/ymf262_lle/nuked_fmopl3.h \
     $$PWD/ymf262_lle/nopl3.h
 
 # Available when C++14 is supported
