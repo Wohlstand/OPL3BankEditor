@@ -74,7 +74,8 @@ void FMOPL3_Clock(fmopl3_t *chip)
         chip->prescaler1_cnt[1] = chip->prescaler1_cnt[0];
     }
 
-    int prescaler1_clk = (chip->reg_test1 & 0x40) != 0 ? chip->input.mclk : !(chip->prescaler1_cnt[1] & 2);
+    /* int prescaler1_clk = (chip->reg_test1 & 0x40) != 0 ? chip->input.mclk : !(chip->prescaler1_cnt[1] & 2);*/
+    int prescaler1_clk = chip->input.mclk; /* Temp: disable prescaler for performance reasons */
 
     chip->aclk1 = !prescaler1_clk;
     chip->aclk2 = prescaler1_clk;
@@ -873,9 +874,9 @@ void FMOPL3_Clock(fmopl3_t *chip)
 
         int maxrate = rate_hi == 15;
 
-        int rate12 = rate_hi == 12;
-        int rate13 = rate_hi == 13;
-        int rate14 = rate_hi == 14;
+        // int rate12 = rate_hi == 12;
+        // int rate13 = rate_hi == 13;
+        // int rate14 = rate_hi == 14;
 
         int inclow = 0;
 

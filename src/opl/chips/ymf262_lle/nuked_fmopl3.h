@@ -22,6 +22,13 @@
 
 #pragma once
 
+#ifndef NUKED_FMOPL3_H
+#define NUKED_FMOPL3_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 typedef struct
@@ -332,3 +339,9 @@ typedef struct
 } fmopl3_t;
 
 extern void FMOPL3_Clock(fmopl3_t *chip);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // NUKED_FMOPL3_H
