@@ -285,6 +285,8 @@ FfmtErrCode SbIBK_impl::saveFileIBK(QString filePath, FmBank &bank)
         FmBank::Instrument &ins = drumFlags[i] ?
                                   tmp.insPercussion[i] :
                                   tmp.insMelodic[i];
+        ins.name[8] = '\0';
+
         if(file.write(ins.name, 9) != 9)
             return FfmtErrCode::ERR_BADFORMAT;
     }
