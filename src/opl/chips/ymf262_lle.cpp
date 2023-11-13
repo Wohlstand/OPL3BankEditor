@@ -50,7 +50,8 @@ void Ymf262LLEOPL3::reset()
 
 void Ymf262LLEOPL3::writeReg(uint16_t addr, uint8_t data)
 {
-    nopl3_write(m_chip, addr, data);
+    nopl3_write(m_chip, 2 * ((addr >> 8) & 3), addr);
+    nopl3_write(m_chip, 1, data);
 }
 
 void Ymf262LLEOPL3::writePan(uint16_t addr, uint8_t data)
