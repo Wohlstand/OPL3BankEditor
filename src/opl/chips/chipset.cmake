@@ -7,6 +7,8 @@ set(CHIPS_SOURCES
     "src/opl/chips/nuked_opl3.h"
     "src/opl/chips/opal_opl3.cpp"
     "src/opl/chips/opal_opl3.h"
+    "src/opl/chips/opal/opal.c"
+    "src/opl/chips/opal/opal.h"
     "src/opl/chips/nuked/nukedopl3.c"
     "src/opl/chips/nuked/nukedopl3.h"
     "src/opl/chips/dosbox/dbopl.cpp"

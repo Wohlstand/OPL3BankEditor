@@ -3,6 +3,7 @@ SOURCES+= \
     $$PWD/java_opl3.cpp \
     $$PWD/nuked_opl3.cpp \
     $$PWD/opal_opl3.cpp \
+    $$PWD/opal/opal.c \
     $$PWD/nuked/nukedopl3.c \
     $$PWD/dosbox/dbopl.cpp \
     $$PWD/nuked_opl3_v174.cpp \
@@ -18,6 +19,7 @@ HEADERS+= \
     $$PWD/java_opl3.h \
     $$PWD/nuked_opl3.h \
     $$PWD/opal_opl3.h \
+    $$PWD/opal/opal.h \
     $$PWD/opl_chip_base.h \
     $$PWD/java/JavaOPL3.hpp \
     $$PWD/nuked/nukedopl3.h \
