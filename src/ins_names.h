@@ -25,7 +25,13 @@
 #include <QString>
 #include <cstdint>
 
-#pragma pack(push, 1)
+
+#if !defined(_MSC_VER) && !defined(__aarch64__) && !defined(__3DS__)
+#define ATTRIB_PACKED __attribute__((__packed__))
+#else
+#define ATTRIB_PACKED
+#endif
+
 struct MidiProgram
 {
     //! Kind of instrument. 'M' melodic 'P' percussive
@@ -40,8 +46,7 @@ struct MidiProgram
     const char *bankName;
     //! Patch name
     const char *patchName;
-};
-#pragma pack(pop)
+} ATTRIB_PACKED;
 
 enum MidiSpec
 {
