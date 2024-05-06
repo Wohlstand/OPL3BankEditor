@@ -18,9 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifdef __unix__
+#if defined( __unix__) || defined(__APPLE__)
 #include <fcntl.h>
-#include <errno.h>
 #include <termios.h>
 #include <unistd.h>
 #endif
@@ -28,6 +27,8 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
+
+#include <string>
 
 
 class ChipSerialPortBase
@@ -56,7 +57,7 @@ public:
 
 
 
-#ifdef __unix__
+#if defined( __unix__) || defined(__APPLE__)
 class ChipSerialPort : public ChipSerialPortBase
 {
     int m_port;
@@ -139,20 +140,36 @@ public:
 
         if(m_port < 0)
         {
+            fprintf(stderr, "-- OPL Serial ERROR: failed to open tty device `%s': %s\n", portPath.c_str(), strerror(errno));
+            fflush(stderr);
             m_port = 0;
             return false;
         }
 
         if(tcgetattr(m_port, &m_portSetup) != 0)
         {
+            fprintf(stderr, "-- OPL Serial ERROR: failed to retrieve setup `%s': %s\n", portPath.c_str(), strerror(errno));
+            fflush(stderr);
             close();
             return false;
         }
+
+        m_portSetup.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+        m_portSetup.c_oflag &= ~OPOST;
+        m_portSetup.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+        m_portSetup.c_cflag &= ~(CSIZE | PARENB);
+        m_portSetup.c_cflag |= CS8;
+
+#if defined (__linux__) || defined (__CYGWIN__)
+        m_portSetup.c_cflag &= ~CBAUD;
+#endif
 
         cfsetospeed(&m_portSetup, baud2enum(baudRate));
 
         if(tcsetattr(m_port, TCSANOW, &m_portSetup) != 0)
         {
+            fprintf(stderr, "-- OPL Serial ERROR: failed to apply setup `%s': %s\n", portPath.c_str(), strerror(errno));
+            fflush(stderr);
             close();
             return false;
         }
