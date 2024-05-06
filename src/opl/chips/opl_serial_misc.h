@@ -25,12 +25,13 @@
 #include <unistd.h>
 #endif
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 
 class ChipSerialPortBase
 {
-protected:
-    std::string m_portName;
-
 public:
     ChipSerialPortBase() {}
     virtual ~ChipSerialPortBase() {}
@@ -169,3 +170,123 @@ public:
 };
 
 #endif // __unix__
+
+
+
+
+#ifdef _WIN32
+
+class ChipSerialPort : public ChipSerialPortBase
+{
+    HANDLE m_port;
+
+    static unsigned int baud2enum(unsigned int baud)
+    {
+        if(baud <= 110)
+            return CBR_110;
+        else if(baud <= 300)
+            return CBR_300;
+        else if(baud <= 600)
+            return CBR_600;
+        else if(baud <= 1200)
+            return CBR_1200;
+        else if(baud <= 2400)
+            return CBR_2400;
+        else if(baud <= 4800)
+            return CBR_4800;
+        else if(baud <= 9600)
+            return CBR_9600;
+        else if(baud <= 19200)
+            return CBR_19200;
+        else if(baud <= 38400)
+            return CBR_38400;
+        else if(baud <= 57600)
+            return CBR_57600;
+        else if(baud <= 115200)
+            return CBR_115200;
+        else
+            return CBR_115200;
+    }
+
+public:
+    ChipSerialPort() : ChipSerialPortBase()
+    {
+        m_port = NULL;
+    }
+
+    virtual ~ChipSerialPort()
+    {
+        close();
+    }
+
+    bool isOpen()
+    {
+        return m_port != NULL;
+    }
+
+    void close()
+    {
+        if(m_port)
+            CloseHandle(m_port);
+
+        m_port = NULL;
+    }
+
+    bool open(const std::string &portName, unsigned baudRate)
+    {
+        if(m_port)
+            this->close();
+
+        std::string portPath = "\\\\.\\" + portName;
+        m_port =  CreateFileA(portPath.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+
+        if(m_port == INVALID_HANDLE_VALUE)
+        {
+            m_port = NULL;
+            return false;
+        }
+
+        DCB dcb;
+        BOOL succ;
+
+        SecureZeroMemory(&dcb, sizeof(DCB));
+        dcb.DCBlength = sizeof(DCB);
+
+        succ = GetCommState(m_port, &dcb);
+        if(!succ)
+        {
+            this->close();
+            return false;
+        }
+
+        dcb.BaudRate = baud2enum(baudRate);
+        dcb.ByteSize = 8;
+        dcb.Parity = NOPARITY;
+        dcb.StopBits = ONESTOPBIT;
+
+        succ = SetCommState(m_port, &dcb);
+
+        if(!succ)
+        {
+            this->close();
+            return false;
+        }
+
+        return true;
+    }
+
+    int write(uint8_t *data, size_t size)
+    {
+        if(!m_port)
+            return 0;
+
+        DWORD written = 0;
+
+        if(!WriteFile(m_port, data, size, &written, 0))
+            return 0;
+
+        return written;
+    }
+};
+
+#endif // _WIN32
