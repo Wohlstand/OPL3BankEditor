@@ -27,6 +27,7 @@
 #include <QAtomicInt>
 
 class QSerialPort;
+class ChipSerialPort;
 
 ///
 class OPL_SerialPort : public QObject, public OPLChipBaseT<OPL_SerialPort>
@@ -61,7 +62,7 @@ private slots:
     void sendSerial(uint addr, uint data);
 
 private:
-    QSerialPort *m_port;
+    ChipSerialPort *m_port;
     QAtomicInt m_protocol;
 };
 

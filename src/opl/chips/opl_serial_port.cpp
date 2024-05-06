@@ -22,6 +22,134 @@
 
 #include <QSerialPort>
 
+#ifdef __linux__
+#include <fcntl.h>
+#include <errno.h>
+#include <termios.h>
+#include <unistd.h>
+#endif
+
+
+class ChipSerialPort
+{
+    std::string m_portName;
+
+#ifdef __unix__
+    int m_port;
+    struct termios m_portSetup;
+
+    static unsigned int baud2enum(unsigned int baud)
+    {
+        if(baud == 0)
+            return B0;
+        else if(baud <= 50)
+            return B50;
+        else if(baud <= 75)
+            return B75;
+        else if(baud <= 110)
+            return B110;
+        else if(baud <= 134)
+            return B134;
+        else if(baud <= 150)
+            return B150;
+        else if(baud <= 200)
+            return B200;
+        else if(baud <= 300)
+            return B300;
+        else if(baud <= 600)
+            return B600;
+        else if(baud <= 1200)
+            return B1200;
+        else if(baud <= 1800)
+            return B1800;
+        else if(baud <= 2400)
+            return B2400;
+        else if(baud <= 4800)
+            return B4800;
+        else if(baud <= 9600)
+            return B9600;
+        else if(baud <= 19200)
+            return B19200;
+        else if(baud <= 38400)
+            return B38400;
+        else if(baud <= 57600)
+            return B57600;
+        else if(baud <= 115200)
+            return B115200;
+        else
+            return B230400;
+    }
+#endif
+
+public:
+    ChipSerialPort()
+    {
+#ifdef __linux__
+        m_port = 0;
+        memset(&m_portSetup, 0, sizeof(struct termios));
+#endif
+    }
+
+    ~ChipSerialPort()
+    {
+        close();
+    }
+
+    bool isOpen()
+    {
+        return m_port != 0;
+    }
+
+    void close()
+    {
+        if(m_port)
+            ::close(m_port);
+
+        m_port = 0;
+    }
+
+    bool open(const std::string &portName, unsigned baudRate)
+    {
+        if(m_port)
+            this->close();
+
+        std::string portPath = "/dev/" + portName;
+        m_port = ::open(portPath.c_str(), O_WRONLY);
+
+        if(m_port < 0)
+        {
+            m_port = 0;
+            return false;
+        }
+
+        if(tcgetattr(m_port, &m_portSetup) != 0)
+        {
+            close();
+            return false;
+        }
+
+        cfsetospeed(&m_portSetup, baud2enum(baudRate));
+
+        if(tcsetattr(m_port, TCSANOW, &m_portSetup) != 0)
+        {
+            close();
+            return false;
+        }
+
+        return true;
+    }
+
+    int write(uint8_t *data, size_t size)
+    {
+        if(!m_port)
+            return 0;
+
+        return ::write(m_port, data, size);
+    }
+};
+
+
+
 static size_t retrowave_protocol_serial_pack(const uint8_t *buf_in, size_t len_in, uint8_t *buf_out)
 {
     size_t in_cursor = 0;
@@ -83,9 +211,12 @@ bool OPL_SerialPort::connectPort(const QString &name, unsigned baudRate, unsigne
     // so chipType() will be correct after the port is live
     m_protocol.storeRelease(protocol);
 
-    QSerialPort *port = m_port = new QSerialPort(name);
-    port->setBaudRate(baudRate);
-    return port->open(QSerialPort::WriteOnly);
+    // QSerialPort *port = m_port = new QSerialPort(name);
+    // port->setBaudRate(baudRate);
+    // return port->open(QSerialPort::WriteOnly);
+
+    m_port = new ChipSerialPort();
+    return m_port->open(name.toStdString(), baudRate);
 }
 
 void OPL_SerialPort::writeReg(uint16_t addr, uint8_t data)
@@ -96,7 +227,7 @@ void OPL_SerialPort::writeReg(uint16_t addr, uint8_t data)
 
 void OPL_SerialPort::sendSerial(uint addr, uint data)
 {
-    QSerialPort *port = m_port;
+    ChipSerialPort *port = m_port;
 
     if(!port || !port->isOpen())
         return;
@@ -118,7 +249,7 @@ void OPL_SerialPort::sendSerial(uint addr, uint data)
             break;
         sendBuffer[0] = (uint8_t)addr;
         sendBuffer[1] = (uint8_t)data;
-        port->write((char *)sendBuffer, 2);
+        port->write(sendBuffer, 2);
         break;
     }
     case ProtocolNukeYktOPL3:
@@ -126,7 +257,7 @@ void OPL_SerialPort::sendSerial(uint addr, uint data)
         sendBuffer[0] = (addr >> 6) | 0x80;
         sendBuffer[1] = ((addr & 0x3f) << 1) | (data >> 7);
         sendBuffer[2] = (data & 0x7f);
-        port->write((char *)sendBuffer, 3);
+        port->write(sendBuffer, 3);
         break;
     }
     case ProtocolRetroWaveOPL3:
@@ -140,7 +271,7 @@ void OPL_SerialPort::sendSerial(uint addr, uint data)
             0xfb, static_cast<uint8_t>(data)
         };
         size_t packed_len = retrowave_protocol_serial_pack(buf, sizeof(buf), sendBuffer);
-        port->write((char *)sendBuffer, (qint64)packed_len);
+        port->write(sendBuffer, packed_len);
         break;
     }
     }
