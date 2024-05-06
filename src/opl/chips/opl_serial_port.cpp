@@ -1,19 +1,21 @@
 /*
- * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2023 Vitaly Novichkov <admin@wohlnet.ru>
+ * Interfaces over Yamaha OPL3 (YMF262) chip emulators
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
+ * Copyright (c) 2017-2023 Vitaly Novichkov (Wohlstand)
  *
- * This program is distributed in the hope that it will be useful,
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include "opl_serial_port.h"
@@ -21,133 +23,7 @@
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
 
 #include <QSerialPort>
-
-#ifdef __linux__
-#include <fcntl.h>
-#include <errno.h>
-#include <termios.h>
-#include <unistd.h>
-#endif
-
-
-class ChipSerialPort
-{
-    std::string m_portName;
-
-#ifdef __unix__
-    int m_port;
-    struct termios m_portSetup;
-
-    static unsigned int baud2enum(unsigned int baud)
-    {
-        if(baud == 0)
-            return B0;
-        else if(baud <= 50)
-            return B50;
-        else if(baud <= 75)
-            return B75;
-        else if(baud <= 110)
-            return B110;
-        else if(baud <= 134)
-            return B134;
-        else if(baud <= 150)
-            return B150;
-        else if(baud <= 200)
-            return B200;
-        else if(baud <= 300)
-            return B300;
-        else if(baud <= 600)
-            return B600;
-        else if(baud <= 1200)
-            return B1200;
-        else if(baud <= 1800)
-            return B1800;
-        else if(baud <= 2400)
-            return B2400;
-        else if(baud <= 4800)
-            return B4800;
-        else if(baud <= 9600)
-            return B9600;
-        else if(baud <= 19200)
-            return B19200;
-        else if(baud <= 38400)
-            return B38400;
-        else if(baud <= 57600)
-            return B57600;
-        else if(baud <= 115200)
-            return B115200;
-        else
-            return B230400;
-    }
-#endif
-
-public:
-    ChipSerialPort()
-    {
-#ifdef __linux__
-        m_port = 0;
-        memset(&m_portSetup, 0, sizeof(struct termios));
-#endif
-    }
-
-    ~ChipSerialPort()
-    {
-        close();
-    }
-
-    bool isOpen()
-    {
-        return m_port != 0;
-    }
-
-    void close()
-    {
-        if(m_port)
-            ::close(m_port);
-
-        m_port = 0;
-    }
-
-    bool open(const std::string &portName, unsigned baudRate)
-    {
-        if(m_port)
-            this->close();
-
-        std::string portPath = "/dev/" + portName;
-        m_port = ::open(portPath.c_str(), O_WRONLY);
-
-        if(m_port < 0)
-        {
-            m_port = 0;
-            return false;
-        }
-
-        if(tcgetattr(m_port, &m_portSetup) != 0)
-        {
-            close();
-            return false;
-        }
-
-        cfsetospeed(&m_portSetup, baud2enum(baudRate));
-
-        if(tcsetattr(m_port, TCSANOW, &m_portSetup) != 0)
-        {
-            close();
-            return false;
-        }
-
-        return true;
-    }
-
-    int write(uint8_t *data, size_t size)
-    {
-        if(!m_port)
-            return 0;
-
-        return ::write(m_port, data, size);
-    }
-};
-
+#include "opl_serial_misc.h"
 
 
 static size_t retrowave_protocol_serial_pack(const uint8_t *buf_in, size_t len_in, uint8_t *buf_out)
