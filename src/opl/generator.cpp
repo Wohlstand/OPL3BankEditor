@@ -36,7 +36,7 @@
 #endif
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
-#include "chips/opl_serial_port.h"
+#include "chips/opl_serial_port_qt.h"
 #endif
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
@@ -913,9 +913,9 @@ Win9x_OPL_Proxy &Generator::oplProxy()
 #endif
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
-OPL_SerialPort &Generator::serialPortOpl()
+OPL_SerialPortQt& Generator::serialPortOpl()
 {
-    static OPL_SerialPort serial;
+    static OPL_SerialPortQt serial;
     return serial;
 }
 #endif

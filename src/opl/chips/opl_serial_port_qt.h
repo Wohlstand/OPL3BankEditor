@@ -19,47 +19,36 @@
  */
 
 
-#ifndef OPL_SERIAL_PORT_H
-#define OPL_SERIAL_PORT_H
+#ifndef OPL_SERIAL_PORT_QT_H
+#define OPL_SERIAL_PORT_QT_H
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
 
-#include <string>
-#include "opl_chip_base.h"
+#include "opl_serial_port.h"
+#include <QObject>
+#include <QMutex>
 
-class ChipSerialPort;
-
-class OPL_SerialPort : public OPLChipBaseT<OPL_SerialPort>
+class OPL_SerialPortQt : public QObject, public OPL_SerialPort
 {
+    Q_OBJECT
+
 public:
-    OPL_SerialPort();
-    virtual ~OPL_SerialPort() override;
+    OPL_SerialPortQt();
+    virtual ~OPL_SerialPortQt() override;
 
-    enum Protocol
-    {
-        ProtocolUnknown,
-        ProtocolArduinoOPL2,
-        ProtocolNukeYktOPL3,
-        ProtocolRetroWaveOPL3,
-    };
+    bool connectPort(const QString &name, unsigned baudRate, unsigned protocol);
 
-    bool connectPort(const std::string &name, unsigned baudRate, unsigned protocol);
-
-    bool canRunAtPcmRate() const override { return false; }
-    void setRate(uint32_t /*rate*/) override {}
-    void reset() override {}
     void writeReg(uint16_t addr, uint8_t data) override;
-    void nativePreGenerate() override {}
-    void nativePostGenerate() override {}
-    void nativeGenerate(int16_t *frame) override;
-    const char *emulatorName() override;
+
     ChipType chipType() override;
 
+private slots:
+    void sendSerial(uint addr, uint data);
+
 private:
-    ChipSerialPort *m_port;
-    int m_protocol;
+    QMutex m_protoMutex;
 };
 
 #endif // ENABLE_HW_OPL_SERIAL_PORT
 
-#endif // OPL_SERIAL_PORT_H
+#endif // OPL_SERIAL_PORT_QT_H

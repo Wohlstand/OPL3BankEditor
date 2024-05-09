@@ -32,7 +32,7 @@ class Win9x_OPL_Proxy;
 #endif
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
-class OPL_SerialPort;
+class OPL_SerialPortQt;
 #endif
 
 #define NUM_OF_CHANNELS         23
@@ -181,7 +181,7 @@ public:
 #endif
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
-    static OPL_SerialPort &serialPortOpl();
+    static OPL_SerialPortQt &serialPortOpl();
 #endif
 
 private:

@@ -44,7 +44,7 @@
 #include "opl/chips/win9x_opl_proxy.h"
 #endif
 #ifdef ENABLE_HW_OPL_SERIAL_PORT // to set port and rate
-#include "opl/chips/opl_serial_port.h"
+#include "opl/chips/opl_serial_port_qt.h"
 #endif
 
 #include "FileFormats/ffmt_factory.h"
@@ -255,7 +255,7 @@ void BankEditor::loadSettings()
     m_serialPortName = setup.value("hw-opl-serial-port", QString()).toString();
     m_serialPortBaudRate = setup.value("hw-opl-serial-baud-rate", 115200).toUInt();
     m_serialPortProtocol = setup.value("hw-opl-serial-protocol", 0u).toUInt();
-    OPL_SerialPort &serial = *m_serialPortOpl;
+    OPL_SerialPortQt &serial = *m_serialPortOpl;
     serial.connectPort(m_serialPortName, m_serialPortBaudRate, m_serialPortProtocol);
 #endif
 
@@ -1477,7 +1477,7 @@ void BankEditor::on_actionHardware_OPL_triggered()
 #endif
 
 #if defined(ENABLE_HW_OPL_SERIAL_PORT)
-    OPL_SerialPort &serial = *m_serialPortOpl;
+    OPL_SerialPortQt &serial = *m_serialPortOpl;
     dlg->setSerialPortName(m_serialPortName);
     dlg->setSerialBaudRate(m_serialPortBaudRate);
     dlg->setSerialProtocol(m_serialPortProtocol);

@@ -57,7 +57,9 @@ endif()
 if(ENABLE_SERIAL_PORT)
   list(APPEND CHIPS_SOURCES
     "src/opl/chips/opl_serial_port.cpp"
+    "src/opl/chips/opl_serial_port_qt.cpp"
     "src/opl/chips/opl_serial_port.h"
+    "src/opl/chips/opl_serial_port_qt.h"
     "src/opl/chips/opl_serial_misc.h"
   )
 endif()

@@ -135,7 +135,7 @@ private:
 #endif
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
-    OPL_SerialPort *m_serialPortOpl = nullptr;
+    OPL_SerialPortQt *m_serialPortOpl = nullptr;
     QString m_serialPortName;
     unsigned m_serialPortBaudRate = 115200;
     unsigned m_serialPortProtocol = 0;

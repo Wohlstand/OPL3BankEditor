@@ -18,10 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#ifndef OPL_SERIAL_MISC_H
+#define OPL_SERIAL_MISC_H
+
 #if defined( __unix__) || defined(__APPLE__)
 #include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>
+#include <cstring>
+#include <cstdio>
 #endif
 
 #ifdef _WIN32
@@ -109,7 +114,7 @@ public:
     ChipSerialPort() : ChipSerialPortBase()
     {
         m_port = 0;
-        memset(&m_portSetup, 0, sizeof(struct termios));
+        std::memset(&m_portSetup, 0, sizeof(struct termios));
     }
 
     virtual ~ChipSerialPort()
@@ -140,16 +145,16 @@ public:
 
         if(m_port < 0)
         {
-            fprintf(stderr, "-- OPL Serial ERROR: failed to open tty device `%s': %s\n", portPath.c_str(), strerror(errno));
-            fflush(stderr);
+            std::fprintf(stderr, "-- OPL Serial ERROR: failed to open tty device `%s': %s\n", portPath.c_str(), strerror(errno));
+            std::fflush(stderr);
             m_port = 0;
             return false;
         }
 
         if(tcgetattr(m_port, &m_portSetup) != 0)
         {
-            fprintf(stderr, "-- OPL Serial ERROR: failed to retrieve setup `%s': %s\n", portPath.c_str(), strerror(errno));
-            fflush(stderr);
+            std::fprintf(stderr, "-- OPL Serial ERROR: failed to retrieve setup `%s': %s\n", portPath.c_str(), strerror(errno));
+            std::fflush(stderr);
             close();
             return false;
         }
@@ -168,8 +173,8 @@ public:
 
         if(tcsetattr(m_port, TCSANOW, &m_portSetup) != 0)
         {
-            fprintf(stderr, "-- OPL Serial ERROR: failed to apply setup `%s': %s\n", portPath.c_str(), strerror(errno));
-            fflush(stderr);
+            std::fprintf(stderr, "-- OPL Serial ERROR: failed to apply setup `%s': %s\n", portPath.c_str(), strerror(errno));
+            std::fflush(stderr);
             close();
             return false;
         }
@@ -307,3 +312,5 @@ public:
 };
 
 #endif // _WIN32
+
+#endif // OPL_SERIAL_MISC_H

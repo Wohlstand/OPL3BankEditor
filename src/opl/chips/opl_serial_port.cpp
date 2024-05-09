@@ -22,7 +22,6 @@
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
 
-#include <QSerialPort>
 #include "opl_serial_misc.h"
 
 
@@ -78,45 +77,32 @@ OPL_SerialPort::~OPL_SerialPort()
     m_port = nullptr;
 }
 
-bool OPL_SerialPort::connectPort(const QString &name, unsigned baudRate, unsigned protocol)
+bool OPL_SerialPort::connectPort(const std::string& name, unsigned baudRate, unsigned protocol)
 {
     delete m_port;
     m_port = nullptr;
 
     // ensure audio thread reads protocol atomically and in order,
     // so chipType() will be correct after the port is live
-    m_protocol.storeRelease(protocol);
+    m_protocol = protocol;
 
     // QSerialPort *port = m_port = new QSerialPort(name);
     // port->setBaudRate(baudRate);
     // return port->open(QSerialPort::WriteOnly);
 
     m_port = new ChipSerialPort();
-    return m_port->open(name.toStdString(), baudRate);
+    return m_port->open(name, baudRate);
 }
 
 void OPL_SerialPort::writeReg(uint16_t addr, uint8_t data)
 {
-    QMetaObject::invokeMethod(this, "sendSerial",
-                              Qt::QueuedConnection, Q_ARG(uint, addr), Q_ARG(uint, data));
-}
-
-void OPL_SerialPort::sendSerial(uint addr, uint data)
-{
+    uint8_t sendBuffer[16];
     ChipSerialPort *port = m_port;
 
     if(!port || !port->isOpen())
         return;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    unsigned protocol = m_protocol.loadRelaxed();
-#else
-    unsigned protocol = m_protocol.load();
-#endif
-
-    uint8_t sendBuffer[16];
-
-    switch(protocol)
+    switch(m_protocol)
     {
     default:
     case ProtocolArduinoOPL2:
@@ -166,9 +152,7 @@ const char *OPL_SerialPort::emulatorName()
 
 OPLChipBase::ChipType OPL_SerialPort::chipType()
 {
-    unsigned protocol = m_protocol.loadAcquire();
-
-    switch(protocol)
+    switch(m_protocol)
     {
     default:
     case ProtocolArduinoOPL2:
@@ -177,7 +161,6 @@ OPLChipBase::ChipType OPL_SerialPort::chipType()
     case ProtocolRetroWaveOPL3:
         return OPLChipBase::CHIPTYPE_OPL3;
     }
-
 }
 
 #endif // ENABLE_HW_OPL_SERIAL_PORT
