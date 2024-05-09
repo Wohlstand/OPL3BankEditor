@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <cstring>
 #include <cstdio>
+#include <errno.h>
 #endif
 
 #ifdef _WIN32

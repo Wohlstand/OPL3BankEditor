@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "opl_serial_port.h"
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
 
+#include "opl_serial_port.h"
 #include "opl_serial_misc.h"
 
 
@@ -68,19 +68,19 @@ static size_t retrowave_protocol_serial_pack(const uint8_t *buf_in, size_t len_i
 }
 
 OPL_SerialPort::OPL_SerialPort()
-    : m_port(nullptr), m_protocol(ProtocolUnknown)
+    : m_port(NULL), m_protocol(ProtocolUnknown)
 {}
 
 OPL_SerialPort::~OPL_SerialPort()
 {
     delete m_port;
-    m_port = nullptr;
+    m_port = NULL;
 }
 
 bool OPL_SerialPort::connectPort(const std::string& name, unsigned baudRate, unsigned protocol)
 {
     delete m_port;
-    m_port = nullptr;
+    m_port = NULL;
 
     // ensure audio thread reads protocol atomically and in order,
     // so chipType() will be correct after the port is live
