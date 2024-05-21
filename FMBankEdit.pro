@@ -30,10 +30,10 @@ greaterThan(QT_MAJOR_VERSION, 4):{
     if(qtCompileTest(cpp14)) {
         CONFIG += c++14
         CONFIG += enable_ymfm
-        message("TEST: С++14 support presented, YMFM will be ENABLED!")
+        message("TEST: C++14 support presented, YMFM will be ENABLED!")
     } else {
         CONFIG += c++11
-        message("TEST: С++14 was not found, YMFM will be DISABLED!")
+        message("TEST: C++14 was not found, YMFM will be DISABLED!")
     }
 } else {
     QMAKE_CXXFLAGS += -std=c++11
