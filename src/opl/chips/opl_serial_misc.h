@@ -170,7 +170,12 @@ public:
         m_portSetup.c_cflag &= ~CBAUD;
 #endif
 
+#if defined (BSD) || defined(__FreeBSD__)
+        cfsetispeed(&m_portSetup, baudRate);
+        cfsetospeed(&m_portSetup, baudRate);
+#elif !defined(__APPLE__)
         cfsetospeed(&m_portSetup, baud2enum(baudRate));
+#endif
 
         if(tcsetattr(m_port, TCSANOW, &m_portSetup) != 0)
         {
