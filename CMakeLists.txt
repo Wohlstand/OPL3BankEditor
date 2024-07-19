@@ -174,7 +174,7 @@ set(MEASURER_SOURCES
   "src/opl/measurer.cpp")
 add_library(Measurer STATIC ${MEASURER_SOURCES})
 target_include_directories(Measurer PUBLIC "src")
-target_link_libraries(Measurer PUBLIC Common Qt5::Concurrent)
+target_link_libraries(Measurer PUBLIC Common Chips Qt5::Concurrent)
 if(NOT MSVC AND NOT APPLE)
   target_compile_options(Measurer PRIVATE "-fopenmp")
 endif()
