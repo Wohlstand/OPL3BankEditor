@@ -101,6 +101,10 @@ public:
     void switchChip(OPL_Chips chipId);
 
     void generate(int16_t *frames, unsigned nframes);
+    void generate(float *frames, unsigned nframes);
+
+    void setGain(float gain);
+    float getGain() const;
 
     /**
      * @brief Set the tone frequency on the chip channel and turn note on
@@ -242,6 +246,9 @@ private:
     uint8_t     testDrum;
 
     uint32_t    m_rate = 44100;
+
+    //! Adjust the volume of the output to not be too quite
+    float       m_gain = 2.0f;
 
     struct OPLChipDelete { void operator()(OPLChipBase *); };
     std::unique_ptr<OPLChipBase, OPLChipDelete> chip;

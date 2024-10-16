@@ -2009,9 +2009,35 @@ void Generator::updateChannelManager()
 void Generator::generate(int16_t *frames, unsigned nframes)
 {
     chip->generate(frames, nframes);
-    // 2x Gain by default
+    // Gain by default
     for(size_t i = 0; i < nframes * 2; ++i)
-        frames[i] *= 2;
+        frames[i] *= m_gain;
+}
+
+void Generator::generate(float* frames, unsigned int nframes)
+{
+    int32_t out[2];
+
+    chip->nativePreGenerate();
+
+    for(unsigned int i = 0; i < nframes; ++i)
+    {
+        chip->resampledGenerate(out);
+        *frames++ = (out[1] / 32767.0f) * m_gain;
+        *frames++ = (out[2] / 32767.0f) * m_gain;
+    }
+
+    chip->nativePostGenerate();
+}
+
+void Generator::setGain(float gain)
+{
+    m_gain = gain;
+}
+
+float Generator::getGain() const
+{
+    return m_gain;
 }
 
 Generator::NotesManager::NotesManager()
