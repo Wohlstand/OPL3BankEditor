@@ -2,7 +2,7 @@
               MIDI playing bank for Yamaha OPL2 (YMF262) chip
                  file format specification (WOPL and OPLI)
 ===============================================================================
-                         Created in July, 23, 2017
+                         Created in 23'th of July, 2017
 ===============================================================================
 Author:             Vitaliy Novichkov "Wohlstand"
 Contacts emails:    admin@wohlnet.ru, nvd339@yandex.ru
@@ -22,22 +22,22 @@ Contents:
 
 Version | What's new
 -------------------------------------------------------------------------------
-    1   | First version (July, 23, 2017)
+    1   | First version (23'th of July, 2017)
 -------------------------------------------------------------------------------
     2   | Added banks meta-data arrays into bank format (August, 1, 2017)
 -------------------------------------------------------------------------------
     3   | Added two delay coefficients are needed for ADLMIDI's channel busy
-        | (November 19, 2017)
+        | (19'th of November, 2017)
         | Change: Added 'blank instrument' flag into existing variable
-        | (March 26, 2018)
+        | (26'th of March, 2018)
         | Change: Added rhythm-mode drum type three-bit number
-        | (May 29, 2018)
+        | (29'th of May, 2018)
         | Change: Added two new volume scaling models: DMX and Apogee with
         | fixed AM voices
-        | (August 31, 2020)
+        | (31'th of August, 2020)
         | Change: Added three new volume scaling models: Audio Interfaces
         | Library, Win9x Generic FM, and HMI Sound Operating System
-        | (September 6, 2020)
+        | (6'th of September, 2020)
 -------------------------------------------------------------------------------
 
 ===============================================================================
@@ -48,6 +48,12 @@ Version | What's new
 channel of YMF262 chip to setup the timbre
 
 Lenght of each instrument entry is 62 bytes (up to version 2 and in OPLI files)
+
+Operators in the list below has the next roles:
+- Operator 1 - the Carrier1 (Operator 2 for 4-operators mode)
+- Operator 2 - the Modulator1 (Operator 1 for 4-operators mode)
+- Operator 3 - the Carrier2 (Operator 4 for 4-operators mode)
+- Operator 4 - the Modulator2 (Operator 3 for 4-operators mode)
 
 Since version 3, in WOPL banks each instrument has extra 4 bytes for
 a two extra fields
@@ -179,4 +185,3 @@ InsSize:
     InsSize * 128 * PBanks  | 128 [Single-instrument entries] per each bank,
                             |     look at top of this text file
 --------------------------------------------
-
