@@ -26,8 +26,8 @@ Each bank contains 128 melodic and 47 percussion instruments.
 Data type | Name           | OPL base register  | Description
 ===============================================================================
 UINT16LE  | flags          | N/A                | Instrument flags:
-          |                |                    | 0x01 - fixed pitch,
-          |                |                    | 0x02 - Unknown flag,
+          |                |                    | 0x01 - Fixed pitch,
+          |                |                    | 0x02 - Delayed vibrato (Unused),
           |                |                    | 0x04 - Double-voice mode
 -------------------------------------------------------------------------------
 UINT8     | fineTune       | N/A                | Second voice detune level
@@ -123,4 +123,3 @@ of fine tune field is approximately equal to 1/0.015625 of tone.
 == Percussion instruments ==
 Percussion instruments are in range between 35 (Bass drum 1)
 and 81 (Open Triangle) MIDI indeces.
-
