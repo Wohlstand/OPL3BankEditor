@@ -2,7 +2,7 @@
               MIDI playing bank for Yamaha OPL2 (YMF262) chip
                  file format specification (WOPL and OPLI)
 ===============================================================================
-                         Created in 23'th of July, 2017
+                         Created in 23'rd of July, 2017
 ===============================================================================
 Author:             Vitaliy Novichkov "Wohlstand"
 Contacts emails:    admin@wohlnet.ru, nvd339@yandex.ru
@@ -22,7 +22,7 @@ Contents:
 
 Version | What's new
 -------------------------------------------------------------------------------
-    1   | First version (23'th of July, 2017)
+    1   | First version (23'rd of July, 2017)
 -------------------------------------------------------------------------------
     2   | Added banks meta-data arrays into bank format (August, 1, 2017)
 -------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ Version | What's new
         | (29'th of May, 2018)
         | Change: Added two new volume scaling models: DMX and Apogee with
         | fixed AM voices
-        | (31'th of August, 2020)
+        | (31'st of August, 2020)
         | Change: Added three new volume scaling models: Audio Interfaces
         | Library, Win9x Generic FM, and HMI Sound Operating System
         | (6'th of September, 2020)
