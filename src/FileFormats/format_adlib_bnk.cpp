@@ -52,7 +52,7 @@ static const char *bnk_magicAN = "ANLIB-";
 /**
  * @brief Reader and Writer of the Apogee Sound System TMB Bank format
  */
-class AdLibBnk_impl : public FmBankFormatBase
+class AdLibBnk_impl
 {
 public:
     enum BnkType
@@ -61,7 +61,7 @@ public:
         BNK_HMI
     };
     static bool detectBank(char *magic);
-    static bool detectInst(QString filePath);
+    static bool detectInst(const QString &filePath);
     static FfmtErrCode loadBankFile(QString filePath, FmBank &bank, BankFormats &format);
     static FfmtErrCode saveBankFile(QString filePath, FmBank &bank, BnkType type, bool hmiIsDrum);
 };
@@ -75,13 +75,17 @@ bool AdLibBnk_impl::detectBank(char *magic)
     return ret;
 }
 
-bool AdLibBnk_impl::detectInst(QString filePath)
+bool AdLibBnk_impl::detectInst(const QString &filePath)
 {
     QFile file(filePath);
+
     if(!file.open(QIODevice::ReadOnly))
         return false;
+
     qint64 fileSize = file.bytesAvailable();
+
     file.close();
+
     /*
      * Need to check both conditions, because some other files with "ins" extension are been used
      * Unfortunately, AdLib INS files has no magic number
