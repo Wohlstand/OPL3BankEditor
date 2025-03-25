@@ -20,14 +20,13 @@
 
 #include "opal_opl3.h"
 #include "opal/opal.h"
-#include <new>
 #include <cstring>
 
 OpalOPL3::OpalOPL3() :
     OPLChipBaseT()
 {
     m_chip = new Opal;
-    setRate(m_rate);
+    OpalOPL3::setRate(m_rate);
 }
 
 OpalOPL3::~OpalOPL3()
@@ -73,6 +72,11 @@ void OpalOPL3::nativeGenerate(int16_t *frame)
 const char *OpalOPL3::emulatorName()
 {
     return "Opal OPL3";
+}
+
+bool OpalOPL3::hasFullPanning()
+{
+    return true;
 }
 
 OPLChipBase::ChipType OpalOPL3::chipType()

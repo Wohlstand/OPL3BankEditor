@@ -71,6 +71,11 @@ const char *Ymf262LLEOPL3::emulatorName()
     return "YMF262-LLE OPL3";
 }
 
+bool Ymf262LLEOPL3::hasFullPanning()
+{
+    return false;
+}
+
 OPLChipBase::ChipType Ymf262LLEOPL3::chipType()
 {
     return CHIPTYPE_OPL3;

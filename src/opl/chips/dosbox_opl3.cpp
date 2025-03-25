@@ -28,7 +28,7 @@ DosBoxOPL3::DosBoxOPL3() :
     OPLChipBaseBufferedT(),
     m_chip(new DBOPL::Handler)
 {
-    reset();
+    DosBoxOPL3::reset();
 }
 
 DosBoxOPL3::~DosBoxOPL3()
@@ -82,6 +82,11 @@ void DosBoxOPL3::nativeGenerateN(int16_t *output, size_t frames)
 const char *DosBoxOPL3::emulatorName()
 {
     return "DOSBox 0.74-r4111 OPL3";
+}
+
+bool DosBoxOPL3::hasFullPanning()
+{
+    return true;
 }
 
 OPLChipBase::ChipType DosBoxOPL3::chipType()

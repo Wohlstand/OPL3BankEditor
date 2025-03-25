@@ -25,9 +25,12 @@
 #include "chips/dosbox_opl3.h"
 #include "chips/opal_opl3.h"
 #include "chips/java_opl3.h"
+#include "chips/esfmu_opl3.h"
+#include "chips/mame_opl2.h"
 #include "chips/ymf262_lle.h"
 
 #ifdef ENABLE_YMFM_EMULATOR
+#include "chips/ymfm_opl2.h"
 #include "chips/ymfm_opl3.h"
 #endif
 
@@ -894,9 +897,8 @@ void Generator::initChip()
     else
     {
         for(size_t a = 0; a < 6; a += 2)
-            WriteReg(data[a], static_cast<uint8_t>(data_opl2[a + 1]));
+            WriteReg(data_opl2[a], static_cast<uint8_t>(data_opl2[a + 1]));
     }
-
 
     updateRegBD();
     switch4op(m_4op_last_state, false);
@@ -931,6 +933,9 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
         break;
 #endif
 #ifdef ENABLE_YMFM_EMULATOR
+    case CHIP_YmFmOPL2:
+        chip.reset(new YmFmOPL2());
+        break;
     case CHIP_YmFm:
         chip.reset(new YmFmOPL3());
         break;
@@ -955,6 +960,12 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
         break;
     case CHIP_Java:
         chip.reset(new JavaOPL3());
+        break;
+    case CHIP_EsFMu:
+        chip.reset(new ESFMuOPL3());
+        break;
+    case CHIP_MameOPL2:
+        chip.reset(new MameOPL2());
         break;
     }
 
@@ -2023,8 +2034,8 @@ void Generator::generate(float* frames, unsigned int nframes)
     for(unsigned int i = 0; i < nframes; ++i)
     {
         chip->resampledGenerate(out);
+        *frames++ = (out[0] / 32767.0f) * m_gain;
         *frames++ = (out[1] / 32767.0f) * m_gain;
-        *frames++ = (out[2] / 32767.0f) * m_gain;
     }
 
     chip->nativePostGenerate();

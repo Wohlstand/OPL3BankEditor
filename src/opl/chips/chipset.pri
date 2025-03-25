@@ -1,8 +1,13 @@
 SOURCES+= \
     $$PWD/dosbox_opl3.cpp \
+    $$PWD/esfmu_opl3.cpp \
     $$PWD/java_opl3.cpp \
+    $$PWD/mame_opl2.cpp \
+    $$PWD/mame/mame_fmopl.cpp \
     $$PWD/nuked_opl3.cpp \
     $$PWD/opal_opl3.cpp \
+    $$PWD/esfmu/esfm.c \
+    $$PWD/esfmu/esfm_registers.c \
     $$PWD/opal/opal.c \
     $$PWD/nuked/nukedopl3.c \
     $$PWD/dosbox/dbopl.cpp \
@@ -16,11 +21,15 @@ HEADERS+= \
     $$PWD/opl_chip_base.h \
     $$PWD/opl_chip_base.tcc \
     $$PWD/dosbox_opl3.h \
+    $$PWD/esfmu_opl3.h \
     $$PWD/java_opl3.h \
+    $$PWD/mame_opl2.h \
+    $$PWD/mame/opl.h \
     $$PWD/nuked_opl3.h \
     $$PWD/opal_opl3.h \
     $$PWD/opal/opal.h \
     $$PWD/opl_chip_base.h \
+    $$PWD/esfmu/esfm.h \
     $$PWD/java/JavaOPL3.hpp \
     $$PWD/nuked/nukedopl3.h \
     $$PWD/opal/opal.hpp \
@@ -36,6 +45,7 @@ enable_ymfm: {
 DEFINES += ENABLE_YMFM_EMULATOR
 
 SOURCES+= \
+    $$PWD/ymfm_opl2.cpp \
     $$PWD/ymfm_opl3.cpp \
     $$PWD/ymfm/ymfm_adpcm.cpp \
     $$PWD/ymfm/ymfm_misc.cpp \
@@ -44,6 +54,7 @@ SOURCES+= \
     $$PWD/ymfm/ymfm_ssg.cpp
 
 HEADERS+= \
+    $$PWD/ymfm_opl2.h \
     $$PWD/ymfm_opl3.h \
     $$PWD/ymfm/ymfm.h \
     $$PWD/ymfm/ymfm_adpcm.h \

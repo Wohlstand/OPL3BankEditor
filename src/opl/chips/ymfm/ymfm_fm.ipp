@@ -1084,6 +1084,7 @@ void fm_channel<RegisterType>::output_4op(output_data &output, uint32_t rshift, 
 template<class RegisterType>
 void fm_channel<RegisterType>::output_rhythm_ch6(output_data &output, uint32_t rshift, int32_t clipmax) const
 {
+	(void)clipmax;
 	// AM amount is the same across all operators; compute it once
 	uint32_t am_offset = m_regs.lfo_am_offset(m_choffs);
 
@@ -1473,6 +1474,9 @@ void fm_engine_base<RegisterType>::assign_operators()
 template<class RegisterType>
 void fm_engine_base<RegisterType>::update_timer(uint32_t tnum, uint32_t enable, int32_t delta_clocks)
 {
+	if (tnum >= 2)
+		return;
+
 	// if the timer is live, but not currently enabled, set the timer
 	if (enable && !m_timer_running[tnum])
 	{
@@ -1504,6 +1508,9 @@ void fm_engine_base<RegisterType>::update_timer(uint32_t tnum, uint32_t enable, 
 template<class RegisterType>
 void fm_engine_base<RegisterType>::engine_timer_expired(uint32_t tnum)
 {
+	if (tnum >= 2)
+		return;
+
 	// update status
 	if (tnum == 0 && m_regs.enable_timer_a())
 		set_reset_status(STATUS_TIMERA, 0);

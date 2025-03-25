@@ -184,7 +184,7 @@ public:
 
 	// return the AM offset from LFO for the given channel
 	// on OPL this is just a fixed value
-	uint32_t lfo_am_offset(uint32_t choffs) const { return m_lfo_am; }
+	uint32_t lfo_am_offset(uint32_t choffs) const { (void)choffs; return m_lfo_am; }
 
 	// return LFO/noise states
 	uint32_t noise_state() const { return m_noise_lfsr >> 23; }
@@ -390,7 +390,7 @@ public:
 
 	// return the AM offset from LFO for the given channel
 	// on OPL this is just a fixed value
-	uint32_t lfo_am_offset(uint32_t choffs) const { return m_lfo_am; }
+	uint32_t lfo_am_offset(uint32_t choffs) const { (void)choffs; return m_lfo_am; }
 
 	// return LFO/noise states
 	uint32_t noise_state() const { return m_noise_lfsr >> 23; }
@@ -432,13 +432,13 @@ public:
 	uint32_t ch_sustain(uint32_t choffs) const       { return byte(0x20, 5, 1, choffs); }
 	uint32_t ch_total_level(uint32_t choffs) const   { return instchbyte(0x02, 0, 6, choffs); }
 	uint32_t ch_feedback(uint32_t choffs) const      { return instchbyte(0x03, 0, 3, choffs); }
-	uint32_t ch_algorithm(uint32_t choffs) const     { return 0; }
+	uint32_t ch_algorithm(uint32_t choffs) const     { (void)choffs; return 0; }
 	uint32_t ch_instrument(uint32_t choffs) const    { return byte(0x30, 4, 4, choffs); }
-	uint32_t ch_output_any(uint32_t choffs) const    { return 1; }
+	uint32_t ch_output_any(uint32_t choffs) const    { (void)choffs; return 1; }
 	uint32_t ch_output_0(uint32_t choffs) const      { return !is_rhythm(choffs); }
 	uint32_t ch_output_1(uint32_t choffs) const      { return is_rhythm(choffs); }
-	uint32_t ch_output_2(uint32_t choffs) const      { return 0; }
-	uint32_t ch_output_3(uint32_t choffs) const      { return 0; }
+	uint32_t ch_output_2(uint32_t choffs) const      { (void)choffs; return 0; }
+	uint32_t ch_output_3(uint32_t choffs) const      { (void)choffs; return 0; }
 
 	// per-operator registers
 	uint32_t op_lfo_am_enable(uint32_t opoffs) const { return instopbyte(0x00, 7, 1, opoffs); }
@@ -825,7 +825,7 @@ public:
 
 	// read access -- doesn't really have any, but provide these for consistency
 	uint8_t read_status() { return 0x00; }
-	uint8_t read(uint32_t offset) { return 0x00; }
+	uint8_t read(uint32_t offset) { (void)offset; return 0x00; }
 
 	// write access
 	void write_address(uint8_t data);

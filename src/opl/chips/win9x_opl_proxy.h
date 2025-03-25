@@ -27,6 +27,7 @@ public:
     void nativeGenerate(int16_t *frame) override;
     const char *emulatorName() override;
     ChipType chipType() override;
+    bool hasFullPanning() override;
 };
 
 #endif // WIN9X_OPL_PROXY_H

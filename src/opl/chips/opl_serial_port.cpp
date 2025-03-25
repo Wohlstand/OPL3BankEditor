@@ -1,26 +1,29 @@
 /*
- * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2025 Vitaly Novichkov <admin@wohlnet.ru>
+ * Interfaces over Yamaha OPL3 (YMF262) chip emulators
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
+ * Copyright (c) 2017-2025 Vitaly Novichkov (Wohlstand)
  *
- * This program is distributed in the hope that it will be useful,
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "opl_serial_port.h"
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
 
-#include <QSerialPort>
+#include "opl_serial_port.h"
+#include "opl_serial_misc.h"
+
 
 static size_t retrowave_protocol_serial_pack(const uint8_t *buf_in, size_t len_in, uint8_t *buf_out)
 {
@@ -65,51 +68,46 @@ static size_t retrowave_protocol_serial_pack(const uint8_t *buf_in, size_t len_i
 }
 
 OPL_SerialPort::OPL_SerialPort()
-    : m_port(nullptr), m_protocol(ProtocolUnknown)
+    : m_port(NULL), m_protocol(ProtocolUnknown)
 {}
 
 OPL_SerialPort::~OPL_SerialPort()
 {
     delete m_port;
-    m_port = nullptr;
+    m_port = NULL;
 }
 
-bool OPL_SerialPort::connectPort(const QString &name, unsigned baudRate, unsigned protocol)
+bool OPL_SerialPort::connectPort(const std::string& name, unsigned baudRate, unsigned protocol)
 {
     delete m_port;
-    m_port = nullptr;
+    m_port = NULL;
 
     // ensure audio thread reads protocol atomically and in order,
     // so chipType() will be correct after the port is live
-    m_protocol.storeRelease(protocol);
+    m_protocol = protocol;
 
-    QSerialPort *port = m_port = new QSerialPort(name);
-    port->setBaudRate(baudRate);
-    return port->open(QSerialPort::WriteOnly);
+    // QSerialPort *port = m_port = new QSerialPort(name);
+    // port->setBaudRate(baudRate);
+    // return port->open(QSerialPort::WriteOnly);
+
+    m_port = new ChipSerialPort;
+    return m_port->open(name, baudRate);
+}
+
+bool OPL_SerialPort::hasFullPanning()
+{
+    return false;
 }
 
 void OPL_SerialPort::writeReg(uint16_t addr, uint8_t data)
 {
-    QMetaObject::invokeMethod(this, "sendSerial",
-                              Qt::QueuedConnection, Q_ARG(uint, addr), Q_ARG(uint, data));
-}
-
-void OPL_SerialPort::sendSerial(uint addr, uint data)
-{
-    QSerialPort *port = m_port;
+    uint8_t sendBuffer[16];
+    ChipSerialPortBase *port = m_port;
 
     if(!port || !port->isOpen())
         return;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    unsigned protocol = m_protocol.loadRelaxed();
-#else
-    unsigned protocol = m_protocol.load();
-#endif
-
-    uint8_t sendBuffer[16];
-
-    switch(protocol)
+    switch(m_protocol)
     {
     default:
     case ProtocolArduinoOPL2:
@@ -118,7 +116,7 @@ void OPL_SerialPort::sendSerial(uint addr, uint data)
             break;
         sendBuffer[0] = (uint8_t)addr;
         sendBuffer[1] = (uint8_t)data;
-        port->write((char *)sendBuffer, 2);
+        port->write(sendBuffer, 2);
         break;
     }
     case ProtocolNukeYktOPL3:
@@ -126,7 +124,7 @@ void OPL_SerialPort::sendSerial(uint addr, uint data)
         sendBuffer[0] = (addr >> 6) | 0x80;
         sendBuffer[1] = ((addr & 0x3f) << 1) | (data >> 7);
         sendBuffer[2] = (data & 0x7f);
-        port->write((char *)sendBuffer, 3);
+        port->write(sendBuffer, 3);
         break;
     }
     case ProtocolRetroWaveOPL3:
@@ -140,7 +138,7 @@ void OPL_SerialPort::sendSerial(uint addr, uint data)
             0xfb, static_cast<uint8_t>(data)
         };
         size_t packed_len = retrowave_protocol_serial_pack(buf, sizeof(buf), sendBuffer);
-        port->write((char *)sendBuffer, (qint64)packed_len);
+        port->write(sendBuffer, packed_len);
         break;
     }
     }
@@ -159,9 +157,7 @@ const char *OPL_SerialPort::emulatorName()
 
 OPLChipBase::ChipType OPL_SerialPort::chipType()
 {
-    unsigned protocol = m_protocol.loadAcquire();
-
-    switch(protocol)
+    switch(m_protocol)
     {
     default:
     case ProtocolArduinoOPL2:
@@ -170,7 +166,6 @@ OPLChipBase::ChipType OPL_SerialPort::chipType()
     case ProtocolRetroWaveOPL3:
         return OPLChipBase::CHIPTYPE_OPL3;
     }
-
 }
 
 #endif // ENABLE_HW_OPL_SERIAL_PORT

@@ -1,51 +1,49 @@
 /*
- * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016-2025 Vitaly Novichkov <admin@wohlnet.ru>
+ * Interfaces over Yamaha OPL3 (YMF262) chip emulators
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
+ * Copyright (c) 2017-2025 Vitaly Novichkov (Wohlstand)
  *
- * This program is distributed in the hope that it will be useful,
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
+
 
 #ifndef OPL_SERIAL_PORT_H
 #define OPL_SERIAL_PORT_H
 
 #ifdef ENABLE_HW_OPL_SERIAL_PORT
 
+#include <string>
 #include "opl_chip_base.h"
-#include <QObject>
-#include <QString>
-#include <QAtomicInt>
 
-class QSerialPort;
+class ChipSerialPortBase;
 
-///
-class OPL_SerialPort : public QObject, public OPLChipBaseT<OPL_SerialPort>
+class OPL_SerialPort : public OPLChipBaseT<OPL_SerialPort>
 {
-    Q_OBJECT
-
 public:
     OPL_SerialPort();
-    ~OPL_SerialPort() override;
+    virtual ~OPL_SerialPort() override;
 
     enum Protocol
     {
         ProtocolUnknown,
         ProtocolArduinoOPL2,
         ProtocolNukeYktOPL3,
-        ProtocolRetroWaveOPL3,
+        ProtocolRetroWaveOPL3
     };
 
-    bool connectPort(const QString &name, unsigned baudRate, unsigned protocol);
+    bool connectPort(const std::string &name, unsigned baudRate, unsigned protocol);
 
     bool canRunAtPcmRate() const override { return false; }
     void setRate(uint32_t /*rate*/) override {}
@@ -56,13 +54,11 @@ public:
     void nativeGenerate(int16_t *frame) override;
     const char *emulatorName() override;
     ChipType chipType() override;
-
-private slots:
-    void sendSerial(uint addr, uint data);
+    bool hasFullPanning() override;
 
 private:
-    QSerialPort *m_port;
-    QAtomicInt m_protocol;
+    ChipSerialPortBase *m_port;
+    int m_protocol;
 };
 
 #endif // ENABLE_HW_OPL_SERIAL_PORT

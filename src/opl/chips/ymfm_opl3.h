@@ -37,9 +37,9 @@ class YmFmOPL3 final : public OPLChipBaseT<YmFmOPL3>
     };
 
     Reg m_queue[c_queueSize];
-    size_t m_headPos = 0;
-    size_t m_tailPos = 0;
-    long m_queueCount = 0;
+    size_t m_headPos;
+    size_t m_tailPos;
+    long m_queueCount;
 
 public:
     YmFmOPL3();
@@ -49,12 +49,12 @@ public:
     void setRate(uint32_t rate) override;
     void reset() override;
     void writeReg(uint16_t addr, uint8_t data) override;
-    void writePan(uint16_t addr, uint8_t data) override;
     void nativePreGenerate() override {}
     void nativePostGenerate() override {}
     void nativeGenerate(int16_t *frame) override;
     const char *emulatorName() override;
     ChipType chipType() override;
+    bool hasFullPanning() override;
 };
 
 #endif // YMFM_OPL3_H

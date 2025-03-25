@@ -18,17 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef NUKED_OPL3_H
-#define NUKED_OPL3_H
+#ifndef ESFMU_OPL3_H
+#define ESFMU_OPL3_H
 
 #include "opl_chip_base.h"
 
-class NukedOPL3 final : public OPLChipBaseT<NukedOPL3>
+class ESFMuOPL3 final : public OPLChipBaseT<ESFMuOPL3>
 {
     void *m_chip;
 public:
-    NukedOPL3();
-    ~NukedOPL3() override;
+    ESFMuOPL3();
+    ~ESFMuOPL3() override;
 
     bool canRunAtPcmRate() const override { return false; }
     void setRate(uint32_t rate) override;
@@ -43,4 +43,4 @@ public:
     bool hasFullPanning() override;
 };
 
-#endif // NUKED_OPL3_H
+#endif // ESFMU_OPL3_H

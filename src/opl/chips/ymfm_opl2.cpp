@@ -1,5 +1,5 @@
 /*
- * Interfaces over Yamaha OPL3 (YMF262) chip emulators
+ * Interfaces over Yamaha OPL3 (ym3812) chip emulators
  *
  * Copyright (c) 2017-2025 Vitaly Novichkov (Wohlstand)
  *
@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ymfm_opl3.h"
+#include "ymfm_opl2.h"
 #include "ymfm/ymfm_opl.h"
 #include <cstring>
 
-YmFmOPL3::YmFmOPL3() :
+YmFmOPL2::YmFmOPL2() :
     OPLChipBaseT(),
     m_headPos(0),
     m_tailPos(0),
@@ -30,33 +30,33 @@ YmFmOPL3::YmFmOPL3() :
 {
     ymfm::ymfm_interface* intf = new ymfm::ymfm_interface;
     m_intf = intf;
-    m_chip = new ymfm::ymf262(*intf);
-    YmFmOPL3::setRate(m_rate);
+    m_chip = new ymfm::ym3812(*intf);
+    YmFmOPL2::setRate(m_rate);
 }
 
-YmFmOPL3::~YmFmOPL3()
+YmFmOPL2::~YmFmOPL2()
 {
-    ymfm::ymf262 *chip_r = reinterpret_cast<ymfm::ymf262*>(m_chip);
+    ymfm::ym3812 *chip_r = reinterpret_cast<ymfm::ym3812*>(m_chip);
     ymfm::ymfm_interface *intf_r = reinterpret_cast<ymfm::ymfm_interface*>(m_intf);
     delete chip_r;
     delete intf_r;
 }
 
-void YmFmOPL3::setRate(uint32_t rate)
+void YmFmOPL2::setRate(uint32_t rate)
 {
     OPLChipBaseT::setRate(rate);
-    ymfm::ymf262 *chip_r = reinterpret_cast<ymfm::ymf262*>(m_chip);
+    ymfm::ym3812 *chip_r = reinterpret_cast<ymfm::ym3812*>(m_chip);
     chip_r->reset();
 }
 
-void YmFmOPL3::reset()
+void YmFmOPL2::reset()
 {
     OPLChipBaseT::reset();
-    ymfm::ymf262 *chip_r = reinterpret_cast<ymfm::ymf262*>(m_chip);
+    ymfm::ym3812 *chip_r = reinterpret_cast<ymfm::ym3812*>(m_chip);
     chip_r->reset();
 }
 
-void YmFmOPL3::writeReg(uint16_t addr, uint8_t data)
+void YmFmOPL2::writeReg(uint16_t addr, uint8_t data)
 {
     Reg &back = m_queue[m_headPos++];
     back.addr = addr;
@@ -68,10 +68,10 @@ void YmFmOPL3::writeReg(uint16_t addr, uint8_t data)
     ++m_queueCount;
 }
 
-void YmFmOPL3::nativeGenerate(int16_t *frame)
+void YmFmOPL2::nativeGenerate(int16_t *frame)
 {
-    ymfm::ymf262 *chip_r = reinterpret_cast<ymfm::ymf262*>(m_chip);
-    ymfm::ymf262::output_data frames_i;
+    ymfm::ym3812 *chip_r = reinterpret_cast<ymfm::ym3812*>(m_chip);
+    ymfm::ym3812::output_data frames_i;
 
     uint32_t addr1 = 0xffff, addr2 = 0xffff;
     uint8_t data1 = 0, data2 = 0;
@@ -100,20 +100,20 @@ void YmFmOPL3::nativeGenerate(int16_t *frame)
 
     chip_r->generate(&frames_i);
     frame[0] = static_cast<int16_t>(ymfm::clamp(frames_i.data[0] / 2, -32768, 32767));
-    frame[1] = static_cast<int16_t>(ymfm::clamp(frames_i.data[1] / 2, -32768, 32767));
+    frame[1] = frame[0];
 }
 
-const char *YmFmOPL3::emulatorName()
+const char *YmFmOPL2::emulatorName()
 {
-    return "YMFM OPL3";
+    return "YMFM OPL2";
 }
 
-OPLChipBase::ChipType YmFmOPL3::chipType()
-{
-    return CHIPTYPE_OPL3;
-}
-
-bool YmFmOPL3::hasFullPanning()
+bool YmFmOPL2::hasFullPanning()
 {
     return false;
+}
+
+OPLChipBase::ChipType YmFmOPL2::chipType()
+{
+    return CHIPTYPE_OPL2;
 }

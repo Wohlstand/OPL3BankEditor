@@ -130,6 +130,9 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorDosBox, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorOpal, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorJava, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorESFMu, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorMameOPL2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorYmFmOPL2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorYmFm, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorYMF262LLC, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
@@ -256,7 +259,7 @@ void BankEditor::loadSettings()
     m_serialPortBaudRate = setup.value("hw-opl-serial-baud-rate", 115200).toUInt();
     m_serialPortProtocol = setup.value("hw-opl-serial-protocol", 0u).toUInt();
     OPL_SerialPort &serial = *m_serialPortOpl;
-    serial.connectPort(m_serialPortName, m_serialPortBaudRate, m_serialPortProtocol);
+    serial.connectPort(m_serialPortName.toStdString(), m_serialPortBaudRate, m_serialPortProtocol);
 #endif
 
     preferredMidiStandard = setup.value("preferred-midi-standard", 3).toInt();
@@ -274,6 +277,9 @@ void BankEditor::loadSettings()
     ui->actionEmulatorDosBox->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
+    ui->actionEmulatorESFMu->setChecked(false);
+    ui->actionEmulatorMameOPL2->setChecked(false);
+    ui->actionEmulatorYmFmOPL2->setChecked(false);
     ui->actionEmulatorYmFm->setChecked(false);
     ui->actionEmulatorYMF262LLC->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
@@ -293,6 +299,15 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_Java:
         ui->actionEmulatorJava->setChecked(true);
+        break;
+    case Generator::CHIP_EsFMu:
+        ui->actionEmulatorESFMu->setChecked(true);
+        break;
+    case Generator::CHIP_MameOPL2:
+        ui->actionEmulatorMameOPL2->setChecked(true);
+        break;
+    case Generator::CHIP_YmFmOPL2:
+        ui->actionEmulatorYmFmOPL2->setChecked(true);
         break;
     case Generator::CHIP_YmFm:
         ui->actionEmulatorYmFm->setChecked(true);
@@ -1155,6 +1170,9 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorDosBox->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
+    ui->actionEmulatorESFMu->setChecked(false);
+    ui->actionEmulatorMameOPL2->setChecked(false);
+    ui->actionEmulatorYmFmOPL2->setChecked(false);
     ui->actionEmulatorYmFm->setChecked(false);
     ui->actionEmulatorYMF262LLC->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
@@ -1185,6 +1203,27 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorJava->setChecked(true);
         m_currentChip = Generator::CHIP_Java;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorESFMu)
+    {
+        ui->actionEmulatorESFMu->setChecked(true);
+        m_currentChip = Generator::CHIP_EsFMu;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorMameOPL2)
+    {
+        ui->actionEmulatorMameOPL2->setChecked(true);
+        m_currentChip = Generator::CHIP_MameOPL2;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorYmFmOPL2)
+    {
+        ui->actionEmulatorYmFmOPL2->setChecked(true);
+        m_currentChip = Generator::CHIP_YmFmOPL2;
         m_generator->ctl_switchChip(m_currentChip);
     }
     else
@@ -1506,7 +1545,7 @@ void BankEditor::on_actionHardware_OPL_triggered()
     m_serialPortName = dlg->serialPortName();
     m_serialPortBaudRate = dlg->serialBaudRate();
     m_serialPortProtocol = dlg->serialProtocol();
-    serial.connectPort(m_serialPortName, m_serialPortBaudRate, m_serialPortProtocol);
+    serial.connectPort(m_serialPortName.toStdString(), m_serialPortBaudRate, m_serialPortProtocol);
     mustReinitialize = true;
 #endif
 

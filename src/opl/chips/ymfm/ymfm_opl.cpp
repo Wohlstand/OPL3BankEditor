@@ -371,6 +371,7 @@ static uint32_t opl_compute_phase_step(uint32_t block_freq, uint32_t multiple, i
 template<int Revision>
 uint32_t opl_registers_base<Revision>::compute_phase_step(uint32_t choffs, uint32_t opoffs, opdata_cache const &cache, int32_t lfo_raw_pm)
 {
+	(void)choffs; (void)opoffs;
 	return opl_compute_phase_step(cache.block_freq, cache.multiple, op_lfo_pm_enable(opoffs) ? lfo_raw_pm : 0);
 }
 
@@ -669,6 +670,7 @@ void opll_registers::cache_operator_data(uint32_t choffs, uint32_t opoffs, opdat
 
 uint32_t opll_registers::compute_phase_step(uint32_t choffs, uint32_t opoffs, opdata_cache const &cache, int32_t lfo_raw_pm)
 {
+	(void)choffs; (void)opoffs;
 	// phase step computation is the same as OPL but the block_freq has one
 	// more bit, which we shift in
 	return opl_compute_phase_step(cache.block_freq << 1, cache.multiple, op_lfo_pm_enable(opoffs) ? lfo_raw_pm : 0);

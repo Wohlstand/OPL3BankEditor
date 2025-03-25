@@ -32,7 +32,7 @@ JavaOPL3::JavaOPL3() :
     OPLChipBaseBufferedT(),
     m_chip(new ADL_JavaOPL3::OPL3(true))
 {
-    reset();
+    JavaOPL3::reset();
 }
 
 JavaOPL3::~JavaOPL3()
@@ -109,6 +109,11 @@ void JavaOPL3::nativeGenerateN(int16_t *output, size_t frames)
 const char *JavaOPL3::emulatorName()
 {
     return "Java 1.0.6 OPL3";
+}
+
+bool JavaOPL3::hasFullPanning()
+{
+    return true;
 }
 
 OPLChipBase::ChipType JavaOPL3::chipType()

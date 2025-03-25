@@ -45,8 +45,11 @@
 #include "chips/dosbox_opl3.h"
 #include "chips/opal_opl3.h"
 #include "chips/java_opl3.h"
+#include "chips/esfmu_opl3.h"
+#include "chips/mame_opl2.h"
 #include "chips/ymf262_lle.h"
 #ifdef ENABLE_YMFM_EMULATOR
+#include "chips/ymfm_opl2.h"
 #include "chips/ymfm_opl3.h"
 #endif
 
@@ -681,11 +684,24 @@ static void MeasureDurationsBenchmark(FmBank::Instrument *in_p, OPLChipBase *chi
 {
     std::chrono::steady_clock::time_point start, stop;
     Measurer::BenchmarkResult res;
-    start = std::chrono::steady_clock::now();
-    BenchmarkChip(in_p, chip);
-    stop  = std::chrono::steady_clock::now();
-    res.elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
+
     res.name = QString::fromUtf8(chip->emulatorName());
+
+    if(in_p->en_4op && chip->chipType() == OPLChipBase::CHIPTYPE_OPL2)
+    {
+        // Skip incompatible emulator (OPL2 can't play 4-operator instruments)
+        res.elapsed = 0;
+        res.name += " [skipped]";
+    }
+    else
+    {
+        start = std::chrono::steady_clock::now();
+        BenchmarkChip(in_p, chip);
+        stop  = std::chrono::steady_clock::now();
+
+        res.elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
+    }
+
     result->push_back(res);
 }
 
@@ -698,10 +714,13 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
         std::shared_ptr<OPLChipBase>(new DosBoxOPL3),
         std::shared_ptr<OPLChipBase>(new OpalOPL3),
         std::shared_ptr<OPLChipBase>(new JavaOPL3),
-        std::shared_ptr<OPLChipBase>(new Ymf262LLEOPL3)
+        std::shared_ptr<OPLChipBase>(new ESFMuOPL3),
+        std::shared_ptr<OPLChipBase>(new MameOPL2),
 #ifdef ENABLE_YMFM_EMULATOR
-        , std::shared_ptr<OPLChipBase>(new YmFmOPL3)
+        std::shared_ptr<OPLChipBase>(new YmFmOPL2),
+        std::shared_ptr<OPLChipBase>(new YmFmOPL3),
 #endif
+        std::shared_ptr<OPLChipBase>(new Ymf262LLEOPL3)
     };
     for(std::shared_ptr<OPLChipBase> &p : emuls)
         MeasureDurationsBenchmark(in_p, p.get(), result);

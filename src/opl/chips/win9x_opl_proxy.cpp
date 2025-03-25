@@ -190,6 +190,11 @@ const char *Win9x_OPL_Proxy::emulatorName()
     return "OPL3 Proxy Driver";
 }
 
+bool Win9x_OPL_Proxy::hasFullPanning()
+{
+    return false;
+}
+
 OPLChipBase::ChipType Win9x_OPL_Proxy::chipType()
 {
     OPLProxyDriver *chip_r = reinterpret_cast<OPLProxyDriver*>(m_chip);

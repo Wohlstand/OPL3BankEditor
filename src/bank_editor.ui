@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>978</width>
-    <height>833</height>
+    <width>1035</width>
+    <height>835</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -1943,7 +1943,7 @@ of second voice</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>978</width>
+     <width>1035</width>
      <height>20</height>
     </rect>
    </property>
@@ -2037,6 +2037,9 @@ of second voice</string>
      <addaction name="actionEmulatorDosBox"/>
      <addaction name="actionEmulatorOpal"/>
      <addaction name="actionEmulatorJava"/>
+     <addaction name="actionEmulatorESFMu"/>
+     <addaction name="actionEmulatorMameOPL2"/>
+     <addaction name="actionEmulatorYmFmOPL2"/>
      <addaction name="actionEmulatorYmFm"/>
      <addaction name="actionEmulatorYMF262LLC"/>
      <addaction name="actionWin9xOPLProxy"/>
@@ -2368,6 +2371,30 @@ of second voice</string>
    </property>
    <property name="text">
     <string notr="true">YMF262-LLC OPL3 [EXPERIMENTAL]</string>
+   </property>
+  </action>
+  <action name="actionEmulatorMameOPL2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>MAME OPL2</string>
+   </property>
+  </action>
+  <action name="actionEmulatorYmFmOPL2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>YMFM OPL2</string>
+   </property>
+  </action>
+  <action name="actionEmulatorESFMu">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>ESFMu</string>
    </property>
   </action>
  </widget>

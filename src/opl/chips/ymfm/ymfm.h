@@ -116,6 +116,7 @@ inline int32_t clamp(int32_t value, int32_t minval, int32_t maxval)
 template<typename ArrayType, int ArraySize>
 constexpr uint32_t array_size(ArrayType (&array)[ArraySize])
 {
+	(void)array;
 	return ArraySize;
 }
 
@@ -504,6 +505,7 @@ class ymfm_interface
 	template<typename RegisterType> friend class fm_engine_base;
 
 public:
+	virtual ~ymfm_interface() {}
 	// the following functions must be implemented by any derived classes; the
 	// default implementations are sufficient for some minimal operation, but will
 	// likely need to be overridden to integrate with the outside world; they are
@@ -529,13 +531,13 @@ public:
 	// has changed state; our responsibility is to arrange to call the engine's
 	// engine_timer_expired() method after the provided number of clocks; if
 	// duration_in_clocks is negative, we should cancel any outstanding timers
-	virtual void ymfm_set_timer(uint32_t tnum, int32_t duration_in_clocks) { }
+	virtual void ymfm_set_timer(uint32_t tnum, int32_t duration_in_clocks) { (void)tnum; (void)duration_in_clocks; }
 
 	// the chip implementation calls this to indicate that the chip should be
 	// considered in a busy state until the given number of clocks has passed;
 	// our responsibility is to compute and remember the ending time based on
 	// the chip's clock for later checking
-	virtual void ymfm_set_busy_end(uint32_t clocks) { }
+	virtual void ymfm_set_busy_end(uint32_t clocks) { (void)clocks; }
 
 	// the chip implementation calls this to see if the chip is still currently
 	// is a busy state, as specified by a previous call to ymfm_set_busy_end();
@@ -550,15 +552,15 @@ public:
 	// the chip implementation calls this when the state of the IRQ signal has
 	// changed due to a status change; our responsibility is to respond as
 	// needed to the change in IRQ state, signaling any consumers
-	virtual void ymfm_update_irq(bool asserted) { }
+	virtual void ymfm_update_irq(bool asserted) { (void)asserted; }
 
 	// the chip implementation calls this whenever data is read from outside
 	// of the chip; our responsibility is to provide the data requested
-	virtual uint8_t ymfm_external_read(access_class type, uint32_t address) { return 0; }
+	virtual uint8_t ymfm_external_read(access_class type, uint32_t address) { (void)type; (void)address; return 0; }
 
 	// the chip implementation calls this whenever data is written outside
 	// of the chip; our responsibility is to pass the written data on to any consumers
-	virtual void ymfm_external_write(access_class type, uint32_t address, uint8_t data) { }
+	virtual void ymfm_external_write(access_class type, uint32_t address, uint8_t data) { (void)type; (void)address; (void)data; }
 
 protected:
 	// pointer to engine callbacks -- this is set directly by the engine at
