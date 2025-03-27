@@ -20,7 +20,6 @@
  */
 
 #include "delay_analysis.h"
-#include "qwt_spline_polynomial.h"
 #include "ui_delay_analysis.h"
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
