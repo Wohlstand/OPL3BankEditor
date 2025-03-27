@@ -20,6 +20,10 @@
 #include <RtAudio.h>
 #include <memory>
 
+#if defined(RTAUDIO_VERSION_MAJOR) && RTAUDIO_VERSION_MAJOR >= 6
+#   define RTAUDIO_VERSION_6
+#endif
+
 class IRealtimeProcess;
 
 class AudioOutRt : public QObject
@@ -36,7 +40,11 @@ public:
     static std::vector<std::string> listDrivers();
 private:
     static int process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
+#if defined(RTAUDIO_VERSION_6)
+    static void errorCallback(RtAudioErrorType type, const std::string &errorText);
+#else
     static void errorCallback(RtAudioError::Type type, const std::string &errorText);
+#endif
     static bool isCompatibleDevice(const RtAudio::DeviceInfo &info);
     IRealtimeProcess *m_rt = nullptr;
     std::unique_ptr<RtAudio> m_audioOut;

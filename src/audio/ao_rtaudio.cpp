@@ -28,7 +28,9 @@ AudioOutRt::AudioOutRt(double latency, const std::string& device_name, const std
 {
     RtAudio* audioOut = nullptr;
 
+#if !defined(RTAUDIO_VERSION_6)
     try
+#endif
     {
         RtAudio::Api api = RtAudio::UNSPECIFIED;
 
@@ -43,13 +45,19 @@ AudioOutRt::AudioOutRt(double latency, const std::string& device_name, const std
         if(api != RtAudio::UNSPECIFIED)
         {
             fprintf(stderr, "Trying RtAudio driver from settings: %s\n", device_name.c_str());
+#if defined(RTAUDIO_VERSION_6)
+            audioOut = new RtAudio(api, &AudioOutRt::errorCallback);
+#else
             audioOut = new RtAudio(api);
+#endif
         }
     }
+#if !defined(RTAUDIO_VERSION_6)
     catch(RtAudioError& error)
     {
         fprintf(stderr, "Failed to use RtAudio driver from settings, using default\n");
     }
+#endif
 
     if(!audioOut)
         audioOut = new RtAudio(RtAudio::Api::UNSPECIFIED);
@@ -108,9 +116,18 @@ AudioOutRt::AudioOutRt(double latency, const std::string& device_name, const std
     qDebug() << "Desired latency" << latency;
     qDebug() << "Buffer size" << bufferSize;
 
+#if defined(RTAUDIO_VERSION_6)
+    RtAudioErrorType err = audioOut->openStream(
+        &streamParam, nullptr, RTAUDIO_SINT16, sampleRate, &bufferSize,
+        &process, this, &streamOpts);
+
+    if(err != RTAUDIO_WARNING && err != RTAUDIO_NO_ERROR)
+        qWarning() << "RtAudio: Failed to open stream: " << err;
+#else
     audioOut->openStream(
         &streamParam, nullptr, RTAUDIO_SINT16, sampleRate, &bufferSize,
         &process, this, &streamOpts, &errorCallback);
+#endif
 }
 
 unsigned AudioOutRt::sampleRate() const
@@ -172,6 +189,15 @@ int AudioOutRt::process(void* outputbuffer, void*, unsigned nframes, double, RtA
     return 0;
 }
 
+#if defined(RTAUDIO_VERSION_6)
+void AudioOutRt::errorCallback(RtAudioErrorType type, const std::string& errorText)
+{
+    qWarning() << "Audio error: " << errorText.c_str();
+
+    if(type != RTAUDIO_WARNING && type != RTAUDIO_NO_ERROR)
+        qWarning() << "RtAudio: Error has occured:" << QString::fromStdString(errorText);
+}
+#else
 void AudioOutRt::errorCallback(RtAudioError::Type type, const std::string& errorText)
 {
     qWarning() << "Audio error: " << errorText.c_str();
@@ -180,6 +206,7 @@ void AudioOutRt::errorCallback(RtAudioError::Type type, const std::string& error
     if(type != RtAudioError::WARNING && type != RtAudioError::DEBUG_WARNING)
         throw RtAudioError(errorText, type);
 }
+#endif
 
 bool AudioOutRt::isCompatibleDevice(const RtAudio::DeviceInfo& info)
 {
