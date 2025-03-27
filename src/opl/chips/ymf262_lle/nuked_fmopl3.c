@@ -1591,7 +1591,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
             break;
     }
 
-end:
+// end:
 
     if (chip->io_write0)
         chip->write0_sr = 1;
