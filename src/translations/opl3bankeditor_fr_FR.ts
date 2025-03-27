@@ -10,11 +10,21 @@
     </message>
     <message>
         <location filename="../audio_config.ui" line="20"/>
+        <source>Driver</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.ui" line="28"/>
+        <source>Select the sound driver:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.ui" line="80"/>
         <source>Device</source>
         <translation>Périphérique</translation>
     </message>
     <message>
-        <location filename="../audio_config.ui" line="28"/>
+        <location filename="../audio_config.ui" line="88"/>
         <source>Select the sound device:</source>
         <translation>Sélectionner le périphérique audio :</translation>
     </message>
@@ -23,46 +33,52 @@
         <translation type="vanished">...</translation>
     </message>
     <message>
-        <location filename="../audio_config.ui" line="80"/>
+        <location filename="../audio_config.ui" line="140"/>
         <source>Latency</source>
         <translation>Latence</translation>
     </message>
     <message>
-        <location filename="../audio_config.ui" line="86"/>
+        <location filename="../audio_config.ui" line="146"/>
         <source>Define the audio latency.</source>
         <translation>Définir la latence audio.</translation>
     </message>
     <message>
-        <location filename="../audio_config.ui" line="127"/>
+        <location filename="../audio_config.ui" line="187"/>
         <source>ms</source>
         <translation>ms</translation>
     </message>
     <message>
-        <location filename="../audio_config.ui" line="136"/>
+        <location filename="../audio_config.ui" line="196"/>
         <source>If audio glitches occur, you should reset this setting to a higher value.</source>
         <translation>Si des problèmes audio se produisent, réassignez à ce paramètre une valeur plus élevée.</translation>
     </message>
     <message>
-        <location filename="../audio_config.ui" line="162"/>
+        <location filename="../audio_config.ui" line="222"/>
         <source>These settings will only become effective after restarting the software.</source>
         <translation>Ces paramètres ne deviendront effectifs qu&apos;au redémarrage du logiciel.</translation>
     </message>
     <message>
         <location filename="../audio_config.cpp" line="30"/>
-        <location filename="../audio_config.cpp" line="84"/>
+        <location filename="../audio_config.cpp" line="95"/>
         <source>Default device</source>
         <translation>Périphérique par défaut</translation>
+    </message>
+    <message>
+        <location filename="../audio_config.cpp" line="31"/>
+        <location filename="../audio_config.cpp" line="121"/>
+        <source>Default driver</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>AudioOutRt</name>
     <message>
-        <location filename="../audio/ao_rtaudio.cpp" line="37"/>
+        <location filename="../audio/ao_rtaudio.cpp" line="66"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../audio/ao_rtaudio.cpp" line="37"/>
+        <location filename="../audio/ao_rtaudio.cpp" line="66"/>
         <source>No audio devices are present for output.</source>
         <translation>Aucun périphérique audio de sortie n&apos;a été trouvé.</translation>
     </message>
@@ -188,27 +204,27 @@
         <translation>Porteuse 2 (Opérateur 4)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="370"/>
-        <location filename="../bank_editor.cpp" line="782"/>
+        <location filename="../bank_editor.ui" line="377"/>
+        <location filename="../bank_editor.cpp" line="852"/>
         <source>&lt;Untitled&gt;</source>
         <translation>&lt;Sans titre&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="431"/>
-        <location filename="../bank_editor.ui" line="447"/>
-        <location filename="../bank_editor.ui" line="913"/>
-        <location filename="../bank_editor.ui" line="932"/>
+        <location filename="../bank_editor.ui" line="438"/>
+        <location filename="../bank_editor.ui" line="454"/>
+        <location filename="../bank_editor.ui" line="951"/>
+        <location filename="../bank_editor.ui" line="970"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack Modulation Factor&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If 0, no feedback is present. If 1-7, operator 1 will send a portion of its output back into itself.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FeedBack&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Factor&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;When in four-operator mode, the FeedBack value is used only by Operator 1, value of Operators 2, 3 and 4 is ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Facteur de Rétroaction de la Modulation&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Si cette valeur est 0, il n&apos;y a aucun retour. Entre 1 et-7, l&apos;opérateur 1 renvoie une partie de sa sortie à son entrée.&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Retour&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Facteur&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/16&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/8&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/4&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n/2&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4.n&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;En mode 4-opérateurs, la valeur Retour est seulement utilisée par l&apos;Opérateur 1, les valeurs associées aux Opérateurs 2, 3 et 4 sont ignorées.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="434"/>
+        <location filename="../bank_editor.ui" line="441"/>
         <source>Feedback 1</source>
         <translation>Retour 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="466"/>
-        <location filename="../bank_editor.ui" line="954"/>
+        <location filename="../bank_editor.ui" line="473"/>
+        <location filename="../bank_editor.ui" line="992"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Synthesis Type.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;AM (1) = Additive synthesis, FM (0) = Frequency Modulation&lt;br/&gt;In four-operator mode, there are two bits controlling the synthesis type. Both are the bit 0 of register C0, one of Operators 1 and 2 and the second of Operators 3 and 4. &lt;/p&gt;
 &lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
 &lt;tr&gt;&lt;th&gt;Op 1&amp;amp;2&lt;/th&gt;&lt;th&gt;Op 3&amp;amp;4 &lt;/th&gt;&lt;th&gt;Type&lt;/th&gt;&lt;/tr&gt;
@@ -233,193 +249,198 @@
 &lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="479"/>
+        <location filename="../bank_editor.ui" line="486"/>
         <source>Synthesis type 1</source>
         <translation>Type synthèse 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="512"/>
-        <location filename="../bank_editor.ui" line="1009"/>
+        <location filename="../bank_editor.ui" line="519"/>
+        <location filename="../bank_editor.ui" line="1047"/>
         <source>AM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="531"/>
-        <location filename="../bank_editor.ui" line="1034"/>
+        <location filename="../bank_editor.ui" line="538"/>
+        <location filename="../bank_editor.ui" line="1072"/>
         <source>FM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="565"/>
-        <location filename="../bank_editor.ui" line="581"/>
+        <location filename="../bank_editor.ui" line="572"/>
+        <location filename="../bank_editor.ui" line="588"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don&apos;t offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In pair of 2-operator voices mode is an offset of the first voice&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Décalage en demi-tons (un octave vaut 12 demi-tons) &lt;br/&gt;(0 ne décale pas la note. Valeurs entre -127 et 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;En mode couplage de 2 paires d&apos;opérateurs ceci est un décalage de la première voix&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="568"/>
+        <location filename="../bank_editor.ui" line="575"/>
         <source>Note offset 1</source>
         <translation>Décalage note 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="597"/>
+        <location filename="../bank_editor.ui" line="604"/>
         <source>Percussion type</source>
         <translation>Type percussion</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="620"/>
-        <location filename="../bank_editor.ui" line="639"/>
+        <location filename="../bank_editor.ui" line="627"/>
+        <location filename="../bank_editor.ui" line="689"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Numéro de note constant&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Fait jouer à l&apos;instrument toujours la même note.&lt;/p&gt;&lt;p&gt;Utilisation recommandée pour les instruments percussifs. Si la valeur est 0, le numéro de note n&apos;est pas figé.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="623"/>
+        <location filename="../bank_editor.ui" line="630"/>
         <source>N:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="655"/>
+        <location filename="../bank_editor.ui" line="646"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Drum instrument mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Generic (a.k.a. Melodic) mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Is a mode where are percussions are playing in the regular melodic channels without any limits. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Is highly recommended to use&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bass-Drum/Snare/TomTom/Cymbal/Hi-hat&lt;/span&gt;&lt;br/&gt;Enables legacy percussion mode where are five restricted channels. This mode is restricts a playing more than one sound of every type. For example, in this mode is impossible playing multiple snares or multiple bass-drums. &lt;span style=&quot; text-decoration: underline;&quot;&gt;This mode is available only on some special bank formats (for example, IBK, SBI). Other bank formats are supports a generic mode only&lt;/span&gt;!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Mode d&apos;instrument percussif&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Mode générique (alias Mélodique)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;C&apos;est un mode où les percussions sont jouées sur les canaux mélodiques ordinaires sans aucun limite. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Son utilisation est hautement recommandée&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Basse/Caisse claire/Tam-tam/Cymbale/Charleston&lt;/span&gt;&lt;br/&gt;Active un mode de percussion obsolète où il y a cinq canaux restreints. Dans ce mode on ne peut pas jouer plus d&apos;un son de chaque type. Par exemple, il est impossible de jouer simultanément plusieurs grosses caisses ou plusieurs cymbales. &lt;span style=&quot; text-decoration: underline;&quot;&gt;Ce mode n&apos;est disponible que sur des formats de banques particuliers (par exemple, IBK, SBI). Les autres formats ne gèrent que le mode générique&lt;/span&gt; !&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="659"/>
-        <location filename="../bank_editor.ui" line="1410"/>
+        <location filename="../bank_editor.ui" line="650"/>
+        <location filename="../bank_editor.ui" line="1433"/>
         <source>Generic</source>
         <translation>Générique</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="664"/>
+        <location filename="../bank_editor.ui" line="655"/>
         <source>Bass</source>
         <translation>Grosse caisse</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="669"/>
+        <location filename="../bank_editor.ui" line="660"/>
         <source>Snare</source>
         <translation>Caisse claire</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="674"/>
+        <location filename="../bank_editor.ui" line="665"/>
         <source>Tom-tom</source>
         <translation>Tam-tam</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="679"/>
+        <location filename="../bank_editor.ui" line="670"/>
         <source>Cymbal</source>
         <translation>Cymbale</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="684"/>
+        <location filename="../bank_editor.ui" line="675"/>
         <source>Hi-Hat</source>
         <translation>Charleston</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="704"/>
+        <location filename="../bank_editor.ui" line="699"/>
+        <source>Fixed note tone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="721"/>
         <source>Modulator 1 (Operator 1)</source>
         <translation>Modulatrice 1 (Opérateur 1)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="740"/>
+        <location filename="../bank_editor.ui" line="764"/>
         <source>Modulator 2 (Operator 3)</source>
         <translation>Modulatrice 2 (Opérateur 3)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="773"/>
+        <location filename="../bank_editor.ui" line="804"/>
         <source>Carrier 1 (Operator 2)</source>
         <translation>Porteuse 1 (Opérateur 2)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="827"/>
+        <location filename="../bank_editor.ui" line="865"/>
         <source>Custom instrument name:</source>
         <translation>Nom d&apos;instrument personnalisé :</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="843"/>
+        <location filename="../bank_editor.ui" line="881"/>
         <source>Custom instrument name</source>
         <translation>Nom d&apos;instrument personnalisé</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="916"/>
+        <location filename="../bank_editor.ui" line="954"/>
         <source>Feedback 2</source>
         <translation>Retour 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="967"/>
+        <location filename="../bank_editor.ui" line="1005"/>
         <source>Synthesis Type 2</source>
         <translation>Type synthèse 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1071"/>
-        <location filename="../bank_editor.ui" line="1090"/>
+        <location filename="../bank_editor.ui" line="1109"/>
+        <location filename="../bank_editor.ui" line="1128"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset second voice to one semi-tone (octave is 12 semi-tones) &lt;br/&gt;(0 is don&apos;t offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Décalage de la seconde voix en demi-tons (un octave vaut 12 demi-tons) &lt;br/&gt;(0 ne décale pas la note. Valeurs entre -127 et 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Uniquement en mode couplage de 2 paires d&apos;opérateurs&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1074"/>
+        <location filename="../bank_editor.ui" line="1112"/>
         <source>Note offset 2</source>
         <translation>Décalage note 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1114"/>
+        <location filename="../bank_editor.ui" line="1152"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enables 4-operators mode of OPL3 chip&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(not supported on OPL2 chip, but &amp;quot;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices&lt;/span&gt;&amp;quot; can be used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Active le mode 4-opérateurs de l&apos;OPL3&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(incompatible avec l&apos;OPL2, mais le &amp;quot;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Couplage de 2 paires d&apos;opérateurs&lt;/span&gt;&amp;quot; peut être utilisé)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1117"/>
+        <location filename="../bank_editor.ui" line="1155"/>
         <source>Enable 4-operator</source>
         <translation>Activer le mode 4 opérateurs</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1133"/>
+        <location filename="../bank_editor.ui" line="1171"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enables pseudo 4-operators mode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;It&apos;s a pair of 2-operator voices which work independently from each other.&lt;br/&gt;Is possible to detune second voice and play both voices with different tones.&lt;/p&gt;&lt;p&gt;Mainly used in DMX OP2 files.&lt;br/&gt;This was needed for OPL2 chip which does not support 4 operators mode.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Active le mode pseudo 4-opérateurs&lt;/span&gt;&lt;/p&gt;&lt;p&gt;C&apos;est une paire de voix à 2 opérateurs qui fonctionnent indépendamment l&apos;une de l&apos;autre.&lt;br/&gt;Il est possible de réaccorder la deuxième voix et de jouer les deux avec des tons différents.&lt;/p&gt;&lt;p&gt;Utilisé principalement par les fichiers DMX OP2.&lt;br/&gt;Ceci était nécessaire pour l&apos;OPL2 qui ne gère pas le mode 4 opérateurs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1136"/>
+        <location filename="../bank_editor.ui" line="1174"/>
         <source>Pair of 2-operator voices mode</source>
         <translation>Couplage de 2 paires d&apos;opérateurs</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1191"/>
+        <location filename="../bank_editor.ui" line="1229"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Recently used channel ID&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(from 0 to N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Two-operators mode (2-op):&lt;/span&gt;&lt;br/&gt;Totally 18 two-operator channels available on OPL3 chip.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pseudo four-operators mode (Ps-4-op):&lt;/span&gt;&lt;br/&gt;Using of pairs of two-operator channels, in result we are have 9 double-voice channels&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Four-operators mode (4-op):&lt;/span&gt;&lt;br/&gt;Totally 6 four-operator channels available on OPL3 chip.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Identifiant de canal récemment utilisé&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(de0 à N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Mode 2-opérateurs (2-op):&lt;/span&gt;&lt;br/&gt;Au total 18 canaux à 2 opérateurs disponibles sur OPL3.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Mode pseudo 4-opérateurs (Ps-4-op):&lt;/span&gt;&lt;br/&gt;En utilisant des paires de canaux à 2 opérateurs, on a au total 9 canaux à double voix.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Mode 4-opérateurs (4-op):&lt;/span&gt;&lt;br/&gt;Au total 6 canaux à 4 opérateurs disponibles sur OPL3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1225"/>
+        <location filename="../bank_editor.ui" line="1263"/>
         <source>MIDI input</source>
         <translation>Entrée MIDI</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1262"/>
+        <location filename="../bank_editor.ui" line="1300"/>
         <source>Select port:</source>
         <translation>Choix du port :</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1278"/>
+        <location filename="../bank_editor.ui" line="1316"/>
         <source>MIDI In</source>
         <translation>Entrée MIDI</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1305"/>
+        <location filename="../bank_editor.ui" line="1343"/>
         <source>Global OPL3 flags</source>
         <translation>Options globales OPL3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1335"/>
+        <location filename="../bank_editor.ui" line="1373"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tremolo (Amplitude Vibrato) Depth.&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Unchecked&lt;/span&gt; = 1.0dB,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Checked&lt;/span&gt; = 4.8dB.&lt;/p&gt;&lt;p&gt;(Effect taking for instruments where tremolo flag is used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Niveau de Tremolo (vibrato d&apos;amplitude).&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Décoché&lt;/span&gt; = 1.0dB,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Coché&lt;/span&gt; = 4.8dB.&lt;/p&gt;&lt;p&gt;(Prend effet sur les instruments ayant le fanion Tremolo activé)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1338"/>
+        <location filename="../bank_editor.ui" line="1376"/>
         <source>Deep Tremolo</source>
         <translation>Tremolo Augmenté</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1351"/>
+        <location filename="../bank_editor.ui" line="1389"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Vibrato Depth.&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Unchecked&lt;/span&gt; = 7 cents,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Checked&lt;/span&gt; = 14 cents.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;A &amp;quot;cent&amp;quot; is 1/100 of a semi-tone.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(Effect taking for instruments where vibrato flag is used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Niveau de Vibrato (de fréquence).&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Décoché&lt;/span&gt; = 7 cents,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Coché&lt;/span&gt; = 14 cents.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Un &amp;quot;cent&amp;quot; est un centième de demi-ton.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(Prend effet sur les instruments ayant le fanion Vibrato activé)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1354"/>
+        <location filename="../bank_editor.ui" line="1392"/>
         <source>Deep Vibrato</source>
         <translation>Vibrato Augmenté</translation>
     </message>
@@ -428,17 +449,17 @@
         <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choisit une formule qui convertit le niveau de volume MIDI en niveau physique.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Générique &lt;/span&gt;- Echelle de volume linéaire&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Native OPL3&lt;/span&gt; - Échelle de volume logarithmique produite nativement par l&apos;OPL3&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;DMX&lt;/span&gt; - Fonction tabulée associant à tout volume MIDI sa valeur en unités de volume OPL&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apogee&lt;/span&gt; - Échelle de volume logarithmique&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pilote Win9x&lt;/span&gt; - Fonction tabulée discontinue, avec une résolution deux fois moindre que les niveaux possibles de l&apos;OPL3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1376"/>
+        <location filename="../bank_editor.ui" line="1414"/>
         <source>Bank volume model</source>
         <translation>Modèle de volume</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1415"/>
+        <location filename="../bank_editor.ui" line="1438"/>
         <source>OPL3 Native</source>
         <translation>Natif OPL3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1364"/>
+        <location filename="../bank_editor.ui" line="1402"/>
         <source>&lt;p&gt;Declares a volume scale formula that will set physical volume level from a MIDI volume.&lt;/p&gt;
 &lt;p&gt;&lt;br/&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Generic&lt;/b&gt; - linear volume scale&lt;/p&gt;
@@ -456,405 +477,488 @@
         <translation type="vanished">Pilote Win9x</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1435"/>
+        <location filename="../bank_editor.ui" line="1458"/>
         <source>DMX (Fixed AM)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1440"/>
+        <location filename="../bank_editor.ui" line="1463"/>
         <source>Apogee (Fixed AM)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1507"/>
+        <location filename="../bank_editor.ui" line="1483"/>
+        <source>HMI SOS (Old variant)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1516"/>
+        <source>MIDI volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1535"/>
+        <source>Channels allocation mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1542"/>
+        <source>Choose the channel selection algorithm.
+
+- Cycling - the next channel will be selected by the iteration thgouh all channels in the list. 
+  If selected channel is busy, the oldest will be replaced.
+- First released - the next channel will be selected by finding any released (no playing note),
+  causing the channel of recently released note to be re-used by a new note, which makes
+  the the legato-like effect. If all channels are busy, the oldest will be replaced.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1552"/>
+        <source>Cycling</source>
+        <comment>Channels allocation mode name</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1557"/>
+        <source>First released</source>
+        <comment>Channels allocation mode name</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1568"/>
         <source>Testing</source>
         <translation>Mise à l&apos;essai</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1531"/>
+        <location filename="../bank_editor.ui" line="1592"/>
         <source>Test note #(0...127)</source>
         <translation>Note à tester #(0...127)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1544"/>
+        <location filename="../bank_editor.ui" line="1605"/>
         <source>Current note position (60 is a C of a first octave).
 Available from 0 to 127</source>
         <translation>Indice de la note actuelle (60 correspond au Do du premier octave)
 Valeurs entre 0 et 127</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1558"/>
+        <location filename="../bank_editor.ui" line="1619"/>
         <source>Play a single note. Hold button to play sound, release button to off note.</source>
         <translation>Joue une note seule. Appuyez sur le bouton pour jouer, relâchez pour arrêter la note.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1561"/>
+        <location filename="../bank_editor.ui" line="1622"/>
         <source>Play Note</source>
         <translation>Jouer Note</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1568"/>
+        <location filename="../bank_editor.ui" line="1629"/>
         <source>Play a major triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Joue une triade majeure relative à la note sélectionnée. Appuyez sur le bouton pour jouer, relâchez pour arrêter la note.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1571"/>
+        <location filename="../bank_editor.ui" line="1632"/>
         <source>Major chord</source>
         <translation>Accord majeur</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1578"/>
+        <location filename="../bank_editor.ui" line="1639"/>
         <source>Play a minor triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Joue une triade mineure relative à la note sélectionnée. Appuyez sur le bouton pour jouer, relâchez pour arrêter la note.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1581"/>
+        <location filename="../bank_editor.ui" line="1642"/>
         <source>Minor chord</source>
         <translation>Accord mineur</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1588"/>
+        <location filename="../bank_editor.ui" line="1649"/>
         <source>Play a augmented triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Joue une triade augmentée relative à la note sélectionnée. Appuyez sur le bouton pour jouer, relâchez pour arrêter la note.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1591"/>
+        <location filename="../bank_editor.ui" line="1652"/>
         <source>Augmented chord</source>
         <translation>Accord augmenté</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1598"/>
+        <location filename="../bank_editor.ui" line="1659"/>
         <source>Play a diminished triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Joue une triade diminuée relative à la note sélectionnée. Appuyez sur le bouton pour jouer, relâchez pour arrêter la note.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1601"/>
+        <location filename="../bank_editor.ui" line="1662"/>
         <source>Diminished chord</source>
         <translation>Accord diminué</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1608"/>
+        <location filename="../bank_editor.ui" line="1669"/>
         <source>Play a major seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Joue un accord majeur de septième relatif à la note sélectionnée. Appuyez sur le bouton pour jouer, relâchez pour arrêter la note.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1611"/>
+        <location filename="../bank_editor.ui" line="1672"/>
         <source>Major 7-chord</source>
         <translation>Accord majeur 7</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1618"/>
+        <location filename="../bank_editor.ui" line="1679"/>
         <source>Play a minor seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Joue un accord mineur de septième relatif à la note sélectionnée. Appuyez sur le bouton pour jouer, relâchez pour arrêter la note.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1621"/>
+        <location filename="../bank_editor.ui" line="1682"/>
         <source>Minor 7-chord</source>
         <translation>Accord mineur 7</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1644"/>
+        <location filename="../bank_editor.ui" line="1705"/>
         <source>Mute all playing/sustaining notes in all channels</source>
         <translation>Mettre en sourdine les notes jouées sur tous les canaux</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1647"/>
+        <location filename="../bank_editor.ui" line="1708"/>
         <source>Shut up!</source>
         <translation>Silence !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1657"/>
-        <location filename="../bank_editor.ui" line="1673"/>
+        <location filename="../bank_editor.ui" line="1718"/>
+        <location filename="../bank_editor.ui" line="1734"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Note velocity offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Offsets MIDI velocity (range from -127 to 127)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Décalage de vélocité des notes&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Décale la vélocité MIDI (valeurs entre -127 to 127)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1660"/>
+        <location filename="../bank_editor.ui" line="1721"/>
         <source>Velocity offset</source>
         <translation>Décalage de vélocité</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1689"/>
-        <location filename="../bank_editor.ui" line="1709"/>
+        <location filename="../bank_editor.ui" line="1750"/>
+        <location filename="../bank_editor.ui" line="1770"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Detune second voice pitch&lt;br/&gt;(0 is don&apos;t detune.&lt;br/&gt;Range from -127 to 127)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pair of 2-operator voices mode only&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Réglage du ton de la deuxième voix&lt;br/&gt;(0 ne change rien.&lt;br/&gt;Valeurs entre -127 et 127)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Mode couplage de 2 paires d&apos;opérateurs uniquement&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1692"/>
+        <location filename="../bank_editor.ui" line="1753"/>
         <source>Fine tuning
 of second voice</source>
         <translation>Réglage fin du ton
 de la deuxième voix</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1828"/>
+        <location filename="../bank_editor.ui" line="1889"/>
         <source>Hold</source>
         <translation>Maintien</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1831"/>
+        <location filename="../bank_editor.ui" line="1892"/>
         <source>H</source>
         <translation>H</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1875"/>
+        <location filename="../bank_editor.ui" line="1936"/>
         <source>Pitch bend</source>
         <translation>Modulation de hauteur tonale</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1934"/>
+        <location filename="../bank_editor.ui" line="1995"/>
         <source>File</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1948"/>
+        <location filename="../bank_editor.ui" line="2009"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1952"/>
+        <location filename="../bank_editor.ui" line="2013"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1964"/>
+        <location filename="../bank_editor.ui" line="2025"/>
         <source>Edit</source>
         <translation>Édition</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1968"/>
+        <location filename="../bank_editor.ui" line="2029"/>
         <source>Paste one voice</source>
         <translation>Coller une voix</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1977"/>
+        <location filename="../bank_editor.ui" line="2038"/>
         <source>Preferred MIDI standard</source>
         <translation>Standard MIDI préféré</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2012"/>
+        <location filename="../bank_editor.ui" line="2073"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2016"/>
+        <location filename="../bank_editor.ui" line="2077"/>
         <source>Choose chip emulator</source>
         <translation>Choisir l&apos;émulateur de circuit</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2037"/>
+        <location filename="../bank_editor.ui" line="2103"/>
         <source>Open</source>
         <translation>Ouvrir</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2045"/>
+        <location filename="../bank_editor.ui" line="2111"/>
         <source>Save bank as...</source>
         <translation>Enregistrer la banque sous...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2050"/>
+        <location filename="../bank_editor.ui" line="2116"/>
         <source>Exit</source>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2058"/>
+        <location filename="../bank_editor.ui" line="2124"/>
         <source>About</source>
         <translation>À propos</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2063"/>
+        <location filename="../bank_editor.ui" line="2129"/>
         <source>New</source>
         <translation>Nouveau</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2068"/>
+        <location filename="../bank_editor.ui" line="2134"/>
         <source>Copy current instrument</source>
         <translation>Copier l&apos;instrument courant</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2076"/>
+        <location filename="../bank_editor.ui" line="2142"/>
         <source>Paste instrument</source>
         <translation>Coller l&apos;instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2084"/>
+        <location filename="../bank_editor.ui" line="2150"/>
         <source>Reset current instrument</source>
         <translation>Réinitialiser l&apos;instrument courant</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2092"/>
+        <location filename="../bank_editor.ui" line="2158"/>
         <source>Import instruments...</source>
         <translation>Importer les instruments...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2097"/>
+        <location filename="../bank_editor.ui" line="2161"/>
+        <source>Ctrl+I</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="2166"/>
         <source>Add instrument</source>
         <translation>Ajouter un instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2102"/>
+        <location filename="../bank_editor.ui" line="2171"/>
         <source>Delete current instrument</source>
         <translation>Supprimer l&apos;instrument courant</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2107"/>
+        <location filename="../bank_editor.ui" line="2176"/>
         <source>Save current instrument as...</source>
         <translation>Enregister l&apos;instrument courant sous...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2118"/>
-        <location filename="../bank_editor.ui" line="2121"/>
+        <location filename="../bank_editor.ui" line="2187"/>
+        <location filename="../bank_editor.ui" line="2190"/>
         <source>United view of all banks</source>
         <translation>Vue unifiée de toutes les banques</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2124"/>
+        <location filename="../bank_editor.ui" line="2193"/>
         <source>Show all instruments without separating them into 128-instrument banks</source>
         <translation>Afficher les instruments sans les séparer en banques de 128 instruments</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2129"/>
+        <location filename="../bank_editor.ui" line="2198"/>
         <source>Add bank</source>
         <translation>Ajouter une banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2134"/>
+        <location filename="../bank_editor.ui" line="2201"/>
+        <source>Ctrl+A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="2206"/>
         <source>Delete bank</source>
         <translation>Supprimer la banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2139"/>
+        <location filename="../bank_editor.ui" line="2209"/>
+        <source>Shift+Del</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="2214"/>
         <source>Clone bank</source>
         <translation>Cloner la banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2144"/>
+        <location filename="../bank_editor.ui" line="2219"/>
         <source>Clear instrument</source>
         <translation>Effacer l&apos;instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2149"/>
+        <location filename="../bank_editor.ui" line="2222"/>
+        <source>Del</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="2227"/>
         <source>Clear bank</source>
         <translation>Effacer la banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2154"/>
+        <location filename="../bank_editor.ui" line="2232"/>
         <source>Supported formats...</source>
         <translation>Formats compatibles...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2159"/>
+        <location filename="../bank_editor.ui" line="2237"/>
         <source>Swap two voices</source>
         <translation>Échanger deux voix</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2167"/>
+        <location filename="../bank_editor.ui" line="2245"/>
         <source>Paste voice 1 as voice 1</source>
         <translation>Coller la voix 1 sur la voix 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2172"/>
+        <location filename="../bank_editor.ui" line="2250"/>
         <source>Paste voice 1 as voice 2</source>
         <translation>Coller la voix 1 sur la voix 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2177"/>
+        <location filename="../bank_editor.ui" line="2255"/>
         <source>Paste voice 2 as voice 1</source>
         <translation>Coller la voix 2 sur la voix 1</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2182"/>
+        <location filename="../bank_editor.ui" line="2260"/>
         <source>Paste voice 2 as voice 2</source>
         <translation>Coller la voix 2 sur la voix 2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2187"/>
+        <location filename="../bank_editor.ui" line="2265"/>
         <source>Re-Calculate all sounding delays</source>
         <translation>Recalculer tous les délais sonores</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2195"/>
+        <location filename="../bank_editor.ui" line="2268"/>
+        <source>Ctrl+Alt+G</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="2276"/>
         <source>Nuked OPL3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2203"/>
+        <location filename="../bank_editor.ui" line="2284"/>
         <source>DosBox 0.74</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2208"/>
+        <location filename="../bank_editor.ui" line="2289"/>
         <source>Run emulators benchmark</source>
         <translation>Évaluer la performance des émulateurs</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2213"/>
+        <location filename="../bank_editor.ui" line="2294"/>
         <source>Save bank...</source>
         <translation>Enregistrer la banque...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2216"/>
+        <location filename="../bank_editor.ui" line="2297"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2224"/>
+        <location filename="../bank_editor.ui" line="2305"/>
         <source>Proxy to the real OPL3 chip</source>
         <translation>Interfaçage avec un circuit OPL3 réel</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2229"/>
+        <location filename="../bank_editor.ui" line="2310"/>
         <source>Audio &amp;configuration</source>
         <translation>&amp;Configuration audio</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2234"/>
+        <location filename="../bank_editor.ui" line="2315"/>
         <source>System default</source>
         <translation>Par défaut du système</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2239"/>
+        <location filename="../bank_editor.ui" line="2320"/>
         <source>Re-Calculate sounding delays of instrument</source>
         <translation>Recalculer les délais sonores de l&apos;instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2244"/>
+        <location filename="../bank_editor.ui" line="2323"/>
+        <source>Ctrl+Alt+S</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="2328"/>
         <source>Run delay analysis</source>
         <translation>Lancer l&apos;analyse des délais</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2249"/>
+        <location filename="../bank_editor.ui" line="2333"/>
         <source>Hardware OPL...</source>
         <translation>OPL matériel...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2302"/>
+        <location filename="../bank_editor.ui" line="2386"/>
         <source>Compare with other bank...</source>
         <translation>Comparer avec une autre banque...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2310"/>
+        <location filename="../bank_editor.ui" line="2394"/>
         <source>Serial port OPL interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="557"/>
-        <location filename="../bank_editor.cpp" line="597"/>
+        <location filename="../bank_editor.ui" line="2424"/>
+        <source>MAME OPL2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="2432"/>
+        <source>YMFM OPL2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="2440"/>
+        <source>ESFMu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.cpp" line="627"/>
+        <location filename="../bank_editor.cpp" line="667"/>
         <source>bad file format</source>
         <translation>mauvais format de fichier</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="472"/>
+        <location filename="../bank_editor.cpp" line="542"/>
         <source>Bank &apos;%1&apos; has been loaded!</source>
         <translation>La banque &apos;%1&apos; a été chargée !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="502"/>
+        <location filename="../bank_editor.cpp" line="572"/>
         <source>Save melodic-only bank file</source>
         <translation>Enregistrement de banque mélodique uniquement</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="503"/>
+        <location filename="../bank_editor.cpp" line="573"/>
         <source>Saving into &apos;%1&apos; format allows to save one melodic only bank. All other banks include percussion will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
@@ -863,12 +967,12 @@ Do you want to continue file saving?</source>
 Voulez vous poursuivre l&apos;enregistrement ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="516"/>
+        <location filename="../bank_editor.cpp" line="586"/>
         <source>Save percussion-only bank file</source>
         <translation>Enregistrement de banque à percussions uniquement</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="517"/>
+        <location filename="../bank_editor.cpp" line="587"/>
         <source>Saving into &apos;%1&apos; format allows to save one percussion only bank. All other banks include melodic will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
@@ -877,12 +981,12 @@ Do you want to continue file saving?</source>
 Voulez vous poursuivre l&apos;enregistrement ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="532"/>
+        <location filename="../bank_editor.cpp" line="602"/>
         <source>Save GeneralMIDI bank file</source>
         <translation>Enregistrement de banque GeneralMIDI</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="533"/>
+        <location filename="../bank_editor.cpp" line="603"/>
         <source>Saving into &apos;%1&apos; format allows you to have one melodic and one percussion banks only. All extra banks will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
@@ -891,160 +995,160 @@ Do you want to continue file saving?</source>
 Voulez vous poursuivre l&apos;enregistrement ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="560"/>
-        <location filename="../bank_editor.cpp" line="600"/>
+        <location filename="../bank_editor.cpp" line="630"/>
+        <location filename="../bank_editor.cpp" line="670"/>
         <source>can&apos;t open file for write</source>
         <translation>impossible d&apos;ouvrir le fichier en écriture</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="563"/>
-        <location filename="../bank_editor.cpp" line="603"/>
+        <location filename="../bank_editor.cpp" line="633"/>
+        <location filename="../bank_editor.cpp" line="673"/>
         <source>writing into this format is not implemented yet</source>
         <translation>l&apos;écriture de ce format n&apos;est pas encore implémentée</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="566"/>
-        <location filename="../bank_editor.cpp" line="606"/>
+        <location filename="../bank_editor.cpp" line="636"/>
+        <location filename="../bank_editor.cpp" line="676"/>
         <source>unsupported file format, please define file name extension to choice target file format</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="582"/>
+        <location filename="../bank_editor.cpp" line="652"/>
         <source>Bank file &apos;%1&apos; has been saved!</source>
         <translation>Le fichier banque &apos;%1&apos; a été enregistré !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="619"/>
+        <location filename="../bank_editor.cpp" line="689"/>
         <source>Instrument file &apos;%1&apos; has been saved!</source>
         <translation>Le fichier instrument &apos;%1&apos; a été enregistré !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="665"/>
+        <location filename="../bank_editor.cpp" line="735"/>
         <source>Nothing to save</source>
         <translation>Rien à engistrer</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="666"/>
+        <location filename="../bank_editor.cpp" line="736"/>
         <source>No selected instrument to save. Please select an instrument first!</source>
         <translation>Aucun instrument à enregistrer n&apos;est sélectionné. Veuillez d&apos;abord sélectionner un instrument !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="683"/>
+        <location filename="../bank_editor.cpp" line="753"/>
         <source>File is not saved</source>
         <translation>Fichier non enregistré</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="683"/>
+        <location filename="../bank_editor.cpp" line="753"/>
         <source>File is modified and not saved. Do you want to save it?</source>
         <translation>Le fichier a des modifications non enregistrées. Voulez vous sauvegarder ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="699"/>
+        <location filename="../bank_editor.cpp" line="769"/>
         <source>&lt;Unknown&gt;</source>
         <translation>&lt;Inconnu&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="711"/>
+        <location filename="../bank_editor.cpp" line="781"/>
         <source>&lt;Reserved %1&gt;</source>
         <translation>&lt;Réservé %1&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="926"/>
+        <location filename="../bank_editor.cpp" line="998"/>
         <source>Reset instrument to initial state</source>
         <translation>Remise à zéro de l&apos;instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="927"/>
+        <location filename="../bank_editor.cpp" line="999"/>
         <source>This instrument will be reset to initial state (since this file was loaded or saved).
 Do you wish to continue?</source>
         <translation>Cet instrument sera remis à l&apos;état initial (tel qu&apos;au dernier chargement ou enregistrement du fichier).
 Voulez-vous continuer ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="962"/>
-        <location filename="../bank_editor.cpp" line="1037"/>
+        <location filename="../bank_editor.cpp" line="1034"/>
+        <location filename="../bank_editor.cpp" line="1109"/>
         <source>Nothing to measure</source>
         <translation>Rien à mesurer</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="963"/>
-        <location filename="../bank_editor.cpp" line="1038"/>
+        <location filename="../bank_editor.cpp" line="1035"/>
+        <location filename="../bank_editor.cpp" line="1110"/>
         <source>No selected instrument to measure. Please select an instrument first!</source>
         <translation>Aucun instrument à mesurer n&apos;est sélectionné. Veuillez d&apos;abord sélectionner un instrument !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="990"/>
+        <location filename="../bank_editor.cpp" line="1062"/>
         <source>%1 passed in %2 milliseconds.
 </source>
         <translation>%1 effectué en %2 millisecondes.
 </translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1010"/>
+        <location filename="../bank_editor.cpp" line="1082"/>
         <source>Open other bank file</source>
         <translation>Ouvrir une autre banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1221"/>
-        <location filename="../bank_editor.cpp" line="1224"/>
+        <location filename="../bank_editor.cpp" line="1342"/>
+        <location filename="../bank_editor.cpp" line="1345"/>
         <source>Delays on: %1, off: %2</source>
         <translation>Délais on : %1, off : %2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1746"/>
-        <location filename="../bank_editor.cpp" line="1782"/>
-        <location filename="../bank_editor.cpp" line="1869"/>
+        <location filename="../bank_editor.cpp" line="1870"/>
+        <location filename="../bank_editor.cpp" line="1906"/>
+        <location filename="../bank_editor.cpp" line="1993"/>
         <source>United bank mode is turned on. Disable it to be able add or remove banks.</source>
         <translation>Le mode unifié est activé. Désactivez-le pour pouvoir ajouter ou supprimer des banques.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1827"/>
+        <location filename="../bank_editor.cpp" line="1951"/>
         <source>United bank mode is turned on. Disable it to be able clear banks.</source>
         <translation>Le mode unifié est activé. Désactivez-le pour pouvoir effacer des banques.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1832"/>
+        <location filename="../bank_editor.cpp" line="1956"/>
         <source>128-instrument bank erasure</source>
         <translation>Effacement de banque à 128 instruments</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1833"/>
+        <location filename="../bank_editor.cpp" line="1957"/>
         <source>All instruments in this bank will be cleared. Do you want continue erasure?</source>
         <translation>Tous les instruments de cette banque seront effacés. Confirmer la suppression ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="941"/>
+        <location filename="../bank_editor.cpp" line="1013"/>
         <source>Are you sure?</source>
         <translation>Êtes-vous sûr ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="569"/>
-        <location filename="../bank_editor.cpp" line="609"/>
+        <location filename="../bank_editor.cpp" line="639"/>
+        <location filename="../bank_editor.cpp" line="679"/>
         <source>unknown error occurred</source>
         <translation>une erreur inconnue s&apos;est produite</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="942"/>
+        <location filename="../bank_editor.cpp" line="1014"/>
         <source>All sounding delays measures will be re-calculated. This operation may take a while. Do you want to continue? You may cancel operation in any moment.</source>
         <translation>Toutes les mesures de délais sonores seront recalculées. Cette opération peut prendre du temps. Voulez-vous continuer ? Cette opération peut être interrompue à tout moment.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="949"/>
+        <location filename="../bank_editor.cpp" line="1021"/>
         <source>Sounding delays calculation has been completed!</source>
         <translation>Le calcul des délais sonores est terminé !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="951"/>
+        <location filename="../bank_editor.cpp" line="1023"/>
         <source>Sounding delays calculation was canceled!</source>
         <translation>Le calcul des délais sonores a été annulé !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="992"/>
+        <location filename="../bank_editor.cpp" line="1064"/>
         <source>Benchmark result</source>
         <translation>Compte rendu de la performance</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="993"/>
+        <location filename="../bank_editor.cpp" line="1065"/>
         <source>Result of emulators benchmark based on &apos;%1&apos; instrument:
 
 %2</source>
@@ -1053,24 +1157,24 @@ Voulez-vous continuer ?</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1001"/>
-        <location filename="../bank_editor.cpp" line="1671"/>
-        <location filename="../bank_editor.cpp" line="1687"/>
+        <location filename="../bank_editor.cpp" line="1073"/>
+        <location filename="../bank_editor.cpp" line="1795"/>
+        <location filename="../bank_editor.cpp" line="1811"/>
         <source>Instrument is not selected</source>
         <translation>Aucun instrument n&apos;est sélectionné</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1002"/>
+        <location filename="../bank_editor.cpp" line="1074"/>
         <source>Please select any instrument to begin the benchmark of emulators!</source>
         <translation>Veuillez selectionner un instrument pour évaluer la performance des émulateurs !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1065"/>
+        <location filename="../bank_editor.cpp" line="1137"/>
         <source>About bank editor</source>
         <translation>À propos de l&apos;éditeur de banques</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1066"/>
+        <location filename="../bank_editor.cpp" line="1138"/>
         <source>FM Bank Editor for Yamaha OPL3/OPL2 chip, Version %1
 
 %2
@@ -1089,88 +1193,88 @@ Source code disponible sur GitHub :
 %3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1453"/>
+        <location filename="../bank_editor.cpp" line="1576"/>
         <source>Change name of bank</source>
         <translation>Renommer la banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1453"/>
+        <location filename="../bank_editor.cpp" line="1576"/>
         <source>Please type name of current bank (32 characters max):</source>
         <translation>Veuillez saisir le nom de la banque actuelle (32 caractères maxi) :</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1672"/>
+        <location filename="../bank_editor.cpp" line="1796"/>
         <source>Select instrument to clear please</source>
         <translation>Veuillez sélectionner l&apos;instrument à effacer</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1688"/>
+        <location filename="../bank_editor.cpp" line="1812"/>
         <source>Select instrument to remove please</source>
         <translation>Veuillez sélectionner l&apos;instrument à supprimer</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1693"/>
+        <location filename="../bank_editor.cpp" line="1817"/>
         <source>Single instrument deletion</source>
         <translation>Suppression d&apos;un seul instrument</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1694"/>
+        <location filename="../bank_editor.cpp" line="1818"/>
         <source>Deletion of instrument will cause offset of all next instrument indexes. Suggested to use &apos;Clear instrument&apos; action instead. Do you want continue deletion?</source>
         <translation>Supprimer cet instrument causera un décalage des indices d&apos;instruments suivants. Il est plutôt conseillé d&apos;&quot;Effacer l&apos;instrument&quot;. Supprimer malgré tout ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1745"/>
+        <location filename="../bank_editor.cpp" line="1869"/>
         <source>Add bank error</source>
         <translation>Erreur d&apos;ajout de banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1781"/>
+        <location filename="../bank_editor.cpp" line="1905"/>
         <source>Clone bank error</source>
         <translation>Erreur de clonage de banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1826"/>
+        <location filename="../bank_editor.cpp" line="1950"/>
         <source>Clear bank error</source>
         <translation>Erreur d&apos;effacement de banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1868"/>
-        <location filename="../bank_editor.cpp" line="1877"/>
+        <location filename="../bank_editor.cpp" line="1992"/>
+        <location filename="../bank_editor.cpp" line="2001"/>
         <source>Delete bank error</source>
         <translation>Erreur de suppression de banque</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1878"/>
+        <location filename="../bank_editor.cpp" line="2002"/>
         <source>Removing of last bank is not allowed!</source>
         <translation>Impossible de supprimer la dernière banque !</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1883"/>
+        <location filename="../bank_editor.cpp" line="2007"/>
         <source>128-instrument bank deletion</source>
         <translation>Suppression d&apos;une banque à 128 instruments</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1884"/>
+        <location filename="../bank_editor.cpp" line="2008"/>
         <source>Deletion of bank will cause offset of all next bank indexes. Suggested to use &apos;Clear bank&apos; action instead. Do you want continue deletion?</source>
         <translation>Supprimer cette banque causera un décalage des indices de banques suivantes. Il est plutôt conseillé d&apos;&quot;Effacer la banque&quot;. Supprimer malgré tout ?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1935"/>
+        <location filename="../bank_editor.cpp" line="2059"/>
         <source>Virtual port</source>
         <translation>Port virtuel</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1954"/>
+        <location filename="../bank_editor.cpp" line="2078"/>
         <source>Disable</source>
         <translation>Désactiver</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1995"/>
+        <location filename="../bank_editor.cpp" line="2119"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1996"/>
+        <location filename="../bank_editor.cpp" line="2120"/>
         <source>Cannot open the MIDI port.</source>
         <translation>Impossible d&apos;ouvrir le port MIDI.</translation>
     </message>
@@ -1196,18 +1300,18 @@ Amplitude au point de coupure : %3</translation>
 <context>
     <name>DelayAnalysisDialog</name>
     <message>
-        <location filename="../delay_analysis.cpp" line="164"/>
+        <location filename="../delay_analysis.cpp" line="169"/>
         <source>Key-On Amplitude</source>
         <translation>Amplitude de note jouée</translation>
     </message>
     <message>
-        <location filename="../delay_analysis.cpp" line="166"/>
+        <location filename="../delay_analysis.cpp" line="171"/>
         <source>Key-Off Amplitude</source>
         <translation>Amplitude de note relâchée</translation>
     </message>
     <message>
-        <location filename="../delay_analysis.cpp" line="180"/>
-        <location filename="../delay_analysis.cpp" line="186"/>
+        <location filename="../delay_analysis.cpp" line="185"/>
+        <location filename="../delay_analysis.cpp" line="191"/>
         <source>Delay: %1 ms
 Peak amplitude: %2
 Amplitude at breaking point: %3</source>
@@ -1310,12 +1414,17 @@ Amplitude au point de coupure : %3</translation>
         <translation>Nuke.YKT OPL3</translation>
     </message>
     <message>
-        <location filename="../hardware.cpp" line="174"/>
+        <location filename="../hardware.cpp" line="157"/>
+        <source>RetroWave OPL3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../hardware.cpp" line="176"/>
         <source>Usually $388, varies depending on card.</source>
         <translation>Le plus souvent $388, varie en fonction de la carte.</translation>
     </message>
     <message>
-        <location filename="../hardware.cpp" line="176"/>
+        <location filename="../hardware.cpp" line="178"/>
         <source>Impossible to set the hardware address.
 Make sure you installed the latest OPL proxy.</source>
         <translation>Impossible de définir l&apos;adresse du matériel.
@@ -1411,7 +1520,7 @@ Vérifiez que le proxy OPL le plus récent est installé.</translation>
     </message>
     <message>
         <location filename="../importer.ui" line="39"/>
-        <location filename="../importer.cpp" line="606"/>
+        <location filename="../importer.cpp" line="612"/>
         <source>&lt;No opened files&gt;</source>
         <translation>&lt;Aucun fichier ouvert&gt;</translation>
     </message>
@@ -1426,44 +1535,44 @@ Vérifiez que le proxy OPL le plus récent est installé.</translation>
         <translation>Charger instrument seul</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="469"/>
+        <location filename="../importer.cpp" line="475"/>
         <source>&lt;Unknown&gt;</source>
         <translation>&lt;Inconnu&gt;</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="479"/>
+        <location filename="../importer.cpp" line="485"/>
         <source>&lt;Reserved %1&gt;</source>
         <translation>&lt;Réservé %1&gt;</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="529"/>
+        <location filename="../importer.cpp" line="535"/>
         <source>Nothing to import</source>
         <translation>Rien à importer</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="529"/>
+        <location filename="../importer.cpp" line="535"/>
         <source>You have no selected instruments to import!
 Please select something first!</source>
         <translation>Vous n&apos;avez sélectionné aucun instrument à importer !
 Veuillez d&apos;abord sélectionner quelque chose !</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="565"/>
+        <location filename="../importer.cpp" line="571"/>
         <source>%1 instruments have been imported!</source>
         <translation>%1 instruments ont été importés !</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="581"/>
+        <location filename="../importer.cpp" line="587"/>
         <source>Instrument #%1 has been imported!</source>
         <translation>L&apos;instrument #%1 a été importé !</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="585"/>
+        <location filename="../importer.cpp" line="591"/>
         <source>No target</source>
         <translation>Aucune cible</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="585"/>
+        <location filename="../importer.cpp" line="591"/>
         <source>No target instrument selected.
 Please select target instrument in the main window and retry again!</source>
         <translation>Aucun instrument cible n&apos;est sélectionné. Veuillez sélectionner un instrument cible dans la fenêtre principale et essayer à nouveau !</translation>
@@ -1472,22 +1581,22 @@ Please select target instrument in the main window and retry again!</source>
 <context>
     <name>Measurer</name>
     <message>
-        <location filename="../opl/measurer.cpp" line="744"/>
-        <location filename="../opl/measurer.cpp" line="800"/>
-        <location filename="../opl/measurer.cpp" line="827"/>
+        <location filename="../opl/measurer.cpp" line="785"/>
+        <location filename="../opl/measurer.cpp" line="841"/>
+        <location filename="../opl/measurer.cpp" line="868"/>
         <source>Sounding delay calculation</source>
         <translation>Calcul des délais sonores</translation>
     </message>
     <message>
-        <location filename="../opl/measurer.cpp" line="745"/>
-        <location filename="../opl/measurer.cpp" line="801"/>
-        <location filename="../opl/measurer.cpp" line="828"/>
-        <location filename="../opl/measurer.cpp" line="855"/>
+        <location filename="../opl/measurer.cpp" line="786"/>
+        <location filename="../opl/measurer.cpp" line="842"/>
+        <location filename="../opl/measurer.cpp" line="869"/>
+        <location filename="../opl/measurer.cpp" line="896"/>
         <source>Please wait...</source>
         <translation>Veuillez patienter...</translation>
     </message>
     <message>
-        <location filename="../opl/measurer.cpp" line="854"/>
+        <location filename="../opl/measurer.cpp" line="895"/>
         <source>Benchmarking emulators</source>
         <translation>Évaluation de la performance des émulateurs</translation>
     </message>
@@ -1666,44 +1775,44 @@ Please select target instrument in the main window and retry again!</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../common.cpp" line="176"/>
-        <location filename="../common.cpp" line="185"/>
+        <location filename="../common.cpp" line="198"/>
+        <location filename="../common.cpp" line="207"/>
         <source>bank</source>
         <translation>banque</translation>
     </message>
     <message>
-        <location filename="../common.cpp" line="176"/>
-        <location filename="../common.cpp" line="185"/>
+        <location filename="../common.cpp" line="198"/>
+        <location filename="../common.cpp" line="207"/>
         <source>instrument</source>
         <translation>instrument</translation>
     </message>
     <message>
-        <location filename="../common.cpp" line="178"/>
+        <location filename="../common.cpp" line="200"/>
         <source>Can&apos;t open %1 file!</source>
         <translation>Impossible d&apos;ouvrir le fichier %1 !</translation>
     </message>
     <message>
-        <location filename="../common.cpp" line="179"/>
+        <location filename="../common.cpp" line="201"/>
         <source>Can&apos;t open %1 file because %2.</source>
         <translation>Impossible d&apos;ouvrir le fichier %1 : %2.</translation>
     </message>
     <message>
-        <location filename="../common.cpp" line="187"/>
+        <location filename="../common.cpp" line="209"/>
         <source>Can&apos;t save %1 file!</source>
         <translation>Impossible d&apos;enregistrer le fichier %1 !</translation>
     </message>
     <message>
-        <location filename="../common.cpp" line="188"/>
+        <location filename="../common.cpp" line="210"/>
         <source>Can&apos;t save %1 file because %2.</source>
         <translation>Impossible d&apos;enregistrer le fichier %1 : %2.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="66"/>
+        <location filename="../bank_editor.cpp" line="67"/>
         <source>Bank %1, ID: %2</source>
         <translation>Banque %1, ID: %2</translation>
     </message>
     <message>
-        <location filename="../opl/generator.cpp" line="215"/>
+        <location filename="../opl/generator.cpp" line="801"/>
         <source>Channels:
 2-op: %1, Ps-4op: %2
 4-op: %3</source>
@@ -1712,7 +1821,7 @@ Please select target instrument in the main window and retry again!</source>
 4-op : %3</translation>
     </message>
     <message>
-        <location filename="../ins_names.cpp" line="135"/>
+        <location filename="../ins_names.cpp" line="138"/>
         <source>&lt;Reserved %1&gt;</source>
         <translation>&lt;Réservé %1&gt;</translation>
     </message>
@@ -1735,57 +1844,57 @@ Please select target instrument in the main window and retry again!</source>
         <translation>Formats pris en charge par cet éditeur</translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="33"/>
+        <location filename="../formats_sup.cpp" line="36"/>
         <source>N/A</source>
         <translation>Aucune</translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="36"/>
+        <location filename="../formats_sup.cpp" line="39"/>
         <source>Open, Save, Import</source>
         <translation>Ouverture, Enregistrement, Importation</translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="40"/>
+        <location filename="../formats_sup.cpp" line="43"/>
         <source>Open</source>
         <translation>Ouverture</translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="45"/>
+        <location filename="../formats_sup.cpp" line="48"/>
         <source>Save</source>
         <translation>Enregistrement</translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="51"/>
+        <location filename="../formats_sup.cpp" line="54"/>
         <source>Import</source>
         <translation>Importation</translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="71"/>
+        <location filename="../formats_sup.cpp" line="74"/>
         <source>File format module</source>
         <translation>Module de format de fichier</translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="71"/>
+        <location filename="../formats_sup.cpp" line="74"/>
         <source>Extensions</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="71"/>
+        <location filename="../formats_sup.cpp" line="74"/>
         <source>Type</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="71"/>
+        <location filename="../formats_sup.cpp" line="74"/>
         <source>Capabilities</source>
         <translation>Capacités</translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="98"/>
+        <location filename="../formats_sup.cpp" line="101"/>
         <source>Bank</source>
         <translation>Banque</translation>
     </message>
     <message>
-        <location filename="../formats_sup.cpp" line="111"/>
+        <location filename="../formats_sup.cpp" line="114"/>
         <source>Instrument</source>
         <translation></translation>
     </message>
