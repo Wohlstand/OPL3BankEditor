@@ -1,4 +1,4 @@
-#include "nuked_fmopl3.c"
+#include "nuked_fmopl3.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include "nopl3.h"
