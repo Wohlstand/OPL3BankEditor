@@ -268,10 +268,10 @@ private:
     {
         //! Regular melodic/percussion channel
         ChanCat_Regular     = 0,
-        //! Four-op master
-        ChanCat_4op_Master  = 1,
-        //! Four-op slave
-        ChanCat_4op_Slave   = 2,
+        //! Four-op first part
+        ChanCat_4op_First  = 1,
+        //! Four-op second part
+        ChanCat_4op_Second   = 2,
         //! Rhythm-mode Bass drum
         ChanCat_Rhythm_Bass     = 3,
         //! Rhythm-mode Snare drum
@@ -282,8 +282,10 @@ private:
         ChanCat_Rhythm_Cymbal   = 6,
         //! Rhythm-mode Hi-Hat
         ChanCat_Rhythm_HiHat    = 7,
-        //! Rhythm-mode Slave channel
-        ChanCat_Rhythm_Slave    = 8
+        //! Rhythm-mode Secondary channel
+        ChanCat_Rhythm_Secondary    = 8,
+        //! Here is no channel used (OPL2 only)
+        ChanCat_None = 9
     };
 
     int8_t      m_four_op_category[NUM_OF_CHANNELS * 2];
@@ -293,7 +295,9 @@ private:
     // 5 = percussion Tom
     // 6 = percussion Crash cymbal
     // 7 = percussion Hihat
-    // 8 = percussion slave
+    // 8 = percussion secondary
+
+    void initFourOpCats();
 
     //! index of operators pair, cached, needed by Touch()
     uint16_t    m_ins[NUM_OF_CHANNELS];

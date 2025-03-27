@@ -835,12 +835,6 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
     memset(m_keyBlockFNumCache, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
     memset(m_four_op_category, 0, NUM_OF_CHANNELS * 2);
 
-    uint32_t p = 0;
-    for(uint32_t b = 0; b < 18; ++b)
-        m_four_op_category[p++] = 0;
-    for(uint32_t b = 0; b < 5; ++b)
-        m_four_op_category[p++] = ChanCat_Rhythm_Slave;
-
     m_4op_last_state = true;
     deepTremoloMode   = 0;
     deepVibratoMode   = 0;
@@ -893,6 +887,8 @@ void Generator::initChip()
 
     chip->setChipId(0);
     chip->setRate(m_rate);
+
+    initFourOpCats();
 
     for(uint32_t a = 0; a < maxChans; ++a)
         WriteReg(0xB0 + g_Channels[a], 0x00);
@@ -985,6 +981,35 @@ void Generator::WriteReg(uint16_t address, uint8_t byte)
     chip->writeReg(address, byte);
 }
 
+void Generator::initFourOpCats()
+{
+    uint32_t p = 0;
+
+    memset(&m_four_op_category, 0, sizeof(m_four_op_category));
+
+    for(uint32_t b = 0; b < 18; ++b, ++p)
+    {
+        if(m_chipType == OPLChipBase::CHIPTYPE_OPL2 && b >= 9)
+            m_four_op_category[p] = ChanCat_None;
+        else
+            m_four_op_category[p] = ChanCat_Regular;
+
+        if(rythmModePercussionMode && b >= 6 && b < 9)
+            m_four_op_category[p] = ChanCat_Rhythm_Secondary;
+    }
+
+    if(rythmModePercussionMode == 0)
+    {
+        for(uint32_t b = 0; b < 5; ++b)
+            m_four_op_category[p++] = ChanCat_Rhythm_Secondary;
+    }
+    else
+    {
+        for(uint32_t b = 0; b < 5; ++b)
+            m_four_op_category[p++] = (ChanCat_Rhythm_Bass + b);
+    }
+}
+
 void Generator::NoteOff(uint32_t c)
 {
     uint8_t cc = static_cast<uint8_t>(c % 23);
@@ -995,6 +1020,8 @@ void Generator::NoteOff(uint32_t c)
         WriteReg(0xBD, m_regBD);
         return;
     }
+    else if(m_chipType == OPLChipBase::CHIPTYPE_OPL2 && cc >= USED_CHANNELS_2OP_OPL2)
+        return;
 
     WriteReg(0xB0 + g_Channels[cc], m_keyBlockFNumCache[c] & 0xDF);
 }
@@ -1160,6 +1187,8 @@ void Generator::touchNote(uint32_t c,
         { true,  true  }  /* 4 op AM-AM ops 3&4 */
     };
 
+    if(m_chipType == OPLChipBase::CHIPTYPE_OPL2 && m_four_op_category[c] == ChanCat_None)
+        return; // Do nothing
 
     // ------ Mix volumes and compute average ------
 
@@ -1264,11 +1293,11 @@ void Generator::touchNote(uint32_t c,
     {
         mode = m_patch.OPS[i].feedconn & 1; // 2-op FM or 2-op AM
     }
-    else if(m_four_op_category[c] == ChanCat_4op_Master ||
-            m_four_op_category[c] == ChanCat_4op_Slave)
+    else if(m_four_op_category[c] == ChanCat_4op_First ||
+            m_four_op_category[c] == ChanCat_4op_Second)
     {
         uint32_t i0, i1;
-        if(m_four_op_category[c] == ChanCat_4op_Master)
+        if(m_four_op_category[c] == ChanCat_4op_First)
         {
             i0 = i;
             i1 = m_ins[c + 3];
@@ -1684,26 +1713,7 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
     }
 
     updateRegBD();
-
-    memset(&m_four_op_category, 0, sizeof(m_four_op_category));
-
-    if(rythmModePercussionMode == 0)
-    {
-        for(size_t b = 0; b < 23; ++b)
-        {
-            m_four_op_category[b] =
-                (b >= 18) ? ChanCat_Rhythm_Slave : ChanCat_Regular;
-        }
-    }
-    else
-    {
-        for(size_t b = 0; b < 23; ++b)
-        {
-            m_four_op_category[b] =
-                (b >= 18) ? static_cast<ChanCat>(ChanCat_Rhythm_Bass + (b - 18)) :
-                (b >= 6 && b < 9) ? ChanCat_Rhythm_Slave : ChanCat_Regular;
-        }
-    }
+    initFourOpCats();
 
     if(enabled && (m_chipType == OPLChipBase::CHIPTYPE_OPL3))
     {
@@ -1714,8 +1724,8 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
 
         for(uint32_t a = 0; a < fours; ++a)
         {
-            m_four_op_category[nextfour    ] = ChanCat_4op_Master;
-            m_four_op_category[nextfour + 3] = ChanCat_4op_Slave;
+            m_four_op_category[nextfour    ] = ChanCat_4op_First;
+            m_four_op_category[nextfour + 3] = ChanCat_4op_Second;
 
             switch(a % 6)
             {
@@ -1740,8 +1750,6 @@ void Generator::switch4op(bool enabled, bool patchCleanUp)
     {
         if(m_chipType == OPLChipBase::CHIPTYPE_OPL3)
             WriteReg(0x104, 0x00);//Disable 4-operators mode
-        for(uint32_t a = 0; a < 18; ++a)
-            m_four_op_category[a] = 0;
     }
 
     if(patchCleanUp)
