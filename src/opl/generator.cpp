@@ -99,6 +99,13 @@ static const uint16_t g_Channels_pan[NUM_OF_CHANNELS] =
     0x006, 0x007, 0x008, 0xFFF, 0xFFF
 };
 
+static const uint16_t g_Channels_fbconn[NUM_OF_CHANNELS] =
+{
+    0x000, 0x001, 0x002, 0x003, 0x004, 0x005, 0x006, 0x007, 0x008, // 0..8
+    0x100, 0x101, 0x102, 0x103, 0x104, 0x105, 0x106, 0x107, 0x108, // 9..17 (secondary set)
+    0x006, 0xFFF, 0xFFF, 0xFFF, 0xFFF
+};
+
 /*
     In OPL3 mode:
          0    1    2    6    7    8     9   10   11    16   17   18
@@ -823,6 +830,7 @@ Generator::Generator(uint32_t sampleRate, OPL_Chips initialChip)
         -0.125000 // Fine tuning
     };
     m_regBD = 0;
+    memset(m_regC0, 0x30, NUM_OF_CHANNELS);
     memset(m_ins, 0, sizeof(uint16_t) * NUM_OF_CHANNELS);
     memset(m_keyBlockFNumCache, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
     memset(m_four_op_category, 0, NUM_OF_CHANNELS * 2);
@@ -1440,6 +1448,8 @@ void Generator::Patch(uint32_t c, uint32_t i)
     uint16_t o1 = g_Operators[cc * 2 + 0],
              o2 = g_Operators[cc * 2 + 1];
     uint32_t x = m_patch.OPS[i].modulator_E862, y = m_patch.OPS[i].carrier_E862;
+    uint8_t fbconn = 0;
+    uint16_t fbconn_reg = 0x00;
 
     for(uint32_t a = 0; a < 4; ++a, x >>= 8, y >>= 8)
     {
@@ -1448,13 +1458,34 @@ void Generator::Patch(uint32_t c, uint32_t i)
         if(o2 != 0xFFF)
             WriteReg(data[a] + o2, y & 0xFF);
     }
+
+    if(g_Channels_fbconn[cc] != 0xFFF)
+    {
+        fbconn |= m_patch.OPS[i].feedconn;
+        fbconn_reg = 0xC0 + g_Channels_fbconn[cc];
+    }
+
+    if(m_chipType != OPLChipBase::CHIPTYPE_OPL2 && g_Channels_pan[cc] != 0xFFF)
+    {
+        fbconn |= (m_regC0[c] & 0x30);
+        if(!fbconn_reg)
+            fbconn_reg = 0xC0 + g_Channels_pan[cc];
+    }
+
+    if(fbconn_reg != 0x00)
+        WriteReg(fbconn_reg, fbconn);
 }
 
 void Generator::Pan(uint32_t c, uint32_t value)
 {
     uint8_t cc = c % 23;
+
     if(g_Channels_pan[cc] != 0xFFF)
-        WriteReg(0xC0 + g_Channels_pan[cc], static_cast<uint8_t>(m_patch.OPS[m_ins[c]].feedconn | value));
+    {
+        m_regC0[cc] = value;
+        if(m_chipType != OPLChipBase::CHIPTYPE_OPL2)
+            WriteReg(0xC0 + g_Channels_pan[cc], static_cast<uint8_t>(m_patch.OPS[m_ins[c]].feedconn | value));
+    }
 }
 
 void Generator::PlayNoteF(int noteID, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)

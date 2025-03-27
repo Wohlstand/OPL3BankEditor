@@ -259,6 +259,7 @@ private:
 
     OPL_PatchSetup m_patch;
     uint8_t     m_regBD;
+    uint8_t     m_regC0[NUM_OF_CHANNELS];
 
     /**
      * @brief Channel categiry enumeration
