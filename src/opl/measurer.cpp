@@ -48,6 +48,7 @@
 #include "chips/esfmu_opl3.h"
 #include "chips/mame_opl2.h"
 #include "chips/ymf262_lle.h"
+#include "chips/ym3812_lle.h"
 #ifdef ENABLE_YMFM_EMULATOR
 #include "chips/ymfm_opl2.h"
 #include "chips/ymfm_opl3.h"
@@ -720,7 +721,8 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
         std::shared_ptr<OPLChipBase>(new YmFmOPL2),
         std::shared_ptr<OPLChipBase>(new YmFmOPL3),
 #endif
-        std::shared_ptr<OPLChipBase>(new Ymf262LLEOPL3)
+        std::shared_ptr<OPLChipBase>(new Ymf262LLEOPL3),
+        std::shared_ptr<OPLChipBase>(new Ym3812LLEOPL2)
     };
     for(std::shared_ptr<OPLChipBase> &p : emuls)
         MeasureDurationsBenchmark(in_p, p.get(), result);

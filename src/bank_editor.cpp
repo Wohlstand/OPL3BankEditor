@@ -135,6 +135,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorYmFmOPL2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorYmFm, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorYMF262LLE, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorYM3812LLE, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionSerialPortOPL, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
@@ -282,6 +283,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorYmFmOPL2->setChecked(false);
     ui->actionEmulatorYmFm->setChecked(false);
     ui->actionEmulatorYMF262LLE->setChecked(false);
+    ui->actionEmulatorYM3812LLE->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
     ui->actionSerialPortOPL->setChecked(false);
 
@@ -314,6 +316,9 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_YMF262LLE:
         ui->actionEmulatorYMF262LLE->setChecked(true);
+        break;
+    case Generator::CHIP_YM3812LLE:
+        ui->actionEmulatorYM3812LLE->setChecked(true);
         break;
     case Generator::CHIP_Win9xProxy:
         ui->actionWin9xOPLProxy->setChecked(true);
@@ -1175,6 +1180,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorYmFmOPL2->setChecked(false);
     ui->actionEmulatorYmFm->setChecked(false);
     ui->actionEmulatorYMF262LLE->setChecked(false);
+    ui->actionEmulatorYM3812LLE->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
     ui->actionSerialPortOPL->setChecked(false);
 
@@ -1238,6 +1244,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorYMF262LLE->setChecked(true);
         m_currentChip = Generator::CHIP_YMF262LLE;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorYM3812LLE)
+    {
+        ui->actionEmulatorYM3812LLE->setChecked(true);
+        m_currentChip = Generator::CHIP_YM3812LLE;
         m_generator->ctl_switchChip(m_currentChip);
     }
     else

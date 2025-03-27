@@ -28,6 +28,7 @@
 #include "chips/esfmu_opl3.h"
 #include "chips/mame_opl2.h"
 #include "chips/ymf262_lle.h"
+#include "chips/ym3812_lle.h"
 
 #ifdef ENABLE_YMFM_EMULATOR
 #include "chips/ymfm_opl2.h"
@@ -951,6 +952,9 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
 #endif
     case CHIP_YMF262LLE:
         chip.reset(new Ymf262LLEOPL3());
+        break;
+    case CHIP_YM3812LLE:
+        chip.reset(new Ym3812LLEOPL2());
         break;
     case CHIP_DosBox:
         chip.reset(new DosBoxOPL3());

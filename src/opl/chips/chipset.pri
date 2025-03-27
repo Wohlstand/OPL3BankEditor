@@ -15,7 +15,10 @@ SOURCES+= \
     $$PWD/nuked/nukedopl3_174.c \
     $$PWD/ymf262_lle.cpp \
     $$PWD/ymf262_lle/nuked_fmopl3.c \
-    $$PWD/ymf262_lle/nopl3.c
+    $$PWD/ymf262_lle/nopl3.c \
+    $$PWD/ym3812_lle.cpp \
+    $$PWD/ym3812_lle/nuked_fmopl2.c \
+    $$PWD/ym3812_lle/nopl2.c
 
 HEADERS+= \
     $$PWD/opl_chip_base.h \
@@ -38,7 +41,10 @@ HEADERS+= \
     $$PWD/nuked/nukedopl3_174.h \
     $$PWD/ymf262_lle.h \
     $$PWD/ymf262_lle/nuked_fmopl3.h \
-    $$PWD/ymf262_lle/nopl3.h
+    $$PWD/ymf262_lle/nopl3.h \
+    $$PWD/ym3812_lle.h \
+    $$PWD/ym3812_lle/nuked_fmopl2.h \
+    $$PWD/ym3812_lle/nopl2.h
 
 # Available when C++14 is supported
 enable_ymfm: {

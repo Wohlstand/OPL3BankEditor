@@ -93,6 +93,7 @@ public:
         CHIP_YmFmOPL2,
         CHIP_YmFm,
         CHIP_YMF262LLE,
+        CHIP_YM3812LLE,
         CHIP_Win9xProxy,
         CHIP_SerialPort,
         CHIP_END

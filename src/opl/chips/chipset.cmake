@@ -26,13 +26,18 @@ set(CHIPS_SOURCES
     "src/opl/chips/nuked_opl3_v174.h"
     "src/opl/chips/nuked/nukedopl3_174.c"
     "src/opl/chips/nuked/nukedopl3_174.h"
-    "src/opl/chips/ymf262_lle/nopl3.h"
     "src/opl/chips/ymf262_lle.cpp"
     "src/opl/chips/ymf262_lle.h"
     "src/opl/chips/ymf262_lle/nuked_fmopl3.c"
     "src/opl/chips/ymf262_lle/nuked_fmopl3.h"
     "src/opl/chips/ymf262_lle/nopl3.c"
     "src/opl/chips/ymf262_lle/nopl3.h"
+    "src/opl/chips/ym3812_lle.cpp"
+    "src/opl/chips/ym3812_lle.h"
+    "src/opl/chips/ym3812_lle/nuked_fmopl2.c"
+    "src/opl/chips/ym3812_lle/nuked_fmopl2.h"
+    "src/opl/chips/ym3812_lle/nopl2.c"
+    "src/opl/chips/ym3812_lle/nopl2.h"
 )
 
 if(COMPILER_SUPPORTS_CXX14) # YMFM can be built in only condition when C++14 and newer were available

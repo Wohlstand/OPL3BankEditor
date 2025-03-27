@@ -2085,6 +2085,7 @@ of second voice</string>
      <addaction name="actionEmulatorYmFmOPL2"/>
      <addaction name="actionEmulatorYmFm"/>
      <addaction name="actionEmulatorYMF262LLE"/>
+     <addaction name="actionEmulatorYM3812LLE"/>
      <addaction name="actionWin9xOPLProxy"/>
      <addaction name="actionSerialPortOPL"/>
     </widget>
@@ -2421,7 +2422,7 @@ of second voice</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>MAME OPL2</string>
+    <string notr="true">MAME OPL2</string>
    </property>
   </action>
   <action name="actionEmulatorYmFmOPL2">
@@ -2429,7 +2430,7 @@ of second voice</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>YMFM OPL2</string>
+    <string notr="true">YMFM OPL2</string>
    </property>
   </action>
   <action name="actionEmulatorESFMu">
@@ -2437,7 +2438,15 @@ of second voice</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>ESFMu</string>
+    <string notr="true">ESFMu</string>
+   </property>
+  </action>
+  <action name="actionEmulatorYM3812LLE">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">YM3812-LLE OPL2 [EXPERIMENTAL]</string>
    </property>
   </action>
  </widget>

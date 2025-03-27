@@ -47,6 +47,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 endif()
 
 OPTION(DEBUG_WRITE_AMPLITUDE_PLOT "Write the captured result of sounding measurer into the apmplitudes plot" OFF)
+option(ENABLE_ADDRESS_SANITIZER "Enable the Address Sanitizer GCC feature" OFF)
 
 if(WIN32)
     OPTION(USE_RTAUDIO_WASAPI "Enable WASAPI support on RtAudio (breaks Windows XP compatibility)" ON)
@@ -111,6 +112,10 @@ set(COMMON_SOURCES
 add_library(Common STATIC ${COMMON_SOURCES})
 target_include_directories(Common PUBLIC "src")
 target_link_libraries(Common PUBLIC Qt5::Widgets)
+if(ENABLE_ADDRESS_SANITIZER)
+    target_compile_options(Common PUBLIC -fsanitize=address)
+    target_link_options(Common PUBLIC -fsanitize=address)
+endif()
 
 set(FILEFORMATS_SOURCES
   "src/FileFormats/ffmt_base.cpp"
@@ -168,6 +173,10 @@ endif()
 if(ENABLE_SERIAL_PORT)
   target_link_libraries(Chips PUBLIC Qt5::SerialPort)
   target_compile_definitions(Chips PUBLIC "-DENABLE_HW_OPL_SERIAL_PORT")
+endif()
+if(ENABLE_ADDRESS_SANITIZER)
+  target_compile_options(Chips PUBLIC -fsanitize=address)
+  target_link_options(Chips PUBLIC -fsanitize=address)
 endif()
 
 set(MEASURER_SOURCES
