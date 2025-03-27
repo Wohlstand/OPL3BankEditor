@@ -134,7 +134,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorMameOPL2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorYmFmOPL2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorYmFm, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
-    connect(ui->actionEmulatorYMF262LLC, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorYMF262LLE, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionSerialPortOPL, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
@@ -281,7 +281,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorMameOPL2->setChecked(false);
     ui->actionEmulatorYmFmOPL2->setChecked(false);
     ui->actionEmulatorYmFm->setChecked(false);
-    ui->actionEmulatorYMF262LLC->setChecked(false);
+    ui->actionEmulatorYMF262LLE->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
     ui->actionSerialPortOPL->setChecked(false);
 
@@ -312,8 +312,8 @@ void BankEditor::loadSettings()
     case Generator::CHIP_YmFm:
         ui->actionEmulatorYmFm->setChecked(true);
         break;
-    case Generator::CHIP_YMF262LLC:
-        ui->actionEmulatorYMF262LLC->setChecked(true);
+    case Generator::CHIP_YMF262LLE:
+        ui->actionEmulatorYMF262LLE->setChecked(true);
         break;
     case Generator::CHIP_Win9xProxy:
         ui->actionWin9xOPLProxy->setChecked(true);
@@ -1174,7 +1174,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorMameOPL2->setChecked(false);
     ui->actionEmulatorYmFmOPL2->setChecked(false);
     ui->actionEmulatorYmFm->setChecked(false);
-    ui->actionEmulatorYMF262LLC->setChecked(false);
+    ui->actionEmulatorYMF262LLE->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
     ui->actionSerialPortOPL->setChecked(false);
 
@@ -1234,10 +1234,10 @@ void BankEditor::toggleEmulator()
         m_generator->ctl_switchChip(m_currentChip);
     }
     else
-    if(menuItem == ui->actionEmulatorYMF262LLC)
+    if(menuItem == ui->actionEmulatorYMF262LLE)
     {
-        ui->actionEmulatorYMF262LLC->setChecked(true);
-        m_currentChip = Generator::CHIP_YMF262LLC;
+        ui->actionEmulatorYMF262LLE->setChecked(true);
+        m_currentChip = Generator::CHIP_YMF262LLE;
         m_generator->ctl_switchChip(m_currentChip);
     }
     else

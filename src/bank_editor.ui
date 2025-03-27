@@ -2041,7 +2041,7 @@ of second voice</string>
      <addaction name="actionEmulatorMameOPL2"/>
      <addaction name="actionEmulatorYmFmOPL2"/>
      <addaction name="actionEmulatorYmFm"/>
-     <addaction name="actionEmulatorYMF262LLC"/>
+     <addaction name="actionEmulatorYMF262LLE"/>
      <addaction name="actionWin9xOPLProxy"/>
      <addaction name="actionSerialPortOPL"/>
     </widget>
@@ -2365,12 +2365,12 @@ of second voice</string>
     <string notr="true">YMFM OPL3</string>
    </property>
   </action>
-  <action name="actionEmulatorYMF262LLC">
+  <action name="actionEmulatorYMF262LLE">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">YMF262-LLC OPL3 [EXPERIMENTAL]</string>
+    <string notr="true">YMF262-LLE OPL3 [EXPERIMENTAL]</string>
    </property>
   </action>
   <action name="actionEmulatorMameOPL2">

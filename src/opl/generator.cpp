@@ -945,7 +945,7 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
         chip.reset(&serialPortOpl());
         break;
 #endif
-    case CHIP_YMF262LLC:
+    case CHIP_YMF262LLE:
         chip.reset(new Ymf262LLEOPL3());
         break;
     case CHIP_DosBox:
