@@ -11,12 +11,12 @@
     <message>
         <location filename="../audio_config.ui" line="20"/>
         <source>Driver</source>
-        <translation type="unfinished"></translation>
+        <translation>Драйвер</translation>
     </message>
     <message>
         <location filename="../audio_config.ui" line="28"/>
         <source>Select the sound driver:</source>
-        <translation type="unfinished"></translation>
+        <translation>Выберите звуковое устройство:</translation>
     </message>
     <message>
         <location filename="../audio_config.ui" line="80"/>
@@ -63,7 +63,7 @@
         <location filename="../audio_config.cpp" line="31"/>
         <location filename="../audio_config.cpp" line="121"/>
         <source>Default driver</source>
-        <translation type="unfinished"></translation>
+        <translation>Драйвер по-умолчанию</translation>
     </message>
 </context>
 <context>
@@ -445,7 +445,7 @@
     <message>
         <location filename="../bank_editor.ui" line="699"/>
         <source>Fixed note tone</source>
-        <translation type="unfinished"></translation>
+        <translation>Фикс. тон ноты</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="721"/>
@@ -612,17 +612,17 @@
     <message>
         <location filename="../bank_editor.ui" line="1483"/>
         <source>HMI SOS (Old variant)</source>
-        <translation type="unfinished"></translation>
+        <translation>HMI SOS (Старый вариант)</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1516"/>
         <source>MIDI volume</source>
-        <translation type="unfinished"></translation>
+        <translation>MIDI-громкость</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1535"/>
         <source>Channels allocation mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Режим выбора каналов</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1542"/>
@@ -633,19 +633,26 @@
 - First released - the next channel will be selected by finding any released (no playing note),
   causing the channel of recently released note to be re-used by a new note, which makes
   the the legato-like effect. If all channels are busy, the oldest will be replaced.</source>
-        <translation type="unfinished"></translation>
+        <translation>Выберите алгоритм выбора каналов.
+
+- Цикл - следующий канал будет выбран методом итерации через все каналы в списке.
+  Если выбранный канал уже занят, то будет заменён старейший из них.
+- Первый свободный - канал будет выбран методом поиска первого освободившегося (то есть,
+  не удерживающего ноту), из-за чего недавно освободившийся канал будет тут же перезаписан 
+  новой нотой, из-за чего появится эффект, похожий на Легато. Если все каналы заняты, то будет
+  заменён старейший из них.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1552"/>
         <source>Cycling</source>
         <comment>Channels allocation mode name</comment>
-        <translation type="unfinished"></translation>
+        <translation>Цикл</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1557"/>
         <source>First released</source>
         <comment>Channels allocation mode name</comment>
-        <translation type="unfinished"></translation>
+        <translation>Первый свободный</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1568"/>
@@ -871,7 +878,7 @@ of second voice</source>
     <message>
         <location filename="../bank_editor.ui" line="2161"/>
         <source>Ctrl+I</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+I</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2166"/>
@@ -907,7 +914,7 @@ of second voice</source>
     <message>
         <location filename="../bank_editor.ui" line="2201"/>
         <source>Ctrl+A</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+A</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2206"/>
@@ -917,7 +924,7 @@ of second voice</source>
     <message>
         <location filename="../bank_editor.ui" line="2209"/>
         <source>Shift+Del</source>
-        <translation type="unfinished"></translation>
+        <translation>Shift+Del</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2214"/>
@@ -932,7 +939,7 @@ of second voice</source>
     <message>
         <location filename="../bank_editor.ui" line="2222"/>
         <source>Del</source>
-        <translation type="unfinished"></translation>
+        <translation>Del</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2227"/>
@@ -977,7 +984,7 @@ of second voice</source>
     <message>
         <location filename="../bank_editor.ui" line="2268"/>
         <source>Ctrl+Alt+G</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Alt+G</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2276"/>
@@ -1017,7 +1024,7 @@ of second voice</source>
     <message>
         <location filename="../bank_editor.ui" line="2323"/>
         <source>Ctrl+Alt+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Alt+S</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2394"/>
@@ -1027,17 +1034,17 @@ of second voice</source>
     <message>
         <location filename="../bank_editor.ui" line="2424"/>
         <source>MAME OPL2</source>
-        <translation type="unfinished"></translation>
+        <translation>MAME OPL2</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2432"/>
         <source>YMFM OPL2</source>
-        <translation type="unfinished"></translation>
+        <translation>YMFM OPL2</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2440"/>
         <source>ESFMu</source>
-        <translation type="unfinished"></translation>
+        <translation>ESFMu</translation>
     </message>
     <message>
         <source>Audio &amp;latency...</source>
@@ -1539,7 +1546,7 @@ Amplitude at breaking point: %3</source>
     <message>
         <location filename="../hardware.cpp" line="157"/>
         <source>RetroWave OPL3</source>
-        <translation type="unfinished"></translation>
+        <translation>RetroWave OPL3</translation>
     </message>
     <message>
         <location filename="../hardware.cpp" line="176"/>
