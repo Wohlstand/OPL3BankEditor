@@ -12,6 +12,7 @@ void nopl3_shutdown(void *chip);
 void nopl3_reset(void *chip);
 
 void nopl3_getsample(void *chip, short *sndptr, int numsamples);
+void nopl3_getsample_one_native(void *chip, short *sndptr);
 
 void nopl3_write(void *chip, int port, int val);
 

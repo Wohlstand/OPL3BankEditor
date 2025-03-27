@@ -175,6 +175,34 @@ void nopl3_getsample(void *chip, short *sndptr, int numsamples)
     }
 }
 
+void nopl3_getsample_one_native(void *chip, short *sndptr)
+{
+    nopl3_t* chip2 = chip;
+    short *p = sndptr;
+    opl3_writebuf* writebuf;
+
+    chip2->oldsample[0] = chip2->sample_a;
+    chip2->oldsample[1] = chip2->sample_b;
+    nopl3_cycle(chip2);
+
+    while ((writebuf = &chip2->writebuf[chip2->writebuf_cur]), writebuf->time <= chip2->writebuf_samplecnt)
+    {
+        if (!(writebuf->reg & 4))
+            break;
+
+        writebuf->reg &= 3;
+        nopl3_write2(chip2, writebuf->reg, writebuf->data);
+        chip2->writebuf_cur = (chip2->writebuf_cur + 1) % OPL_WRITEBUF_SIZE;
+    }
+
+    chip2->writebuf_samplecnt++;
+    chip2->samplecnt -= chip2->rateratio;
+    chip2->samplecnt += 1 << RSM_FRAC;
+
+    *p++ = chip2->sample_a;
+    *p++ = chip2->sample_b;
+}
+
 void nopl3_write(void *chip, int port, int val)
 {
     nopl3_t* chip2 = chip;
