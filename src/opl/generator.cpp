@@ -1401,9 +1401,10 @@ void Generator::touchNote(uint32_t c,
         }
 
         if(isDrum) // TODO: VERIFY A CORRECTNESS OF THIS!!!
-            vol = s_hmi_volume_table[velocity >> 1];
+            vol = (64 - s_hmi_volume_table[velocity >> 1]) << 1;
+        else
+            vol = (64 - volume) << 1;
 
-        vol = (64 - volume) << 1;
         vol *= (64 - tlCar);
         tlCar = (8192 - vol) >> 7;
     }
