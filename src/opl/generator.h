@@ -180,6 +180,8 @@ public:
     void updateRegBD();
     void updateChannelManager();
 
+    void setChanAllocMode(int mode);
+
     const GeneratorDebugInfo &debugInfo() const
         { return m_debug; }
 
@@ -200,6 +202,12 @@ private:
     class NotesManager
     {
     public:
+        enum Algorithm
+        {
+            ALG_CYCLE = 0,
+            ALG_RELEASED
+        };
+
         struct Note
         {
             //! Currently pressed key. -1 means channel is free
@@ -220,6 +228,8 @@ private:
         QVector<Note> channels;
         //! Round-Robin cycler. Looks for any free channel that is not busy. Otherwise, oldest busy note will be replaced
         uint8_t cycle = 0;
+        //! Channel allocation algorithm
+        Algorithm alg = ALG_CYCLE;
     public:
         NotesManager();
         ~NotesManager();
@@ -234,6 +244,8 @@ private:
             { return channels.at(ch); }
         int channelCount() const
             { return static_cast<int>(channels.size()); }
+        void setChanAllocMode(int mode)
+            { alg = static_cast<Algorithm>(mode); }
     } m_noteManager;
 
     int32_t     note;

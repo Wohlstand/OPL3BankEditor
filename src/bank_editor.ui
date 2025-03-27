@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1035</width>
-    <height>835</height>
+    <width>1051</width>
+    <height>908</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -353,7 +353,14 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="OperatorEditor" name="c2edit" native="true"/>
+                 <widget class="OperatorEditor" name="c2edit" native="true">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -730,7 +737,14 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="OperatorEditor" name="m1edit" native="true"/>
+                 <widget class="OperatorEditor" name="m1edit" native="true">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -766,7 +780,14 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="OperatorEditor" name="m2edit" native="true"/>
+                 <widget class="OperatorEditor" name="m2edit" native="true">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -799,7 +820,14 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="OperatorEditor" name="c1edit" native="true"/>
+                 <widget class="OperatorEditor" name="c1edit" native="true">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -1389,21 +1417,6 @@
              <set>Qt::AlignCenter</set>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
-             <property name="spacing">
-              <number>2</number>
-             </property>
-             <property name="leftMargin">
-              <number>1</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>1</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
              <item>
               <widget class="QComboBox" name="volumeModel">
                <property name="maximumSize">
@@ -1514,6 +1527,36 @@
                  </widget>
                 </item>
                </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="chanAllocLabel">
+               <property name="text">
+                <string>Channels allocation mode</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="chanAlloc">
+               <property name="toolTip">
+                <string>Choose the channel selection algorithm.
+
+- Cycling - the next channel will be selected by the iteration thgouh all channels in the list. 
+  If selected channel is busy, the oldest will be replaced.
+- First released - the next channel will be selected by finding any released (no playing note),
+  causing the channel of recently released note to be re-used by a new note, which makes
+  the the legato-like effect. If all channels are busy, the oldest will be replaced.</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string comment="Channels allocation mode name">Cycling</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string comment="Channels allocation mode name">First released</string>
+                </property>
+               </item>
               </widget>
              </item>
             </layout>
@@ -1943,7 +1986,7 @@ of second voice</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1035</width>
+     <width>1051</width>
      <height>20</height>
     </rect>
    </property>

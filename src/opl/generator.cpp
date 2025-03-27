@@ -2057,6 +2057,11 @@ void Generator::updateChannelManager()
         m_noteManager.allocateChannels(chan2ops);
 }
 
+void Generator::setChanAllocMode(int mode)
+{
+    m_noteManager.setChanAllocMode(mode);
+}
+
 void Generator::generate(int16_t *frames, unsigned nframes)
 {
     chip->generate(frames, nframes);
@@ -2122,10 +2127,51 @@ uint8_t Generator::NotesManager::noteOn(int note, uint32_t volume, uint8_t ccvol
 
     do
     {
-        chan = cycle++;
-        // Rotate cycles
-        if(cycle == channels.size())
-            cycle = 0;
+        switch(alg)
+        {
+        default:
+        case ALG_CYCLE:
+            chan = cycle++;
+            // Rotate cycles
+            if(cycle == channels.size())
+                cycle = 0;
+            break;
+
+        case ALG_RELEASED:
+        {
+            int age = 0;
+            int found = -1;
+
+            // Find first released
+            for(chan = 0; chan < channels.size(); ++chan)
+            {
+                if(channels[chan].note == -1)
+                {
+                    cycle = chan;
+                    found = chan;
+                    break;
+                }
+            }
+
+            // Find oldest
+            if(found < 0)
+            {
+                for(chan = 0; chan < channels.size(); ++chan)
+                {
+                    if(channels[chan].age > age)
+                    {
+                        channels[chan].age = age;
+                        found = chan;
+                    }
+                }
+
+                if(found >= 0)
+                    chan = found;
+            }
+
+            break;
+        }
+        }
 
         if(channels[chan].note == -1)
         {
