@@ -32,7 +32,7 @@ enum {
 
 void FMOPL3_Clock(fmopl3_t *chip)
 {
-    int i;
+    int i, prescaler1_clk, bank_masked, reg_sel4_wr, reg_sel4_rst;
 
     chip->mclk1 = !chip->input.mclk;
     chip->mclk2 = chip->input.mclk;
@@ -75,7 +75,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
     }
 
     /* int prescaler1_clk = (chip->reg_test1 & 0x40) != 0 ? chip->input.mclk : !(chip->prescaler1_cnt[1] & 2);*/
-    int prescaler1_clk = chip->input.mclk; /* Temp: disable prescaler for performance reasons */
+    prescaler1_clk = chip->input.mclk; /* Temp: disable prescaler for performance reasons */
 
     chip->aclk1 = !prescaler1_clk;
     chip->aclk2 = prescaler1_clk;
@@ -120,11 +120,11 @@ void FMOPL3_Clock(fmopl3_t *chip)
         chip->write1 = chip->write1_l[3] && !chip->write1_l[1];
     }
 
-    //////////////////////
+    /*////////////////////*/
 
-    //if (chip->o_clk1 == chip->clk1 && chip->o_clk2 == chip->clk2 && chip->o_rclk1 == chip->rclk1 && chip->o_rclk2 == chip->rclk2 && chip->o_reset0 == chip->reset0
-    //    && chip->o_ra_w1_l1 == chip->ra_w1_l1 && chip->o_bank_latch == chip->bank_latch && chip->o_data_latch == chip->data_latch)
-    //    goto end; // opt
+    /*if (chip->o_clk1 == chip->clk1 && chip->o_clk2 == chip->clk2 && chip->o_rclk1 == chip->rclk1 && chip->o_rclk2 == chip->rclk2 && chip->o_reset0 == chip->reset0
+      && chip->o_ra_w1_l1 == chip->ra_w1_l1 && chip->o_bank_latch == chip->bank_latch && chip->o_data_latch == chip->data_latch)
+        goto end; */ /* opt*/
 
     chip->o_clk1 = chip->clk1;
     chip->o_clk2 = chip->clk2;
@@ -161,7 +161,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
     else if (chip->write1 && chip->bank_latch && chip->reg_sel5)
         chip->reg_new = chip->data_latch & 1;
 
-    int bank_masked = chip->reg_new && chip->bank_latch;
+    bank_masked = chip->reg_new && chip->bank_latch;
 
     if (chip->reset0)
     {
@@ -183,10 +183,12 @@ void FMOPL3_Clock(fmopl3_t *chip)
             chip->reg_timer1 = chip->data_latch & 255;
         if (chip->reg_sel3 && !bank_masked)
             chip->reg_timer2 = chip->data_latch & 255;
+
         if (chip->reg_sel8 && !bank_masked)
         {
             chip->reg_notesel = (chip->data_latch & 64) != 0;
         }
+
         if (chip->reg_selbd && !bank_masked)
         {
             chip->reg_rh_kon = chip->data_latch & 31;
@@ -194,13 +196,16 @@ void FMOPL3_Clock(fmopl3_t *chip)
             chip->reg_dv = (chip->data_latch & 64) != 0;
             chip->reg_da = (chip->data_latch & 128) != 0;
         }
+
         if (chip->reg_sel1 && bank_masked)
             chip->reg_test1 = chip->data_latch & 255;
+
         if (chip->reg_sel4 && bank_masked)
             chip->reg_4op = chip->data_latch & 63;
     }
-    int reg_sel4_wr = chip->write1 && chip->reg_sel4 && !bank_masked && (chip->data_latch & 128) == 0;
-    int reg_sel4_rst = (chip->write1 && chip->reg_sel4 && !bank_masked && (chip->data_latch & 128) != 0) || chip->reset0;
+
+    reg_sel4_wr = chip->write1 && chip->reg_sel4 && !bank_masked && (chip->data_latch & 128) == 0;
+    reg_sel4_rst = (chip->write1 && chip->reg_sel4 && !bank_masked && (chip->data_latch & 128) != 0) || chip->reset0;
 
     if (chip->reset0)
     {
@@ -220,7 +225,9 @@ void FMOPL3_Clock(fmopl3_t *chip)
     chip->reset1 = chip->reset0 || (chip->reg_test1 & 0xc0) == 0xc0;
 
     {
-        //int bclk = !prescaler2_reset && chip->prescaler2_l7 && (chip->prescaler2_cnt[1] & 1) == 0;
+        int write0, write;
+        int rst, of1, of2, of4;
+        /* int bclk = !prescaler2_reset && chip->prescaler2_l7 && (chip->prescaler2_cnt[1] & 1) == 0; */
 
         int ga = (chip->data_latch & 0xe0) != 0;
 
@@ -237,8 +244,8 @@ void FMOPL3_Clock(fmopl3_t *chip)
         else if (chip->write1 && chip->ra_address_good)
             chip->ra_data_latch = chip->data_latch;
 
-        int write0 = ga && chip->write0 && (chip->reg_test1 & 16) != 0;
-        int write = chip->write1 || write0;
+        write0 = ga && chip->write0 && (chip->reg_test1 & 16) != 0;
+        write = chip->write1 || write0;
 
         if (chip->aclk1)
             chip->ra_w1_l1 = write;
@@ -250,19 +257,22 @@ void FMOPL3_Clock(fmopl3_t *chip)
         if (chip->clk1)
         {
             chip->ra_rst_l[0] = chip->reset1;
-            int rst = (chip->reset1 && !chip->ra_rst_l[1]) || chip->fsm_out[5];
+            rst = (chip->reset1 && !chip->ra_rst_l[1]) || chip->fsm_out[5];
 
-            int of1 = (chip->ra_cnt1[1] & 5) == 5;
-            int of2 = (chip->ra_cnt2[1] & 2) == 2 && of1;
-            int of4 = (chip->ra_cnt4[1] & 2) == 2;
+            of1 = (chip->ra_cnt1[1] & 5) == 5;
+            of2 = (chip->ra_cnt2[1] & 2) == 2 && of1;
+            of4 = (chip->ra_cnt4[1] & 2) == 2;
+
             if (rst || of1)
                 chip->ra_cnt1[0] = 0;
             else
                 chip->ra_cnt1[0] = (chip->ra_cnt1[1] + 1) & 7;
+
             if (rst || of2)
                 chip->ra_cnt2[0] = 0;
             else
                 chip->ra_cnt2[0] = (chip->ra_cnt2[1] + of1) & 3;
+
             if (rst)
                 chip->ra_cnt3[0] = 0;
             else
@@ -274,6 +284,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
                 chip->ra_cnt4[0] = (chip->ra_cnt4[1] + 1) & 3;
 
         }
+
         if (chip->clk2)
         {
             chip->ra_rst_l[1] = chip->ra_rst_l[0];
@@ -308,9 +319,14 @@ void FMOPL3_Clock(fmopl3_t *chip)
                 -1, -1, -1, -1, -1, -1, -1, -1
             };
 
+            int ch_address_write, add, ch_address_mapped, ch_address_mapped2;
+            int ch_address_read, ch_address, ch_address_read_4op;
+            int ch_address_4op, ch_address_fb, idx1, idx2, idx3;
+
             int bank = (chip->ra_address_latch & 0x100) != 0;
             int op_address = chip->ra_write_a ? ((chip->ra_address_latch & 0x1f) | (bank << 5)) : chip->ra_cnt;
             int idx = op_map[op_address];
+
             if (chip->ra_write && idx != -1)
             {
                 if ((chip->ra_address_latch & 0xe0) == 0x20 || write0 || chip->reset1)
@@ -344,18 +360,21 @@ void FMOPL3_Clock(fmopl3_t *chip)
                     chip->ra_wf[idx] = data;
                 }
             }
-            int ch_address_write = chip->ra_address_latch & 15;
-            int add = 0;
+
+            ch_address_write = chip->ra_address_latch & 15;
+            add = 0;
+
             if (ch_address_write == 3 || ch_address_write == 4 || ch_address_write == 5)
                 add |= 1;
             if (ch_address_write == 6 || ch_address_write == 7 || ch_address_write == 8)
                 add |= 2;
-            int ch_address_mapped = (ch_address_write & 1) + (add & 1);
+
+            ch_address_mapped = (ch_address_write & 1) + (add & 1);
             ch_address_mapped |= add & 2;
             ch_address_mapped += ch_address_write & 14;
             ch_address_mapped &= 15;
             ch_address_mapped |= bank << 4;
-            int ch_address_mapped2 = ch_address_mapped & 3;
+            ch_address_mapped2 = ch_address_mapped & 3;
             if ((ch_address_mapped & 12) == 8)
                 ch_address_mapped2 |= 4;
             if ((ch_address_mapped & 12) == 0)
@@ -363,52 +382,54 @@ void FMOPL3_Clock(fmopl3_t *chip)
             if ((ch_address_mapped & 28) == 0 || (ch_address_mapped & 28) == 20 || (ch_address_mapped & 28) == 24)
                 ch_address_mapped2 |= 16;
 
+            ch_address_read = (chip->ra_cnt4[1] & 3) | (chip->ra_cnt2[1] << 2) | (chip->ra_cnt3[1] << 4);
+            ch_address = chip->ra_write_a ? ch_address_mapped : ch_address_read;
+            ch_address_read_4op = ch_address_read;
 
-            int ch_address_read = (chip->ra_cnt4[1] & 3) | (chip->ra_cnt2[1] << 2) | (chip->ra_cnt3[1] << 4);
-            int ch_address = chip->ra_write_a ? ch_address_mapped : ch_address_read;
-            int ch_address_read_4op = ch_address_read;
             if ((chip->ra_cnt2[1] & 2) == 0)
             {
                 switch (chip->ra_cnt3[1] * 4 + chip->ra_cnt4[1])
                 {
-                    case 0: // 0, 3, 6, 9
+                    case 0: /* 0, 3, 6, 9 */
                         if (chip->reg_4op & 1)
                             ch_address_read_4op &= ~4;
                         break;
-                    case 1: // 1, 4, 7, 10
+                    case 1: /* 1, 4, 7, 10 */
                         if (chip->reg_4op & 2)
                             ch_address_read_4op &= ~4;
                         break;
-                    case 2: // 2, 5, 8, 11
+                    case 2: /* 2, 5, 8, 11 */
                         if (chip->reg_4op & 4)
                             ch_address_read_4op &= ~4;
                         break;
-                    case 4: // 0, 3, 6, 9
+                    case 4: /* 0, 3, 6, 9 */
                         if (chip->reg_4op & 8)
                             ch_address_read_4op &= ~4;
                         break;
-                    case 5: // 1, 4, 7, 10
+                    case 5: /* 1, 4, 7, 10 */
                         if (chip->reg_4op & 16)
                             ch_address_read_4op &= ~4;
                         break;
-                    case 6: // 2, 5, 8, 11
+                    case 6: /* 2, 5, 8, 11 */
                         if (chip->reg_4op & 32)
                             ch_address_read_4op &= ~4;
                         break;
                 }
             }
-            int ch_address_4op = chip->ra_write_a ? ch_address_mapped : ch_address_read_4op;
-            int ch_address_fb = chip->ra_write_a ? ch_address_mapped2 : ch_address_read;
 
-            int idx1 = ch_map[ch_address];
-            int idx2 = ch_map[ch_address_4op];
-            int idx3 = ch_map[ch_address_fb];
+            ch_address_4op = chip->ra_write_a ? ch_address_mapped : ch_address_read_4op;
+            ch_address_fb = chip->ra_write_a ? ch_address_mapped2 : ch_address_read;
+
+            idx1 = ch_map[ch_address];
+            idx2 = ch_map[ch_address_4op];
+            idx3 = ch_map[ch_address_fb];
+
             if (chip->ra_write && idx1 != -1)
             {
                 if ((chip->ra_address_latch & 0xf0) == 0xc0 || write0 || chip->reset1)
                 {
-                    chip->ra_connect[idx1] = chip->ra_data_latch & 1;
                     int pan_data = 0;
+                    chip->ra_connect[idx1] = chip->ra_data_latch & 1;
                     if (!chip->reg_new || chip->reset1)
                         pan_data |= 3;
                     if (chip->reg_new)
@@ -416,6 +437,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
                     chip->ra_pan[idx1] = pan_data;
                 }
             }
+
             if (chip->ra_write && idx2 != -1)
             {
                 if ((chip->ra_address_latch & 0xf0) == 0xa0 || write0 || chip->reset1)
@@ -423,6 +445,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
                     chip->ra_fnum[idx2] &= 0x300;
                     chip->ra_fnum[idx2] |= chip->ra_data_latch & 0xff;
                 }
+
                 if ((chip->ra_address_latch & 0xf0) == 0xb0 || write0 || chip->reset1)
                 {
                     chip->ra_fnum[idx2] &= 0xff;
@@ -431,6 +454,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
                     chip->ra_keyon[idx2] = (chip->ra_data_latch >> 5) & 1;
                 }
             }
+
             if (chip->ra_write && idx3 != -1)
             {
                 if ((chip->ra_address_latch & 0xf0) == 0xc0 || write0 || chip->reset1)
@@ -475,6 +499,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
                 }
             }
         }
+
         if (chip->clk2)
         {
             chip->multi[1] = chip->multi[0];
@@ -511,6 +536,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
         chip->pan_l[0][0] = chip->pan[1];
         chip->pan_l[1][0] = chip->pan_l[0][1];
     }
+
     if (chip->clk2)
     {
         chip->connect_l[1] = chip->connect_l[0];
@@ -522,37 +548,40 @@ void FMOPL3_Clock(fmopl3_t *chip)
     }
 
     {
-        int fsm_4op = 0;
+        int fsm_4op = 0, con_4op, fsm_reset, fsm_of1, fsm_of2;
+        int fsm_mc, fsm_mc_4op, rhy_19_20;
+
         switch (chip->fsm_cnt)
         {
-        case 5: // 5
+        case 5: /* 5 */
             fsm_4op = (chip->reg_4op & 1) != 0;
             break;
-        case 8: // 6
+        case 8: /* 6 */
             fsm_4op = (chip->reg_4op & 2) != 0;
             break;
-        case 9: // 7
+        case 9: /* 7 */
             fsm_4op = (chip->reg_4op & 4) != 0;
             break;
-        case 37: // 23
+        case 37: /* 23 */
             fsm_4op = (chip->reg_4op & 8) != 0;
             break;
-        case 40: // 24
+        case 40: /* 24 */
             fsm_4op = (chip->reg_4op & 16) != 0;
             break;
-        case 41: // 25
+        case 41: /* 25 */
             fsm_4op = (chip->reg_4op & 32) != 0;
             break;
         }
-        int con_4op = fsm_4op && (chip->fsm_l10[1] & 4) != 0; // 01 connect
+
+        con_4op = fsm_4op && (chip->fsm_l10[1] & 4) != 0; /* 01 connect */
 
         if (chip->clk1)
         {
-            int fsm_reset = (chip->fsm_reset_l[1] & 2) == 0 && chip->reset1;
+            fsm_reset = (chip->fsm_reset_l[1] & 2) == 0 && chip->reset1;
             chip->fsm_reset_l[0] = (chip->fsm_reset_l[1] << 1) | chip->reset1;
 
-            int fsm_of1 = (chip->fsm_cnt1[1] & 5) == 5;
-            int fsm_of2 = (chip->fsm_cnt2[1] & 2) == 2 && fsm_of1;
+            fsm_of1 = (chip->fsm_cnt1[1] & 5) == 5;
+            fsm_of2 = (chip->fsm_cnt2[1] & 2) == 2 && fsm_of1;
 
             if (fsm_reset || fsm_of1)
                 chip->fsm_cnt1[0] = 0;
@@ -580,6 +609,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
             chip->fsm_l9[0] = (chip->fsm_l9[1] << 1) | con_4op;
             chip->fsm_l10[0] = (chip->fsm_l10[1] << 1) | ((chip->connect_l[1] & 2) == 0 && (chip->connect_pair_l[1] & 2) != 0);
         }
+
         if (chip->clk2)
         {
             chip->fsm_reset_l[1] = chip->fsm_reset_l[0];
@@ -601,28 +631,28 @@ void FMOPL3_Clock(fmopl3_t *chip)
             chip->fsm_l10[1] = chip->fsm_l10[0];
         }
         {
-            chip->fsm_out[0] = chip->fsm_l1[1]; // 0
-            chip->fsm_out[1] = chip->fsm_cnt == 16; // 12
-            chip->fsm_out[2] = chip->fsm_l2[1]; // 13
-            chip->fsm_out[3] = chip->fsm_cnt == 20; // 16
-            chip->fsm_out[4] = chip->fsm_l3[1]; // 17
-            chip->fsm_out[5] = chip->fsm_cnt == 52; // 34
-            chip->fsm_out[6] = chip->fsm_l4[1]; // 35
-            chip->fsm_out[7] = (chip->fsm_l5[1] & 4) != 0 || ((chip->fsm_cnt & 56) == 0); // 0-8
+            chip->fsm_out[0] = chip->fsm_l1[1]; /* 0 */
+            chip->fsm_out[1] = chip->fsm_cnt == 16; /* 12 */
+            chip->fsm_out[2] = chip->fsm_l2[1]; /* 13 */
+            chip->fsm_out[3] = chip->fsm_cnt == 20; /* 16 */
+            chip->fsm_out[4] = chip->fsm_l3[1]; /* 17 */
+            chip->fsm_out[5] = chip->fsm_cnt == 52; /* 34 */
+            chip->fsm_out[6] = chip->fsm_l4[1]; /* 35 */
+            chip->fsm_out[7] = (chip->fsm_l5[1] & 4) != 0 || ((chip->fsm_cnt & 56) == 0); /* 0-8 */
             chip->fsm_out[8] = (chip->fsm_cnt & 32) == 0;
             chip->fsm_out[9] = (chip->fsm_l6[1] & 2) != 0;
             chip->fsm_out[10] = (chip->fsm_l7[1] & 2) != 0;
-            chip->fsm_out[11] = chip->rhythm && (chip->fsm_l8[1] & 2) != 0; // r 14, 15, 16, 17, 18, 19
+            chip->fsm_out[11] = chip->rhythm && (chip->fsm_l8[1] & 2) != 0; /* r 14, 15, 16, 17, 18, 19 */
 
-            int fsm_mc = !((chip->fsm_cnt & 5) == 4 || (chip->fsm_cnt & 2) != 0);
-            int fsm_mc_4op = fsm_mc && !fsm_4op;
-            int rhy_19_20 = chip->rhythm && (chip->fsm_cnt == 19 || chip->fsm_cnt == 20);
+            fsm_mc = !((chip->fsm_cnt & 5) == 4 || (chip->fsm_cnt & 2) != 0);
+            fsm_mc_4op = fsm_mc && !fsm_4op;
+            rhy_19_20 = chip->rhythm && (chip->fsm_cnt == 19 || chip->fsm_cnt == 20);
 
-            chip->fsm_out[12] = fsm_mc_4op && !(chip->rhythm && (chip->fsm_cnt == 16 || chip->fsm_cnt == 17)); // feedback
-            chip->fsm_out[14] = con_4op || (!fsm_4op && !(chip->fsm_l9[1] & 4) && (chip->connect_l[1] & 2) != 0); // connect
-            chip->fsm_out[13] = !(chip->rhythm && chip->fsm_cnt == 18) && (fsm_mc_4op || rhy_19_20 || chip->fsm_out[14]); // output
-            chip->fsm_out[15] = !fsm_mc && !rhy_19_20; // load fb
-            chip->fsm_out[16] = !fsm_mc_4op && !rhy_19_20; // modulate
+            chip->fsm_out[12] = fsm_mc_4op && !(chip->rhythm && (chip->fsm_cnt == 16 || chip->fsm_cnt == 17)); /* feedback */
+            chip->fsm_out[14] = con_4op || (!fsm_4op && !(chip->fsm_l9[1] & 4) && (chip->connect_l[1] & 2) != 0); /* connect */
+            chip->fsm_out[13] = !(chip->rhythm && chip->fsm_cnt == 18) && (fsm_mc_4op || rhy_19_20 || chip->fsm_out[14]); /* output */
+            chip->fsm_out[15] = !fsm_mc && !rhy_19_20; /* load fb */
+            chip->fsm_out[16] = !fsm_mc_4op && !rhy_19_20; /* modulate */
         }
     }
 
@@ -645,6 +675,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
         chip->lfo_cnt[0] = reset ? 0 : (lfo + add) & 1023;
         chip->vib_cnt[0] = reset ? 0 : (chip->vib_cnt[1] + chip->vib_step) & 7;
     }
+
     if (chip->clk2)
     {
         chip->lfo_cnt[1] = chip->lfo_cnt[0];
@@ -710,12 +741,12 @@ void FMOPL3_Clock(fmopl3_t *chip)
     }
 
     chip->keyon_comb = chip->keyon[1]
-        || (chip->rh_sel0 && (chip->reg_rh_kon & 16) != 0) // bd0
-        || ((chip->rh_sel[1] & 1) != 0 && (chip->reg_rh_kon & 1) != 0) // hh
-        || ((chip->rh_sel[1] & 2) != 0 && (chip->reg_rh_kon & 4) != 0) // tom
-        || ((chip->rh_sel[1] & 4) != 0 && (chip->reg_rh_kon & 16) != 0) // bd1
-        || ((chip->rh_sel[1] & 8) != 0 && (chip->reg_rh_kon & 8) != 0) // sd
-        || ((chip->rh_sel[1] & 16) != 0 && (chip->reg_rh_kon & 2) != 0); // tc
+        || (chip->rh_sel0 && (chip->reg_rh_kon & 16) != 0) /* bd0 */
+        || ((chip->rh_sel[1] & 1) != 0 && (chip->reg_rh_kon & 1) != 0) /* hh */
+        || ((chip->rh_sel[1] & 2) != 0 && (chip->reg_rh_kon & 4) != 0) /* tom */
+        || ((chip->rh_sel[1] & 4) != 0 && (chip->reg_rh_kon & 16) != 0) /* bd1 */
+        || ((chip->rh_sel[1] & 8) != 0 && (chip->reg_rh_kon & 8) != 0) /* sd */
+        || ((chip->rh_sel[1] & 16) != 0 && (chip->reg_rh_kon & 2) != 0); /* tc */
 
 
     if (chip->clk1)
@@ -742,10 +773,11 @@ void FMOPL3_Clock(fmopl3_t *chip)
             int step = ((chip->trem_step || (chip->reg_test0 & 16) != 0) && (chip->fsm_out[0] || chip->trem_dir[1]))
                 && chip->fsm_out[7];
             int carry = chip->fsm_out[7] && chip->trem_carry[1];
+            int of;
 
             bit += step + carry;
 
-            int of = (chip->trem_out == 0) || (chip->trem_out & 105) == 105;
+            of = (chip->trem_out == 0) || (chip->trem_out & 105) == 105;
 
             chip->trem_carry[0] = (bit & 2) != 0;
             chip->trem_value[0] = (chip->trem_value[1] >> 1) & 255;
@@ -758,6 +790,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
             else
                 chip->trem_dir[0] = chip->trem_dir[1] ^ (of && !chip->trem_of[1]);
         }
+
         if (chip->clk2)
         {
             chip->trem_carry[1] = chip->trem_carry[0];
@@ -793,9 +826,10 @@ void FMOPL3_Clock(fmopl3_t *chip)
             int bit = chip->eg_timer_o[3];
             int bit2;
             int carry = chip->eg_carry[1] || (chip->eg_subcnt[1] && chip->eg_sync_l[1]);
-            bit += carry;
+            int rst;
 
-            int rst = chip->reset1 || (chip->reg_test1 & 8) != 0;
+            bit += carry;
+            rst = chip->reset1 || (chip->reg_test1 & 8) != 0;
 
             if (rst)
                 bit2 = 0;
@@ -822,6 +856,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
 
             chip->eg_timer_dbg[0] = (chip->reg_test0 & 64) != 0;
         }
+
         if (chip->clk2)
         {
             chip->eg_carry[1] = chip->eg_carry[0];
@@ -843,13 +878,26 @@ void FMOPL3_Clock(fmopl3_t *chip)
             { 1, 1, 1, 0 }
         };
 
+        static const int eg_ksltable[16] = {
+            0, 32, 40, 45, 48, 51, 53, 55, 56, 58, 59, 60, 61, 62, 63, 64
+        };
+
+        static const int eg_kslshift[4] = {
+            31, 1, 2, 0
+        };
+
         int rst = chip->reset1 || (chip->reg_test1 & 32) != 0;
 
         int state = chip->eg_state_o[3];
         int dokon = state == eg_state_release && chip->keyon_comb;
         int rate_sel = dokon ? eg_state_attack : state;
         int rate = 0;
-        int ksr;
+        int ksr, sl, ns, rate_hi, maxrate, inclow, stephi, step1, step2, step3;
+        int level, slreach, zeroreach, silent, nextstate;
+        int linear, exponent, instantattack, mute, level2, add, addshift;
+        int levelnext, ksl, ksl_hi, ksltl, tremolo;
+        int ksltltrem, levelof, totallevel, totallevelclamp;
+
         if (rate_sel == 0)
             rate |= chip->ar[1];
         if (rate_sel == 1)
@@ -857,28 +905,28 @@ void FMOPL3_Clock(fmopl3_t *chip)
         if (rate_sel == 3 || (rate_sel == 2 && !chip->egt[1]))
             rate |= chip->rr[1];
 
-        int sl = chip->sl[1];
+        sl = chip->sl[1];
         if (chip->sl[1] == 15)
             sl |= 16;
 
-        int ns = chip->reg_notesel ? (chip->fnum[1] & 256) != 0 : (chip->fnum[1] & 512) != 0;
+        ns = chip->reg_notesel ? (chip->fnum[1] & 256) != 0 : (chip->fnum[1] & 512) != 0;
 
         if (chip->ksr[1])
             ksr = (chip->block[1] << 1) | ns;
         else
             ksr = chip->block[1] >> 1;
 
-        int rate_hi = rate + (ksr >> 2);
+        rate_hi = rate + (ksr >> 2);
         if (rate_hi & 16)
             rate_hi = 15;
 
-        int maxrate = rate_hi == 15;
+        maxrate = rate_hi == 15;
 
-        // int rate12 = rate_hi == 12;
-        // int rate13 = rate_hi == 13;
-        // int rate14 = rate_hi == 14;
+        /* int rate12 = rate_hi == 12; */
+        /* int rate13 = rate_hi == 13; */
+        /* int rate14 = rate_hi == 14; */
 
-        int inclow = 0;
+        inclow = 0;
 
         if (rate_hi < 12 && rate != 0 && chip->eg_subcnt[1])
         {
@@ -897,11 +945,11 @@ void FMOPL3_Clock(fmopl3_t *chip)
             }
         }
 
-        int stephi = eg_stephi[ksr & 3][chip->eg_timer_low];
+        stephi = eg_stephi[ksr & 3][chip->eg_timer_low];
 
-        int step1 = 0;
-        int step2 = 0;
-        int step3 = 0;
+        step1 = 0;
+        step2 = 0;
+        step3 = 0;
 
         switch (rate_hi)
         {
@@ -927,16 +975,12 @@ void FMOPL3_Clock(fmopl3_t *chip)
 
         step1 |= inclow;
 
-        int level = chip->eg_level_o[3];
-        int slreach = (level >> 4) == sl;
-        int zeroreach = level == 0;
-        int silent = (level & 0x1f8) == 0x1f8;
+        level = chip->eg_level_o[3];
+        slreach = (level >> 4) == sl;
+        zeroreach = level == 0;
+        silent = (level & 0x1f8) == 0x1f8;
 
-        static const int eg_ksltable[16] = {
-            0, 32, 40, 45, 48, 51, 53, 55, 56, 58, 59, 60, 61, 62, 63, 64
-        };
-
-        int nextstate = eg_state_attack;
+        nextstate = eg_state_attack;
 
         if (rst)
             nextstate = eg_state_release;
@@ -956,15 +1000,15 @@ void FMOPL3_Clock(fmopl3_t *chip)
                 nextstate = eg_state_release;
         }
 
-        int linear = !dokon && !silent && ((state & 2) != 0 || (state == eg_state_decay && !slreach));
-        int exponent = state == eg_state_attack && chip->keyon_comb && !maxrate && !zeroreach;
-        int instantattack = (dokon && maxrate) || (chip->reg_test0 & 16) != 0;
-        int mute = rst || (state != eg_state_attack && silent && !dokon && !(chip->reg_test0 & 16));
+        linear = !dokon && !silent && ((state & 2) != 0 || (state == eg_state_decay && !slreach));
+        exponent = state == eg_state_attack && chip->keyon_comb && !maxrate && !zeroreach;
+        instantattack = (dokon && maxrate) || (chip->reg_test0 & 16) != 0;
+        mute = rst || (state != eg_state_attack && silent && !dokon && !(chip->reg_test0 & 16));
 
-        int level2 = mute ? 0x1ff : (instantattack ? 0 : level);
+        level2 = mute ? 0x1ff : (instantattack ? 0 : level);
 
-        int add = 0;
-        int addshift = 0;
+        add = 0;
+        addshift = 0;
 
         if (exponent)
             add |= (level >> 1) ^ 0xff;
@@ -981,11 +1025,9 @@ void FMOPL3_Clock(fmopl3_t *chip)
         if (step3)
             addshift |= (add >> 0) | (linear << 2);
 
-        int levelnext = level2 + addshift;
-
-        int ksl;
+        levelnext = level2 + addshift;
         ksl = eg_ksltable[chip->fnum[1] >> 6];
-        int ksl_hi = (ksl & 64) != 0;
+        ksl_hi = (ksl & 64) != 0;
 
         ksl = (ksl & 63) + (chip->block[1] << 3);
         if (ksl_hi || (ksl & 64) != 0)
@@ -993,15 +1035,8 @@ void FMOPL3_Clock(fmopl3_t *chip)
         else
             ksl = 0;
 
-        static int eg_kslshift[4] = {
-            31, 1, 2, 0
-        };
-
         ksl = (ksl << 2) >> eg_kslshift[chip->ksl[1]];
-
-        int ksltl = ksl + (chip->tl[1] << 2);
-
-        int tremolo;
+        ksltl = ksl + (chip->tl[1] << 2);
 
         if (!chip->am[1])
             tremolo = 0;
@@ -1010,20 +1045,19 @@ void FMOPL3_Clock(fmopl3_t *chip)
         else
             tremolo = chip->trem_out >> 4;
 
-        int ksltltrem = ksltl + tremolo;
-        int levelof = 0;
+        ksltltrem = ksltl + tremolo;
+        levelof = 0;
 
         if (ksltltrem & 0x200)
             levelof = 1;
 
-        int totallevel = level + (ksltltrem & 0x1ff);
+        totallevel = level + (ksltltrem & 0x1ff);
         if (totallevel & 0x200)
             levelof = 1;
 
-        int totallevelclamp = (chip->reg_test0 & 1) != 0 ? 0 : (levelof ? 0x1ff : (totallevel & 0x1ff));
+        totallevelclamp = (chip->reg_test0 & 1) != 0 ? 0 : (levelof ? 0x1ff : (totallevel & 0x1ff));
 
         chip->eg_out[0] = totallevelclamp;
-
         chip->eg_dbg[0] = chip->eg_dbg[1] >> 1;
 
         if ((chip->reg_test0 & 32) != 0 && !chip->eg_dbg_load_l[1])
@@ -1047,10 +1081,12 @@ void FMOPL3_Clock(fmopl3_t *chip)
             chip->eg_level_o[0] = (chip->eg_cells[18 + index1] >> 2) & 511;
             chip->eg_timer_o[0] = (chip->eg_cells[18 + index1] >> 11) & 1;
         }
+
         chip->eg_state_o[2] = chip->eg_state_o[1];
         chip->eg_level_o[2] = chip->eg_level_o[1];
         chip->eg_timer_o[2] = chip->eg_timer_o[1];
     }
+
     if (chip->clk2)
     {
         chip->eg_out[1] = chip->eg_out[0];
@@ -1082,7 +1118,8 @@ void FMOPL3_Clock(fmopl3_t *chip)
         int vib_sh2 = !chip->reg_dv && chip->vib[1] && vib_sel2;
         int vib_sign = (chip->vib_cnt[1] & 4) != 0 && chip->vib[1];
         int vib_add = 0;
-        int phase;
+        int phase, state, dokon;
+
         if (vib_sh0)
             vib_add |= (chip->fnum[1] >> 7) & 7;
         if (vib_sh1)
@@ -1102,8 +1139,8 @@ void FMOPL3_Clock(fmopl3_t *chip)
 
         pg_add = (freq * pg_multi[chip->multi[1]]) >> 1;
 
-        int state = chip->eg_state_o[3];
-        int dokon = state == eg_state_release && chip->keyon_comb;
+        state = chip->eg_state_o[3];
+        dokon = state == eg_state_release && chip->keyon_comb;
 
         phase = ((dokon || (chip->reg_test0 & 4) != 0 || chip->reset1) ? 0 : chip->pg_phase_o[3]) + pg_add;
 
@@ -1122,6 +1159,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
         }
         chip->pg_phase_o[2] = chip->pg_phase_o[1];
     }
+
     if (chip->clk2)
     {
         chip->pg_index[1] = chip->pg_index[0];
@@ -1173,7 +1211,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
             chip->tc_bit5 = (pg_out >> 5) & 1;
         }
 
-        if (chip->clk1) // opt
+        if (chip->clk1) /* opt */
         {
             int rm_bit;
             int noise = (chip->noise_lfsr[1] >> 22) & 1;
@@ -1268,7 +1306,8 @@ void FMOPL3_Clock(fmopl3_t *chip)
             int square = wf == 6;
             int sawtooth = wf == 7;
 
-            int phase2;
+            int phase2, mute, sign, index, ls, att, pw, value, fb1, fb2, fb_sum, mod;
+
             if (wf == 4 || wf == 5)
                 phase2 = phase << 1;
             else
@@ -1278,12 +1317,12 @@ void FMOPL3_Clock(fmopl3_t *chip)
             if (wf == 7 ? (phase2 & 512) != 0 : (phase2 & 256) != 0)
                 phase2 ^= 511;
 
-            int mute = ((phase & 512) != 0 && (wf == 1 || wf == 4 || wf == 5)) || ((phase & 256) != 0 && wf == 3);
-            int sign = (wf == 2 || wf == 3 || wf == 5) ? 0 : (phase2 & 512) != 0;
+            mute = ((phase & 512) != 0 && (wf == 1 || wf == 4 || wf == 5)) || ((phase & 256) != 0 && wf == 3);
+            sign = (wf == 2 || wf == 3 || wf == 5) ? 0 : (phase2 & 512) != 0;
 
-            int index = square ? 255 : (phase2 & 255);
+            index = square ? 255 : (phase2 & 255);
 
-            int ls = logsin[index >> 1];
+            ls = logsin[index >> 1];
             if ((index & 1) == 0)
                 ls += logsin_d[index >> 1];
 
@@ -1291,11 +1330,11 @@ void FMOPL3_Clock(fmopl3_t *chip)
             chip->op_saw[0] = sawtooth;
             chip->op_saw_phase[0] = phase2 & 511;
 
-            int att = (chip->op_saw[1] ? (chip->op_saw_phase[1] << 3) : chip->op_logsin[1]) + (chip->eg_out[1] << 3);
+            att = (chip->op_saw[1] ? (chip->op_saw_phase[1] << 3) : chip->op_logsin[1]) + (chip->eg_out[1] << 3);
             if (att & 4096)
                 att = 4095;
 
-            int pw = pow[(att >> 1) & 127];
+            pw = pow[(att >> 1) & 127];
             if ((att & 1) == 0)
                 pw += pow_d[(att >> 1) & 127];
 
@@ -1305,7 +1344,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
             chip->op_mute[0] = (chip->op_mute[1] << 1) | mute;
             chip->op_sign[0] = (chip->op_sign[1] << 1) | sign;
 
-            int value = 0;
+            value = 0;
 
             if ((chip->op_mute[1] & 2) == 0)
             {
@@ -1344,8 +1383,9 @@ void FMOPL3_Clock(fmopl3_t *chip)
                 chip->op_fb[3][i][0] |= bit;
             }
 
-            int fb1 = 0;
-            int fb2 = 0;
+            fb1 = 0;
+            fb2 = 0;
+
             for (i = 0; i < 14; i++)
             {
                 int j = i;
@@ -1354,15 +1394,17 @@ void FMOPL3_Clock(fmopl3_t *chip)
                 fb1 |= ((chip->op_fb[1][j][1] >> 5) & 1) << i;
                 fb2 |= ((chip->op_fb[3][j][1] >> 5) & 1) << i;
             }
-            int fb_sum = fb1 + fb2;
+
+            fb_sum = fb1 + fb2;
             fb_sum &= 16383;
             if (fb_sum & 8192)
                 fb_sum |= ~8191;
 
-            int mod = 0;
+            mod = 0;
 
             if (chip->fsm_out[16] && !chip->fsm_out[14])
                 mod |= value & 1023;
+
             if (chip->fsm_out[12])
             {
                 if (chip->fb_l[1][1])
@@ -1372,9 +1414,9 @@ void FMOPL3_Clock(fmopl3_t *chip)
             }
 
             chip->op_mod[0] = mod & 1023;
-
             chip->op_value = value;
         }
+
         if (chip->clk2)
         {
             chip->op_logsin[1] = chip->op_logsin[0];
@@ -1402,6 +1444,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
             chip->accm_load_ac_l = chip->fsm_out[6];
             chip->accm_load_bd_l = chip->fsm_out[4];
         }
+
         chip->accm_load_ac = !chip->accm_load_ac_l && chip->fsm_out[6];
         chip->accm_load_bd = !chip->accm_load_bd_l && chip->fsm_out[4];
 
@@ -1423,7 +1466,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
 
         if (chip->clk1)
         {
-            int value = 0;
+            int value = 0, sign, accm_a, accm_b, accm_c, accm_d;
 
             if (chip->fsm_out[13])
             {
@@ -1441,9 +1484,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
                 value |= 0x7c000;
             }
 
-            int sign;
-
-            int accm_a = chip->fsm_out[6] ? 0 : chip->accm_a[1];
+            accm_a = chip->fsm_out[6] ? 0 : chip->accm_a[1];
             accm_a += (chip->pan_l[1][1] & 1) != 0 ? value : 0;
             chip->accm_a[0] = accm_a;
             sign = (chip->accm_a[1] & 0x40000) == 0;
@@ -1455,7 +1496,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
                     chip->accm_shift_a[0] |= 0x8000;
             }
 
-            int accm_b = chip->fsm_out[4] ? 0 : chip->accm_b[1];
+            accm_b = chip->fsm_out[4] ? 0 : chip->accm_b[1];
             accm_b += (chip->pan_l[1][1] & 2) != 0 ? value : 0;
             chip->accm_b[0] = accm_b;
             sign = (chip->accm_b[1] & 0x40000) == 0;
@@ -1467,7 +1508,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
                     chip->accm_shift_b[0] |= 0x8000;
             }
 
-            int accm_c = chip->fsm_out[6] ? 0 : chip->accm_c[1];
+            accm_c = chip->fsm_out[6] ? 0 : chip->accm_c[1];
             accm_c += (chip->pan_l[1][1] & 4) != 0 ? value : 0;
             chip->accm_c[0] = accm_c;
             sign = (chip->accm_c[1] & 0x40000) == 0;
@@ -1479,7 +1520,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
                     chip->accm_shift_c[0] |= 0x8000;
             }
 
-            int accm_d = chip->fsm_out[4] ? 0 : chip->accm_d[1];
+            accm_d = chip->fsm_out[4] ? 0 : chip->accm_d[1];
             accm_d += (chip->pan_l[1][1] & 8) != 0 ? value : 0;
             chip->accm_d[0] = accm_d;
             sign = (chip->accm_d[1] & 0x40000) == 0;
@@ -1491,6 +1532,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
                     chip->accm_shift_d[0] |= 0x8000;
             }
         }
+
         if (chip->clk2)
         {
             chip->accm_a[1] = chip->accm_a[0];
@@ -1591,7 +1633,7 @@ void FMOPL3_Clock(fmopl3_t *chip)
             break;
     }
 
-// end:
+/* end: */
 
     if (chip->io_write0)
         chip->write0_sr = 1;

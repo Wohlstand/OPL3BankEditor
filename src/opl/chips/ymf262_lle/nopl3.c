@@ -1,3 +1,25 @@
+/*
+ * Copyright (C) 2023 nukeykt
+ *
+ * This file is part of YMF262-LLE.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ *  YMF262 emulator
+ *  Thanks:
+ *      John McMaster (siliconpr0n.org):
+ *          YMF262 decap and die shot
+ *
+ */
+
 #include "nuked_fmopl3.h"
 #include <stdint.h>
 #include <stdlib.h>
@@ -99,7 +121,7 @@ void nopl3_set_rate(void* chip_p, int clock, int samplerate)
 
     chip->rateratio = ((samplerate << RSM_FRAC) * (int64_t)288) / clock;
 
-    //printf("%i %i\n", clock, samplerate);
+    /* printf("%i %i\n", clock, samplerate); */
 
     nopl3_reset(chip);
 }
@@ -132,16 +154,18 @@ void nopl3_write2(nopl3_t *chip, int port, int val)
     chip->chip.input.address = port;
     chip->chip.input.data_i = val;
     chip->chip.input.wr = 0;
-    FMOPL3_Clock(&chip->chip); // propagate
+    FMOPL3_Clock(&chip->chip); /* propagate */
     chip->chip.input.wr = 1;
-    FMOPL3_Clock(&chip->chip); // propagate
+    FMOPL3_Clock(&chip->chip); /* propagate */
 }
 
 void nopl3_getsample(void *chip, short *sndptr, int numsamples)
 {
     nopl3_t* chip2 = chip;
-    int i;
+    int i, buf0, buf1;
     short *p = sndptr;
+    opl3_writebuf* writebuf;
+
     for (i = 0; i < numsamples; i++)
     {
         while (chip2->samplecnt >= chip2->rateratio)
@@ -149,8 +173,6 @@ void nopl3_getsample(void *chip, short *sndptr, int numsamples)
             chip2->oldsample[0] = chip2->sample_a;
             chip2->oldsample[1] = chip2->sample_b;
             nopl3_cycle(chip2);
-
-            opl3_writebuf* writebuf;
 
             while ((writebuf = &chip2->writebuf[chip2->writebuf_cur]), writebuf->time <= chip2->writebuf_samplecnt)
             {
@@ -165,9 +187,10 @@ void nopl3_getsample(void *chip, short *sndptr, int numsamples)
             chip2->writebuf_samplecnt++;
             chip2->samplecnt -= chip2->rateratio;
         }
-        int buf0 = (chip2->oldsample[0] * (chip2->rateratio - chip2->samplecnt)
+
+        buf0 = (chip2->oldsample[0] * (chip2->rateratio - chip2->samplecnt)
             + chip2->sample_a * chip2->samplecnt) / chip2->rateratio;
-        int buf1 = (chip2->oldsample[1] * (chip2->rateratio - chip2->samplecnt)
+        buf1 = (chip2->oldsample[1] * (chip2->rateratio - chip2->samplecnt)
             + chip2->sample_b * chip2->samplecnt) / chip2->rateratio;
         chip2->samplecnt += 1 << RSM_FRAC;
         *p++ = buf0;

@@ -1,3 +1,25 @@
+/*
+ * Copyright (C) 2023 nukeykt
+ *
+ * This file is part of YM3812-LLE.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ *  YM3812 emulator
+ *  Thanks:
+ *      Travis Goodspeed:
+ *          YM3812 decap and die shot
+ *
+ */
+
 #include "nuked_fmopl2.h"
 #include <stdint.h>
 #include <stdlib.h>
@@ -86,7 +108,7 @@ void nopl2_set_rate(void* chip_p, int clock, int samplerate)
 
     chip->rateratio = ((samplerate << RSM_FRAC) * (int64_t)72) / clock;
 
-    //printf("%i %i\n", clock, samplerate);
+    /* printf("%i %i\n", clock, samplerate); */
 
     nopl2_reset(chip);
 }
@@ -119,16 +141,17 @@ void nopl2_write2(nopl2_t *chip, int port, int val)
     chip->chip.input.address = port;
     chip->chip.input.data_i = val;
     chip->chip.input.wr = 0;
-    FMOPL2_Clock(&chip->chip); // propagate
+    FMOPL2_Clock(&chip->chip); /* propagate */
     chip->chip.input.wr = 1;
-    FMOPL2_Clock(&chip->chip); // propagate
+    FMOPL2_Clock(&chip->chip); /* propagate */
 }
 
 void nopl2_getsample(void *chip, short *sndptr, int numsamples)
 {
     nopl2_t* chip2 = chip;
-    int i;
+    int i, buf;
     short *p = sndptr;
+    opl2_writebuf* writebuf;
 
     for (i = 0; i < numsamples; i++)
     {
@@ -136,8 +159,6 @@ void nopl2_getsample(void *chip, short *sndptr, int numsamples)
         {
             chip2->oldsample = chip2->sample;
             nopl2_cycle(chip2);
-
-            opl2_writebuf* writebuf;
 
             while ((writebuf = &chip2->writebuf[chip2->writebuf_cur]), writebuf->time <= chip2->writebuf_samplecnt)
             {
@@ -151,8 +172,9 @@ void nopl2_getsample(void *chip, short *sndptr, int numsamples)
             chip2->writebuf_samplecnt++;
             chip2->samplecnt -= chip2->rateratio;
         }
-        int buf = (chip2->oldsample * (chip2->rateratio - chip2->samplecnt)
-            + chip2->sample * chip2->samplecnt) / chip2->rateratio;
+
+        buf = (chip2->oldsample * (chip2->rateratio - chip2->samplecnt)
+             + chip2->sample * chip2->samplecnt) / chip2->rateratio;
         *p++ = buf;
         *p++ = buf;
     }

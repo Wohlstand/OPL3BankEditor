@@ -344,4 +344,4 @@ extern void FMOPL3_Clock(fmopl3_t *chip);
 }
 #endif
 
-#endif // NUKED_FMOPL3_H
+#endif /* NUKED_FMOPL3_H */

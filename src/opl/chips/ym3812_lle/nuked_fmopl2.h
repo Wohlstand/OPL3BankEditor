@@ -58,13 +58,13 @@ typedef struct
     int reset1;
 
     int fsm_reset_l[2];
-    int fsm_reset; // wire
+    int fsm_reset; /* wire */
     int fsm_cnt1[2];
     int fsm_cnt2[2];
-    int fsm_cnt1_of; // wire
-    int fsm_cnt2_of; // wire
+    int fsm_cnt1_of; /* wire */
+    int fsm_cnt2_of; /* wire */
     int fsm_sel[13];
-    int fsm_cnt; // wire
+    int fsm_cnt; /* wire */
     int fsm_ch_out;
     int fsm_do_fb;
     int fsm_load_fb;
@@ -113,8 +113,8 @@ typedef struct
     int reg_dv;
     int rhythm;
     int reg_rh_kon;
-    int reg_sel4_wr; // wire
-    int reg_sel4_rst; // wire
+    int reg_sel4_wr; /* wire */
+    int reg_sel4_rst; /* wire */
     int reg_t1_mask;
     int reg_t2_mask;
     int reg_t1_start;
@@ -135,7 +135,7 @@ typedef struct
     int t1_start;
     int t1_start_l[2];
     int t2_start_l[2];
-    int t1_load; // wire
+    int t1_load; /* wire */
     int csm_load_l;
     int csm_load;
     int csm_kon;
@@ -171,7 +171,7 @@ typedef struct
     int op_rr[4][2];
     int op_wf[2][2];
     int op_mod[2];
-    int op_value; // wire
+    int op_value; /* wire */
 
     int eg_load1_l;
     int eg_load1;
@@ -199,7 +199,7 @@ typedef struct
     int eg_state[2][2];
     int eg_level[9][2];
     int eg_out[2];
-    int eg_dokon; // wire
+    int eg_dokon; /* wire */
     int eg_mute[2];
 
     int block;
@@ -223,10 +223,10 @@ typedef struct
     int wf;
 
     int lfo_cnt[2];
-    int t1_step; // wire
-    int t2_step; // wire
-    int am_step; // wire
-    int vib_step; // wire
+    int t1_step; /* wire */
+    int t2_step; /* wire */
+    int am_step; /* wire */
+    int vib_step; /* wire */
     int vib_cnt[2];
     int pg_phase[19][2];
     int dbg_serial[2];
@@ -248,8 +248,8 @@ typedef struct
     int op_sign[2];
     int op_fb[2][13][2];
 
-    int pg_out; // wire
-    int pg_out_rhy; // wire
+    int pg_out; /* wire */
+    int pg_out_rhy; /* wire */
 
     int accm_value[2];
     int accm_shifter[2];
@@ -284,4 +284,4 @@ extern void FMOPL2_Clock(fmopl2_t *chip);
 }
 #endif
 
-#endif // NUKED_FMOPL2_H
+#endif /* NUKED_FMOPL2_H */
