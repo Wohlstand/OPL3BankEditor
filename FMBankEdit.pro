@@ -121,7 +121,6 @@ win32 {
 include(src/opl/chips/chipset.pri)
 
 SOURCES += \
-    src/FileFormats/format_smaf_importer.cpp \
     src/audio.cpp \
     src/bank.cpp \
     src/bank_editor.cpp \
@@ -147,6 +146,8 @@ SOURCES += \
     src/FileFormats/format_sb_ibk.cpp \
     src/FileFormats/format_dro_importer.cpp \
     src/FileFormats/format_vgm_import.cpp \
+    src/FileFormats/format_smaf_importer.cpp \
+    src/FileFormats/format_klm_importer.cpp \
     src/FileFormats/format_misc_sgi.cpp \
     src/FileFormats/format_misc_cif.cpp \
     src/FileFormats/format_misc_hsc.cpp \
@@ -168,7 +169,6 @@ SOURCES += \
     src/FileFormats/wopl/wopl_file.c
 
 HEADERS += \
-    src/FileFormats/format_smaf_importer.h \
     src/bank_editor.h \
     src/operator_editor.h \
     src/bank_comparison.h \
@@ -192,6 +192,8 @@ HEADERS += \
     src/FileFormats/format_sb_ibk.h \
     src/FileFormats/format_dro_importer.h \
     src/FileFormats/format_vgm_import.h \
+    src/FileFormats/format_smaf_importer.h \
+    src/FileFormats/format_klm_importer.h \
     src/FileFormats/format_misc_sgi.h \
     src/FileFormats/format_misc_cif.h \
     src/FileFormats/format_misc_hsc.h \
