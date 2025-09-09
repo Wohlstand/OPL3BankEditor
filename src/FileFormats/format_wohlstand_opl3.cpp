@@ -219,7 +219,7 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
 {
     uint8_t odata[WOPL_INST_SIZE_V3];
     memset(odata, 0, WOPL_INST_SIZE_V3);
-    strncpy(char_p(odata), ins.name, 32);       //32
+    strncpy(char_p(odata), ins.name, 33);       //32
     fromSint16BE(ins.note_offset1, odata + 32); //2
     fromSint16BE(ins.note_offset2, odata + 34); //2
     odata[36] = uint8_t(ins.velocity_offset); //1

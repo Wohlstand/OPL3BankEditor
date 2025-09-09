@@ -2,6 +2,7 @@ Version 1.5.2
 - Fixed a small bug at the importer
 - Added voice importing from SMAF v1 and v2 (they are partially compatible with OPL synth, so, can be imported)
 - Added support for the RIFF FM4 file format (the "synth.pat" file at the Windows NT4)
+- Added voice importing from KLM music files found at theWacky Wheels game
 
 Version 1.5.1
 - Added an ability to set the audio device by user interface

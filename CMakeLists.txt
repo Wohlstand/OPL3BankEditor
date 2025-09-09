@@ -136,6 +136,8 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_dro_importer.cpp"
   "src/FileFormats/format_vgm_import.cpp"
   "src/FileFormats/format_smaf_importer.cpp"
+  "src/FileFormats/format_klm_importer.h"
+  "src/FileFormats/format_klm_importer.cpp"
   "src/FileFormats/format_misc_sgi.cpp"
   "src/FileFormats/format_misc_cif.cpp"
   "src/FileFormats/format_misc_hsc.cpp"
@@ -144,7 +146,8 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_patch_fm4.h"
   "src/FileFormats/format_patch_fm4.cpp"
   "src/FileFormats/ymf262_to_wopi.cpp"
-  "src/FileFormats/wopl/wopl_file.c")
+  "src/FileFormats/wopl/wopl_file.c"
+)
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
 target_include_directories(FileFormats PUBLIC "src" PRIVATE ${ZLIB_INCLUDE_DIRS})
 target_link_libraries(FileFormats PUBLIC Common PRIVATE ${ZLIB_LIBRARIES})
