@@ -185,3 +185,4 @@ InsSize:
     InsSize * 128 * PBanks  | 128 [Single-instrument entries] per each bank,
                             |     look at top of this text file
 --------------------------------------------
+
