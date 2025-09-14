@@ -17,6 +17,7 @@
  */
 
 #include <set>
+#include <QFileInfo>
 
 #include "format_klm_importer.h"
 #include "../common.h"
@@ -25,6 +26,21 @@
 
 bool KLM_Importer::detect(const QString &filePath, char *magic)
 {
+    uint16_t song_offset = 0;
+
+    if(magic[2] != 0x01)
+        return false;
+
+    QFileInfo file(filePath);
+
+    song_offset = toUint16LE(reinterpret_cast<uint8_t*>(magic) + 3);
+
+    if(song_offset > file.size())
+        return false;
+
+    if((song_offset - 5) % 11 != 0) // Invalid offset!
+        return false;
+
     return filePath.endsWith(".klm", Qt::CaseInsensitive);
 }
 
@@ -127,7 +143,7 @@ FfmtErrCode KLM_Importer::loadFile(QString filePath, FmBank &bank)
         case 0x00: // Note Off;
             break; // 0
         case 0x10: // Note on with frequency
-            if(chan <= 5) // Melodic instrument, two bytes should be skipped
+            if(chan <= 5) // Melodic instrument and bass drum, two bytes should be skipped
             {
                 file.read((char*)data, 2);
                 tone[chan] = data[0] && ((unsigned)(data[1] & 0x03) << 8);
@@ -135,6 +151,13 @@ FfmtErrCode KLM_Importer::loadFile(QString filePath, FmBank &bank)
             }
             else // Caught a rhythm-mode instrument
             {
+                if(chan == 6) // Bass drum also has frequency
+                {
+                    file.read((char*)data, 2);
+                    tone[chan] = data[0] && ((unsigned)(data[1] & 0x03) << 8);
+                    octave[chan] = (data[1] >> 2) & 0x07;
+                }
+
                 if(rhythm_stored.find(cur_inst[chan]) == rhythm_stored.end())
                 {
                     ins = bank.Ins_Melodic_box[cur_inst[chan]];
@@ -167,7 +190,7 @@ FfmtErrCode KLM_Importer::loadFile(QString filePath, FmBank &bank)
                         break;
                     }
 
-                    snprintf(ins.name, 32, "KLM Drum. %03u", drum_i++);
+                    snprintf(ins.name, 32, "KLM Drum. %03u (idx=%03u)", drum_i++, cur_inst[chan]);
                     bank.Ins_Percussion_box.push_back(ins);
                     rhythm_stored.insert(cur_inst[chan]);
                 }
@@ -204,8 +227,19 @@ FfmtErrCode KLM_Importer::loadFile(QString filePath, FmBank &bank)
                 break;
             case 0xFF: // End of song
                 break;
+            default:
+                // Invalid command
+                file.close();
+                bank.reset();
+                return FfmtErrCode::ERR_BADFORMAT;
             }
             break;
+
+        default:
+            // Invalid command
+            file.close();
+            bank.reset();
+            return FfmtErrCode::ERR_BADFORMAT;
         }
     }
 
