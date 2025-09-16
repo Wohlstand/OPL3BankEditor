@@ -49,6 +49,9 @@ channel of YMF262 chip to setup the timbre
 
 Lenght of each instrument entry is 62 bytes (up to version 2 and in OPLI files)
 
+Any non-ASCII string data must be encoded with UTF-8 and fit to 32 bytes
+including the NULL terminator.
+
 Operators in the list below has the next roles:
 - Operator 1 - the Carrier1 (Operator 2 for 4-operators mode)
 - Operator 2 - the Modulator1 (Operator 1 for 4-operators mode)
@@ -133,6 +136,9 @@ multiple sets with 128-instruments which is needed to store
 GS and XG instrument sets which are have more than standard 128
 instruments with a single bank.
 
+Any non-ASCII string data must be encoded with UTF-8 and fit to 32 bytes
+including the NULL terminator.
+
 Total data length is sum of: 19 + (62*128*MBanks) + (62*128*PBanks) bytes
 
 Bytes-Lenght      |      Description
@@ -185,4 +191,3 @@ InsSize:
     InsSize * 128 * PBanks  | 128 [Single-instrument entries] per each bank,
                             |     look at top of this text file
 --------------------------------------------
-
