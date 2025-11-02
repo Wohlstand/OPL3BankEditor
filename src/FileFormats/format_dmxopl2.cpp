@@ -100,7 +100,7 @@ FfmtErrCode DmxOPL2::loadFile(QString filePath, FmBank &bank)
         ins.setKSL(CARRIER1,        idata[11]);
         ins.setLevel(CARRIER1,      idata[12]);
         //13'th byte is unused, but sadly :P, lucky number, it MUST BE USED!!!
-        ins.note_offset1 = isDrum ? 12 : toSint16LE(&idata[14]) + 12;
+        ins.note_offset1 = ins.is_fixed_note ? 12 : toSint16LE(&idata[14]) + 12;
 
         ins.setAVEKM(MODULATOR2,    idata[16]);
         ins.setAtDec(MODULATOR2,    idata[17]);
@@ -118,7 +118,7 @@ FfmtErrCode DmxOPL2::loadFile(QString filePath, FmBank &bank)
         ins.setKSL(CARRIER2,        idata[27]);
         ins.setLevel(CARRIER2,      idata[28]);
         //29'th byte is unused
-        ins.note_offset2 = isDrum ? 12 : toSint16LE(&idata[30]) + 12;
+        ins.note_offset2 = ins.is_fixed_note ? 12 : toSint16LE(&idata[30]) + 12;
     }
 
     //Instrument names
@@ -172,6 +172,14 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
         flags |= (i == 65) ? Dmx_DelayedVib : 0;
         note_number = ins.percNoteNum;
 
+        if(ins.is_fixed_note) // When fixed note flag is set, DMX ignores the note offset completely
+        {
+            if((ins.note_offset1 - 12) < note_number)
+                note_number = 0; // lower than 0!
+            else
+                note_number += (ins.note_offset1 - 12);
+        }
+
         odata[0]  = ins.getAVEKM(MODULATOR1);
         odata[1]  = ins.getAtDec(MODULATOR1);
         odata[2]  = ins.getSusRel(MODULATOR1);
@@ -189,7 +197,7 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
         odata[12] = ins.getLevel(CARRIER1);
         odata[13] = 0x00;//...but would to use this for something other?
 
-        if(isDrum)
+        if(ins.is_fixed_note)
             fromSint16LE(0, &odata[14]);
         else
             fromSint16LE(ins.note_offset1 - 12, &odata[14]);
@@ -211,7 +219,7 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
         odata[28] = ins.getLevel(CARRIER2);
         odata[29] = 0x00;//...but would to use this for something other?
 
-        if(isDrum)
+        if(ins.is_fixed_note)
             fromSint16LE(0, &odata[30]);
         else
             fromSint16LE(ins.note_offset2 - 12, &odata[30]);
