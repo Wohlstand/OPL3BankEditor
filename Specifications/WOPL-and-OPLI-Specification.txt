@@ -38,6 +38,10 @@ Version | What's new
         | Change: Added three new volume scaling models: Audio Interfaces
         | Library, Win9x Generic FM, and HMI Sound Operating System
         | (6'th of September, 2020)
+        | Change: Added three new volume scaling models: Old variant of HMI
+        | with defected FM voices, MS AdLib driver for Windows 3.x, IMF Creator,
+        | and Jammie O'Connel's FM Synth driver for Windowx 3.x
+        | (14'th of November, 2025)
 -------------------------------------------------------------------------------
 
 ===============================================================================
@@ -168,7 +172,11 @@ Bytes-Lenght      |      Description
                   |     6 - Apogee Sound System volume model with fixed AM voc.
                   |     7 - Audio Interfaces Library volume model
                   |     8 - Windows 9x Generic FM driver volume model
-                  |     9 - HMI Sound Operating System volume model
+                  |     9 - HMI Sound Operating System (Ver. 4.0) volume model
+                  |    10 - HMI Sound Operating System (Ver. 3.0 and below)
+                  |    11 - MS AdLib Driver for Windows 9x volume model
+                  |    12 - IMF Creator volume model
+                  |    13 - Jammie O'Connel's FM Synth volume model
 --VERSION >= 2---Melodic bank meta-data-----
 (repeat MBanks times)
     32            | Name of melodic bank null-terminated string

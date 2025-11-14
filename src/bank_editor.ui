@@ -1483,6 +1483,21 @@
                  <string>HMI SOS (Old variant)</string>
                 </property>
                </item>
+               <item>
+                <property name="text">
+                 <string>MS AdLib</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>IMF Creator</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>FM Synth by O'Connel</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item>

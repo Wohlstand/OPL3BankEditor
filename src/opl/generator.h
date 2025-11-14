@@ -153,7 +153,10 @@ public:
         VOLUME_AIL,
         VOLUME_9X_GENERIC_FM,
         VOLUME_HMI,
-        VOLUME_HMI_OLD
+        VOLUME_HMI_OLD,
+        VOLUME_MS_ADLIB,
+        VOLUME_IMF_CREATOR,
+        VOLUME_OCONNEL
     };
 
 public:
@@ -273,6 +276,9 @@ private:
     OPL_PatchSetup m_patch;
     uint8_t     m_regBD;
     uint8_t     m_regC0[NUM_OF_CHANNELS];
+
+    uint16_t (*m_getFreq)(double tone, uint32_t *mul_offset) = nullptr;
+    void (*m_getVolume)(struct OPLVolume_t *v) = nullptr;
 
     /**
      * @brief Channel categiry enumeration
