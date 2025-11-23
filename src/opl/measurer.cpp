@@ -227,18 +227,23 @@ struct TinySynth
 
         std::memset(m_x, 0, sizeof(m_x));
         m_notenum = in.percNoteNum >= 128 ? (in.percNoteNum - 128) : in.percNoteNum;
+
         if(m_notenum == 0)
             m_notenum = 25;
+
         m_notesNum = (in.en_4op || in.en_pseudo4op) ? 2 : 1;
         m_fineTune = 0;
+
         m_noteOffsets[0] = in.note_offset1;
         m_noteOffsets[1] = in.note_offset2;
+
         if(in.en_pseudo4op)
             m_fineTune = in.fine_tune;
+
         if((m_notesNum == 2) && !in.en_pseudo4op)
         {
             m_chip->writeReg(0x105, 1);
-            m_chip->writeReg(0x104, 0xFF);
+            m_chip->writeReg(0x104, 0x3F);
         }
 
         rawData[0][0] = in.getAVEKM(MODULATOR1) & 0x3F; //For clearer measurement, disable tremolo and vibrato
@@ -269,9 +274,11 @@ struct TinySynth
         {
             static const unsigned char patchdata[11] =
             {0x20, 0x23, 0x60, 0x63, 0x80, 0x83, 0xE0, 0xE3, 0x40, 0x43, 0xC0};
+
             for(unsigned a = 0; a < 10; ++a)
                 m_chip->writeReg(patchdata[a] + n * 8, rawData[n][a]);
-            m_chip->writeReg(patchdata[10] + n * 8, rawData[n][10] | 0x30);
+
+            m_chip->writeReg(patchdata[10] + n * 3, rawData[n][10] | 0x30);
         }
     }
 
