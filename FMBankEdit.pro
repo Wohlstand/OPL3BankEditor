@@ -164,6 +164,14 @@ SOURCES += \
     src/opl/generator.cpp \
     src/opl/generator_realtime.cpp \
     src/opl/realtime/ring_buffer.cpp \
+    src/opl/models/model_ail.c \
+    src/opl/models/model_apogee.c \
+    src/opl/models/model_dmx.c \
+    src/opl/models/model_generic.c \
+    src/opl/models/model_hmi_sos.c \
+    src/opl/models/model_msadlib.c \
+    src/opl/models/model_oconnel.c \
+    src/opl/models/model_win9x.c \
     src/piano.cpp \
     src/opl/measurer.cpp \
     src/FileFormats/wopl/wopl_file.c
@@ -213,6 +221,7 @@ HEADERS += \
     src/opl/nukedopl3.h \
     src/opl/realtime/ring_buffer.h \
     src/opl/realtime/ring_buffer.tcc \
+    src/opl/models/opl_models.h \
     src/piano.h \
     src/version.h \
     src/opl/measurer.h \
