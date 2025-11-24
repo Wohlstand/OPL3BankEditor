@@ -32,8 +32,22 @@
 extern "C" {
 #endif
 
-#if !defined(__STDC_VERSION__) || (defined(__STDC_VERSION__) && (__STDC_VERSION__ < 199901L)) \
-  || defined(__STRICT_ANSI__) || !defined(__cplusplus)
+/* Solaris defines the integer types regardless of what C/C++ standard is actually available,
+ * so avoid defining them at all by ourselves. */
+#if !defined(WOPL_STDINT_TYPEDEFS_NOT_NEEDED) && defined(__sun)
+#   define WOPL_STDINT_TYPEDEFS_NOT_NEEDED
+#endif
+
+#if !defined(WOPL_STDINT_TYPEDEFS_NEEDED) && !defined(WOPL_STDINT_TYPEDEFS_NOT_NEEDED)
+#   if !defined(__STDC_VERSION__) || \
+       (defined(__STDC_VERSION__) && (__STDC_VERSION__ < 199901L)) || \
+        defined(__STRICT_ANSI__) || \
+       !defined(__cplusplus)
+#       define WOPL_STDINT_TYPEDEFS_NEEDED
+#   endif
+#endif
+
+#ifdef WOPL_STDINT_TYPEDEFS_NEEDED
 typedef signed char int8_t;
 typedef unsigned char uint8_t;
 typedef signed short int int16_t;
@@ -46,7 +60,9 @@ typedef enum WOPLFileFlags
     /* Enable Deep-Tremolo flag */
     WOPL_FLAG_DEEP_TREMOLO = 0x01,
     /* Enable Deep-Vibrato flag */
-    WOPL_FLAG_DEEP_VIBRATO = 0x02
+    WOPL_FLAG_DEEP_VIBRATO = 0x02,
+    /* Enable MT32 defaults (127 initials and octave-wide pitch bend by default, etc.) */
+    WOPL_FLAG_MT32 = 0x04
 } WOPLFileFlags;
 
 /* Volume scaling model implemented in the libADLMIDI */

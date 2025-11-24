@@ -173,7 +173,8 @@ static void WOPL_parseInstrument(WOPLInstrument *ins, uint8_t *cursor, uint16_t 
 static void WOPL_writeInstrument(WOPLInstrument *ins, uint8_t *cursor, uint16_t version, uint8_t has_sounding_delays)
 {
     int l;
-    strncpy((char*)cursor, ins->inst_name, 32);
+    memcpy((char*)cursor, ins->inst_name, 32);
+    cursor[32] = '\0';
     fromSint16BE(ins->note_offset1, cursor + 32);
     fromSint16BE(ins->note_offset2, cursor + 34);
     cursor[36] = (uint8_t)ins->midi_velocity_offset;
