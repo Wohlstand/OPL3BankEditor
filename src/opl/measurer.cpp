@@ -17,8 +17,10 @@
  */
 
 #ifndef IS_QT_4
-#include <QtConcurrent/QtConcurrent>
-#include <QFuture>
+#   include <QtConcurrent/QtConcurrent>
+#   include <QFuture>
+#else
+#   include <QCoreApplication>
 #endif
 #include <QQueue>
 #include <QProgressDialog>
@@ -27,10 +29,8 @@
 #include <chrono>
 #include <cmath>
 #include <memory>
-#include <fstream>
 #include <cstring>
 #include <cstdio>
-#include <limits>
 
 #include "measurer.h"
 
@@ -827,17 +827,19 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
     }
 
     return !watcher.isCanceled();
-
 #else
     m_progressBox.setMaximum(tasks.size());
     m_progressBox.setValue(0);
     int count = 0;
+
     foreach(FmBank::Instrument *ins, tasks)
     {
         MeasureDurationsDefault(ins);
         m_progressBox.setValue(++count);
         if(m_progressBox.wasCanceled())
             return false;
+
+        QCoreApplication::instance()->processEvents();
     }
     return true;
 #endif
@@ -865,6 +867,7 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
 
 #else
     m_progressBox.show();
+    QCoreApplication::instance()->processEvents();
     MeasureDurationsDefault(&instrument);
     return true;
 #endif
@@ -893,6 +896,7 @@ bool Measurer::doComputation(const FmBank::Instrument &instrument, DurationInfo 
 #else
     m_progressBox.show();
     ComputeDurationsDefault(&instrument, &result);
+    QCoreApplication::instance()->processEvents();
     return true;
 #endif
 }

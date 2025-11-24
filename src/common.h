@@ -22,6 +22,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <stdint.h>
 #include <QFile>
 
 //! Typedef to signed character pointer

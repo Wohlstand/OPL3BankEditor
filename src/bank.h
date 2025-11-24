@@ -19,6 +19,8 @@
 #ifndef BANK_H
 #define BANK_H
 
+#include <stdint.h>
+#include <QString>
 #include <QVector>
 
 /* *********** FM Operator indexes *********** */

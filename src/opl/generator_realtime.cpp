@@ -117,32 +117,48 @@ void RealtimeGenerator::ctl_switchChip(int chipId)
 
 void RealtimeGenerator::ctl_initChip()
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlInitChip, 0};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
 }
 
 void RealtimeGenerator::ctl_silence()
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlSilence, 0};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
 }
 
 void RealtimeGenerator::ctl_noteOffAllChans()
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlNoteOffAllChans, 0};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
 }
 
 void RealtimeGenerator::ctl_playNote()
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlPlayNote, sizeof(uint)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(m_note);
@@ -150,8 +166,12 @@ void RealtimeGenerator::ctl_playNote()
 
 void RealtimeGenerator::ctl_stopNote()
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlStopNote, sizeof(uint)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(m_note);
@@ -159,8 +179,12 @@ void RealtimeGenerator::ctl_stopNote()
 
 void RealtimeGenerator::ctl_pitchBend(int bend)
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlPitchBend, sizeof(int)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(bend);
@@ -168,8 +192,12 @@ void RealtimeGenerator::ctl_pitchBend(int bend)
 
 void RealtimeGenerator::ctl_hold(bool held)
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlHold, sizeof(bool)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(held);
@@ -177,10 +205,15 @@ void RealtimeGenerator::ctl_hold(bool held)
 
 void RealtimeGenerator::ctl_playChord(int chord)
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlPlayChord, sizeof(ChordMessage)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
+
     ChordMessage ch;
     ch.chord = (ChordType)chord;
     ch.note = m_note;
@@ -202,10 +235,15 @@ void IRealtimeControl::ctl_playMinor7Chord()
 
 void RealtimeGenerator::ctl_changePatch(FmBank::Instrument &instrument, bool isDrum)
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlPatchChange, sizeof(PatchChangeMessage)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
+
     PatchChangeMessage pc;
     pc.instrument = instrument;
     pc.isDrum = isDrum;
@@ -214,8 +252,12 @@ void RealtimeGenerator::ctl_changePatch(FmBank::Instrument &instrument, bool isD
 
 void RealtimeGenerator::ctl_changeDeepVibrato(bool enabled)
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlDeepVibrato, sizeof(bool)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(enabled);
@@ -223,8 +265,12 @@ void RealtimeGenerator::ctl_changeDeepVibrato(bool enabled)
 
 void RealtimeGenerator::ctl_changeDeepTremolo(bool enabled)
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlDeepTremolo, sizeof(bool)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(enabled);
@@ -232,8 +278,12 @@ void RealtimeGenerator::ctl_changeDeepTremolo(bool enabled)
 
 void RealtimeGenerator::ctl_changeVolumeModel(int model)
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlVolumeModel, sizeof(int)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(model);
@@ -241,8 +291,12 @@ void RealtimeGenerator::ctl_changeVolumeModel(int model)
 
 void RealtimeGenerator::ctl_changeVolume(unsigned vol)
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlVolume, sizeof(unsigned)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(vol);
@@ -250,8 +304,12 @@ void RealtimeGenerator::ctl_changeVolume(unsigned vol)
 
 void RealtimeGenerator::ctl_setChanAllocMode(int mode)
 {
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     Ring_Buffer &rb = *m_rb_ctl;
     MessageHeader hdr = {MSG_CtlChanAlloc, sizeof(int)};
+
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(mode);
@@ -262,12 +320,17 @@ void RealtimeGenerator::midi_event(const uint8_t *msg, unsigned msglen)
 {
     enum { midi_msglen_max = 64 };
 
+    if(!m_audioWorks)
+        return; // Do nothing!
+
     if(msglen > midi_msglen_max)
         return;
 
     Ring_Buffer &rb = *m_rb_midi;
     MessageHeader hdr = {MSG_MidiEvent, msglen};
-    if (rb.size_free() >= sizeof(hdr) + hdr.size) {
+
+    if(rb.size_free() >= sizeof(hdr) + hdr.size)
+    {
         rb.put(hdr);
         rb.put(msg, msglen);
     }
@@ -303,6 +366,11 @@ void RealtimeGenerator::rt_generate(int16_t *frames, unsigned nframes)
     }
 
     m_gen->generate(frames, nframes);
+}
+
+void RealtimeGenerator::setAudioWorks(bool works)
+{
+    m_audioWorks = works;
 }
 
 void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigned len)

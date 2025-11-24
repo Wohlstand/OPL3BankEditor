@@ -141,6 +141,8 @@ public:
     /* Realtime */
     void rt_generate(int16_t *frames, unsigned nframes) override;
 
+    void setAudioWorks(bool works);
+
 private:
     void rt_message_process(int tag, const uint8_t *data, unsigned len);
     void rt_midi_process(const uint8_t *data, unsigned len);
@@ -154,6 +156,8 @@ private:
     std::unique_ptr<Ring_Buffer> m_rb_midi;
     std::unique_ptr<uint8_t[]> m_body;
 
+    bool m_audioWorks = false;
+
     struct MidiChannelInfo
     {
         unsigned lastmrpn = 0;
@@ -164,6 +168,7 @@ private:
         unsigned volume = 100;
         unsigned expression = 127;
     };
+
     MidiChannelInfo m_midichan[16];
 
 #if defined(ENABLE_HW_OPL_PROXY)

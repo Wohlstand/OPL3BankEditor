@@ -70,9 +70,10 @@ AudioOutRt::AudioOutRt(double latency, const std::string& device_name, const std
 
     if(num_audio_devices == 0)
     {
-        QMessageBox::warning(
-            nullptr, tr("Error"), tr("No audio devices are present for output."));
-        qApp->exit(1);
+        QMessageBox::warning(nullptr,
+                             tr("Error"),
+                             tr("No audio devices are present for output. Playback will be disabled"));
+        m_isValid = false;
         return;
     }
 
@@ -128,6 +129,8 @@ AudioOutRt::AudioOutRt(double latency, const std::string& device_name, const std
         &streamParam, nullptr, RTAUDIO_SINT16, sampleRate, &bufferSize,
         &process, this, &streamOpts, &errorCallback);
 #endif
+
+    m_isValid = true;
 }
 
 unsigned AudioOutRt::sampleRate() const
@@ -179,6 +182,11 @@ std::vector<std::string> AudioOutRt::listDrivers()
         drivers.push_back(RtAudio::getApiName(api));
 
     return drivers;
+}
+
+bool AudioOutRt::isValid() const
+{
+    return m_isValid;
 }
 
 int AudioOutRt::process(void* outputbuffer, void*, unsigned nframes, double, RtAudioStreamStatus, void* userdata)

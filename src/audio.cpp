@@ -38,6 +38,9 @@ void BankEditor::initAudio()
     qDebug() << "Seting pointer of RT Generator...";
     m_generator = rtgenerator;
 
+    // Mark if audio works
+    rtgenerator->setAudioWorks(m_audioOut->isValid());
+
     qDebug() << "Init signals and slots of keys...";
     //Test note
     connect(ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(ctl_playNote()));

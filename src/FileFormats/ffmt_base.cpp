@@ -21,6 +21,10 @@
 
 #include "ffmt_base.h"
 
+#ifndef QStringLiteral
+#   define QStringLiteral(x) QString(x) // Fallback for Qt4
+#endif
+
 FmBankFormatBase::FmBankFormatBase() {}
 
 FmBankFormatBase::~FmBankFormatBase()

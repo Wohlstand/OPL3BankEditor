@@ -36,8 +36,12 @@ public:
     unsigned sampleRate() const;
     void start(IRealtimeProcess &rt);
     void stop();
+
     std::vector<std::string> listCompatibleDevices();
     static std::vector<std::string> listDrivers();
+
+    bool isValid() const;
+
 private:
     static int process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
 #if defined(RTAUDIO_VERSION_6)
@@ -46,6 +50,8 @@ private:
     static void errorCallback(RtAudioError::Type type, const std::string &errorText);
 #endif
     static bool isCompatibleDevice(const RtAudio::DeviceInfo &info);
+
+    bool m_isValid = false;
     IRealtimeProcess *m_rt = nullptr;
     std::unique_ptr<RtAudio> m_audioOut;
 };

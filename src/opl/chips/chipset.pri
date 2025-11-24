@@ -35,7 +35,6 @@ HEADERS+= \
     $$PWD/esfmu/esfm.h \
     $$PWD/java/JavaOPL3.hpp \
     $$PWD/nuked/nukedopl3.h \
-    $$PWD/opal/opal.hpp \
     $$PWD/dosbox/dbopl.h \
     $$PWD/nuked_opl3_v174.h \
     $$PWD/nuked/nukedopl3_174.h \
