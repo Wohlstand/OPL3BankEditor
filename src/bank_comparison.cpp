@@ -319,7 +319,7 @@ QString BankCompareDialog::tabulateDiffElements(const std::vector<DiffElement> &
 QString BankCompareDialog::stringOfId(uint32_t id)
 {
     char idText[128];
-    sprintf(idText, "%c%03u:%03u:%03u", "MP"[(id >> 24) != 0],
+    snprintf(idText, 128, "%c%03u:%03u:%03u", "MP"[(id >> 24) != 0],
             (id >> 16) & 127, (id >> 8) & 127, id & 127);
     return QString::fromLatin1(idText);
 }

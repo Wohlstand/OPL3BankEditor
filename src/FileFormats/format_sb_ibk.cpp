@@ -240,7 +240,7 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank, BankFormats 
         }
 
         char tempName[10];
-        sprintf(tempName, "NONAME%03d", i);
+        snprintf(tempName, 10, "NONAME%03d", i);
 
         if(isDrumBank)
             strncpy(bank.Ins_Percussion[i].name, tempName, 9);
