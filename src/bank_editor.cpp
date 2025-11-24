@@ -167,6 +167,8 @@ BankEditor::BankEditor(QWidget *parent) :
         connect(ed, SIGNAL(operatorChanged()), this, SLOT(onOperatorChanged()));
     }
 
+    // Always white to avoid colour confusion
+    ui->instruments->setStyleSheet("background-color: #FFFFFF");
     ui->instruments->installEventFilter(this);
 
     ui->pitchBendSlider->setTracking(true);

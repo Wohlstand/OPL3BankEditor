@@ -58,11 +58,8 @@ endif()
 include(FindPkgConfig)
 include(CheckCXXCompilerFlag)
 
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Concurrent REQUIRED)
-find_package(Qt5LinguistTools REQUIRED)
-find_package(Qt5SerialPort)
-set(QWT_NAMES qwt-qt5 qwt) # find versions for Qt5 only
+include(cmake/library_qt.cmake)
+
 find_package(Qwt)
 find_package(ZLIB REQUIRED)
 find_package(Threads REQUIRED)
@@ -87,7 +84,7 @@ else()
     set(ENABLE_PLOTS OFF)
 endif()
 
-if(TARGET Qt5::SerialPort)
+if(TARGET ${QT_SerialPort_TARGET})
     set(ENABLE_SERIAL_PORT ON)
 else()
     set(ENABLE_SERIAL_PORT OFF)
@@ -115,7 +112,9 @@ set(COMMON_SOURCES
 
 add_library(Common STATIC ${COMMON_SOURCES})
 target_include_directories(Common PUBLIC "src")
-target_link_libraries(Common PUBLIC Qt5::Widgets)
+if(BUILD_MAJOR_QT GREATER_EQUAL 5)
+    target_link_libraries(Common PUBLIC ${QT_Widgets_TARGET})
+endif()
 
 if(ENABLE_ADDRESS_SANITIZER)
     target_compile_options(Common PUBLIC -fsanitize=address)
@@ -175,7 +174,9 @@ if(COMPILER_SUPPORTS_CXX14)
 endif()
 
 if(ENABLE_OPL3_PROXY)
-    target_link_libraries(Chips PUBLIC Qt5::Widgets)
+    if(BUILD_MAJOR_QT GREATER_EQUAL 5)
+        target_link_libraries(Chips PUBLIC ${QT_Widgets_TARGET})
+    endif()
     target_compile_definitions(Chips PUBLIC "-DENABLE_HW_OPL_PROXY")
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         target_link_libraries(Chips PUBLIC dl)
@@ -183,7 +184,7 @@ if(ENABLE_OPL3_PROXY)
 endif()
 
 if(ENABLE_SERIAL_PORT)
-    target_link_libraries(Chips PUBLIC Qt5::SerialPort)
+    target_link_libraries(Chips PUBLIC ${QT_SerialPort_TARGET})
     target_compile_definitions(Chips PUBLIC "-DENABLE_HW_OPL_SERIAL_PORT")
 endif()
 
@@ -196,7 +197,7 @@ set(MEASURER_SOURCES "src/opl/measurer.cpp")
 
 add_library(Measurer STATIC ${MEASURER_SOURCES})
 target_include_directories(Measurer PUBLIC "src")
-target_link_libraries(Measurer PUBLIC Common Chips Qt5::Concurrent)
+target_link_libraries(Measurer PUBLIC Common Chips ${QT_Concurrent_TARGET})
 
 if(NOT MSVC AND NOT APPLE)
     target_compile_options(Measurer PRIVATE "-fopenmp")
@@ -246,11 +247,11 @@ if(ENABLE_PLOTS)
     list(APPEND UIS "src/delay_analysis.ui")
 endif()
 
-qt5_wrap_ui(FORMS ${UIS})
+pge_qt_wrap_ui(FORMS ${UIS})
 
-qt5_add_resources(RESOURCES "src/resources/resources.qrc")
+pge_qt_add_resources(RESOURCES "src/resources/resources.qrc")
 
-qt5_add_translation(TRANSLATIONS
+pge_qt_add_translation(TRANSLATIONS
     "src/translations/opl3bankeditor_fr_FR.ts"
     "src/translations/opl3bankeditor_pl_PL.ts"
     "src/translations/opl3bankeditor_ru_RU.ts"
@@ -291,7 +292,11 @@ endif()
 
 target_link_libraries(OPL3BankEditor PRIVATE FileFormats Chips Measurer)
 
-target_link_libraries(OPL3BankEditor PRIVATE Qt5::Widgets ${CMAKE_THREAD_LIBS_INIT})
+if(BUILD_MAJOR_QT GREATER_EQUAL 5)
+    target_link_libraries(OPL3BankEditor PRIVATE ${QT_Widgets_TARGET} ${CMAKE_THREAD_LIBS_INIT})
+else()
+    target_link_libraries(OPL3BankEditor PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+endif()
 
 if(ENABLE_PLOTS)
     target_link_libraries(OPL3BankEditor PRIVATE ${QWT_LIBRARIES})

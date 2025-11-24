@@ -57,11 +57,13 @@ void Application::translate(const QString &language)
 
     QString qtTranslationDir = getQtTranslationDir();
     qDebug() << "Qt translation dir:" << qtTranslationDir;
-    m_qtTranslator.load("qt_" + language, qtTranslationDir);
+    if(!m_qtTranslator.load("qt_" + language, qtTranslationDir))
+        qWarning() << "Failed to load Qt translation:" << "qt_" + language;
 
     QString appTranslationDir = getAppTranslationDir();
     qDebug() << "App translation dir:" << appTranslationDir;
-    m_appTranslator.load("opl3bankeditor_" + language, appTranslationDir);
+    if(!m_appTranslator.load("opl3bankeditor_" + language, appTranslationDir))
+        qWarning() << "Failed to load Qt translation:" << "opl3bankeditor_" + language;
 }
 
 QString Application::getQtTranslationDir() const
@@ -71,7 +73,11 @@ QString Application::getQtTranslationDir() const
 #elif defined(Q_OS_DARWIN)
     return QCoreApplication::applicationDirPath() + "/../Resources/translations";
 #else
+#   if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    return QLibraryInfo::path(QLibraryInfo::TranslationsPath);
+#   else
     return QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+#   endif
 #endif
 }
 
