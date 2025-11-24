@@ -376,6 +376,8 @@ public:
     bool createBank(uint8_t msb, uint8_t lsb, bool percussive,
                     MidiBank **pBank, Instrument **pIns);
 
+    //! Bank information string included with the bank's content at supported formats
+    QString InfoString;
     //! Pointer to array of melodic instruments
     Instrument* Ins_Melodic;
     //! Pointer to array of percussion instruments
