@@ -57,6 +57,11 @@ static FmBankFormatsL g_formats;
 //! Single-Instrument formats
 static FmBankFormatsL g_formatsInstr;
 
+static QString extensionCaseMasks(const QString &in)
+{
+    return in + QStringLiteral(" ") + in.toUpper();
+}
+
 static void registerBankFormat(FmBankFormatBase *format)
 {
 #ifndef QT_NO_DEBUG
@@ -156,11 +161,13 @@ QString FmBankFormatFactory::getSaveFiltersList()
         Q_ASSERT(p.get());//It must be non-null!
         if(p->formatCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE)
         {
-            formats.append(QString("%1 (%2);;").arg(p->formatName()).arg(p->formatExtensionMask()));
+            formats.append(QString("%1 (%2);;").arg(p->formatName()).arg(extensionCaseMasks(p->formatExtensionMask())));
         }
     }
+
     if(formats.endsWith(";;"))
-        formats.remove(formats.size()-2, 2);
+        formats.remove(formats.size() - 2, 2);
+
     return formats;
 }
 
@@ -179,16 +186,21 @@ QString FmBankFormatFactory::getOpenFiltersList(bool import)
         Q_ASSERT(p.get());//It must be non-null!
         if(p->formatCaps() & (int)dst)
         {
+            QString mask = extensionCaseMasks(p->formatExtensionMask());
+
             //Don't add duplicated extensions into "supported" list
-            if(!masks.contains(p->formatExtensionMask()))
+            if(!masks.contains(mask))
             {
                 if(!masks.isEmpty())
                     masks.append(' ');
-                masks.append(p->formatExtensionMask());
+
+                masks.append(mask);
             }
-            formats.append(QString("%1 (%2);;").arg(p->formatName()).arg(p->formatExtensionMask()));
+
+            formats.append(QString("%1 (%2);;").arg(p->formatName()).arg(mask));
         }
     }
+
     out.append(QString("Supported bank files (%1);;").arg(masks));
     out.append(formats);
     out.push_back("All files (*.*)");
