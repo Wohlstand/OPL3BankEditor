@@ -404,7 +404,7 @@ QString WohlstandOPL3::formatName() const
 
 QString WohlstandOPL3::formatExtensionMask() const
 {
-    return "*.wopl";
+    return "*.wopl *.wop";
 }
 
 QString WohlstandOPL3::formatDefaultExtension() const
@@ -527,7 +527,7 @@ QString WohlstandOPL3_GM::formatModuleName() const
 
 QString WohlstandOPL3_GM::formatExtensionMask() const
 {
-    return "*.wopl";
+    return "*.wopl *.wop";
 }
 
 QString WohlstandOPL3_GM::formatDefaultExtension() const
