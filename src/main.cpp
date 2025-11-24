@@ -52,7 +52,7 @@ Application::Application(int &argc, char **argv)
 
 void Application::translate(const QString &language)
 {
-    if (language.isEmpty())
+    if(language.isEmpty())
         return translate(QLocale::system().name());
 
     QString qtTranslationDir = getQtTranslationDir();
