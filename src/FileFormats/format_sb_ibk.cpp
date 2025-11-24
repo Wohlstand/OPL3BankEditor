@@ -211,14 +211,11 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank, BankFormats 
     memset(drumFlags, 0, sizeof(bool) * 128);
 
     // Check does bank contains any rhythm-mode instruments?
-
-    qint64 insBegin = file.pos();
-
     for(uint16_t i = 0; i < 128; i++)
     {
         char byte;
 
-        file.seek(insBegin + 11 + (16 * i));
+        file.seek(4 + 11 + (16 * i));
 
         if(file.read(char_p(&byte), 1) != 1)
         {
@@ -231,7 +228,7 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank, BankFormats 
 
     format = isDrumBank ? BankFormats::FORMAT_IBK_DRUMS : BankFormats::FORMAT_IBK;
 
-    file.seek(insBegin);
+    file.seek(4);
 
     for(uint16_t i = 0; i < 128; i++)
     {
