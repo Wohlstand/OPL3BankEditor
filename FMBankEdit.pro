@@ -45,7 +45,12 @@ greaterThan(QT_MAJOR_VERSION, 4):{
         DEFINES += NO_NATIVE_OPEN_DIALOGS
         INCLUDEPATH += $$PWD/src/audio/for-mingw-9x
     }
+
+    unix: !macx {
+        CONFIG+=linux
+    }
 }
+
 win32 {
     DEFINES += _USE_MATH_DEFINES
 }
