@@ -723,11 +723,13 @@ bool BankEditor::saveFileAs(const QString &optionalFilePath)
                                                        FILE_OPEN_DIALOG_OPTIONS);
         saveFormat = FmBankFormatFactory::getFormatFromFilter(selectedFilter);
     }
+
     if(fileToSave.isEmpty())
         return false;
 
     if(!saveBankFile(fileToSave, saveFormat))
        return false;
+
     m_currentFileFormat = saveFormat;
     return true;
 }

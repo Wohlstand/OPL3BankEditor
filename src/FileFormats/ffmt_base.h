@@ -57,6 +57,9 @@ public:
     virtual QString     formatInstExtensionMask() const;
     virtual QString     formatInstDefaultExtension() const;
     virtual InstFormats formatInstId() const;
+
+    QString             formatExtensionMaskCase() const;
+    QString             formatInstExtensionMaskCase() const;
 };
 
 #endif // FMBANKFORMATBASE_H

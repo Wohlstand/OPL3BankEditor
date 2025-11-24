@@ -116,3 +116,14 @@ InstFormats FmBankFormatBase::formatInstId() const
     return InstFormats::FORMAT_INST_UNKNOWN;
 }
 
+QString FmBankFormatBase::formatExtensionMaskCase() const
+{
+    QString in = formatExtensionMask();
+    return in + QStringLiteral(" ") + in.toUpper();
+}
+
+QString FmBankFormatBase::formatInstExtensionMaskCase() const
+{
+    QString in = formatInstExtensionMask();
+    return in + QStringLiteral(" ") + in.toUpper();
+}
