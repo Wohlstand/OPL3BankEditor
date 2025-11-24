@@ -72,7 +72,7 @@ AudioOutRt::AudioOutRt(double latency, const std::string& device_name, const std
     {
         QMessageBox::warning(nullptr,
                              tr("Error"),
-                             tr("No audio devices are present for output. Playback will be disabled"));
+                             tr("No audio devices are present for output. Playback will be unavailable."));
         m_isValid = false;
         return;
     }

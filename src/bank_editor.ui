@@ -1485,12 +1485,12 @@
                </item>
                <item>
                 <property name="text">
-                 <string>MS AdLib</string>
+                 <string notr="true">MS AdLib</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>IMF Creator</string>
+                 <string notr="true">IMF Creator</string>
                 </property>
                </item>
                <item>
