@@ -21,14 +21,15 @@
 
 #include "ffmt_base.h"
 
-class SbIBK_DOS final : public FmBankFormatBase
+class SbIBK_DOS_READ final : public FmBankFormatBase
 {
+    BankFormats m_recentFormat = BankFormats::FORMAT_UNKNOWN;
 public:
     bool    detect(const QString &filePath, char *magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
-    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int     formatCaps() const override;
     QString formatName() const override;
+    QString formatModuleName() const override;
     QString formatExtensionMask() const override;
     QString formatDefaultExtension() const override;
     BankFormats formatId() const override;
@@ -43,6 +44,31 @@ public:
     QString     formatInstDefaultExtension() const override;
     InstFormats formatInstId() const override;
 };
+
+class SbIBK_DOS_WRITE final : public FmBankFormatBase
+{
+public:
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int  formatCaps() const override;
+    QString formatName() const override;
+    QString formatModuleName() const override;
+    QString formatExtensionMask() const override;
+    QString formatDefaultExtension() const override;
+    BankFormats formatId() const override;
+};
+
+class SbIBK_DOS_DRUMS_WRITE final : public FmBankFormatBase
+{
+public:
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int  formatCaps() const override;
+    QString formatName() const override;
+    QString formatModuleName() const override;
+    QString formatExtensionMask() const override;
+    QString formatDefaultExtension() const override;
+    BankFormats formatId() const override;
+};
+
 
 class SbIBK_UNIX_READ final : public FmBankFormatBase
 {

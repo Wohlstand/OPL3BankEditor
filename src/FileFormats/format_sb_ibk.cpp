@@ -32,8 +32,8 @@ public:
     static bool detectUNIXO2(QString filePath, BankFormats &format);
     static bool detectUNIXO3(QString filePath, BankFormats &format);
     // IBK/SBI for DOS
-    static FfmtErrCode loadFileIBK(QString filePath, FmBank &bank);
-    static FfmtErrCode saveFileIBK(QString filePath, FmBank &bank);
+    static FfmtErrCode loadFileIBK(QString filePath, FmBank &bank, BankFormats &format);
+    static FfmtErrCode saveFileIBK(QString filePath, FmBank &bank, bool drums);
     static FfmtErrCode loadFileSBI(QString filePath, FmBank::Instrument &inst, bool *isDrum = nullptr);
     static FfmtErrCode saveFileSBI(QString filePath, FmBank::Instrument &inst, bool isDrum = false);
     // SB/O3 for UNIX
@@ -186,7 +186,7 @@ static void sbi2raw(uint8_t *odata, FmBank::Instrument &ins, bool fourOp = false
 }
 
 
-FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank, BankFormats &format)
 {
     char magic[4];
     memset(magic, 0, 4);
@@ -207,8 +207,31 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank)
     if(strncmp(magic, ibk_magic, 4) != 0)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    bool drumFlags[128];
+    bool drumFlags[128], isDrumBank = false;
     memset(drumFlags, 0, sizeof(bool) * 128);
+
+    // Check does bank contains any rhythm-mode instruments?
+
+    qint64 insBegin = file.pos();
+
+    for(uint16_t i = 0; i < 128; i++)
+    {
+        char byte;
+
+        file.seek(insBegin + 11 + (16 * i));
+
+        if(file.read(char_p(&byte), 1) != 1)
+        {
+            bank.reset();
+            return FfmtErrCode::ERR_BADFORMAT;
+        }
+
+        isDrumBank |= (byte != 0x00);
+    }
+
+    format = isDrumBank ? BankFormats::FORMAT_IBK_DRUMS : BankFormats::FORMAT_IBK;
+
+    file.seek(insBegin);
 
     for(uint16_t i = 0; i < 128; i++)
     {
@@ -221,9 +244,13 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank)
 
         char tempName[10];
         sprintf(tempName, "NONAME%03d", i);
-        strncpy(bank.Ins_Melodic[i].name, tempName, 9);
-        strncpy(bank.Ins_Percussion[i].name, tempName, 9);
-        FmBank::Instrument &ins = (idata[11] == 0x00) ? bank.Ins_Melodic[i] : bank.Ins_Percussion[i];
+
+        if(isDrumBank)
+            strncpy(bank.Ins_Percussion[i].name, tempName, 9);
+        else
+            strncpy(bank.Ins_Melodic[i].name, tempName, 9);
+
+        FmBank::Instrument &ins = isDrumBank ? bank.Ins_Percussion[i] : bank.Ins_Melodic[i];
         drumFlags[i] = (idata[11] != 0x00);
         raw2sbi(ins, idata, false);
     }
@@ -231,9 +258,10 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank)
     //fetch bank names
     for(uint16_t i = 0; i < 128; i++)
     {
-        FmBank::Instrument &ins = drumFlags[i] ?
+        FmBank::Instrument &ins = isDrumBank ?
                                   bank.Ins_Percussion[i] :
                                   bank.Ins_Melodic[i];
+
         if(file.read(ins.name, 9) != 9)
         {
             bank.reset();
@@ -250,7 +278,7 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-FfmtErrCode SbIBK_impl::saveFileIBK(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_impl::saveFileIBK(QString filePath, FmBank &bank, bool drums)
 {
     QFile file(filePath);
 
@@ -263,13 +291,14 @@ FfmtErrCode SbIBK_impl::saveFileIBK(QString filePath, FmBank &bank)
 
     bool drumFlags[128];
     memset(drumFlags, 0, sizeof(bool) * 128);
+
     //Write header
     file.write(char_p(ibk_magic), 4);
 
     for(uint16_t i = 0; i < 128; i++)
     {
         drumFlags[i] = (tmp.insPercussion[i].rhythm_drum_type != 0);
-        FmBank::Instrument &ins = drumFlags[i] ?
+        FmBank::Instrument &ins = drums ?
                                   tmp.insPercussion[i] :
                                   tmp.insMelodic[i];
         uint8_t odata[16];
@@ -282,7 +311,7 @@ FfmtErrCode SbIBK_impl::saveFileIBK(QString filePath, FmBank &bank)
     //store bank names
     for(uint16_t i = 0; i < 128; i++)
     {
-        FmBank::Instrument &ins = drumFlags[i] ?
+        FmBank::Instrument &ins = drums ?
                                   tmp.insPercussion[i] :
                                   tmp.insMelodic[i];
         ins.name[8] = '\0';
@@ -290,6 +319,7 @@ FfmtErrCode SbIBK_impl::saveFileIBK(QString filePath, FmBank &bank)
         if(file.write(ins.name, 9) != 9)
             return FfmtErrCode::ERR_BADFORMAT;
     }
+
     file.close();
 
     return FfmtErrCode::ERR_OK;
@@ -539,89 +569,165 @@ FfmtErrCode SbIBK_impl::saveFileSBOP(QString filePath, FmBank &bank, bool fourOp
 
 
 
-bool SbIBK_DOS::detect(const QString &, char *magic)
+bool SbIBK_DOS_READ::detect(const QString &, char *magic)
 {
     return SbIBK_impl::detectIBK(magic);
 }
 
-FfmtErrCode SbIBK_DOS::loadFile(QString filePath, FmBank &bank)
+FfmtErrCode SbIBK_DOS_READ::loadFile(QString filePath, FmBank &bank)
 {
-    return SbIBK_impl::loadFileIBK(filePath, bank);
+    m_recentFormat = BankFormats::FORMAT_UNKNOWN;
+    return SbIBK_impl::loadFileIBK(filePath, bank, m_recentFormat);
 }
 
-FfmtErrCode SbIBK_DOS::saveFile(QString filePath, FmBank &bank)
+int SbIBK_DOS_READ::formatCaps() const
 {
-    return SbIBK_impl::saveFileIBK(filePath, bank);
+    return int(FormatCaps::FORMAT_CAPS_OPEN) | int(FormatCaps::FORMAT_CAPS_IMPORT);
 }
 
-int SbIBK_DOS::formatCaps() const
-{
-    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING_GM;
-}
-
-QString SbIBK_DOS::formatName() const
+QString SbIBK_DOS_READ::formatName() const
 {
     return "Sound Blaster IBK file";
 }
 
-QString SbIBK_DOS::formatExtensionMask() const
+QString SbIBK_DOS_READ::formatModuleName() const
 {
-    return "*.ibk";
+    return "Sound Blaster IBK reader";
 }
 
-QString SbIBK_DOS::formatDefaultExtension() const
+QString SbIBK_DOS_READ::formatExtensionMask() const
+{
+    return "*.ibk *.IBK";
+}
+
+QString SbIBK_DOS_READ::formatDefaultExtension() const
 {
     return "ibk";
 }
 
-BankFormats SbIBK_DOS::formatId() const
+BankFormats SbIBK_DOS_READ::formatId() const
 {
     return BankFormats::FORMAT_IBK;
 }
 
-bool SbIBK_DOS::detectInst(const QString &, char *magic)
+bool SbIBK_DOS_READ::detectInst(const QString &, char *magic)
 {
     return SbIBK_impl::detectSBI(magic);
 }
 
-FfmtErrCode SbIBK_DOS::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+FfmtErrCode SbIBK_DOS_READ::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
 {
     return SbIBK_impl::loadFileSBI(filePath, inst, isDrum);
 }
 
-FfmtErrCode SbIBK_DOS::saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum)
+FfmtErrCode SbIBK_DOS_READ::saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum)
 {
     return SbIBK_impl::saveFileSBI(filePath, inst, isDrum);
 }
 
-int SbIBK_DOS::formatInstCaps() const
+int SbIBK_DOS_READ::formatInstCaps() const
 {
     return int(FormatCaps::FORMAT_CAPS_EVERYTHING_GM);
 }
 
-QString SbIBK_DOS::formatInstName() const
+QString SbIBK_DOS_READ::formatInstName() const
 {
     return "Sound Blaster Instrument [2OP DOS/UNIX]";
 }
 
-QString SbIBK_DOS::formatInstModuleName() const
+QString SbIBK_DOS_READ::formatInstModuleName() const
 {
     return "SB DOS/UNIX 2-Op instrument";
 }
 
-QString SbIBK_DOS::formatInstExtensionMask() const
+QString SbIBK_DOS_READ::formatInstExtensionMask() const
 {
     return "*.sbi";
 }
 
-QString SbIBK_DOS::formatInstDefaultExtension() const
+QString SbIBK_DOS_READ::formatInstDefaultExtension() const
 {
     return "sbi";
 }
 
-InstFormats SbIBK_DOS::formatInstId() const
+InstFormats SbIBK_DOS_READ::formatInstId() const
 {
     return InstFormats::FORMAT_INST_SBI;
+}
+
+
+
+
+FfmtErrCode SbIBK_DOS_WRITE::saveFile(QString filePath, FmBank &bank)
+{
+    return SbIBK_impl::saveFileIBK(filePath, bank, false);
+}
+
+int SbIBK_DOS_WRITE::formatCaps() const
+{
+    return int(FormatCaps::FORMAT_CAPS_SAVE) | int(FormatCaps::FORMAT_CAPS_MELODIC_ONLY);
+}
+
+QString SbIBK_DOS_WRITE::formatName() const
+{
+    return "SB IBK instrument bank [melodic]";
+}
+
+QString SbIBK_DOS_WRITE::formatModuleName() const
+{
+    return "SB IBK melodic bank writer";
+}
+
+QString SbIBK_DOS_WRITE::formatExtensionMask() const
+{
+    return "*.ibk";
+}
+
+QString SbIBK_DOS_WRITE::formatDefaultExtension() const
+{
+    return "ibk";
+}
+
+BankFormats SbIBK_DOS_WRITE::formatId() const
+{
+    return BankFormats::FORMAT_IBK;
+}
+
+
+
+FfmtErrCode SbIBK_DOS_DRUMS_WRITE::saveFile(QString filePath, FmBank &bank)
+{
+    return SbIBK_impl::saveFileIBK(filePath, bank, true);
+}
+
+int SbIBK_DOS_DRUMS_WRITE::formatCaps() const
+{
+    return int(FormatCaps::FORMAT_CAPS_SAVE) | int(FormatCaps::FORMAT_CAPS_PERCUSSION_ONLY);
+}
+
+QString SbIBK_DOS_DRUMS_WRITE::formatName() const
+{
+    return "SB IBK instrument bank [percussion]";
+}
+
+QString SbIBK_DOS_DRUMS_WRITE::formatModuleName() const
+{
+    return "SB IBK percussion bank writer";
+}
+
+QString SbIBK_DOS_DRUMS_WRITE::formatExtensionMask() const
+{
+    return "*.ibk";
+}
+
+QString SbIBK_DOS_DRUMS_WRITE::formatDefaultExtension() const
+{
+    return "ibk";
+}
+
+BankFormats SbIBK_DOS_DRUMS_WRITE::formatId() const
+{
+    return BankFormats::FORMAT_IBK_DRUMS;
 }
 
 
@@ -954,3 +1060,4 @@ BankFormats SbIBK_UNIX4OP_DRUMS_SAVE::formatId() const
 {
     return BankFormats::FORMAT_SB4OP_DRUMS;
 }
+

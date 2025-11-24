@@ -100,8 +100,10 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new PatchFm4());
 
     //SB IBK DOS
-    registerBankFormat(new SbIBK_DOS());
-    registerInstFormat(new SbIBK_DOS());
+    registerBankFormat(new SbIBK_DOS_READ());
+    registerInstFormat(new SbIBK_DOS_READ());
+    registerBankFormat(new SbIBK_DOS_WRITE());
+    registerBankFormat(new SbIBK_DOS_DRUMS_WRITE());
     //SBI UNIX
     registerBankFormat(new SbIBK_UNIX_READ());
     registerInstFormat(new SbIBK_UNIX_READ());
