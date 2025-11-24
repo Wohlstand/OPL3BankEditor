@@ -3,6 +3,7 @@
                  file format specification (WOPL and OPLI)
 ===============================================================================
                          Created in 23'rd of July, 2017
+                       Updated in 24'th of November, 2025
 ===============================================================================
 Author:             Vitaliy Novichkov "Wohlstand"
 Contacts emails:    admin@wohlnet.ru, nvd339@yandex.ru
@@ -42,6 +43,9 @@ Version | What's new
         | with defected FM voices, MS AdLib driver for Windows 3.x, IMF Creator,
         | and Jammie O'Connel's FM Synth driver for Windowx 3.x
         | (14'th of November, 2025)
+        | Change: Formerly unused bit at the instrument bitwise flags,
+        | now became the "Fixed note" flag. Also clarified other bits.
+        | (24'th of November, 2025)
 -------------------------------------------------------------------------------
 
 ===============================================================================
@@ -77,17 +81,18 @@ Bytes-Lenght  | Description
               | in pseudo-4-operators mode
     1         | 8-bit unsigned integer, Percussion instrument key number
     1         | 8-bit unsigned integer, Bitwise flags:
-              |     [0EEEDCBA]
+              |     [0EDDDCBA]
               |     A) 0x00 - 2-operator mode
-              |     B) 0x01 - 4-operator mode
-              |     C) 0x02 - pseudo-4-operator (two 2-operator voices) mode
-              |     D) 0x04 - is 'blank' instrument (instrument which has no sound)
-              |     E) 0x38 - Reserved for rhythm-mode percussion type number (three bits number)
+              |        0x01 - 4-operator mode
+              |     B) 0x02 - pseudo-4-operator (two 2-operator voices) mode
+              |     C) 0x04 - is 'blank' instrument (instrument which has no sound)
+              |     D) 0x38 - Reserved for rhythm-mode percussion type number (three bits number)
               |        -> 0x08 - is Bass drum
               |        -> 0x10 - is Snare
               |        -> 0x18 - is Tom-tom
               |        -> 0x20 - is Cymbal
               |        -> 0x28 - is Hi-hat
+              |     E) 0x40 - Fixed note
               |     0) Reserved / Unused
     1         | 8-bit unsigned integer, Feedback / Connection
               | for 1'st and 2'nd operators or first voice

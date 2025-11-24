@@ -75,6 +75,7 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     ins.en_4op          = (flags & WOPL_Ins_4op) != 0;
     ins.en_pseudo4op    = (flags & WOPL_Ins_Pseudo4op) != 0;
     ins.is_blank        = (flags & WOPL_Ins_IsBlank) != 0;
+    ins.is_fixed_note   = (flags & WOPL_Ins_FixedNote) != 0;
     ins.rhythm_drum_type = 0;
     if((flags & WOPL_RhythmModeMask) != 0)
     {
@@ -125,7 +126,7 @@ static void cvt_WOPLI_to_FMIns(FmBank::Instrument &out, WOPLInstrument &in)
     out.velocity_offset = in.midi_velocity_offset;
     out.fine_tune = in.second_voice_detune;
     out.percNoteNum = in.percussion_key_number;
-    out.is_fixed_note = (out.percNoteNum > 0);
+    out.is_fixed_note   = (out.percNoteNum > 0) || (in.inst_flags & WOPL_Ins_FixedNote) != 0;
     out.en_4op          = (in.inst_flags & WOPL_Ins_4op) != 0;
     out.en_pseudo4op    = (in.inst_flags & WOPL_Ins_Pseudo4op) != 0;
     out.is_blank        = (in.inst_flags & WOPL_Ins_IsBlank) != 0;
@@ -178,7 +179,8 @@ static void cvt_FMIns_to_WOPLI(FmBank::Instrument &in, WOPLInstrument &out, bool
     out.percussion_key_number = (in.is_fixed_note || isDrum) ? in.percNoteNum : 0;
     out.inst_flags = (in.en_4op ? WOPL_Ins_4op : 0) |
                      (in.en_pseudo4op ? WOPL_Ins_Pseudo4op : 0) |
-                     (in.is_blank ? WOPL_Ins_IsBlank : 0);
+                     (in.is_blank ? WOPL_Ins_IsBlank : 0) |
+                     (in.is_fixed_note ? WOPL_Ins_FixedNote : 0);
     if(in.rhythm_drum_type != 0)
     {
         switch (in.rhythm_drum_type)
@@ -227,7 +229,8 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
     odata[38] = ins.percNoteNum;              //1
     odata[39] = (ins.en_4op ? WOPL_Ins_4op : 0) |
                 (ins.en_pseudo4op ? WOPL_Ins_Pseudo4op : 0) |
-                (ins.is_blank ? WOPL_Ins_IsBlank : 0);
+                (ins.is_blank ? WOPL_Ins_IsBlank : 0) |
+                (ins.is_fixed_note ? WOPL_Ins_FixedNote : 0);
     if(ins.rhythm_drum_type != 0)
     {
         switch (ins.rhythm_drum_type)
