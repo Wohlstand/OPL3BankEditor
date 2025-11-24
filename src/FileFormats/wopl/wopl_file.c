@@ -278,7 +278,7 @@ WOPLFile *WOPL_LoadBankFromMem(void *mem, size_t length, int *error)
         outFile->version        = version;
         outFile->opl_flags      = head[4];
         outFile->volume_model   = head[5];
-    }    
+    }
 
     bankslots_sizes[0] = count_melodic_banks;
     bankslots[0] = outFile->banks_melodic;
