@@ -72,8 +72,10 @@ void BankEditor::initAudio()
     //Deep tremolo and vibrato
     connect(ui->deepVibrato,  SIGNAL(toggled(bool)), m_generator,  SLOT(ctl_changeDeepVibrato(bool)));
     connect(ui->deepTremolo,  SIGNAL(toggled(bool)), m_generator,  SLOT(ctl_changeDeepTremolo(bool)));
+
     connect(ui->volumeModel,  SIGNAL(currentIndexChanged(int)), m_generator,  SLOT(ctl_changeVolumeModel(int)));
     connect(ui->chanAlloc,  SIGNAL(currentIndexChanged(int)), m_generator,  SLOT(ctl_setChanAllocMode(int)));
+
     //Generator's debug info
     connect(m_generator, SIGNAL(debugInfo(QString)), ui->debugBox, SLOT(setText(QString)));
     //Key pressed on piano bar
@@ -93,6 +95,12 @@ void BankEditor::initAudio()
     //Test note button on the importer dialog box
     m_importer->connect(m_importer->ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(ctl_playNote()));
     m_importer->connect(m_importer->ui->testNote,  SIGNAL(released()), m_generator,  SLOT(ctl_stopNote()));
+
+    //Apply load-time settings
+    m_generator->ctl_changeDeepTremolo(ui->deepTremolo->isChecked());
+    m_generator->ctl_changeDeepVibrato(ui->deepVibrato->isChecked());
+    m_generator->ctl_changeVolumeModel(ui->volumeModel->currentIndex());
+    m_generator->ctl_setChanAllocMode(ui->chanAlloc->currentIndex());
 
     qDebug() << "Trying to start audio... (with dereferencing of RtGenerator!)";
     //Start generator!

@@ -5,6 +5,7 @@ Version 1.5.2
 - Added voice importing from KLM music files found at theWacky Wheels game.
 - Fixed incorrect measure of 4-op voices.
 - Reworked the support for IBK files: now they can be saved as melodic and percussion parts independently.
+- Fixed a bug caused deep tremolo and deep vibrato weren't applied to generator after loading a bank file with matched settings.
 
 Version 1.5.1
 - Added an ability to set the audio device by user interface
