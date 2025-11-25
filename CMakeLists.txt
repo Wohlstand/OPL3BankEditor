@@ -159,6 +159,7 @@ target_link_libraries(FileFormats PUBLIC Common PRIVATE ${ZLIB_LIBRARIES})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(OPL3_PROXY_DEFAULT ON)
+    OPTION(ENABLE_Win9X_OPL3_PROXY "Enable Win9x variant of the OPL3 proxy support through 'liboplproxy' plugin" OFF)
 else()
     set(OPL3_PROXY_DEFAULT OFF)
 endif()
@@ -166,6 +167,10 @@ endif()
 OPTION(ENABLE_OPL3_PROXY "Enable OPL3 proxy support through 'liboplproxy' plugin" ${OPL3_PROXY_DEFAULT})
 
 include(src/opl/chips/chipset.cmake)
+if(ENABLE_Win9X_OPL3_PROXY)
+    include(src/opl/chips/win9x_opl_proxy.cmake)
+endif()
+
 add_library(Chips STATIC ${CHIPS_SOURCES})
 target_include_directories(Chips PUBLIC "src")
 
@@ -177,6 +182,7 @@ if(ENABLE_OPL3_PROXY)
     if(BUILD_MAJOR_QT GREATER_EQUAL 5)
         target_link_libraries(Chips PUBLIC ${QT_Widgets_TARGET})
     endif()
+
     target_compile_definitions(Chips PUBLIC "-DENABLE_HW_OPL_PROXY")
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         target_link_libraries(Chips PUBLIC dl)
