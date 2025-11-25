@@ -27,11 +27,32 @@
 #define DLLExport       __declspec(dllexport)
 #define STDCall         __stdcall
 typedef unsigned short  uint16_t;
+typedef int BOOL;
+typedef void *PVOID;
+typedef void *LPVOID;
+typedef PVOID HANDLE;
+typedef HANDLE HINSTANCE;
+typedef unsigned long DWORD;
+#define TRUE 255
+#define FALSE 0
 
-static const uint16_t   OPLBase = 0x388;
+static uint16_t OPLBase = 0x388;
+
+DLLExport BOOL STDCall DllMain(HINSTANCE const instance, DWORD const reason, LPVOID const reserved)
+{
+    (void)instance;
+    (void)reason;
+    (void)reserved;
+    return TRUE;
+}
 
 DLLExport void STDCall chipInit(void)
 { /* Dummy */ }
+
+DLLExport void STDCall chipSetPort(uint16_t port)
+{
+    OPLBase = port;
+}
 
 DLLExport void STDCall chipUnInit(void)
 { /* Dummy */ }
@@ -42,6 +63,5 @@ DLLExport void STDCall chipPoke(uint16_t index, uint16_t value)
     outp(port, index);
     for(c = 0; c < 6; ++c)  inp(port);
     outp(port + 1, value);
-    for(c = 0; c < 35; ++c) inp(port);
+    for(c = 0; c < 24; ++c) inp(port);
 }
-
