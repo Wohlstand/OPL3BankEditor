@@ -184,6 +184,11 @@ if(ENABLE_OPL3_PROXY)
     endif()
 
     target_compile_definitions(Chips PUBLIC "-DENABLE_HW_OPL_PROXY")
+
+    if(ENABLE_Win9X_OPL3_PROXY)
+        target_compile_definitions(Chips PUBLIC "-DENABLE_WIN9X_OPL_PROXY")
+    endif()
+
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         target_link_libraries(Chips PUBLIC dl)
     endif()

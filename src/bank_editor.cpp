@@ -229,9 +229,12 @@ void BankEditor::loadSettings()
     QApplication::setApplicationName("OPL FM Banks Editor");
 
     int preferredMidiStandard = 3;
-    int defaultChip = Generator::CHIP_Nuked;
 #ifdef ENABLE_WIN9X_OPL_PROXY
-    defaultChip = Generator::CHIP_Win9xProxy;
+    int defaultChip = Generator::CHIP_Win9xProxy;
+#elif QT_VERSION < 0x050000
+    int defaultChip = Generator::CHIP_DosBox;
+#else
+    int defaultChip = Generator::CHIP_Nuked;
 #endif
 
     QSettings setup;
