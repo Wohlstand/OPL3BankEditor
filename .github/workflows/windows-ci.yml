@@ -222,8 +222,10 @@ jobs:
 
         mkdir translations
         cp -v ../src/translations/*.qm translations/
-        if [[ "${{ matrix.config.WINXX_ARCH }}" != "win9x" ]]; then
+        if [[ "${{ matrix.config.WINXX_ARCH }}" == "win64" ]]; then
             windeployqt --force --ignore-library-errors --no-quick-import --no-system-d3d-compiler --no-angle --no-opengl-sw opl3_bank_editor.exe
+        elif [[ "${{ matrix.config.WINXX_ARCH }}" == "win32" ]]; then
+            windeployqt --force --no-quick-import --no-system-d3d-compiler --no-angle --no-opengl-sw opl3_bank_editor.exe
         fi
         cd ..
 
