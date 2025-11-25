@@ -6,7 +6,7 @@ A small cross-platform editor of the OPL3 FM banks of different formats
 # CI Build status
 Linux | Windows | macOS
 ------------ | ------------- | -------------
-[![Build Status](https://travis-ci.org/Wohlstand/OPL3BankEditor.svg?branch=master)](https://travis-ci.org/Wohlstand/OPL3BankEditor) | [![Build status](https://ci.appveyor.com/api/projects/status/llbyd0blk0i7amih?svg=true)](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor) | [![Build Status](https://travis-ci.org/Wohlstand/OPL3BankEditor.svg?branch=master)](https://travis-ci.org/Wohlstand/OPL3BankEditor)
+[![Build Status](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/ubuntu-ci.yml/badge.svg)](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/ubuntu-ci.yml) | [![Build status](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml/badge.svg)](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml) | [![Build Status](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/macos-ci.yml/badge.svg)](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/macos-ci.yml)
 
 ## Currently supported bank formats
 * Own bank format (.WOPL) (Specification in the **WOPL-and-OPLI-Specification.txt** file)
@@ -51,4 +51,3 @@ As alternate way you can open FMBankEdit.pro in the Qt Creator and build it.
 * ***Bank_Examples*** - example bank files which you can edit and preview them
 * ***src*** - source code of this tool
 * ***_Misc*** - Various stuff (test scripts, dummy banks, documents, etc.) which was been used in development of this tool
-

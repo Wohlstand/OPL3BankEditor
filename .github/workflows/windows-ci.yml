@@ -161,7 +161,7 @@ jobs:
           export QtDir="${{ matrix.config.qt_dir }}"
           echo "PATH environment: ${PATH}"
         fi
-        lrelease FMBankEdit.pro
+        lrelease src/translations/*.ts
 
     - name: Configure
       shell: bash
@@ -223,7 +223,7 @@ jobs:
         mkdir translations
         cp -v ../src/translations/*.qm translations/
         if [[ "${{ matrix.config.WINXX_ARCH }}" != "win9x" ]]; then
-            windeployqt opl3_bank_editor.exe
+            windeployqt --force --no-quick-import opl3_bank_editor.exe
         fi
         cd ..
 
@@ -260,4 +260,6 @@ jobs:
       shell: bash
       run: |
         git status
-        ls -lR build
+        ls -lR bin-release
+        ls -lR _packed
+        ls -lR src/translations
