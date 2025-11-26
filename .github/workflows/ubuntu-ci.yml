@@ -75,9 +75,9 @@ jobs:
 
             deps_cmdline: "echo 'Ubuntu 20' \
             && apt-get update --fix-missing -qq \
-            && DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common \
+            && apt-get install -y software-properties-common \
             && apt-get update --fix-missing -qq \
-            && DEBIAN_FRONTEND=noninteractive apt-get install -f -qq \
+            && apt-get install -f -qq \
             && apt-get install -qq \
             sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
             qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
@@ -102,9 +102,9 @@ jobs:
 
             deps_cmdline: "echo 'Ubuntu 22' \
             && apt-get update --fix-missing -qq \
-            && DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common \
+            && apt-get install -y software-properties-common \
             && apt-get update --fix-missing -qq \
-            && DEBIAN_FRONTEND=noninteractive apt-get install -f -qq \
+            && apt-get install -f -qq \
             && apt-get install -qq \
             sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
             qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
@@ -187,6 +187,12 @@ jobs:
     - name: Install Dependencies
       shell: bash
       run: |
+        echo "XKBMODEL=\"pc105\"" > /etc/default/keyboard
+        echo "XKBLAYOUT=\"pl,ru\"" >> /etc/default/keyboard
+        echo "XKBVARIANT=\",\"" >> /etc/default/keyboard
+        echo "XKBOPTIONS=\"grp:ctrl_shift_toggle,grp_led:scroll\"" >> /etc/default/keyboard
+        echo "BACKSPACE=\"guess\"" >> /etc/default/keyboard
+
         if [[ ! -z "${{ matrix.config.deps_cmdline }}" ]]; then
           eval ${{ matrix.config.deps_cmdline }}
         fi
