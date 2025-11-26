@@ -36,7 +36,7 @@ jobs:
             gcc_cxx: "g++-8",
             lrelease_exec: "/usr/lib/qt5/bin/lrelease",
 
-            deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
+            deb_deps: "libqt5core5a (>= 5.9.0), libqt5gui5 (>= 5.9.0), libqt5widgets5 (>= 5.9.0), libqt5concurrent5 (>= 5.9.0), libqt5serialport5 (>= 5.9.0), libasound2 (>= 1.1.3), libpulse0, libfreetype6 (>= 2.8.0)",
 
             deps_cmdline: "echo 'Ubuntu 18' \
             && apt-get update --fix-missing -qq \
@@ -71,7 +71,7 @@ jobs:
             gcc_cxx: "g++",
             lrelease_exec: "/usr/lib/qt5/bin/lrelease",
 
-            deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
+            deb_deps: "libqt5core5a (>= 5.12.0), libqt5gui5 (>= 5.12.0), libqt5widgets5 (>= 5.12.0), libqt5concurrent5 (>= 5.12.0), libqt5serialport5 (>= 5.12.0), libasound2 (>= 1.2.2), libpulse0, libfreetype6 (>= 2.10.0)",
 
             deps_cmdline: "echo 'Ubuntu 20' \
             && apt-get update --fix-missing -qq \
@@ -99,7 +99,7 @@ jobs:
             gcc_cxx: "g++",
             lrelease_exec: "/usr/lib/qt5/bin/lrelease",
 
-            deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
+            deb_deps: "libqt5core5a (>= 5.15.0), libqt5gui5 (>= 5.15.0), libqt5widgets5 (>= 5.15.0), libqt5concurrent5 (>= 5.15.0), libqt5serialport5 (>= 5.15.0), libasound2 (>= 1.2.6), libpulse0, libfreetype6 (>= 2.11.0)",
 
             deps_cmdline: "echo 'Ubuntu 22' \
             && apt-get update --fix-missing -qq \
@@ -115,6 +115,36 @@ jobs:
             && git config --global --add safe.directory '*'"
           }
         - {
+            name: "Ubuntu 22.04 (Qt6) x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:22.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-22-04/",
+            package_name_suffix: "qt6-ubuntu-22-04-amd64",
+            gcc_cc: "gcc",
+            gcc_cxx: "g++",
+            lrelease_exec: "/usr/lib/qt6/bin/lrelease",
+            extra_options: "-DBUILD_MAJOR_QT=6",
+
+            deb_deps: "libqt6core6 (>= 6.2.4), libqt6gui6 (>= 6.2.4), libqt6widgets6 (>= 6.2.4), libqt6concurrent6 (>= 6.2.4), libqt6serialport6 (>= 6.2.4), libasound2 (>= 1.2.6), libpulse0, libfreetype6 (>= 2.11.0)",
+
+            deps_cmdline: "echo 'Ubuntu 24' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
+            qt6-base-dev qt6-5compat-dev qt6-serialport-dev \
+            qt6-tools-dev qt6-tools-dev-tools qt6-gtk-platformtheme \
+            qt6-xdgdesktopportal-platformtheme libqt6nfc6 qt6-scxml-dev \
+            qt6-image-formats-plugins qt6-l10n-tools \
+            libasound2-dev libpulse-dev libudev-dev \
+            build-essential gcc g++ libc6 libstdc++6 \
+            && git config --global --add safe.directory '*'"
+          }
+        - {
             name: "Ubuntu 24.04 (Qt5) x86_64",
             os: ubuntu-latest,
             container: "ubuntu:24.04",
@@ -126,7 +156,7 @@ jobs:
             gcc_cxx: "g++",
             lrelease_exec: "/usr/lib/qt5/bin/lrelease",
 
-            deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
+            deb_deps: "libqt5core5a (>= 5.15.12), libqt5gui5 (>= 5.15.12), libqt5widgets5 (>= 5.15.12), libqt5concurrent5 (>= 5.15.12), libqt5serialport5 (>= 5.15.12), libasound2 (>= 1.2.10), libpulse0, libfreetype6 (>= 2.13.2)",
 
             deps_cmdline: "echo 'Ubuntu 24' \
             && apt-get update --fix-missing -qq \
@@ -154,7 +184,7 @@ jobs:
             lrelease_exec: "/usr/lib/qt6/bin/lrelease",
             extra_options: "-DBUILD_MAJOR_QT=6",
 
-            deb_deps: "libqt6core6, libqt6gui6, libqt6widgets6, libqt6concurrent6, libqt6serialport6, libasound2, libpulse0, libfreetype6",
+            deb_deps: "libqt6core6 (>= 6.4.2), libqt6gui6 (>= 6.4.2), libqt6widgets6 (>= 6.4.2), libqt6concurrent6 (>= 6.4.2), libqt6serialport6 (>= 6.4.2), libasound2 (>= 1.2.10), libpulse0, libfreetype6 (>= 2.13.2)",
 
             deps_cmdline: "echo 'Ubuntu 24' \
             && apt-get update --fix-missing -qq \
