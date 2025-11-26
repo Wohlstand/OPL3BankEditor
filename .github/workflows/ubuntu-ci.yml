@@ -194,6 +194,7 @@ jobs:
         echo "BACKSPACE=\"guess\"" >> /etc/default/keyboard
 
         echo "Europe/Moscow" > /etc/timezone
+        ln -snf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 
         if [[ ! -z "${{ matrix.config.deps_cmdline }}" ]]; then
           eval ${{ matrix.config.deps_cmdline }}
