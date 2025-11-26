@@ -357,12 +357,12 @@ jobs:
         rm -f lftp.deb
 
     - name: Download LFTP (TAR-GZ)
-      if: matrix.config.lftp_download
+      if: matrix.config.lftp_gz_download
       shell: bash
       run: wget -d -nv -t 5 -O lftp.tar.gz "${{ matrix.config.lftp_gz_download }}"
 
     - name: Install LFTP (TAR-GZ)
-      if: matrix.config.lftp_download
+      if: matrix.config.lftp_gz_download
       shell: bash
       run: |
         sudo tar -xvf lftp.tar.gz -C /
