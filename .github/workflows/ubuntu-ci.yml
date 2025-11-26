@@ -29,12 +29,12 @@ jobs:
             generator: "Ninja",
             build_type: "Release",
             upload_directory: "www/ubuntu-18-04/",
-            package_name_suffix: "ubuntu-18-04_amd64",
+            package_name_suffix: "ubuntu-18-04-amd64",
             readline6_download: "https://wohlsoft.ru/docs/Software/libreadline6_6.3-8_amd64-ubuntu1804.deb",
             lftp_download: "https://wohlsoft.ru/docs/Software/lftp_4.9.1-1_amd64-ubuntu1604.deb",
             gcc_cc: "gcc-8",
             gcc_cxx: "g++-8",
-            lrelease_exec: "/usr/lib/qt5/lrelease",
+            lrelease_exec: "/usr/lib/qt5/bin/lrelease",
 
             deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
 
@@ -66,10 +66,10 @@ jobs:
             generator: "Ninja",
             build_type: "Release",
             upload_directory: "www/ubuntu-20-04/",
-            package_name_suffix: "ubuntu-20-04_amd64",
+            package_name_suffix: "ubuntu-20-04-amd64",
             gcc_cc: "gcc",
             gcc_cxx: "g++",
-            lrelease_exec: "/usr/lib/qt5/lrelease",
+            lrelease_exec: "/usr/lib/qt5/bin/lrelease",
 
             deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
 
@@ -93,10 +93,10 @@ jobs:
             generator: "Ninja",
             build_type: "Release",
             upload_directory: "www/ubuntu-22-04/",
-            package_name_suffix: "ubuntu-22-04_amd64",
+            package_name_suffix: "ubuntu-22-04-amd64",
             gcc_cc: "gcc",
             gcc_cxx: "g++",
-            lrelease_exec: "/usr/lib/qt5/lrelease",
+            lrelease_exec: "/usr/lib/qt5/bin/lrelease",
 
             deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
 
@@ -120,10 +120,10 @@ jobs:
             generator: "Ninja",
             build_type: "Release",
             upload_directory: "www/ubuntu-24-04/",
-            package_name_suffix: "ubuntu-24-04_amd64",
+            package_name_suffix: "qt5-ubuntu-24-04-amd64",
             gcc_cc: "gcc",
             gcc_cxx: "g++",
-            lrelease_exec: "/usr/lib/qt5/lrelease",
+            lrelease_exec: "/usr/lib/qt5/bin/lrelease",
 
             deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
 
@@ -147,10 +147,10 @@ jobs:
             generator: "Ninja",
             build_type: "Release",
             upload_directory: "www/ubuntu-24-04/",
-            package_name_suffix: "qt6-ubuntu-24-04_amd64",
+            package_name_suffix: "qt6-ubuntu-24-04-amd64",
             gcc_cc: "gcc",
             gcc_cxx: "g++",
-            lrelease_exec: "/usr/lib/qt6/lrelease",
+            lrelease_exec: "/usr/lib/qt6/bin/lrelease",
             extra_options: "-DBUILD_MAJOR_QT=6",
 
             deb_deps: "libqt6core6, libqt6gui6, libqt6widgets6, libqt6concurrent6, libqt6serialport6, libasound2, libpulse0, libfreetype6",
@@ -270,7 +270,7 @@ jobs:
 
         cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DCMAKE_INSTALL_PREFIX=/usr ${{ matrix.config.extra_options }} \
             -DCPACK_GENERATOR=DEB \
-            -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${BRANCH_NAME}-${{ matrix.config.package_name_suffix }}"\
+            -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${{ matrix.config.package_name_suffix }}-${BRANCH_NAME}"\
             -DCPACK_DEBIAN_PACKAGE_HOMEPAGE="https://wohlsoft.ru" \
             -DCPACK_DEBIAN_PACKAGE_RELEASE=${GITHUB_RUN_NUMBER} \
             -DCPACK_DEBIAN_PACKAGE_ARCHITECTURE=amd64 \
