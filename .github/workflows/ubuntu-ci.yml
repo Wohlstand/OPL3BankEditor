@@ -51,7 +51,7 @@ jobs:
             qt5-image-formats-plugins libqt5serialport5-dev \
             libasound2-dev libpulse-dev libudev-dev \
             gcc-8 g++-8 libc6 libstdc++6 \
-            libexpat1 readline-common libgnutls30 libtinfo5 zlib1g \
+            libexpat1 readline-common libgnutls28 libtinfo5 zlib1g \
             && wget https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-linux-x86_64.tar.gz -O cmake.tar.gz \
             && tar -xf cmake.tar.gz \
             && cp -a cmake-3.27.1-linux-x86_64/bin/* /usr/local/bin \
