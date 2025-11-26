@@ -75,9 +75,9 @@ jobs:
 
             deps_cmdline: "echo 'Ubuntu 20' \
             && apt-get update --fix-missing -qq \
-            && apt-get install -y software-properties-common \
+            && DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common \
             && apt-get update --fix-missing -qq \
-            && apt-get install -f -qq \
+            && DEBIAN_FRONTEND=noninteractive apt-get install -f -qq \
             && apt-get install -qq \
             sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
             qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
@@ -102,9 +102,9 @@ jobs:
 
             deps_cmdline: "echo 'Ubuntu 22' \
             && apt-get update --fix-missing -qq \
-            && apt-get install -y software-properties-common \
+            && DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common \
             && apt-get update --fix-missing -qq \
-            && apt-get install -f -qq \
+            && DEBIAN_FRONTEND=noninteractive apt-get install -f -qq \
             && apt-get install -qq \
             sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
             qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
