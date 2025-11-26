@@ -36,7 +36,7 @@ jobs:
             lftp_download: "https://wohlsoft.ru/docs/Software/lftp_4.9.1-1_amd64-ubuntu1604.deb",
             gcc_cc: "gcc-8",
             gcc_cxx: "g++-8",
-            lrelease_exec: "/usr/lib/qt5/bin/lrelease",
+            lrelease_exec: "/usr/bin/lrelease",
 
             deb_deps: "libqt5core5a (>= 5.2.1), libqt5gui5 (>= 5.2.1), libqt5widgets5 (>= 5.2.1), libqt5concurrent5 (>= 5.2.1), libqt5serialport5 (>= 5.2.1), libasound2 (>= 1.0.27), libpulse0, libfreetype6 (>= 2.5.2)",
 
@@ -73,7 +73,7 @@ jobs:
             lftp_download: "https://wohlsoft.ru/docs/Software/lftp_4.9.1-1_amd64-ubuntu1604.deb",
             gcc_cc: "gcc-8",
             gcc_cxx: "g++-8",
-            lrelease_exec: "/usr/lib/qt5/bin/lrelease",
+            lrelease_exec: "/usr/bin/lrelease",
 
             deb_deps: "libqt5core5a (>= 5.5.0), libqt5gui5 (>= 5.5.0), libqt5widgets5 (>= 5.5.0), libqt5concurrent5 (>= 5.5.0), libqt5serialport5 (>= 5.5.0), libqwt-qt5-6 (>= 6.1.2), libasound2 (>= 1.1.0), libpulse0, libfreetype6 (>= 2.6.1)",
 
@@ -343,6 +343,7 @@ jobs:
       if: matrix.config.libgnutls30_download
       shell: bash
       run: |
+        apt-tget remove -qq libhogweed2 libnettle4
         sudo dpkg -i ./libgnutls30.deb
         rm -f libgnutls30.deb
 
