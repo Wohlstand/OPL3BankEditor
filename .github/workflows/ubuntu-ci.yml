@@ -259,9 +259,7 @@ jobs:
         export CXX=${{ matrix.config.gcc_cxx }}
 
         echo "====================================="
-        qmake --version
-        echo "====================================="
-        gcc --version
+        ${{ matrix.config.gcc_cc }} --version
         echo "====================================="
         git --version
         echo "====================================="
