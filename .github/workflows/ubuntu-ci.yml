@@ -76,7 +76,7 @@ jobs:
             qt5-default qtbase5-dev qt5-qmake qttools5-dev-tools libqt5concurrent5 libqt5test5 \
             qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
             libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
-            libc6 libstdc++6 libqwt-qt5-dev \
+            build-essential gcc g++ libc6 libstdc++6 libqwt-qt5-dev \
             libexpat1 readline-common libgnutls30 libtinfo5 zlib1g \
             && git config --global --add safe.directory '*'"
           }
