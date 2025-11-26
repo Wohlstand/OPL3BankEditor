@@ -32,6 +32,7 @@ jobs:
             package_name_suffix: "ubuntu-14-04-amd64",
             readline6_download: "https://wohlsoft.ru/docs/Software/libreadline6_6.3-8_amd64-ubuntu1804.deb",
             libtinfo5_download: "https://wohlsoft.ru/docs/Software/libtinfo5_6.0_amd64-ubuntu-1604.deb",
+            libgnutls30_download: "https://wohlsoft.ru/docs/Software/libgnutls30_3.4.10_ubuntu1604_amd64",
             lftp_download: "https://wohlsoft.ru/docs/Software/lftp_4.9.1-1_amd64-ubuntu1604.deb",
             gcc_cc: "gcc-8",
             gcc_cxx: "g++-8",
@@ -332,6 +333,18 @@ jobs:
       run: |
         sudo dpkg -i ./libreadline6.deb
         rm -f libreadline6.deb
+
+    - name: Download libgnutls30
+      if: matrix.config.libgnutls30_download
+      shell: bash
+      run: wget -d -nv -t 5 -O libgnutls30.deb "${{ matrix.config.libgnutls30_download }}"
+
+    - name: Install libgnutls30
+      if: matrix.config.libgnutls30_download
+      shell: bash
+      run: |
+        sudo dpkg -i ./libgnutls30.deb
+        rm -f libgnutls30.deb
 
     - name: Download LFTP
       if: matrix.config.lftp_download
