@@ -94,7 +94,7 @@ jobs:
             generator: "Ninja",
             build_type: "Release",
             upload_directory: "www/ubuntu-22-04/",
-            package_name_suffix: "qt5-ubuntu-22-04-amd64",
+            package_name_suffix: "ubuntu-22-04-amd64",
             gcc_cc: "gcc",
             gcc_cxx: "g++",
             lrelease_exec: "/usr/lib/qt5/bin/lrelease",
