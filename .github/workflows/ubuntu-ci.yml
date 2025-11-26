@@ -32,6 +32,8 @@ jobs:
             package_name_suffix: "ubuntu-18-04_amd64",
             readline6_download: "https://wohlsoft.ru/docs/Software/libreadline6_6.3-8_amd64-ubuntu1804.deb",
             lftp_download: "https://wohlsoft.ru/docs/Software/lftp_4.9.1-1_amd64-ubuntu1604.deb",
+            gcc_cc: "gcc-8",
+            gcc_cxx: "g++-8",
 
             deps_cmdline: "echo 'Ubuntu 18' \
             && apt-get update --fix-missing -qq \
@@ -41,7 +43,7 @@ jobs:
             && apt-get update --fix-missing -qq \
             && apt-get install -f -qq \
             && apt-get install -qq \
-            sudo git p7zip-full ninja-build wget lftp \
+            sudo git p7zip-full ninja-build wget lftp dpkg-dev \
             qt5-default qtbase5-dev qt5-qmake qttools5-dev-tools libqt5concurrent5 libqt5test5 \
             qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
             libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
@@ -62,17 +64,19 @@ jobs:
             build_type: "Release",
             upload_directory: "www/ubuntu-24-04/",
             package_name_suffix: "ubuntu-24-04_amd64",
+            gcc_cc: "gcc",
+            gcc_cxx: "g++",
             deps_cmdline: "echo 'Ubuntu 24' \
             && apt-get update --fix-missing -qq \
             && apt-get install -y software-properties-common \
             && apt-get update --fix-missing -qq \
             && apt-get install -f -qq \
             && apt-get install -qq \
-            sudo git p7zip-full ninja-build wget lftp \
+            sudo git p7zip-full ninja-build wget lftp dpkg-dev \
             qt5-default qtbase5-dev qt5-qmake qttools5-dev-tools libqt5concurrent5 libqt5test5 \
             qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
             libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
-            gcc-8 g++-8 libc6 libstdc++6 libqwt-qt5-dev \
+            libc6 libstdc++6 libqwt-qt5-dev \
             libexpat1 readline-common libgnutls30 libtinfo5 zlib1g \
             && git config --global --add safe.directory '*'"
           }
@@ -96,7 +100,8 @@ jobs:
         if [[ ! -z "${{ matrix.config.deps_cmdline }}" ]]; then
           eval ${{ matrix.config.deps_cmdline }}
         fi
-        g++-8 --version
+
+        ${{ matrix.config.gcc_cxx }} --version
         cmake --version
 
     - uses: WohlSoft/checkout@v0.1
@@ -160,8 +165,8 @@ jobs:
             BRANCH_NAME_RES=${BRANCH_NAME}
         fi
 
-        export CC=gcc-8
-        export CXX=g++-8
+        export CC=${{ matrix.config.gcc_cc }}
+        export CXX=${{ matrix.config.gcc_cxx }}
 
         echo "====================================="
         qmake --version
@@ -177,7 +182,7 @@ jobs:
             -DCPACK_GENERATOR=DEB \
             -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${BRANCH_NAME}-${{ matrix.config.package_name_suffix }}"\
             -DCPACK_DEBIAN_PACKAGE_HOMEPAGE="https://wohlsoft.ru" \
-            -DCPACK_DEBIAN_PACKAGE_RELEASE=1 \
+            -DCPACK_DEBIAN_PACKAGE_RELEASE=${GITHUB_RUN_NUMBER} \
             -DCPACK_DEBIAN_PACKAGE_ARCHITECTURE=amd64 \
             -DCPACK_DEBIAN_PACKAGE_DEPENDS="libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6" \
             -DCPACK_DEBIAN_PACKAGE_DESCRIPTION="OPL3 Bank Editor - A tone bank editor for OPL2/OPL3 chips" \ .
