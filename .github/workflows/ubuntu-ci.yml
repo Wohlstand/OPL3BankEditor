@@ -76,6 +76,7 @@ jobs:
             deps_cmdline: "echo 'Ubuntu 20' \
             && apt-get update --fix-missing -qq \
             && apt-get install -y software-properties-common \
+            && add-apt-repository -y \"ppa:git-core/ppa\" \
             && apt-get update --fix-missing -qq \
             && apt-get install -f -qq \
             && apt-get install -qq \
@@ -188,7 +189,7 @@ jobs:
       shell: bash
       run: |
         apt-get update --fix-missing -qq
-        apt install -qq debconf-utils
+        apt-get install -qq debconf-utils
 
         echo "keyboard-configuration	keyboard-configuration/toggle	select	Control+Shift" > selects.conf
         debconf-set-selections < selects.conf
