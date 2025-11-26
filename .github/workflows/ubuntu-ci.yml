@@ -34,6 +34,7 @@ jobs:
             lftp_download: "https://wohlsoft.ru/docs/Software/lftp_4.9.1-1_amd64-ubuntu1604.deb",
             gcc_cc: "gcc-8",
             gcc_cxx: "g++-8",
+            lrelease_exec: "/usr/lib/qt5/lrelease",
 
             deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
 
@@ -68,6 +69,7 @@ jobs:
             package_name_suffix: "ubuntu-20-04_amd64",
             gcc_cc: "gcc",
             gcc_cxx: "g++",
+            lrelease_exec: "/usr/lib/qt5/lrelease",
 
             deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
 
@@ -94,6 +96,7 @@ jobs:
             package_name_suffix: "ubuntu-22-04_amd64",
             gcc_cc: "gcc",
             gcc_cxx: "g++",
+            lrelease_exec: "/usr/lib/qt5/lrelease",
 
             deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
 
@@ -120,6 +123,7 @@ jobs:
             package_name_suffix: "ubuntu-24-04_amd64",
             gcc_cc: "gcc",
             gcc_cxx: "g++",
+            lrelease_exec: "/usr/lib/qt5/lrelease",
 
             deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
 
@@ -146,6 +150,7 @@ jobs:
             package_name_suffix: "qt6-ubuntu-24-04_amd64",
             gcc_cc: "gcc",
             gcc_cxx: "g++",
+            lrelease_exec: "/usr/lib/qt6/lrelease",
 
             deb_deps: "libqt6core6, libqt6gui6, libqt6widgets6, libqt6concurrent6, libqt6serialport6, libasound2, libpulse0, libfreetype6",
 
@@ -237,7 +242,7 @@ jobs:
     - name: Build translations
       shell: bash
       run: |
-        lrelease src/translations/*.ts
+        ${{ matrix.config.lrelease_exec }} src/translations/*.ts
 
     - name: Configure
       shell: bash
