@@ -187,11 +187,19 @@ jobs:
     - name: Install Dependencies
       shell: bash
       run: |
+        apt-get update --fix-missing -qq
+        apt install -qq debconf-utils
+
+        echo "keyboard-configuration	keyboard-configuration/toggle	select	Control+Shift" > selects.conf
+        debconf-set-selections < selects.conf
+        rm -f selects.conf
+
         echo "XKBMODEL=\"pc105\"" > /etc/default/keyboard
         echo "XKBLAYOUT=\"pl,ru\"" >> /etc/default/keyboard
         echo "XKBVARIANT=\",\"" >> /etc/default/keyboard
         echo "XKBOPTIONS=\"grp:ctrl_shift_toggle,grp_led:scroll\"" >> /etc/default/keyboard
         echo "BACKSPACE=\"guess\"" >> /etc/default/keyboard
+        ln -snf /etc/default/keyboard /etc/vconsole.conf
 
         echo "Europe/Moscow" > /etc/timezone
         ln -snf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
