@@ -35,6 +35,8 @@ jobs:
             gcc_cc: "gcc-8",
             gcc_cxx: "g++-8",
 
+            deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
+
             deps_cmdline: "echo 'Ubuntu 18' \
             && apt-get update --fix-missing -qq \
             && apt-get install -y software-properties-common \
@@ -44,9 +46,9 @@ jobs:
             && apt-get install -f -qq \
             && apt-get install -qq \
             sudo git p7zip-full ninja-build wget lftp dpkg-dev \
-            qt5-default qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 libqt5test5 \
-            qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
-            libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
+            qt5-default qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
+            qt5-image-formats-plugins libqt5serialport5-dev \
+            libasound2-dev libpulse-dev libudev-dev \
             gcc-8 g++-8 libc6 libstdc++6 \
             libexpat1 readline-common libgnutls30 libtinfo5 zlib1g \
             && wget https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-linux-x86_64.tar.gz -O cmake.tar.gz \
@@ -67,6 +69,8 @@ jobs:
             gcc_cc: "gcc",
             gcc_cxx: "g++",
 
+            deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
+
             deps_cmdline: "echo 'Ubuntu 20' \
             && apt-get update --fix-missing -qq \
             && apt-get install -y software-properties-common \
@@ -74,9 +78,9 @@ jobs:
             && apt-get install -f -qq \
             && apt-get install -qq \
             sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
-            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 libqt5test5 \
-            qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
-            libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
+            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
+            qt5-image-formats-plugins libqt5serialport5-dev \
+            libasound2-dev libpulse-dev libudev-dev \
             build-essential gcc g++ libc6 libstdc++6 libqwt-qt5-dev \
             && git config --global --add safe.directory '*'"
           }
@@ -91,6 +95,8 @@ jobs:
             gcc_cc: "gcc",
             gcc_cxx: "g++",
 
+            deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
+
             deps_cmdline: "echo 'Ubuntu 22' \
             && apt-get update --fix-missing -qq \
             && apt-get install -y software-properties-common \
@@ -98,14 +104,14 @@ jobs:
             && apt-get install -f -qq \
             && apt-get install -qq \
             sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
-            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 libqt5test5 \
-            qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
-            libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
+            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
+            qt5-image-formats-plugins libqt5serialport5-dev \
+            libasound2-dev libpulse-dev libudev-dev \
             build-essential gcc g++ libc6 libstdc++6 libqwt-qt5-dev \
             && git config --global --add safe.directory '*'"
           }
         - {
-            name: "Ubuntu 24.04 x86_64",
+            name: "Ubuntu 24.04 (Qt5) x86_64",
             os: ubuntu-latest,
             container: "ubuntu:24.04",
             generator: "Ninja",
@@ -115,6 +121,8 @@ jobs:
             gcc_cc: "gcc",
             gcc_cxx: "g++",
 
+            deb_deps: "libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6",
+
             deps_cmdline: "echo 'Ubuntu 24' \
             && apt-get update --fix-missing -qq \
             && apt-get install -y software-properties-common \
@@ -122,10 +130,38 @@ jobs:
             && apt-get install -f -qq \
             && apt-get install -qq \
             sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
-            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 libqt5test5 \
-            qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
-            libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
+            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
+            qt5-image-formats-plugins libqt5serialport5-dev \
+            libasound2-dev libpulse-dev libudev-dev \
             build-essential gcc g++ libc6 libstdc++6 libqwt-qt5-dev \
+            && git config --global --add safe.directory '*'"
+          }
+        - {
+            name: "Ubuntu 24.04 (Qt6) x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:24.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-24-04/",
+            package_name_suffix: "qt6-ubuntu-24-04_amd64",
+            gcc_cc: "gcc",
+            gcc_cxx: "g++",
+
+            deb_deps: "libqt6core6, libqt6gui6, libqt6widgets6, libqt6concurrent6, libqt6serialport6, libasound2, libpulse0, libfreetype6",
+
+            deps_cmdline: "echo 'Ubuntu 24' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
+            qt6-base-dev qt6-5compat-dev qt6-serialport-dev \
+            qt6-tools-dev qt6-tools-dev-tools qt6-gtk-platformtheme \
+            qt6-xdgdesktopportal-platformtheme libqt6nfc6 qt6-scxml-dev \
+            qt6-image-formats-plugins qt6-l10n-tools \
+            libasound2-dev libpulse-dev libudev-dev \
+            build-essential gcc g++ libc6 libstdc++6 \
             && git config --global --add safe.directory '*'"
           }
 
@@ -232,7 +268,7 @@ jobs:
             -DCPACK_DEBIAN_PACKAGE_HOMEPAGE="https://wohlsoft.ru" \
             -DCPACK_DEBIAN_PACKAGE_RELEASE=${GITHUB_RUN_NUMBER} \
             -DCPACK_DEBIAN_PACKAGE_ARCHITECTURE=amd64 \
-            -DCPACK_DEBIAN_PACKAGE_DEPENDS="libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6" \
+            -DCPACK_DEBIAN_PACKAGE_DEPENDS="${{ matrix.config.deb_deps }}" \
             -DCPACK_DEBIAN_PACKAGE_DESCRIPTION="OPL3 Bank Editor - A tone bank editor for OPL2/OPL3 chips" \
         .
 
