@@ -57,6 +57,54 @@ jobs:
             && git config --global --add safe.directory '*'"
           }
         - {
+            name: "Ubuntu 20.04 x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:20.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-20-04/",
+            package_name_suffix: "ubuntu-20-04_amd64",
+            gcc_cc: "gcc",
+            gcc_cxx: "g++",
+
+            deps_cmdline: "echo 'Ubuntu 20' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
+            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 libqt5test5 \
+            qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
+            libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
+            build-essential gcc g++ libc6 libstdc++6 libqwt-qt5-dev \
+            && git config --global --add safe.directory '*'"
+          }
+        - {
+            name: "Ubuntu 22.04 x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:22.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-22-04/",
+            package_name_suffix: "ubuntu-22-04_amd64",
+            gcc_cc: "gcc",
+            gcc_cxx: "g++",
+
+            deps_cmdline: "echo 'Ubuntu 22' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
+            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 libqt5test5 \
+            qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
+            libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
+            build-essential gcc g++ libc6 libstdc++6 libqwt-qt5-dev \
+            && git config --global --add safe.directory '*'"
+          }
+        - {
             name: "Ubuntu 24.04 x86_64",
             os: ubuntu-latest,
             container: "ubuntu:24.04",
