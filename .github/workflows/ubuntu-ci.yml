@@ -34,6 +34,7 @@ jobs:
             gcc_cc: "gcc-8",
             gcc_cxx: "g++-8",
             lrelease_exec: "/usr/lib/x86_64-linux-gnu/qt5/bin/lrelease",
+            extra_options: "-DFORCE_EXEC_NO_PIE=OFF",
 
             deb_deps: "libqt5core5a (>= 5.2.1), libqt5gui5 (>= 5.2.1), libqt5widgets5 (>= 5.2.1), libqt5concurrent5 (>= 5.2.1), libqt5serialport5 (>= 5.2.1), libasound2 (>= 1.0.27), libpulse0, libfreetype6 (>= 2.5.2)",
 

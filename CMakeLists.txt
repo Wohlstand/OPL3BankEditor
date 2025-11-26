@@ -47,6 +47,8 @@ option(USE_VENDORED_RTMIDI "Use vendored RtMidi instead of system-installed one"
 option(USE_RTAUDIO "Use RtAudio" ON)
 option(USE_VENDORED_RTAUDIO "Use vendored RtAudio instead of system-installed one" OFF)
 
+option(FORCE_EXEC_NO_PIE "Disable Position-Independent code on executables (default ON)" ON)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     option(USE_VENDORED_RTAUDIO_JACK "Enable JACK suport at RtAudio if possible" ON)
 endif()
@@ -316,7 +318,9 @@ if(ENABLE_PLOTS)
     target_link_libraries(OPL3BankEditor PRIVATE ${QWT_LIBRARIES})
 endif()
 
-pge_set_nopie(OPL3BankEditor)
+if(FORCE_EXEC_NO_PIE)
+    pge_set_nopie(OPL3BankEditor)
+endif()
 
 include(cmake/deploy.cmake)
 
@@ -544,4 +548,6 @@ endif()
 add_executable(measurer_tool "utils/measurer/measurer-tool.cpp")
 set_target_properties(measurer_tool PROPERTIES OUTPUT_NAME "measurer")
 target_link_libraries(measurer_tool PRIVATE FileFormats Measurer Chips)
-pge_set_nopie(measurer_tool)
+if(FORCE_EXEC_NO_PIE)
+    pge_set_nopie(measurer_tool)
+endif()
