@@ -177,7 +177,7 @@ jobs:
         cmake --version
         echo "====================================="
 
-        cmake -B build -G ninja -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DCMAKE_INSTALL_PREFIX=/usr ${{ matrix.config.extra_options }} \
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DCMAKE_INSTALL_PREFIX=/usr ${{ matrix.config.extra_options }} \
             -DCPACK_GENERATOR=DEB \
             -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${BRANCH_NAME}-${{ matrix.config.package_name_suffix }}"\
             -DCPACK_DEBIAN_PACKAGE_HOMEPAGE="https://wohlsoft.ru" \
