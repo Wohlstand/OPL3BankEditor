@@ -192,7 +192,7 @@ jobs:
       shell: bash
       run: |
         cmake --build build --target all --config ${{ matrix.config.build_type }} --parallel 3
-        cpack -G DEB build
+        cpack build
 
     - name: Deploy to builds.wohlsoft.ru
       if: success() && github.event_name != 'pull_request' && steps.event-check.outputs.is_pull_request == 'false' && steps.upload-check.outputs.available == 'true'
