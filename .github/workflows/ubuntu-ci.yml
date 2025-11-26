@@ -343,7 +343,7 @@ jobs:
       if: matrix.config.libgnutls30_download
       shell: bash
       run: |
-        apt-tget remove -qq libhogweed2 libnettle4
+        apt-get remove -qq libhogweed2 libnettle4
         sudo dpkg -i ./libgnutls30.deb
         rm -f libgnutls30.deb
 
