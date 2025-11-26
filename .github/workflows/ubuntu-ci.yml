@@ -193,6 +193,8 @@ jobs:
         echo "XKBOPTIONS=\"grp:ctrl_shift_toggle,grp_led:scroll\"" >> /etc/default/keyboard
         echo "BACKSPACE=\"guess\"" >> /etc/default/keyboard
 
+        echo "Europe/Moscow" > /etc/timezone
+
         if [[ ! -z "${{ matrix.config.deps_cmdline }}" ]]; then
           eval ${{ matrix.config.deps_cmdline }}
         fi
