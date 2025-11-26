@@ -44,7 +44,7 @@ jobs:
             && apt-get install -f -qq \
             && apt-get install -qq \
             sudo git p7zip-full ninja-build wget lftp dpkg-dev \
-            qt5-default qtbase5-dev qt5-qmake qttools5-dev-tools libqt5concurrent5 libqt5test5 \
+            qt5-default qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 libqt5test5 \
             qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
             libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
             gcc-8 g++-8 libc6 libstdc++6 \
@@ -66,6 +66,7 @@ jobs:
             package_name_suffix: "ubuntu-24-04_amd64",
             gcc_cc: "gcc",
             gcc_cxx: "g++",
+
             deps_cmdline: "echo 'Ubuntu 24' \
             && apt-get update --fix-missing -qq \
             && apt-get install -y software-properties-common \
@@ -73,7 +74,7 @@ jobs:
             && apt-get install -f -qq \
             && apt-get install -qq \
             sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
-            qtbase5-dev qt5-qmake qttools5-dev-tools libqt5concurrent5 libqt5test5 \
+            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 libqt5test5 \
             qtmultimedia5-dev libqt5multimedia5-plugins libqt5multimediawidgets5 qt5-image-formats-plugins \
             libqt5serialport5-dev libasound2-dev libpulse-dev libudev-dev \
             build-essential gcc g++ libc6 libstdc++6 libqwt-qt5-dev \
