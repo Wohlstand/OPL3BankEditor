@@ -2,8 +2,11 @@ cmake_minimum_required(VERSION 3.2...3.10)
 project(OPL3BankEditor LANGUAGES C CXX)
 
 include(CheckCXXCompilerFlag)
+include(GNUInstallDirs)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+set(OPL3_BANK_EDITOR_VERSION_STRING "1.5.2")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -315,8 +318,20 @@ endif()
 
 pge_set_nopie(OPL3BankEditor)
 
-if(NOT APPLE)
+include(cmake/deploy.cmake)
+
+if(APPLE)
+    install(TARGETS OPL3BankEditor DESTINATION .)
+    install(FILES changelog.txt DESTINATION .)
+    install(FILES README.md DESTINATION . RENAME ReadMe.txt)
+    install(FILES license.txt DESTINATION . RENAME License.txt)
+    install(DIRECTORY Bank_Examples DESTINATION .)
+else()
     install(TARGETS OPL3BankEditor DESTINATION "bin" RENAME "opl3_bank_editor")
+    install(FILES changelog.txt DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/opl3_bank_editor)
+    install(DIRECTORY Bank_Examples DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/opl3_bank_editor)
+    install(FILES README.md DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/opl3_bank_editor RENAME ReadMe.txt)
+    install(FILES license.txt DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/opl3_bank_editor RENAME License.OPL3-Bank-Editor.txt)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")

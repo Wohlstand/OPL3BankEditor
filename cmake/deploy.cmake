@@ -1,0 +1,65 @@
+set(CPACK_PACKAGE_VENDOR "Wohlstand")
+set(CPACK_PACKAGE_CONTACT "admin@wohlnet.ru")
+set(CPACK_PACKAGE_VERSION "${OPL3_BANK_EDITOR_VERSION_STRING}")
+
+if(APPLE)
+    set(CPACK_PACKAGE_NAME "OPL3 Bank Editor")
+    set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_PACKAGE_VERSION "${OPL3_BANK_EDITOR_VERSION_STRING}")
+    set(CPACK_DMG_FORMAT "UDBZ")
+    set(CPACK_DMG_VOLUME_NAME "OPL3 Bank Editor")
+    if(NOT CPACK_PACKAGE_FILE_NAME)
+        set(CPACK_PACKAGE_FILE_NAME "opl3-bank-editor")
+    endif()
+    include(CPack)
+
+elseif(UNIX)
+    set(CPACK_PACKAGE_NAME "opl3-bank-editor")
+    if(NOT CPACK_GENERATOR)
+        set(CPACK_GENERATOR "TBZ2")
+    endif()
+
+    # DEB related
+    set(CPACK_DEB_COMPONENT_INSTALL OFF)
+    set(CPACK_DEBIAN_PACKAGE_NAME "opl3-bank-editor")
+    set(CPACK_DEBIAN_PACKAGE_VERSION ${OPL3_BANK_EDITOR_VERSION_STRING})
+    if(NOT CPACK_DEBIAN_PACKAGE_RELEASE)
+        set(CPACK_DEBIAN_PACKAGE_RELEASE 1)
+    endif()
+
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${CPACK_PACKAGE_VENDOR} <${CPACK_PACKAGE_CONTACT}>")
+    set(CPACK_DEBIAN_PACKAGE_SECTION games)
+    set(CPACK_DEBIAN_PACKAGE_PRIORITY optional)
+    if(NOT CPACK_DEBIAN_PACKAGE_HOMEPAGE)
+        set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://wohlsoft.ru/")
+    endif()
+
+    # RPM related
+    set(CPACK_RPM_PACKAGE_VENDOR "${CPACK_PACKAGE_VENDOR} <${CPACK_PACKAGE_CONTACT}>")
+    set(CPACK_RPM_PACKAGE_NAME  "${opl3-bank-editor}")
+    set(CPACK_RPM_PACKAGE_VERSION ${OPL3_BANK_EDITOR_VERSION_STRING})
+
+    if(NOT CPACK_RPM_PACKAGE_RELEASE)
+        set(CPACK_RPM_PACKAGE_RELEASE 1)
+    endif()
+
+    if(NOT CPACK_RPM_PACKAGE_URL)
+        set(CPACK_RPM_PACKAGE_URL "https://wohlsoft.ru/")
+    endif()
+
+    # Generic
+    if(NOT CPACK_PACKAGE_FILE_NAME)
+        set(CPACK_PACKAGE_FILE_NAME "opl3-bank-editor")
+    endif()
+    include(CPack)
+endif()
+
+if(WIN32)
+    set(CPACK_PACKAGE_NAME "${THEXTECH_PACKAGE_NAME}")
+    set(CPACK_GENERATOR "7Z")
+    set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
+    if(NOT CPACK_PACKAGE_FILE_NAME)
+        set(CPACK_PACKAGE_FILE_NAME "opl3-bank-editor")
+    endif()
+    include(CPack)
+endif()
