@@ -184,7 +184,8 @@ jobs:
             -DCPACK_DEBIAN_PACKAGE_RELEASE=${GITHUB_RUN_NUMBER} \
             -DCPACK_DEBIAN_PACKAGE_ARCHITECTURE=amd64 \
             -DCPACK_DEBIAN_PACKAGE_DEPENDS="libqt5core5a, libqt5gui5, libqt5widgets5, libqt5concurrent5, libqt5serialport5, libasound2, libpulse0, libfreetype6" \
-            -DCPACK_DEBIAN_PACKAGE_DESCRIPTION="OPL3 Bank Editor - A tone bank editor for OPL2/OPL3 chips" \ .
+            -DCPACK_DEBIAN_PACKAGE_DESCRIPTION="OPL3 Bank Editor - A tone bank editor for OPL2/OPL3 chips" \
+        .
 
     - name: Build
       shell: bash
