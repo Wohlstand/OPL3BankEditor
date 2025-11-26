@@ -31,6 +31,7 @@ jobs:
             upload_directory: "www/ubuntu-14-04/",
             package_name_suffix: "ubuntu-14-04-amd64",
             readline6_download: "https://wohlsoft.ru/docs/Software/libreadline6_6.3-8_amd64-ubuntu1804.deb",
+            libtinfo5_download: "https://wohlsoft.ru/docs/Software/libtinfo5_6.0_amd64-ubuntu-1604.deb",
             lftp_download: "https://wohlsoft.ru/docs/Software/lftp_4.9.1-1_amd64-ubuntu1604.deb",
             gcc_cc: "gcc-8",
             gcc_cxx: "g++-8",
@@ -308,12 +309,24 @@ jobs:
           echo "is_pull_request=false" >> $GITHUB_OUTPUT;
         fi
 
+    - name: Download libtinfo5
+      if: matrix.config.libtinfo5_download
+      shell: bash
+      run: wget -d -nv -t 5 -O libtinfo5.deb "${{ matrix.config.libtinfo5_download }}"
+
+    - name: Install libtinfo5
+      if: matrix.config.libtinfo5_download
+      shell: bash
+      run: |
+        sudo dpkg -i ./libtinfo5.deb
+        rm -f libtinfo5.deb
+
     - name: Download libreadline6
       if: matrix.config.readline6_download
       shell: bash
       run: wget -d -nv -t 5 -O libreadline6.deb "${{ matrix.config.readline6_download }}"
 
-    - name: Install LFTP
+    - name: Install libreadline6
       if: matrix.config.readline6_download
       shell: bash
       run: |
@@ -401,4 +414,7 @@ jobs:
       shell: bash
       run: |
         git status
-        ls -lR build
+
+        if [[ -d build ]]; then
+            ls -lR build
+        fi
