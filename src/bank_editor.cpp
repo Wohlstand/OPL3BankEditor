@@ -878,13 +878,15 @@ void BankEditor::on_actionOpen_triggered()
 {
     if(!askForSaving())
         return;
+
     QString filters = FmBankFormatFactory::getOpenFiltersList();
     QString fileToOpen;
-    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file",
+    fileToOpen = QFileDialog::getOpenFileName(this, tr("Open bank file"),
                                               m_recentPath, filters, nullptr,
                                               FILE_OPEN_DIALOG_OPTIONS);
     if(fileToOpen.isEmpty())
         return;
+
     openFile(fileToOpen);
 }
 
@@ -1629,12 +1631,16 @@ void BankEditor::on_bank_no_currentIndexChanged(int index)
         }
         this->m_lock = false;
     }
+
     QList<QListWidgetItem *> items = ui->instruments->findItems("*", Qt::MatchWildcard);
-    for(QListWidgetItem *it : items)
-        it->setHidden(!ui->actionAdLibBnkMode->isChecked() && (it->data(INS_BANK_ID) != index));
+
+    for(QList<QListWidgetItem *>::iterator it = items.begin(); it != items.end(); ++it)
+        (*it)->setHidden(!ui->actionAdLibBnkMode->isChecked() && ((*it)->data(INS_BANK_ID) != index));
+
     QList<QListWidgetItem *> selected = ui->instruments->selectedItems();
     if(!selected.isEmpty())
         ui->instruments->scrollToItem(selected.front());
+
     QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
 }
 
@@ -1862,8 +1868,10 @@ void BankEditor::on_actionDelInst_triggered()
         // Recount indeces
         QList<QListWidgetItem *> leftItems = ui->instruments->findItems("*", Qt::MatchWildcard);
         int counter = 0;
-        for(QListWidgetItem *it : leftItems)
-            setInstrumentMetaInfo(it, counter++);
+
+        for(QList<QListWidgetItem *>::iterator it = leftItems.begin(); it != leftItems.end(); ++it)
+            setInstrumentMetaInfo(*it, counter++);
+
         reloadInstrumentNames();
         int oldBank = ui->bank_no->currentIndex();
         reloadBanks();
