@@ -2,7 +2,11 @@
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-opl3-wopl">
     <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-wopl-bank"/>
     <comment>OPL3 bank (WOPL)</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="WOPL3-BANK\0"/>
+    </magic>
     <glob pattern="*.wopl"/>
   </mime-type>
 </mime-info>

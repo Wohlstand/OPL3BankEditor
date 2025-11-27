@@ -335,6 +335,18 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_SYSTEM_NAME STREQUAL "
                 DESTINATION "share/icons/hicolor/${size}x${size}/apps"
                 RENAME "opl3_bank_editor.png")
     endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_wopl/file_wopl_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-wopl-bank.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_opli/file_opli_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-opli-instrument.png")
+    endforeach()
 endif()
 
 add_executable(OPL3BankEditor WIN32 MACOSX_BUNDLE
