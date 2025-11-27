@@ -274,7 +274,9 @@ pge_qt_add_translation(TRANSLATIONS
 )
 
 add_custom_target(OPL3BankEditor_translations ALL DEPENDS ${TRANSLATIONS})
-install(FILES ${TRANSLATIONS} DESTINATION "share/opl3_bank_editor/translations")
+if(NOT APPLE)
+    install(FILES ${TRANSLATIONS} DESTINATION "share/opl3_bank_editor/translations")
+endif()
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     install(FILES "src/resources/opl3_bank_editor.desktop"
@@ -330,6 +332,9 @@ if(APPLE)
     install(FILES README.md DESTINATION . RENAME ReadMe.txt)
     install(FILES license.txt DESTINATION . RENAME License.txt)
     install(DIRECTORY Bank_Examples DESTINATION .)
+    set_source_files_properties(${TRANSLATIONS} PROPERTIES GENERATED TRUE) # WORKAROUND
+    target_sources(OPL3BankEditor PRIVATE ${TRANSLATIONS})
+    set_source_files_properties(${TRANSLATIONS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/translations")
 else()
     install(TARGETS OPL3BankEditor DESTINATION "bin" RENAME "opl3_bank_editor")
     install(FILES changelog.txt DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/opl3_bank_editor)
