@@ -112,8 +112,11 @@ message("!!   Serial port: ${ENABLE_SERIAL_PORT}")
 include_directories("src")
 
 set(COMMON_SOURCES
+    "src/bank.cpp"
+    "src/bank.h"
     "src/common.cpp"
-    "src/bank.cpp")
+    "src/common.h"
+)
 
 add_library(Common STATIC ${COMMON_SOURCES})
 target_include_directories(Common PUBLIC "src")
@@ -128,34 +131,60 @@ endif()
 
 set(FILEFORMATS_SOURCES
     "src/FileFormats/ffmt_base.cpp"
+    "src/FileFormats/ffmt_base.h"
     "src/FileFormats/ffmt_enums.cpp"
+    "src/FileFormats/ffmt_enums.h"
     "src/FileFormats/ffmt_factory.cpp"
+    "src/FileFormats/ffmt_factory.h"
     "src/FileFormats/format_adlib_bnk.cpp"
+    "src/FileFormats/format_adlib_bnk.h"
     "src/FileFormats/format_adlib_tim.cpp"
+    "src/FileFormats/format_adlib_tim.h"
     "src/FileFormats/format_adlibgold_bnk2.cpp"
+    "src/FileFormats/format_adlibgold_bnk2.h"
     "src/FileFormats/format_ail2_gtl.cpp"
+    "src/FileFormats/format_ail2_gtl.h"
     "src/FileFormats/format_apogeetmb.cpp"
+    "src/FileFormats/format_apogeetmb.h"
     "src/FileFormats/format_bisqwit.cpp"
+    "src/FileFormats/format_bisqwit.h"
     "src/FileFormats/format_cmf_importer.cpp"
+    "src/FileFormats/format_cmf_importer.h"
     "src/FileFormats/format_dmxopl2.cpp"
+    "src/FileFormats/format_dmxopl2.h"
     "src/FileFormats/format_imf_importer.cpp"
+    "src/FileFormats/format_imf_importer.h"
     "src/FileFormats/format_junlevizion.cpp"
+    "src/FileFormats/format_junlevizion.h"
     "src/FileFormats/format_rad_importer.cpp"
+    "src/FileFormats/format_rad_importer.h"
     "src/FileFormats/format_sb_ibk.cpp"
+    "src/FileFormats/format_sb_ibk.h"
     "src/FileFormats/format_dro_importer.cpp"
+    "src/FileFormats/format_dro_importer.h"
     "src/FileFormats/format_vgm_import.cpp"
+    "src/FileFormats/format_vgm_import.h"
     "src/FileFormats/format_smaf_importer.cpp"
-    "src/FileFormats/format_klm_importer.h"
+    "src/FileFormats/format_smaf_importer.h"
     "src/FileFormats/format_klm_importer.cpp"
+    "src/FileFormats/format_klm_importer.h"
     "src/FileFormats/format_misc_sgi.cpp"
+    "src/FileFormats/format_misc_sgi.h"
     "src/FileFormats/format_misc_cif.cpp"
+    "src/FileFormats/format_misc_cif.h"
     "src/FileFormats/format_misc_hsc.cpp"
+    "src/FileFormats/format_misc_hsc.h"
     "src/FileFormats/format_wohlstand_opl3.cpp"
+    "src/FileFormats/format_wohlstand_opl3.h"
     "src/FileFormats/format_flatbuffer_opl3.cpp"
+    "src/FileFormats/format_flatbuffer_opl3.h"
+    "src/FileFormats/Opl3Bank_generated.h"
     "src/FileFormats/format_patch_fm4.h"
     "src/FileFormats/format_patch_fm4.cpp"
     "src/FileFormats/ymf262_to_wopi.cpp"
+    "src/FileFormats/ymf262_to_wopi.h"
     "src/FileFormats/wopl/wopl_file.c"
+    "src/FileFormats/wopl/wopl_file.h"
 )
 
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
@@ -209,7 +238,7 @@ if(ENABLE_ADDRESS_SANITIZER)
     target_link_options(Chips PUBLIC -fsanitize=address)
 endif()
 
-set(MEASURER_SOURCES "src/opl/measurer.cpp")
+set(MEASURER_SOURCES "src/opl/measurer.cpp" "src/opl/measurer.h")
 
 add_library(Measurer STATIC ${MEASURER_SOURCES})
 target_include_directories(Measurer PUBLIC "src")
@@ -226,24 +255,38 @@ endif()
 set(SOURCES
     "src/audio.cpp"
     "src/bank_editor.cpp"
+    "src/bank_editor.h"
     "src/operator_editor.cpp"
+    "src/operator_editor.h"
     "src/bank_comparison.cpp"
+    "src/bank_comparison.h"
     "src/controlls.cpp"
     "src/proxystyle.cpp"
+    "src/proxystyle.h"
     "src/formats_sup.cpp"
+    "src/formats_sup.h"
     "src/importer.cpp"
+    "src/importer.h"
     "src/audio_config.cpp"
+    "src/audio_config.h"
     "src/hardware.cpp"
+    "src/hardware.h"
     "src/ins_names.cpp"
+    "src/ins_names.h"
     "src/main.cpp"
     "src/opl/generator.cpp"
+    "src/opl/generator.h"
     "src/opl/generator_realtime.cpp"
+    "src/opl/generator_realtime.h"
     "src/opl/realtime/ring_buffer.cpp"
+    "src/opl/realtime/ring_buffer.h"
+    "src/opl/realtime/ring_buffer.tcc"
     "src/piano.cpp"
+    "src/piano.h"
 )
 
 if(ENABLE_PLOTS)
-    list(APPEND SOURCES "src/delay_analysis.cpp")
+    list(APPEND SOURCES "src/delay_analysis.cpp" "src/delay_analysis.h")
 endif()
 
 include(src/opl/models/opl_models.cmake)
