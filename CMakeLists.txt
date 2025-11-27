@@ -375,9 +375,14 @@ if(APPLE)
     install(FILES README.md DESTINATION . RENAME ReadMe.txt)
     install(FILES license.txt DESTINATION . RENAME License.txt)
     install(DIRECTORY Bank_Examples DESTINATION .)
+
     set_source_files_properties(${TRANSLATIONS} PROPERTIES GENERATED TRUE) # WORKAROUND
     target_sources(OPL3BankEditor PRIVATE ${TRANSLATIONS})
     set_source_files_properties(${TRANSLATIONS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/translations")
+
+    file(GLOB BANKEDIT_FILE_ICONS "${CMAKE_CURRENT_SOURCE_DIR}/src/resources/file_*.icns")
+    target_sources(OPL3BankEditor PRIVATE ${BANKEDIT_FILE_ICONS})
+    set_source_files_properties(${BANKEDIT_FILE_ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 else()
     install(TARGETS OPL3BankEditor DESTINATION "bin" RENAME "opl3_bank_editor")
     install(FILES changelog.txt DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/opl3_bank_editor)
@@ -394,7 +399,19 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(ICON "${CMAKE_SOURCE_DIR}/src/resources/opl3.icns")
     set_source_files_properties("${ICON}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     target_sources(OPL3BankEditor PRIVATE "${ICON}")
-    set_target_properties(OPL3BankEditor PROPERTIES OUTPUT_NAME "OPL3 Bank Editor")
+    set_target_properties(OPL3BankEditor PROPERTIES
+        OUTPUT_NAME "OPL3 Bank Editor"
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/src/resources/info.plist.in"
+        MACOSX_BUNDLE_EXECUTABLE_NAME "opl3_bank_editor"
+        MACOSX_BUNDLE_BUNDLE_NAME "OPL3 Bank Editor"
+        MACOSX_BUNDLE_GUI_IDENTIFIER "ru.wohlsoft.opl3-bank-editor"
+        MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPL3_BANK_EDITOR_VERSION_STRING}"
+        MACOSX_BUNDLE_LONG_VERSION_STRING "${OPL3_BANK_EDITOR_VERSION_STRING}"
+        MACOSX_BUNDLE_ICON_FILE "opl3.icns"
+        CPACK_BUNDLE_NAME "OPL3 Bank Editor"
+        MACOSX_BUNDLE_INFO_STRING "Editor for OPL2/OPL3 tone banks and instruments"
+    )
 endif()
 
 if(USE_RTMIDI)

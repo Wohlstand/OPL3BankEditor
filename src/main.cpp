@@ -24,6 +24,11 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#ifdef Q_OS_MACX
+#   include <QFileOpenEvent>
+#endif
+
+
 
 int main(int argc, char *argv[])
 {
@@ -40,8 +45,23 @@ int main(int argc, char *argv[])
     if(args.size()>1)
         w.openOrImportFile(args[1]);
 
+#ifdef __APPLE__
+    QStringList files = a.getOpenFileChain();
+
+    if(!files.isEmpty())
+        w.openOrImportFile(files.first());
+#endif
+
+#ifdef __APPLE__
+    QObject::connect(&a, SIGNAL(openFileRequested(QString)), &w, SLOT(openFileSlot(QString)));
+    a.setConnected();
+#endif
+
     return a.exec();
 }
+
+
+
 
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
@@ -49,6 +69,9 @@ Application::Application(int &argc, char **argv)
     installTranslator(&m_qtTranslator);
     installTranslator(&m_appTranslator);
 }
+
+Application::~Application()
+{}
 
 void Application::translate(const QString &language)
 {
@@ -94,3 +117,56 @@ QString Application::getAppTranslationDir() const
         return QCoreApplication::applicationDirPath() + "/../src/translations";
 #endif
 }
+
+
+#ifdef Q_OS_MACX
+
+void Application::setConnected()
+{
+    m_connected = true;
+}
+
+bool Application::event(QEvent *event)
+{
+    if(event->type() == QEvent::FileOpen)
+    {
+        QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
+
+        if(openEvent)
+        {
+            if(m_connected)
+            {
+                QString file = openEvent->file();
+                qDebug() << "Opened file " + file + " (signal)";
+                emit openFileRequested(file);
+            }
+            else
+            {
+                QString file = openEvent->file();
+                qDebug() << "Opened file " + file + " (queue)";
+                m_openFileRequests.enqueue(file);
+            }
+        }
+        else
+        {
+            qDebug() << "Failed to process openEvent: pointer is null!";
+        }
+    }
+
+    return QApplication::event(event);
+}
+
+QStringList Application::getOpenFileChain()
+{
+    QStringList chain;
+
+    while(!m_openFileRequests.isEmpty())
+    {
+        QString file = m_openFileRequests.dequeue();
+        chain.push_back(file);
+    }
+
+    return chain;
+}
+
+#endif

@@ -534,7 +534,9 @@ bool BankEditor::openFile(QString filePath, FfmtErrCode *errp)
 {
     BankFormats format;
     FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &format);
+
     m_recentFormat = format;
+
     if(err != FfmtErrCode::ERR_OK)
     {
         if (!errp) {
@@ -543,6 +545,7 @@ bool BankEditor::openFile(QString filePath, FfmtErrCode *errp)
         }
         else
             *errp = err;
+
         return false;
     }
     else
@@ -557,7 +560,11 @@ bool BankEditor::openFile(QString filePath, FfmtErrCode *errp)
 bool BankEditor::openOrImportFile(QString filePath)
 {
     FfmtErrCode openErr;
-    if (openFile(filePath, &openErr))
+
+    if(filePath.isEmpty())
+        return false;
+
+    if(openFile(filePath, &openErr))
         return true;
 
     Importer &importer = *m_importer;
@@ -1770,6 +1777,13 @@ void BankEditor::reloadBankNames()
     for(int i = 0; i < countOfBanks; i++)
         refreshBankName(i);
 }
+
+#ifdef __APPLE__
+void BankEditor::openFileSlot(QString file)
+{
+    openOrImportFile(file);
+}
+#endif
 
 void BankEditor::on_actionAddInst_triggered()
 {

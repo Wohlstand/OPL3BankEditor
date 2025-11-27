@@ -329,6 +329,10 @@ public slots:
      */
     void reloadBankNames();
 
+#ifdef __APPLE__
+    void openFileSlot(QString file);
+#endif
+
 private slots:
     /* ***************** Common slots ***************** */
     /**
