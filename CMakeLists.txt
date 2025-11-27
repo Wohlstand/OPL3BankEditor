@@ -306,7 +306,7 @@ if(DEBUG_WRITE_AMPLITUDE_PLOT)
     target_compile_definitions(OPL3BankEditor PRIVATE "-DDEBUG_WRITE_AMPLITUDE_PLOT")
 endif()
 
-target_link_libraries(OPL3BankEditor PRIVATE FileFormats Chips Measurer)
+target_link_libraries(OPL3BankEditor PRIVATE FileFormats Measurer Chips)
 
 if(BUILD_MAJOR_QT GREATER_EQUAL 5)
     target_link_libraries(OPL3BankEditor PRIVATE ${QT_Widgets_TARGET} ${CMAKE_THREAD_LIBS_INIT})
