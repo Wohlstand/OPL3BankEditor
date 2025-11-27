@@ -34,13 +34,22 @@ Linux | Windows | macOS
 
 ## Download
 * **Stable builds:** https://github.com/Wohlstand/OPL3BankEditor/releases
-* **Fresh dev builds:**
-  * [Download for Windows x86_64 (7/8/8.1/10 with Nuked OPL3 emulator)](http://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win64.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor))
-  * [Download for Windows x86 (XP/Vista/7/8/8.1/10 with Nuked OPL3 emulator)](http://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win32.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor))
-  * [Download for Windows x86 (98/ME with proxy to real OPL3 chip)](http://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win9x.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opl3bankeditor))
-  * [Download for macOS x64 (DMG)](http://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opl3-bank-editor/opl3_bank_editor-macos.dmg) (built by [Travis-CI](https://travis-ci.org/Wohlstand/OPL3BankEditor))
-  * [Download for macOS x64 (ZIP)](http://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opl3-bank-editor/opl3_bank_editor-macos.zip) (built by [Travis-CI](https://travis-ci.org/Wohlstand/OPL3BankEditor))
-  * CIs for other operating systems are coming soon... (However, it's easy to build it by yourself :wink:)
+* **Fresh dev auto-builds:**
+  * **Windows**:
+    * [Download for Windows x86_64 (7/8/8.1/10 with Nuked OPL3 emulator)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win64.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml))
+    * [Download for Windows x86 (XP/Vista/7/8/8.1/10 with Nuked OPL3 emulator)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win32.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml))
+    * [Download for Windows x86 (98/ME with proxy to real OPL3 chip)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win9x.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml))
+  * **macOS**:
+    * <s>[Download for macOS x64 (DMG)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opl3-bank-editor/opl3_bank_editor-macos.dmg)</s> (Under construction)
+    * <s>[Download for macOS x64 (ZIP)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opl3-bank-editor/opl3_bank_editor-macos.zip)</s> (Under construction)
+  * **Ubuntu**:
+    * [Download for Ubuntu 24.04 for Qt5 x64 (DEB)](https://builds.wohlsoft.ru/ubuntu-24-04/opl3-bank-editor-qt5-ubuntu-24-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 24.04 for Qt6 x64 (DEB) (Plots unsupported)](https://builds.wohlsoft.ru/ubuntu-24-04/opl3-bank-editor-qt6-ubuntu-24-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 22.04 x64 (DEB)](https://builds.wohlsoft.ru/ubuntu-22-04/opl3-bank-editor-ubuntu-22-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 20.04 x64 (DEB)](https://builds.wohlsoft.ru/ubuntu-20-04/opl3-bank-editor-ubuntu-20-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 18.04 x64 (DEB)](https://builds.wohlsoft.ru/ubuntu-18-04/opl3-bank-editor-ubuntu-18-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 16.04 x64 (DEB)](https://builds.wohlsoft.ru/ubuntu-16-04/opl3-bank-editor-ubuntu-16-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 14.04 x64 (DEB) (Plots unsupported)](https://builds.wohlsoft.ru/ubuntu-14-04/opl3-bank-editor-ubuntu-14-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/ubuntu-ci.yml))
 
 # How to build
 Please, see [the wiki](https://github.com/Wohlstand/OPL3BankEditor/wiki).
