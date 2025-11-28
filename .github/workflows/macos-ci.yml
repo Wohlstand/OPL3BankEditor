@@ -131,7 +131,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=$PWD/build/inst ${{ matrix.config.extra_options }} \
             -DUSE_STATIC_QT=ON \
             -DCPACK_GENERATOR=DragNDrop \
-            -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${{ matrix.config.arch }}-${BRANCH_NAME}"\
+            -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${{ matrix.config.arch }}-${BRANCH_NAME_RES}"\
         .
 
     - name: Build
@@ -148,6 +148,12 @@ jobs:
           export PATH=${{ matrix.config.extra_path }}:${PATH}
         fi
         cd build
+
+        # Pack with default setup
+        cpack .
+
+        # Pack as a ZIP file
+        cmake -B build -DCPACK_GENERATOR=ZIP
         cpack .
         cd ..
 
@@ -175,7 +181,10 @@ jobs:
         fi
 
         UPLOAD_LIST="set ssl:verify-certificate no;"
-        for q in ./bin-cmake-release/*.dmg; do
+        for q in ./build/*.dmg; do
+            UPLOAD_LIST="${UPLOAD_LIST} put -O ${{ matrix.config.upload_directory }} $q;"
+        done
+        for q in ./build/*.zip; do
             UPLOAD_LIST="${UPLOAD_LIST} put -O ${{ matrix.config.upload_directory }} $q;"
         done
         # for q in ./bin-cmake-release/*.pkg; do
