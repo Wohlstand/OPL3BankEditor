@@ -10,4 +10,4 @@ Icon=opl3_bank_editor
 Exec=opl3_bank_editor
 Categories=AudioVideo;Audio
 Type=Application
-MimeType=application/x-opl3-wopl;application/x-opl3-opli
+MimeType=application/x-opl3-wopl;application/x-opl3-fbop3;application/x-opl3-opli;application/x-dmx-op2;application/x-sb-ibk;application/x-sb-sbi;application/x-sb-ibk-unix;application/x-adlib-bnk;application/x-adlib-ins;application/x-adlib-snd;application/x-adlibgold-bnk;application/x-hmi-bnk;application/x-apogee-tmb;application/x-miles-gtl;application/x-junglevision-op3;application/x-ms-fm4-patch

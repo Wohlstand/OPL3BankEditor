@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+  <mime-type type="application/x-opl3-opli">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-opli-instrument"/>
+    <comment>Wohlstand's OPL2/OPL3 instrument (OPLI)</comment>
+    <comment xml:lang="ru_RU">Инструмент для OPL2/OPL3 от Wohlstand-а (WOPL)</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="WOPL3-INST\\0"/>
+    </magic>
+    <glob pattern="*.opli"/>
+  </mime-type>
+
+  <mime-type type="application/x-sb-sbi">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-sb-sbi"/>
+    <comment>Sound Blaster SBI instrument file for OPL2/OPL3</comment>
+    <comment xml:lang="ru_RU">Инструмент Sound Blaster IBK для OPL2/OPL3</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="2OP\x1A"/>
+        <match type="string" offset="0" value="4OP\x1A"/>
+        <match type="string" offset="0" value="SBI\x1A"/>
+        <match type="string" offset="0" value="SBI\x1D"/>
+        <match type="string" offset="0" value="JuceOPLVSTi instrument   "/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-adlib-ins">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-adlib-ins"/>
+    <comment>AdLib OPL2/OPL3 instrument (INS)</comment>
+    <comment xml:lang="ru_RU">Инструмент для OPL2/OPL3 от AdLib (INS)</comment>
+    <glob pattern="*.ins"/>
+  </mime-type>
+
+</mime-info>

@@ -4,20 +4,168 @@
 <dict>
 	<key>CFBundleDocumentTypes</key>
 	<array>
+
+		<!-- Banks  -->
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>wopl</string>
+				<string>wop</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>file_wopl.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>Wohlstand's OPL2/OPL3 tones bank</string>
+			<string>Wohlstand's OPL2/OPL3 tone bank (WOPL)</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>fbop2</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_wopl.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>FlatBuffer-based OPL2/OPL3 tone bank</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>op2</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_dmx.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>OPL2 tone bank for DMX (OP2)</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ibk</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_ibk.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>SB-IBK tone bank file for OPL2/OPL3</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>sb</string>
+				<string>o3</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_ibk.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>UNIX-IBK tone bank file for OPL2/OPL3</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>bnk</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_adbnk.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>AdLib's or HMI's BNK tone bank file for OPL2/OPL3</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>tim</string>
+				<string>snd</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_adbnk.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Legacy AdLib's TIM/SND tone bank file for OPL2</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>tmb</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_tmb.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Apogee TMB bank file for OPL2/OPL3</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ad</string>
+				<string>opl</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_miles.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>AIL/Miles's 'Global timbre bank file for OPL2/OPL3</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>op3</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_jv.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Junglevision's tone bank file for OPL2/OPL3</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>pat</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_fm4.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Microsoft FM4 tone bank file for OPL2/OPL3</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+
+		<!-- Instruments  -->
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
@@ -26,12 +174,41 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>file_opli.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>Wohlstand's OPL2/OPL3 tone instrument file</string>
+			<string>Wohlstand's OPL2/OPL3 instrument (OPLI)</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>sbi</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_sbi.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Sound Blaster SBI instrument file for OPL2/OPL3</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ins</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_adins.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>AdLib OPL2/OPL3 instrument (INS)</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${MACOSX_BUNDLE_EXECUTABLE_NAME}</string>

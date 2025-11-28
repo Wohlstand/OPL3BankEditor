@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+  <mime-type type="application/x-opl3-wopl">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-wopl-bank"/>
+    <comment>Wohlstand's OPL2/OPL3 tone bank (WOPL)</comment>
+    <comment xml:lang="ru_RU">Тоновый банк для OPL2/OPL3 от Wohlstand-а (WOPL)</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="WOPL3-BANK"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-opl3-fbop3">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-wopl-bank"/>
+    <comment>FlatBuffer-based OPL2/OPL3 tone bank</comment>
+    <comment xml:lang="ru_RU">Тоновый банк для OPL2/OPL3 на основе FlatBuffer</comment>
+    <magic priority="50">
+        <match type="string" offset="4" value="FOP3"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-dmx-op2">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-dmx-op2-bank"/>
+    <comment>OPL2 tone bank for DMX (OP2)</comment>
+    <comment xml:lang="ru_RU">Тоновый банк для OPL2 формата DMX (OP2)</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="#OPL_II#"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-sb-ibk-dos">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-sb-ibk-bank"/>
+    <comment>SB-IBK tone bank file for OPL2/OPL3</comment>
+    <comment xml:lang="ru_RU">Тоновый банк SB-IBK для OPL2/OPL3</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="IBK\x1A"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-sb-ibk-unix">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-sb-ibk-bank"/>
+    <comment>UNIX-IBK tone bank file for OPL2/OPL3</comment>
+    <comment xml:lang="ru_RU">Тоновый банк UNIX-IBK для OPL2/OPL3</comment>
+    <glob pattern="*.sb"/>
+    <glob pattern="*.o3"/>
+  </mime-type>
+
+  <mime-type type="application/x-adlib-bnk">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-adlib-bnk"/>
+    <comment>AdLib BNK tone bank file for OPL2/OPL3</comment>
+    <comment xml:lang="ru_RU">Тоновый банк AdLib BNK для OPL2/OPL3</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="\x01\x00ADLIB-"/>
+        <match type="string" offset="0" value="\x01\x00AMLIB-"/>
+        <match type="string" offset="0" value="\x01\x00ANLIB-"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-adlib-snd">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-adlib-bnk"/>
+    <comment>AdLib TIM/SND bank file for OPL2</comment>
+    <comment xml:lang="ru_RU">Тоновый банк AdLib TIM/SND для OPL2</comment>
+    <glob pattern="*.tim"/>
+    <glob pattern="*.snd"/>
+  </mime-type>
+
+  <mime-type type="application/x-adlibgold-bnk">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-adlib-bnk"/>
+    <comment>AdLib Gold BNK tone bank file for OPL2/OPL3</comment>
+    <comment xml:lang="ru_RU">Тоновый банк AdLib Gold BNK для OPL2/OPL3</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="Accomp. Bank, (C) AdLib Inc"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-hmi-bnk">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-hmi-bnk"/>
+    <comment>HMI BNK bank file for OPL2/OPL3</comment>
+    <comment xml:lang="ru_RU">Файл банка HMI BNK для OPL2/OPL3</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="\x00\x00ADLIB-"/>
+        <match type="string" offset="0" value="\x00\x00AMLIB-"/>
+        <match type="string" offset="0" value="\x00\x00ANLIB-"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-apogee-tmb">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-apogee-tmb"/>
+    <comment>Apogee TMB bank file for OPL2/OPL3</comment>
+    <comment xml:lang="ru_RU">Файл банка Apogee TMB для OPL2/OPL3</comment>
+    <glob pattern="*.tmb"/>
+  </mime-type>
+
+  <mime-type type="application/x-miles-gtl">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-miles-gtl"/>
+    <comment>AIL/Miles's 'Global timbre bank file for OPL2/OPL3</comment>
+    <comment xml:lang="ru_RU">Глобальный тоновый банк AIL/Miles для OPL2/OPL3</comment>
+    <glob pattern="*.ad"/>
+    <glob pattern="*.opl"/>
+  </mime-type>
+
+  <mime-type type="application/x-junglevision-op3">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-junglevision-op3"/>
+    <comment>Junglevision's tone bank file for OPL2/OPL3</comment>
+    <comment xml:lang="ru_RU">Тоновый банк Junglevision для OPL2/OPL3</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="Junglevision Patch File\x1A\0\0\0\0\0\0\0\0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-ms-fm4-patch">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-ms-fm4"/>
+    <comment>Microsoft FM4 tone bank file for OPL2/OPL3</comment>
+    <comment xml:lang="ru_RU">Тоновый банк Microsoft FM4 для OPL2/OPL3</comment>
+    <magic priority="75">
+        <match type="string" offset="0" value="RIFF"/>
+        <match type="string" offset="8" value="Ptch"/>
+        <match type="string" offset="12" value="fm4 "/>
+    </magic>
+    <glob pattern="*.pat"/>
+  </mime-type>
+</mime-info>

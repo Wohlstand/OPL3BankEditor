@@ -2,3 +2,21 @@
 
 1   ICON    "file_wopl.ico"
 2   ICON    "file_opli.ico"
+
+3   ICON    "file_ibk.ico"
+4   ICON    "file_sbi.ico"
+
+5   ICON    "file_adbnk.ico"
+6   ICON    "file_adins.ico"
+
+7   ICON    "file_dmx.ico"
+
+8   ICON    "file_hmi.ico"
+
+9   ICON    "file_miles.ico"
+
+10  ICON    "file_tmb.ico"
+
+11  ICON    "file_jv.ico"
+
+12  ICON    "file_fm4.ico"

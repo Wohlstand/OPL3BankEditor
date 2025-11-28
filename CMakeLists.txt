@@ -325,7 +325,7 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_SYSTEM_NAME STREQUAL "
     install(FILES "src/resources/opl3_bank_editor.desktop"
             DESTINATION "share/applications")
 
-    foreach(format wopl opli)
+    foreach(format banks instruments)
         install(FILES "src/resources/mime/opl3-${format}.xml"
                 DESTINATION "share/mime/packages")
     endforeach()
@@ -346,6 +346,66 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_SYSTEM_NAME STREQUAL "
         install(FILES "src/resources/file_opli/file_opli_${size}x${size}.png"
                 DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
                 RENAME "x-application-opli-instrument.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_dmx/file_dmx_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-dmx-op2-bank.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_ibk/file_ibk_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-sb-ibk-bank.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_sbi/file_sbi_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-sb-sbi.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_adbnk/file_adbnk_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-adlib-bnk.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_adins/file_adins_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-adlib-ins.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_hmi/file_hmi_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-hmi-bnk.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_tmb/file_tmb_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-apogee-tmb.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_miles/file_miles_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-miles-gtl.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_jv/file_jv_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-junglevision-op3.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_fm4/file_fm4_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-ms-fm4.png")
     endforeach()
 endif()
 
