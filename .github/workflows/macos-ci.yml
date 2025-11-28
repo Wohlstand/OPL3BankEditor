@@ -179,7 +179,6 @@ jobs:
         # for q in ./bin-cmake-release/*.pkg; do
         #     UPLOAD_LIST="${UPLOAD_LIST} put -O ${{ matrix.config.upload_directory }} $q;"
         # done
-        UPLOAD_LIST="${UPLOAD_LIST} put -O ./www/_versions build-temp/build_date_${BRANCH_NAME_RES}_osx.txt;"
 
         lftp -e "${UPLOAD_LIST} exit" -u ${{ secrets.builds_login }},${{ secrets.builds_password }} ${{ secrets.builds_host }}
 
