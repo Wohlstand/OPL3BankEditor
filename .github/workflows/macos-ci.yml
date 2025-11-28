@@ -130,7 +130,7 @@ jobs:
             -DCMAKE_PREFIX_PATH=/Users/StaticQt/${{ matrix.config.qt_ver }} \
             -DCMAKE_INSTALL_PREFIX=$PWD/build/inst ${{ matrix.config.extra_options }} \
             -DUSE_STATIC_QT=ON \
-            -DCPACK_GENERATOR=DragNDrop \
+            -DCPACK_GENERATOR="DragNDrop;ZIP" \
             -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${{ matrix.config.arch }}-${BRANCH_NAME_RES}"\
         .
 
@@ -148,21 +148,23 @@ jobs:
           export PATH=${{ matrix.config.extra_path }}:${PATH}
         fi
         cd build
-
-        # Pack with default setup
-        cpack .
-
-        # Pack as a ZIP file
-        cmake -B build -DCPACK_GENERATOR=ZIP .
         cpack .
         cd ..
 
-    - name: Upload artifact
+    - name: Upload DMG artifact
       if: success() && steps.upload-check.outputs.available == 'true'
       uses: actions/upload-artifact@v4
       continue-on-error: true
       with:
-        path: bin-cmake-release/*.dmg
+        path: build/*.dmg
+        name: ${{ matrix.config.name }} ${{ matrix.config.build_type }}
+
+    - name: Upload ZIP artifact
+      if: success() && steps.upload-check.outputs.available == 'true'
+      uses: actions/upload-artifact@v4
+      continue-on-error: true
+      with:
+        path: build/*.zip
         name: ${{ matrix.config.name }} ${{ matrix.config.build_type }}
 
     - name: Deploy to builds.wohlsoft.ru
