@@ -126,7 +126,9 @@ jobs:
         cmake --version
         echo "====================================="
 
-        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DCMAKE_INSTALL_PREFIX=$PWD/build/inst ${{ matrix.config.extra_options }} \
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+            -DCMAKE_PREFIX_PATH=/Users/StaticQt/${{ matrix.config.qt_ver }} \
+            -DCMAKE_INSTALL_PREFIX=$PWD/build/inst ${{ matrix.config.extra_options }} \
             -DUSE_STATIC_QT=ON \
             -DCPACK_GENERATOR=DragNDrop \
             -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${{ matrix.config.arch }}-${BRANCH_NAME}"\
