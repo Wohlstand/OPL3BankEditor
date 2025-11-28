@@ -49,6 +49,8 @@ option(USE_VENDORED_RTAUDIO "Use vendored RtAudio instead of system-installed on
 
 option(FORCE_EXEC_NO_PIE "Disable Position-Independent code on executables (default ON)" ON)
 
+option(USE_STATIC_QT "Enable linking of extra libraries required to link the static Qt" OFF)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     option(USE_VENDORED_RTAUDIO_JACK "Enable JACK suport at RtAudio if possible" ON)
 endif()
@@ -68,6 +70,8 @@ include(cmake/library_qt.cmake)
 find_package(Qwt)
 find_package(ZLIB REQUIRED)
 find_package(Threads REQUIRED)
+
+include(cmake/static_qt.cmake)
 
 if(NOT WIN32 AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX))
     check_cxx_compiler_flag("-no-pie" HAS_NO_PIE)
@@ -423,10 +427,10 @@ if(DEBUG_WRITE_AMPLITUDE_PLOT)
     target_compile_definitions(OPL3BankEditor PRIVATE "-DDEBUG_WRITE_AMPLITUDE_PLOT")
 endif()
 
-target_link_libraries(OPL3BankEditor PRIVATE FileFormats Measurer Chips)
+target_link_libraries(OPL3BankEditor PRIVATE ${QT_EXTRA_LIBS_PRE} FileFormats Measurer Chips)
 
 if(BUILD_MAJOR_QT GREATER_EQUAL 5)
-    target_link_libraries(OPL3BankEditor PRIVATE ${QT_Widgets_TARGET} ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(OPL3BankEditor PRIVATE ${QT_Widgets_TARGET} ${QT_EXTRA_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 else()
     target_link_libraries(OPL3BankEditor PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 endif()
@@ -684,7 +688,7 @@ endif()
 
 add_executable(measurer_tool "utils/measurer/measurer-tool.cpp")
 set_target_properties(measurer_tool PROPERTIES OUTPUT_NAME "measurer")
-target_link_libraries(measurer_tool PRIVATE FileFormats Measurer Chips)
+target_link_libraries(measurer_tool PRIVATE ${QT_EXTRA_LIBS} FileFormats Measurer Chips ${QT_EXTRA_LIBS_PRE})
 if(FORCE_EXEC_NO_PIE)
     pge_set_nopie(measurer_tool)
 endif()

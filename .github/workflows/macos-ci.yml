@@ -1,0 +1,194 @@
+name: macOS CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: "${{ matrix.config.name }} | ${{ matrix.config.build_type }}"
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        config:
+        - {
+            name: "Intel x64",
+            arch: "x86_64",
+            os: macos-15-intel,
+            osx_target: "10.12",
+            extra_path: "/Users/StaticQt/5.14.2/bin",
+            build_type: "Release",
+            upload_directory: "www/macosx/",
+            qt_download: "https://wohlsoft.ru/docs/Software/QtBuilds/qt-5-14-2-static-macosx-10-14-6.tar.bz2", qt_install_dir: "/Users/StaticQt/",
+            qt_ver: "5.14.2",
+            qt_dir: "/Users/StaticQt/5.14.2/bin",
+            qt_lib_dir: "/Users/StaticQt/5.14.2/lib"
+          }
+        - {
+            name: "Apple Silicon",
+            arch: "arm64",
+            os: macos-15,
+            osx_target: "10.13",
+            extra_path: "/Users/StaticQt/5.15.16/bin",
+            build_type: "Release",
+            upload_directory: "www/macosx/",
+            # FIXME: When switching to Xcode 26, use the "no-agl" edition of Qt build, otherwise build will fail
+            qt_download: "https://wohlsoft.ru/docs/Software/QtBuilds/qt-5-15-16-static-macosx-15-3-1.tar.bz2", qt_install_dir: "/Users/StaticQt/",
+            qt_ver: "5.15.16",
+            qt_dir: "/Users/StaticQt/5.15.16/bin",
+            qt_lib_dir: "/Users/StaticQt/5.15.16/lib"
+          }
+
+    steps:
+    - name: Check for the upload support
+      id: upload-check
+      shell: bash
+      run: |
+        if [[ "${{ secrets.builds_login }}" != '' && \
+              "${{ secrets.builds_password }}" != '' && \
+              "${{ secrets.builds_host }}" != '' ]]; then
+          echo "available=true" >> $GITHUB_OUTPUT;
+        else
+          echo "available=false" >> $GITHUB_OUTPUT;
+        fi
+
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 3
+        submodules: recursive
+
+    - uses: Wohlstand/branch-name@v1.0.1-wohl
+
+    - name: Check if a pull request
+      id: event-check
+      shell: bash
+      run: |
+        if [[ "${BRANCH_NAME}" == *"merge"* ]]; then
+          echo "--- This build is a pull-request ---"
+          echo "is_pull_request=true" >> $GITHUB_OUTPUT;
+        else
+          echo "--- This build is a normal branch build ---"
+          echo "is_pull_request=false" >> $GITHUB_OUTPUT;
+        fi
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        brew install ninja coreutils binutils gnu-sed lftp axel
+        # cmake wget p7zip
+        git submodule init
+        git submodule update
+        mkdir build-temp
+
+    - name: Download Qt
+      if: matrix.config.qt_download
+      uses: carlosperate/download-file-action@v2
+      with:
+        file-url: "${{ matrix.config.qt_download }}"
+        file-name: build-temp/qt.tar.bz2
+
+    - name: Extract Qt
+      if: matrix.config.qt_install_dir
+      shell: bash
+      run: |
+        sudo mkdir -p "${{ matrix.config.qt_install_dir }}"
+        sudo tar -xf build-temp/qt.tar.bz2 -C "${{ matrix.config.qt_install_dir }}"
+
+    - name: Configure
+      shell: bash
+      run: |
+        if [[ ! -z "${{ matrix.config.extra_path }}" ]]; then
+            export PATH=${{ matrix.config.extra_path }}:${PATH}
+        fi
+
+        if [[ "${BRANCH_NAME}" == *"merge"* ]]; then
+            BRANCH_NAME_RES="pull-request"
+            echo "-- Pull-request detected!"
+        else
+            BRANCH_NAME_RES=${BRANCH_NAME}
+        fi
+
+        echo "====================================="
+        clang --version
+        echo "====================================="
+        git --version
+        echo "====================================="
+        cmake --version
+        echo "====================================="
+
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DCMAKE_INSTALL_PREFIX=$PWD/build/inst ${{ matrix.config.extra_options }} \
+            -DUSE_STATIC_QT=ON \
+            -DCPACK_GENERATOR=DragNDrop \
+            -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${{ matrix.config.arch }}-${BRANCH_NAME}"\
+        .
+
+    - name: Build
+      shell: bash
+      run: |
+        cmake --build build --target all --config ${{ matrix.config.build_type }} --parallel 3
+
+    - name: Create DMG package
+      shell: bash
+      id: create_package
+      if: success()
+      run: |
+        if [[ ! -z "${{ matrix.config.extra_path }}" ]]; then
+          export PATH=${{ matrix.config.extra_path }}:${PATH}
+        fi
+        cd build
+        cpack .
+        cd ..
+
+    - name: Upload artifact
+      if: success() && steps.upload-check.outputs.available == 'true'
+      uses: actions/upload-artifact@v4
+      continue-on-error: true
+      with:
+        path: bin-cmake-release/*.dmg
+        name: ${{ matrix.config.name }} ${{ matrix.config.build_type }}
+
+    - name: Deploy to builds.wohlsoft.ru
+      if: success() && github.event_name != 'pull_request' && github.event_name != 'workflow_dispatch' && steps.event-check.outputs.is_pull_request == 'false' && steps.upload-check.outputs.available == 'true'
+      shell: bash
+      run: |
+        if [[ ! -z "${{ matrix.config.extra_path }}" ]]; then
+            export PATH=${{ matrix.config.extra_path }}:${PATH}
+        fi
+
+        if [[ "${BRANCH_NAME}" == *"merge"* ]]; then
+            BRANCH_NAME_RES="pull-request"
+            echo "-- Pull-request detected!"
+        else
+            BRANCH_NAME_RES=${BRANCH_NAME}
+        fi
+
+        UPLOAD_LIST="set ssl:verify-certificate no;"
+        for q in ./bin-cmake-release/*.dmg; do
+            UPLOAD_LIST="${UPLOAD_LIST} put -O ${{ matrix.config.upload_directory }} $q;"
+        done
+        # for q in ./bin-cmake-release/*.pkg; do
+        #     UPLOAD_LIST="${UPLOAD_LIST} put -O ${{ matrix.config.upload_directory }} $q;"
+        # done
+        UPLOAD_LIST="${UPLOAD_LIST} put -O ./www/_versions build-temp/build_date_${BRANCH_NAME_RES}_osx.txt;"
+
+        lftp -e "${UPLOAD_LIST} exit" -u ${{ secrets.builds_login }},${{ secrets.builds_password }} ${{ secrets.builds_host }}
+
+    - name: List Build Directory
+      if: always()
+      shell: bash
+      run: |
+        git status
+
+        if [[ -d build ]]; then
+            ls -lR build
+        fi

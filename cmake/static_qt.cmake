@@ -17,7 +17,7 @@ macro(force_qt_lib_path LIBNAME FORCEPATH)
 endmacro()
 
 # Manually turn on static Qt deployment
-if(OPL3BE_ENABLE_STATIC_QT)
+if(USE_STATIC_QT)
     set(MOONDUST_STATIC_QT_ROOT "${CMAKE_PREFIX_PATH}" CACHE STRING "Path to the static Qt root")
 
     find_library(QT_PRCE2 qtpcre2)
@@ -44,9 +44,53 @@ if(OPL3BE_ENABLE_STATIC_QT)
         endif()
     endif()
 
-    list(APPEND QT_FOUND_EXTRA_LIBS PGE_FreeType)
+    find_library(QT_LIBFREETYPE libqtfreetype.a)
+    if(QT_LIBFREETYPE)
+        message("==Qt-FreeType detected! (${QT_LIBFREETYPE})==")
+        list(APPEND QT_FOUND_EXTRA_LIBS ${QT_LIBFREETYPE})
+        set(OPL3BE_QT_STATIC_DETECTED TRUE)
+    else()
+        find_library(QT_LIBFREETYPE libfreetype.a)
+        if(QT_LIBFREETYPE)
+            list(APPEND QT_FOUND_EXTRA_LIBS ${QT_LIBFREETYPE})
+        endif()
+    endif()
 
-    list(APPEND QT_FOUND_EXTRA_LIBS PGE_libPNG PGE_ZLib)
+    find_library(QT_LIBJPEG libqtlibjpeg.a)
+    if(QT_LIBJPEG)
+        message("==Qt-JPEG detected! (${QT_LIBJPEG})==")
+        list(APPEND QT_FOUND_EXTRA_LIBS ${QT_LIBJPEG})
+        set(OPL3BE_QT_STATIC_DETECTED TRUE)
+    else()
+        find_library(QT_LIBJPEG libjpeg.a)
+        if(QT_LIBJPEG)
+            list(APPEND QT_FOUND_EXTRA_LIBS ${QT_LIBJPEG})
+        endif()
+    endif()
+
+    find_library(QT_LIBPNG libqtlibpng.a)
+    if(QT_LIBPNG)
+        message("==Qt-PNG detected! (${QT_LIBPNG})==")
+        list(APPEND QT_FOUND_EXTRA_LIBS ${QT_LIBPNG})
+        set(OPL3BE_QT_STATIC_DETECTED TRUE)
+    else()
+        find_library(QT_LIBPNG libpng.a)
+        if(QT_LIBPNG)
+            list(APPEND QT_FOUND_EXTRA_LIBS ${QT_LIBPNG})
+        endif()
+    endif()
+
+    find_library(QT_ZLIB libQt5ZLib.a)
+    if(QT_ZLIB)
+        message("==Qt-ZLib detected! (${QT_ZLIB})==")
+        list(APPEND QT_FOUND_EXTRA_LIBS ${QT_ZLIB})
+        set(OPL3BE_QT_STATIC_DETECTED TRUE)
+    else()
+        find_library(QT_ZLIB libz.a)
+        if(QT_ZLIB)
+            list(APPEND QT_FOUND_EXTRA_LIBS ${QT_ZLIB})
+        endif()
+    endif()
 
     find_library(QT_PTHREAD pthread)
     #if(QT_PTHREAD)
@@ -181,8 +225,14 @@ if(OPL3BE_ENABLE_STATIC_QT)
                 Metal
                 CoreFoundation
                 CoreGraphics
-                OpenGL
-                AGL
+                # OpenGL
+            )
+
+            # if(XCODE_VERSION VERSION_LESS "26.0")
+            #     list(APPEND MAC_LIBS_TO_FIND AGL)
+            # endif()
+
+            list(APPEND MAC_LIBS_TO_FIND
                 Carbon
                 QuartzCore
                 CoreText
@@ -464,4 +514,4 @@ if(OPL3BE_ENABLE_STATIC_QT)
         set(QT_EXTRA_LIBS_PRE ${QT_FOUND_EXTRA_LIBS_PRE})
     endif()
 
-endif() #OPL3BE_ENABLE_STATIC_QT
+endif() #USE_STATIC_QT
