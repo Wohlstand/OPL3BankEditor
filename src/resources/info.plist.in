@@ -24,7 +24,7 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>fbop2</string>
+				<string>fbop3</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>file_wopl.icns</string>
