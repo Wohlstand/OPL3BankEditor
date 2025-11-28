@@ -84,8 +84,8 @@ jobs:
     - name: Install dependencies
       shell: bash
       run: |
-        brew install ninja coreutils binutils gnu-sed lftp axel
-        # cmake wget p7zip
+        brew install coreutils binutils gnu-sed lftp axel
+        # cmake wget p7zip ninja
         git submodule init
         git submodule update
         mkdir build-temp
@@ -131,7 +131,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=$PWD/build/inst ${{ matrix.config.extra_options }} \
             -DUSE_STATIC_QT=ON \
             -DCPACK_GENERATOR="DragNDrop;ZIP" \
-            -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${{ matrix.config.arch }}-${BRANCH_NAME_RES}"\
+            -DCPACK_PACKAGE_FILE_NAME="opl3-bank-editor-${{ matrix.config.arch }}-${BRANCH_NAME_RES}" \
         .
 
     - name: Build
@@ -157,7 +157,7 @@ jobs:
       continue-on-error: true
       with:
         path: build/*.dmg
-        name: ${{ matrix.config.name }} ${{ matrix.config.build_type }}
+        name: ${{ matrix.config.name }} ${{ matrix.config.build_type }} DMG
 
     - name: Upload ZIP artifact
       if: success() && steps.upload-check.outputs.available == 'true'
@@ -165,7 +165,7 @@ jobs:
       continue-on-error: true
       with:
         path: build/*.zip
-        name: ${{ matrix.config.name }} ${{ matrix.config.build_type }}
+        name: ${{ matrix.config.name }} ${{ matrix.config.build_type }} ZIP
 
     - name: Deploy to builds.wohlsoft.ru
       if: success() && github.event_name != 'pull_request' && github.event_name != 'workflow_dispatch' && steps.event-check.outputs.is_pull_request == 'false' && steps.upload-check.outputs.available == 'true'
