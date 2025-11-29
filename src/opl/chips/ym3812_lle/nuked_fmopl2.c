@@ -113,6 +113,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         chip->prescaler_l1[0] = !prescaler_reset && chip->prescaler_cnt[1] == 1;
         chip->prescaler_l2[0] = chip->prescaler_cnt[1] == 3;
     }
+
     if (chip->mclk2)
     {
         chip->prescaler_reset_l[1] = chip->prescaler_reset_l[0];
@@ -154,6 +155,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         chip->write0_latch[1] = chip->write0_latch[0];
         chip->write1_latch[1] = chip->write1_latch[0];
     }
+
     if (chip->mclk2)
     {
         chip->write0_latch[0] = chip->write0_sr;
@@ -168,6 +170,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         chip->write0_latch[4] = chip->write0_latch[3];
         chip->write1_latch[4] = chip->write1_latch[3];
     }
+
     if (chip->clk2)
     {
         chip->write0_latch[3] = chip->write0_latch[2];
@@ -182,8 +185,8 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
     /****/
 
-    if (chip->o_clk1 == chip->clk1 && chip->o_clk2 == chip->clk2 && chip->o_reset1 == chip->reset1
-        && chip->o_write0 == chip->write0 && chip->o_write1 == chip->write1 && chip->o_data_latch == chip->data_latch)
+    if (chip->o_clk1 == chip->clk1 && chip->o_clk2 == chip->clk2 && chip->o_reset1 == chip->reset1 &&
+        chip->o_write0 == chip->write0 && chip->o_write1 == chip->write1 && chip->o_data_latch == chip->data_latch)
         goto end; /* opt */
 
     chip->o_clk1 = chip->clk1;
@@ -222,15 +225,19 @@ void FMOPL2_Clock(fmopl2_t *chip)
     {
         if (chip->reg_sel1)
             chip->reg_test = chip->data_latch & 255;
+
         if (chip->reg_sel2)
             chip->reg_timer1 = chip->data_latch & 255;
+
         if (chip->reg_sel3)
             chip->reg_timer2 = chip->data_latch & 255;
+
         if (chip->reg_sel8)
         {
             chip->reg_notesel = (chip->data_latch & 64) != 0;
             chip->reg_csm = (chip->data_latch & 128) != 0;
         }
+
         if (chip->reg_selbd)
         {
             chip->reg_rh_kon = chip->data_latch & 31;
@@ -405,6 +412,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         chip->t1_start_l[0] = (chip->t1_start_l[1] << 1) | chip->t1_start;
         chip->t2_start_l[0] = (chip->t2_start_l[1] << 1) | chip->reg_t2_start;
     }
+
     if (chip->clk2)
     {
         chip->t1_cnt[1] = chip->t1_cnt[0];
@@ -449,6 +457,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
     {
         chip->rh_sel[0] = (chip->rh_sel[1] << 1) | chip->rh_sel0;
     }
+
     if (chip->clk2)
     {
         chip->rh_sel[1] = chip->rh_sel[0];
@@ -563,16 +572,22 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
             for (i = 0; i < 6; i++)
                 chip->op_tl[i][0] &= ~1;
+
             for (i = 0; i < 2; i++)
                 chip->op_ksl[i][0] &= ~1;
+
             for (i = 0; i < 4; i++)
                 chip->op_ar[i][0] &= ~1;
+
             for (i = 0; i < 4; i++)
                 chip->op_dr[i][0] &= ~1;
+
             for (i = 0; i < 4; i++)
                 chip->op_sl[i][0] &= ~1;
+
             for (i = 0; i < 4; i++)
                 chip->op_rr[i][0] &= ~1;
+
             for (i = 0; i < 2; i++)
                 chip->op_wf[i][0] &= ~1;
         }
@@ -591,14 +606,18 @@ void FMOPL2_Clock(fmopl2_t *chip)
             {
                 for (i = 8; i < 10; i++)
                     chip->ch_fnum[i][0] &= ~1;
+
                 for (i = 0; i < 3; i++)
                     chip->ch_block[i][0] &= ~1;
+
                 chip->ch_keyon[0] &= ~1;
 
                 for (i = 8; i < 10; i++)
                     chip->ch_fnum[i][0] |= (chip->data >> (i - 8)) & 1;
+
                 for (i = 0; i < 3; i++)
                     chip->ch_block[i][0] |= (chip->data >> (i + 2)) & 1;
+
                 chip->ch_keyon[0] |= (chip->data >> 5) & 1;
             }
 
@@ -617,6 +636,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
             {
                 for (i = 0; i < 4; i++)
                     chip->op_multi[i][0] &= ~1;
+
                 chip->op_ksr[0] &= ~1;
                 chip->op_egt[0] &= ~1;
                 chip->op_vib[0] &= ~1;
@@ -624,6 +644,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
                 for (i = 0; i < 4; i++)
                     chip->op_multi[i][0] |= (chip->data >> i) & 1;
+
                 chip->op_ksr[0] |= (chip->data >> 4) & 1;
                 chip->op_egt[0] |= (chip->data >> 5) & 1;
                 chip->op_vib[0] |= (chip->data >> 6) & 1;
@@ -634,11 +655,14 @@ void FMOPL2_Clock(fmopl2_t *chip)
             {
                 for (i = 0; i < 6; i++)
                     chip->op_tl[i][0] &= ~1;
+
                 for (i = 0; i < 2; i++)
                     chip->op_ksl[i][0] &= ~1;
 
+
                 for (i = 0; i < 6; i++)
                     chip->op_tl[i][0] |= (chip->data >> i) & 1;
+
                 for (i = 0; i < 2; i++)
                     chip->op_ksl[i][0] |= (chip->data >> (i + 6)) & 1;
             }
@@ -647,11 +671,14 @@ void FMOPL2_Clock(fmopl2_t *chip)
             {
                 for (i = 0; i < 4; i++)
                     chip->op_ar[i][0] &= ~1;
+
                 for (i = 0; i < 4; i++)
                     chip->op_dr[i][0] &= ~1;
 
+
                 for (i = 0; i < 4; i++)
                     chip->op_ar[i][0] |= (chip->data >> (i + 4)) & 1;
+
                 for (i = 0; i < 4; i++)
                     chip->op_dr[i][0] |= (chip->data >> i) & 1;
             }
@@ -660,11 +687,14 @@ void FMOPL2_Clock(fmopl2_t *chip)
             {
                 for (i = 0; i < 4; i++)
                     chip->op_sl[i][0] &= ~1;
+
                 for (i = 0; i < 4; i++)
                     chip->op_rr[i][0] &= ~1;
 
+
                 for (i = 0; i < 4; i++)
                     chip->op_sl[i][0] |= (chip->data >> (i + 4)) & 1;
+
                 for (i = 0; i < 4; i++)
                     chip->op_rr[i][0] |= (chip->data >> i) & 1;
             }
@@ -679,6 +709,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
             }
         }
     }
+
     if (chip->clk2)
     {
         FMOPL2_DoShiftRegisters(chip, 1);
@@ -697,10 +728,13 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
         chip->block = 0;
         chip->fnum = 0;
+
         for (i = 0; i < 3; i++)
             chip->block |= ((chip->ch_block[i][1] >> shift) & 1) << i;
+
         for (i = 0; i < 10; i++)
             chip->fnum |= ((chip->ch_fnum[i][1] >> shift) & 1) << i;
+
         chip->keyon = (chip->ch_keyon[1] >> shift) & 1;
         chip->connect = (chip->ch_connect[1] >> shift) & 1;
 
@@ -761,6 +795,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         chip->fb_l[0][0] = chip->fb;
         chip->fb_l[1][0] = chip->fb_l[0][1];
     }
+
     if (chip->clk2)
     {
         chip->connect_l[1] = chip->connect_l[0];
@@ -774,6 +809,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         chip->eg_load2_l = chip->fsm_out[9];
         chip->eg_load3_l = chip->eg_subcnt_l[1] && chip->eg_sync_l[1];
     }
+
     chip->eg_load1 = !chip->eg_load1_l && chip->fsm_out[8];
     chip->eg_load2 = !chip->eg_load2_l && chip->fsm_out[9];
     chip->eg_load3 = !chip->eg_load3_l && chip->eg_subcnt_l[1] && chip->eg_sync_l[1];
@@ -806,6 +842,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
             if (!reset)
                 chip->trem_value[0] |= (bit & 1) << 8;
+
             chip->trem_of[0] = of;
 
             if (reset)
@@ -823,65 +860,69 @@ void FMOPL2_Clock(fmopl2_t *chip)
         }
     }
 
+    /*{ */
+    if (chip->eg_load3)
     {
+        chip->eg_timer_low = chip->eg_timer[1] & 3;
+        chip->eg_shift = 0;
 
-        if (chip->eg_load3)
-        {
-            chip->eg_timer_low = chip->eg_timer[1] & 3;
-            chip->eg_shift = 0;
-            if (chip->eg_timer_masked[1] & 0x1555)
-                chip->eg_shift |= 1;
-            if (chip->eg_timer_masked[1] & 0x666)
-                chip->eg_shift |= 2;
-            if (chip->eg_timer_masked[1] & 0x1878)
-                chip->eg_shift |= 4;
-            if (chip->eg_timer_masked[1] & 0x1f80)
-                chip->eg_shift |= 8;
-        }
+        if (chip->eg_timer_masked[1] & 0x1555)
+            chip->eg_shift |= 1;
 
-        if (chip->clk1)
-        {
-            uint_fast32_t bit, bit2, carry;
+        if (chip->eg_timer_masked[1] & 0x666)
+            chip->eg_shift |= 2;
 
-            bit = chip->eg_timer[1] & 1;
-            carry = chip->eg_carry[1] || (chip->eg_subcnt[1] && chip->eg_sync_l[1]);
-            bit += carry;
+        if (chip->eg_timer_masked[1] & 0x1878)
+            chip->eg_shift |= 4;
 
-            if (chip->reset1)
-                bit2 = 0;
-            else
-                bit2 = bit & 1;
-
-            chip->eg_timer[0] = (chip->eg_timer[1] >> 1) & 0x1ffff;
-            chip->eg_timer[0] |= bit2 << 17;
-            chip->eg_carry[0] = (bit & 2) != 0;
-            chip->eg_sync_l[0] = chip->fsm_out[8];
-            chip->eg_mask[0] = (chip->reset1 || chip->fsm_out[8]) ? 0 :
-                (chip->eg_mask[1] || bit2);
-            chip->eg_timer_masked[0] = (chip->eg_timer_masked[1] >> 1) & 0x1ffff;
-
-            if (!chip->eg_mask[1])
-                chip->eg_timer_masked[0] |= bit2 << 17;
-
-            if (chip->reset1)
-                chip->eg_subcnt[0] = 0;
-            else
-                chip->eg_subcnt[0] = chip->eg_subcnt[1] ^ chip->fsm_out[8];
-
-            chip->eg_subcnt_l[0] = chip->eg_subcnt[1];
-        }
-
-        if (chip->clk2)
-        {
-            chip->eg_timer[1] = chip->eg_timer[0];
-            chip->eg_carry[1] = chip->eg_carry[0];
-            chip->eg_sync_l[1] = chip->eg_sync_l[0];
-            chip->eg_mask[1] = chip->eg_mask[0];
-            chip->eg_timer_masked[1] = chip->eg_timer_masked[0];
-            chip->eg_subcnt[1] = chip->eg_subcnt[0];
-            chip->eg_subcnt_l[1] = chip->eg_subcnt_l[0];
-        }
+        if (chip->eg_timer_masked[1] & 0x1f80)
+            chip->eg_shift |= 8;
     }
+
+    if (chip->clk1)
+    {
+        uint_fast32_t bit, bit2, carry;
+
+        bit = chip->eg_timer[1] & 1;
+        carry = chip->eg_carry[1] || (chip->eg_subcnt[1] && chip->eg_sync_l[1]);
+        bit += carry;
+
+        if (chip->reset1)
+            bit2 = 0;
+        else
+            bit2 = bit & 1;
+
+        chip->eg_timer[0] = (chip->eg_timer[1] >> 1) & 0x1ffff;
+        chip->eg_timer[0] |= bit2 << 17;
+        chip->eg_carry[0] = (bit & 2) != 0;
+        chip->eg_sync_l[0] = chip->fsm_out[8];
+        chip->eg_mask[0] = (chip->reset1 || chip->fsm_out[8]) ? 0 :
+            (chip->eg_mask[1] || bit2);
+        chip->eg_timer_masked[0] = (chip->eg_timer_masked[1] >> 1) & 0x1ffff;
+
+        if (!chip->eg_mask[1])
+            chip->eg_timer_masked[0] |= bit2 << 17;
+
+        if (chip->reset1)
+            chip->eg_subcnt[0] = 0;
+        else
+            chip->eg_subcnt[0] = chip->eg_subcnt[1] ^ chip->fsm_out[8];
+
+        chip->eg_subcnt_l[0] = chip->eg_subcnt[1];
+    }
+
+    if (chip->clk2)
+    {
+        chip->eg_timer[1] = chip->eg_timer[0];
+        chip->eg_carry[1] = chip->eg_carry[0];
+        chip->eg_sync_l[1] = chip->eg_sync_l[0];
+        chip->eg_mask[1] = chip->eg_mask[0];
+        chip->eg_timer_masked[1] = chip->eg_timer_masked[0];
+        chip->eg_subcnt[1] = chip->eg_subcnt[0];
+        chip->eg_subcnt_l[1] = chip->eg_subcnt_l[0];
+    }
+    /*}*/
+
 
     if (chip->clk1)
     {
@@ -909,6 +950,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
         if (chip->eg_state[0][1] & 0x20000)
             state |= 1;
+
         if (chip->eg_state[1][1] & 0x20000)
             state |= 2;
 
@@ -918,8 +960,10 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
         if (rate_sel == 0)
             rate |= chip->ar;
+
         if (rate_sel == 1)
             rate |= chip->dr;
+
         if (rate_sel == 3 || (rate_sel == 2 && !chip->egt))
             rate |= chip->rr;
 
@@ -1036,13 +1080,17 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
         if (exponent)
             add |= (~level) >> 1;
+
         if (linear)
             add |= 4;
 
+
         if (step1)
             addshift |= add >> 2;
+
         if (step2)
             addshift |= add >> 1;
+
         if (step3)
             addshift |= add >> 0;
 
@@ -1051,6 +1099,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         ksl = eg_ksltable[chip->fnum >> 6] ^ 127;
 
         ksl += ((chip->block ^ 7) + 1) << 3;
+
         if (ksl & 128)
             ksl = 0;
         else
@@ -1087,6 +1136,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         {
             chip->eg_level[i][0] = (chip->eg_level[i][1] << 1) | ((levelnext >> i) & 1);
         }
+
         chip->eg_out[0] = totallevelclamp;
 
         if (chip->fsm_out[9])
@@ -1100,6 +1150,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
         chip->eg_mute[0] = (chip->eg_mute[1] << 1) | mute;
     }
+
     if (chip->clk2)
     {
         chip->eg_state[0][1] = chip->eg_state[0][0];
@@ -1109,6 +1160,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         {
             chip->eg_level[i][1] = chip->eg_level[i][0];
         }
+
         chip->eg_out[1] = chip->eg_out[0];
         chip->eg_mute[1] = chip->eg_mute[0];
     }
@@ -1183,6 +1235,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
         chip->noise_lfsr[0] = (chip->noise_lfsr[1] << 1) | noise_bit;
     }
+
     if (chip->clk2)
     {
         for (i = 0; i < 19; i++)
@@ -1193,6 +1246,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         chip->noise_lfsr[1] = chip->noise_lfsr[0];
 
         chip->pg_out = 0;
+
         for (i = 0; i < 10; i++)
         {
             chip->pg_out |= ((chip->pg_phase[i+9][1] >> 17) & 1) << i;
@@ -1374,16 +1428,20 @@ void FMOPL2_Clock(fmopl2_t *chip)
             {
                 uint_fast32_t bit;
                 chip->op_fb[0][i][0] = chip->op_fb[0][i][1] << 1;
+
                 if (chip->fsm_out[2])
                     bit = (value >> i) & 1;
                 else
                     bit = (chip->op_fb[0][i][1] >> 8) & 1;
+
                 chip->op_fb[0][i][0] |= bit;
                 chip->op_fb[1][i][0] = chip->op_fb[1][i][1] << 1;
+
                 if (chip->fsm_out[2])
                     bit = (chip->op_fb[0][i][1] >> 8) & 1;
                 else
                     bit = (chip->op_fb[1][i][1] >> 8) & 1;
+
                 chip->op_fb[1][i][0] |= bit;
             }
             chip->op_mod[0] = mod & 1023;
@@ -1404,6 +1462,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
                 chip->op_fb[0][i][1] = chip->op_fb[0][i][0];
                 chip->op_fb[1][i][1] = chip->op_fb[1][i][0];
             }
+
             chip->op_mod[1] = chip->op_mod[0];
         }
     }
@@ -1412,6 +1471,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
         uint_fast32_t accm_out, top, clamplow, clamphigh;
 
         accm_out = chip->fsm_out[8] ? (chip->accm_value[1] & 0x7fff) : 0;
+
         if (chip->fsm_out[8] && !(chip->accm_value[1] & 0x20000))
             accm_out |= 0x8000;
 
@@ -1422,6 +1482,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
         if (chip->clk1)
             chip->accm_load1_l = chip->fsm_out[8];
+
         chip->accm_load1 = !chip->accm_load1_l && chip->fsm_out[8];
 
         if (chip->accm_load1)
@@ -1449,6 +1510,7 @@ void FMOPL2_Clock(fmopl2_t *chip)
             sign = ((chip->accm_top & 64) != 0 && !chip->accm_clamplow) || chip->accm_clamphigh;
 
             top_unsigned = chip->accm_top & 63;
+
             if (!sign)
                 top_unsigned ^= 63;
 
@@ -1456,20 +1518,28 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
             if (top_unsigned & 32)
                 shift |= 7;
+
             if ((top_unsigned & 48) == 16)
                 shift |= 6;
+
             if ((top_unsigned & 56) == 8)
                 shift |= 5;
+
             if ((top_unsigned & 60) == 4)
                 shift |= 4;
+
             if ((top_unsigned & 62) == 2)
                 shift |= 3;
+
             if (top_unsigned == 1)
                 shift |= 2;
+
             if (top_unsigned == 0)
                 shift |= 1;
+
             if (chip->accm_clamplow)
                 shift |= 7;
+
             if (chip->accm_clamphigh)
                 shift |= 7;
 
@@ -1477,10 +1547,13 @@ void FMOPL2_Clock(fmopl2_t *chip)
 
             if (chip->fsm_out[6])
                 accm_bit |= sign;
+
             if (chip->accm_sel[1] & 1)
                 accm_bit |= (shift & 1) != 0;
+
             if (chip->accm_sel[1] & 2)
                 accm_bit |= (shift & 2) != 0;
+
             if (chip->accm_sel[1] & 4)
                 accm_bit |= (shift & 4) != 0;
 
@@ -1488,28 +1561,38 @@ void FMOPL2_Clock(fmopl2_t *chip)
             {
                 if (top_unsigned & 32)
                     accm_bit |= (chip->accm_shifter[1] >> 6) & 1;
+
                 if ((top_unsigned & 48) == 16)
                     accm_bit |= (chip->accm_shifter[1] >> 5) & 1;
+
                 if ((top_unsigned & 56) == 8)
                     accm_bit |= (chip->accm_shifter[1] >> 4) & 1;
+
                 if ((top_unsigned & 60) == 4)
                     accm_bit |= (chip->accm_shifter[1] >> 3) & 1;
+
                 if ((top_unsigned & 62) == 2)
                     accm_bit |= (chip->accm_shifter[1] >> 2) & 1;
+
                 if (top_unsigned == 1)
                     accm_bit |= (chip->accm_shifter[1] >> 1) & 1;
+
                 if (top_unsigned == 0)
                     accm_bit |= chip->accm_shifter[1] & 1;
+
                 if (chip->accm_clamphigh)
                     accm_bit |= 1;
+
                 if (chip->accm_clamplow)
                     accm_bit = 0;
             }
 
             chip->accm_value[0] = value & 0x3ffff;
             chip->accm_shifter[0] = (chip->accm_shifter[1] >> 1) & 0x7fff;
+
             if (chip->fsm_out[8])
                 chip->accm_shifter[0] |= accm_out;
+
             chip->accm_sel[0] = (chip->accm_sel[1] << 1) | chip->fsm_out[6];
             chip->accm_mo[0] = accm_bit;
         }
@@ -1532,16 +1615,22 @@ end:
     if (chip->io_read0)
     {
         chip->io_data &= ~6;
+
         if (chip->reg_test & 64)
             chip->io_data |= chip->dbg_serial[1] & 1;
+
         if (irq)
             chip->io_data |= 128;
+
         if (chip->t1_status)
             chip->io_data |= 64;
+
         if (chip->t2_status)
             chip->io_data |= 32;
+
         if (chip->unk_status1)
             chip->io_data |= 16;
+
         if (chip->unk_status2)
             chip->io_data |= 8;
     }
