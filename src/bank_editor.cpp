@@ -95,6 +95,11 @@ BankEditor::BankEditor(QWidget *parent) :
     m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
     m_bank.Ins_Percussion_box.fill(FmBank::blankInst(true));
 
+#ifdef __APPLE__
+    ui->actionAbout->setMenuRole(QAction::AboutRole);
+    ui->actionExit->setMenuRole(QAction::QuitRole);
+#endif
+
     QActionGroup *actionGroupStandard = new QActionGroup(this);
     m_actionGroupStandard = actionGroupStandard;
     ui->actionStandardGM->setData(kMidiSpecGM1);
