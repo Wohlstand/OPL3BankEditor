@@ -35,45 +35,61 @@ static void FMOPL2_DoShiftRegisters(fmopl2_t *chip, uint_fast32_t sel)
     /* fnum */
     for (j = 0; j < 10; j++)
         chip->ch_fnum[j][to] = CH_ROTATE(chip->ch_fnum[j][from]);
+
     /* block */
     for (j = 0; j < 3; j++)
         chip->ch_block[j][to] = CH_ROTATE(chip->ch_block[j][from]);
+
     /* kon */
     chip->ch_keyon[to] = CH_ROTATE(chip->ch_keyon[from]);
+
     /* connect */
     chip->ch_connect[to] = CH_ROTATE(chip->ch_connect[from]);
+
     /* feedback */
     for (j = 0; j < 3; j++)
         chip->ch_fb[j][to] = CH_ROTATE(chip->ch_fb[j][from]);
+
     /* multi */
     for (j = 0; j < 4; j++)
         chip->op_multi[j][to] = OP_ROTATE(chip->op_multi[j][from]);
+
     /* ksr */
     chip->op_ksr[to] = OP_ROTATE(chip->op_ksr[from]);
+
     /* egt */
     chip->op_egt[to] = OP_ROTATE(chip->op_egt[from]);
+
     /* vib */
     chip->op_vib[to] = OP_ROTATE(chip->op_vib[from]);
+
     /* am */
     chip->op_am[to] = OP_ROTATE(chip->op_am[from]);
+
     /* tl */
     for (j = 0; j < 6; j++)
         chip->op_tl[j][to] = OP_ROTATE(chip->op_tl[j][from]);
+
     /* ksl */
     for (j = 0; j < 2; j++)
         chip->op_ksl[j][to] = OP_ROTATE(chip->op_ksl[j][from]);
+
     /* ar */
     for (j = 0; j < 4; j++)
         chip->op_ar[j][to] = OP_ROTATE(chip->op_ar[j][from]);
+
     /* dr */
     for (j = 0; j < 4; j++)
         chip->op_dr[j][to] = OP_ROTATE(chip->op_dr[j][from]);
+
     /* sl */
     for (j = 0; j < 4; j++)
         chip->op_sl[j][to] = OP_ROTATE(chip->op_sl[j][from]);
+
     /* rr */
     for (j = 0; j < 4; j++)
         chip->op_rr[j][to] = OP_ROTATE(chip->op_rr[j][from]);
+
     /* wf */
     for (j = 0; j < 2; j++)
         chip->op_wf[j][to] = OP_ROTATE(chip->op_wf[j][from]);
