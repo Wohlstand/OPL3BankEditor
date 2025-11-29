@@ -26,7 +26,7 @@
 #include <cstdint>
 
 
-#if !defined(_MSC_VER) && !defined(__aarch64__) && !defined(__3DS__)
+#if !defined(_MSC_VER) && !defined(__aarch64__) && !defined(__3DS__) && !defined(__APPLE__)
 #define ATTRIB_PACKED __attribute__((__packed__))
 #else
 #define ATTRIB_PACKED
