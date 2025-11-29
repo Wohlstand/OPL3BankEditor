@@ -64,7 +64,6 @@ static void nopl2_cycle(nopl2_t *chip)
 
         if (!chip->o_sy && chip->chip.o_sy)
         {
-
             if (chip->o_sh && !chip->chip.o_sh)
             {
                 mant = chip->shifter & 0x3ff;
@@ -78,8 +77,8 @@ static void nopl2_cycle(nopl2_t *chip)
                     chip->sample = mant << shift;
                 }
             }
-            chip->shifter = (chip->shifter >> 1) | (chip->chip.o_mo << 12);
 
+            chip->shifter = (chip->shifter >> 1) | (chip->chip.o_mo << 12);
             chip->o_sh = chip->chip.o_sh;
         }
 
