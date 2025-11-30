@@ -1,6 +1,12 @@
 [submodule "src/midi/external/rtmidi"]
 	path = src/midi/external/rtmidi
 	url = https://github.com/Wohlstand/rtmidi.git
+	branch = master
 [submodule "src/audio/external/rtaudio"]
 	path = src/audio/external/rtaudio
 	url = https://github.com/Wohlstand/rtaudio.git
+	branch = master
+[submodule "src/opl/chips"]
+	path = src/opl/chips
+	url = https://github.com/Wohlstand/OPL_ChipSet.git
+	branch = main
