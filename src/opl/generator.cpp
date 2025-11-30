@@ -19,6 +19,7 @@
 #include "generator.h"
 #include <qendian.h>
 #include <cmath>
+#include <assert.h>
 #include <QtDebug>
 
 #include "models/opl_models.h"
@@ -533,6 +534,7 @@ void Generator::touchNote(uint32_t c,
         }
         else
         {
+            assert(c >= 3);
             i0 = m_ins[c - 3];
             i1 = i;
             vol.voiceMode = OPLVoice_MODE_4op_3_4_FM_FM; // 4-op xx-xx ops 3&4
