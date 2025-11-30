@@ -23,6 +23,7 @@
 #include "nuked_fmopl2.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "nopl2.h"
 
 #define OPL_WRITEBUF_SIZE   2048
@@ -56,6 +57,8 @@ typedef struct {
 static void nopl2_cycle(nopl2_t *chip)
 {
     int i, mant, shift;
+    uint_fast32_t kon;
+    static uint_fast32_t prev;
 
     for (i = 0; i < 144; i++)
     {
@@ -80,6 +83,49 @@ static void nopl2_cycle(nopl2_t *chip)
 
             chip->shifter = (chip->shifter >> 1) | (chip->chip.o_mo << 12);
             chip->o_sh = chip->chip.o_sh;
+        }
+
+        //f((chip->chip.input.mclk / 4) == 17)
+        kon = chip->chip.ch_keyon[0];
+        if(kon != prev && ((i / 4) - 4) % 18 == 0)
+        {
+            prev = kon;
+            printf("CLK=%5u KON -> %d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d\r",
+                   chip->chip.input.mclk,
+                   (kon >> 31) & 0x01,
+                   (kon >> 30) & 0x01,
+                   (kon >> 29) & 0x01,
+                   (kon >> 28) & 0x01,
+                   (kon >> 27) & 0x01,
+                   (kon >> 26) & 0x01,
+                   (kon >> 25) & 0x01,
+                   (kon >> 24) & 0x01,
+                   (kon >> 23) & 0x01,
+                   (kon >> 22) & 0x01,
+                   (kon >> 21) & 0x01,
+                   (kon >> 20) & 0x01,
+                   (kon >> 19) & 0x01,
+                   (kon >> 18) & 0x01,
+                   (kon >> 17) & 0x01,
+                   (kon >> 16) & 0x01,
+                   (kon >> 15) & 0x01,
+                   (kon >> 14) & 0x01,
+                   (kon >> 13) & 0x01,
+                   (kon >> 12) & 0x01,
+                   (kon >> 11) & 0x01,
+                   (kon >> 10) & 0x01,
+                   (kon >> 9) & 0x01,
+                   (kon >> 8) & 0x01,
+                   (kon >> 7) & 0x01,
+                   (kon >> 6) & 0x01,
+                   (kon >> 5) & 0x01,
+                   (kon >> 4) & 0x01,
+                   (kon >> 3) & 0x01,
+                   (kon >> 2) & 0x01,
+                   (kon >> 1) & 0x01,
+                   kon & 0x01
+            );
+            fflush(stdout);
         }
 
         chip->o_sy = chip->chip.o_sy;
