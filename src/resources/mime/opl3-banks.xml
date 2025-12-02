@@ -11,6 +11,17 @@
     </magic>
   </mime-type>
 
+  <mime-type type="text/x-opl3-woplx">
+    <sub-class-of type="text/plain"/>
+    <icon name="x-application-wopl-bank"/>
+    <comment>Wohlstand's textual OPL2/OPL3 tone bank (WOPL)</comment>
+    <comment xml:lang="ru_RU">Текстовый тоновый банк для OPL2/OPL3 от Wohlstand-а (WOPL)</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="WOPLX-BANK\n"/>
+        <match type="string" offset="0" value="WOPLX-BANK\r\n"/>
+    </magic>
+  </mime-type>
+
   <mime-type type="application/x-opl3-fbop3">
     <sub-class-of type="application/octet-stream"/>
     <icon name="x-application-wopl-bank"/>

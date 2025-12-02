@@ -47,6 +47,7 @@
 #include "format_misc_cif.h"
 #include "format_misc_hsc.h"
 #include "format_wohlstand_opl3.h"
+#include "format_wohlstand_opl3_text.h"
 #include "format_flatbuffer_opl3.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
@@ -87,6 +88,8 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new WohlstandOPL3());
 
     registerBankFormat(new WohlstandOPL3_GM());
+
+    registerBankFormat(new WohlstandOPL3TeXt());
 
     //Junglevision
     registerBankFormat(new JunleVizion());

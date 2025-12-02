@@ -24,6 +24,21 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
+				<string>woplx</string>
+				<string>wox</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>file_wopl.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Wohlstand's textual OPL2/OPL3 tone bank (WOPX)</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
 				<string>fbop3</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>

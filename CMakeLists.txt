@@ -180,6 +180,8 @@ set(FILEFORMATS_SOURCES
     "src/FileFormats/format_misc_hsc.h"
     "src/FileFormats/format_wohlstand_opl3.cpp"
     "src/FileFormats/format_wohlstand_opl3.h"
+    "src/FileFormats/format_wohlstand_opl3_text.cpp"
+    "src/FileFormats/format_wohlstand_opl3_text.h"
     "src/FileFormats/format_flatbuffer_opl3.cpp"
     "src/FileFormats/format_flatbuffer_opl3.h"
     "src/FileFormats/Opl3Bank_generated.h"

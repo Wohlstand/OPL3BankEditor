@@ -91,19 +91,27 @@ void FmBank::reset()
     size_t insnum = 128;
     size_t banksnum = insnum / 128;
     size_t size = sizeof(Instrument) * insnum;
+
+    InfoString.clear();
+
     Ins_Melodic_box.resize(static_cast<int>(insnum));
     Ins_Percussion_box.resize(static_cast<int>(insnum));
     Ins_Melodic     = Ins_Melodic_box.data();
     Ins_Percussion  = Ins_Percussion_box.data();
+
     Banks_Melodic.resize(static_cast<int>(banksnum));
     Banks_Percussion.resize(static_cast<int>(banksnum));
+
     memset(Ins_Melodic,    0, size);
     memset(Ins_Percussion, 0, size);
     size = sizeof(MidiBank) * banksnum;
+
     memset(Banks_Melodic.data(), 0, size);
     memset(Banks_Percussion.data(), 0, size);
+
     for(auto &i : Ins_Percussion_box)
         i.is_fixed_note = true;
+
     deep_vibrato = false;
     deep_tremolo = false;
 }

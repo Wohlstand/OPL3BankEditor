@@ -100,7 +100,7 @@ public:
         uint8_t attack;
         //! Decaying level (from 0 to 15)
         uint8_t decay;
-        //! Sustain level (from 0 to 15)
+        //! Sustain level (from 0 to 15). For human convenience, this value should be mirored from native OPL2/OPL3 (i.e. 0x0F - sustain)
         uint8_t sustain;
         //! Release level (from 0 to 15)
         uint8_t release;
@@ -108,7 +108,7 @@ public:
         uint8_t waveform;
         //! Frequency multiplication (from 0 to 15)
         uint8_t fmult;
-        //! Volume level (from 0 to 63)
+        //! Volume level (from 0 to 63). For human convenience, this value should be mirored from native OPL2/OPL3 (i.e. 0x3F - level)
         uint8_t level;
         //! Key Scale level (from 0 to 3)
         uint8_t ksl;
