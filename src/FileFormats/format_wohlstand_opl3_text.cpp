@@ -18,6 +18,7 @@
 
 #include "format_wohlstand_opl3_text.h"
 #include "../common.h"
+#include <cstring>
 #include <stdio.h>
 #include <stdint.h>
 
