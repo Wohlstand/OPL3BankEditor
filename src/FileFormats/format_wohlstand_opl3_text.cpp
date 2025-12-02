@@ -28,7 +28,7 @@ static const char *woplx_magic_r    = "WOPLX-BANK\r\n"; // Allow files with CRLF
 
 static FILE *qfopen(const QString &file, const QString &mode)
 {
-#if defined(_WIN32) && !defined(ENABLE_WIN9X_OPL_PROXY)
+#if defined(_WIN32) && !defined(IS_QT_4)
     std::wstring fileU = file.toStdWString();
     std::wstring modeU = mode.toStdWString();
 #else
@@ -36,7 +36,7 @@ static FILE *qfopen(const QString &file, const QString &mode)
     std::string modeU = mode.toStdString();
 #endif
 
-#if defined(_WIN32) && !defined(ENABLE_WIN9X_OPL_PROXY)
+#if defined(_WIN32) && !defined(IS_QT_4)
     return _wfopen(fileU.c_str(), modeU.c_str());
 #else
     return fopen(fileU.c_str(), modeU.c_str());
