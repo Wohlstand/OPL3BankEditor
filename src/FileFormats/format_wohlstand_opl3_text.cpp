@@ -43,6 +43,15 @@ static FILE *qfopen(const QString &file, const QString &mode)
 #endif
 }
 
+static bool str_starts_with(const char *line, size_t line_len, const char *needle)
+{
+    size_t needle_len = std::strlen(needle);
+
+    if(needle_len > line_len)
+        return false; // input shorter than needle!
+
+    return std::strncmp(line, needle, needle_len) == 0;
+}
 
 bool WohlstandOPL3TeXt::detect(const QString &, char *magic)
 {
@@ -52,7 +61,7 @@ bool WohlstandOPL3TeXt::detect(const QString &, char *magic)
 
 FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
 {
-    QByteArray line;
+    QByteArray lineIn, lineTr;
     QFile file(filePath);
     bool parseInfo = false;
     bool isDrumBank = false;
@@ -64,37 +73,47 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
     FmBank::Instrument *newInst = nullptr;
     FmBank::Instrument *curInst = nullptr;
     char nameBuf[33] = "";
+    char *line, *line_tr;
+    size_t line_len = 0, line_tr_len = 0;
 
     bank.reset();
 
     if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
         return FfmtErrCode::ERR_NOFILE;
 
-    line = file.readLine();
+    lineIn = file.readLine();
+    line = lineIn.data();
+    line_len = lineIn.size();
 
-    if(line.compare(woplx_magic) != 0 && line.compare(woplx_magic_r) != 0)
+    if(std::strncmp(line, woplx_magic, line_len) != 0 && std::strncmp(line, woplx_magic_r, line_len) != 0)
         return FfmtErrCode::ERR_BADFORMAT;
 
     while(!file.atEnd())
     {
-        line = file.readLine();
+        lineIn = file.readLine();
+        line = lineIn.data();
+        line_len = lineIn.size();
+
+        lineTr = lineIn.trimmed();
+        line_tr = lineTr.data();
+        line_tr_len = lineTr.size();
 
         if(parseInfo)
         {
-            if(line.trimmed().compare("BANK_INFO_END"))
+            if(std::strncmp(line_tr, "BANK_INFO_END", line_tr_len))
                 parseInfo = false;
             else
-                bank.InfoString.append(QString::fromUtf8(line));
+                bank.InfoString.append(QString::fromUtf8(lineIn));
         }
-        else if(line.trimmed().isEmpty())
+        else if(line_tr_len == 0)
             continue; // Skip empty lines
 
         switch(level)
         {
         case 0: // External level
-            if(line.trimmed().compare("BANK_INFO:") == 0)
+            if(std::strncmp(line_tr, "BANK_INFO:", line_tr_len) == 0)
                 parseInfo = true;
-            else if(line.trimmed().compare("MELODIC_BANK:") == 0)
+            else if(std::strncmp(line_tr, "MELODIC_BANK:", line_tr_len) == 0)
             {
                 msb = 0;
                 lsb = 0;
@@ -103,7 +122,7 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
                 isDrumBank = false;
                 ++level;
             }
-            else if(line.trimmed().compare("PERCUSSION_BANK:") == 0)
+            else if(std::strncmp(line_tr, "PERCUSSION_BANK:", line_tr_len) == 0)
             {
                 msb = 0;
                 lsb = 0;
@@ -112,9 +131,9 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
                 isDrumBank = true;
                 ++level;
             }
-            else if(line.startsWith("DEEP_VIBRATO="))
+            else if(str_starts_with(line, line_len, "DEEP_VIBRATO="))
             {
-                if(std::sscanf(line.data(), "DEEP_VIBRATO=%u", &readU) == 0)
+                if(std::sscanf(line, "DEEP_VIBRATO=%u", &readU) == 0)
                 {
                     bank.reset();
                     return FfmtErrCode::ERR_BADFORMAT;
@@ -122,9 +141,9 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
 
                 bank.deep_vibrato = readU;
             }
-            else if(line.startsWith("DEEP_TREMOLO="))
+            else if(str_starts_with(line, line_len, "DEEP_TREMOLO="))
             {
-                if(std::sscanf(line.data(), "DEEP_TREMOLO=%u", &readU) == 0)
+                if(std::sscanf(line, "DEEP_TREMOLO=%u", &readU) == 0)
                 {
                     bank.reset();
                     return FfmtErrCode::ERR_BADFORMAT;
@@ -132,9 +151,9 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
 
                 bank.deep_tremolo = readU;
             }
-            else if(line.startsWith("VOLUME_MODEL="))
+            else if(str_starts_with(line, line_len, "VOLUME_MODEL="))
             {
-                if(std::sscanf(line.data(), "VOLUME_MODEL=%u", &readU) == 0)
+                if(std::sscanf(line, "VOLUME_MODEL=%u", &readU) == 0)
                 {
                     bank.reset();
                     return FfmtErrCode::ERR_BADFORMAT;
@@ -151,18 +170,18 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
             break;
 
         case 1: // Bank level
-            if(line.startsWith("NAME="))
+            if(str_starts_with(line, line_len, "NAME="))
             {
                 size_t i, o;
 
-                for(i = 5, o = 0; o < 33 && i < (size_t)line.size() && line.at(i) != '\n' && line.at(i) != '\r'; ++i, ++o)
-                    nameBuf[o] = line.at(i);
+                for(i = 5, o = 0; o < 33 && i < line_len && line[i] != '\n' && line[i] != '\r'; ++i, ++o)
+                    nameBuf[o] = line[i];
 
                 nameBuf[o] = 0;
             }
-            else if(line.startsWith("MIDI_BANK_MSB="))
+            else if(str_starts_with(line, line_len, "MIDI_BANK_MSB="))
             {
-                if(std::sscanf(line.data(), "MIDI_BANK_MSB=%u", &msb) == 0)
+                if(std::sscanf(line, "MIDI_BANK_MSB=%u", &msb) == 0)
                 {
                     bank.reset();
                     return FfmtErrCode::ERR_BADFORMAT;
@@ -170,9 +189,9 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
 
                 msbHas = true;
             }
-            else if(line.startsWith("MIDI_BANK_LSB="))
+            else if(str_starts_with(line, line_len, "MIDI_BANK_LSB="))
             {
-                if(std::sscanf(line.data(), "MIDI_BANK_LSB=%u", &lsb) == 0)
+                if(std::sscanf(line, "MIDI_BANK_LSB=%u", &lsb) == 0)
                 {
                     bank.reset();
                     return FfmtErrCode::ERR_BADFORMAT;
@@ -180,7 +199,7 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
 
                 lsbHas = true;
             }
-            else if(line.startsWith("INSTRUMENT="))
+            else if(str_starts_with(line, line_len, "INSTRUMENT="))
             {
                 if(!msbHas || !lsbHas)
                 {
@@ -199,8 +218,8 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
 
                 goto instrument;
             }
-            else if((!isDrumBank && line.trimmed().compare("MELODIC_BANK_END") == 0) ||
-                    (isDrumBank && line.trimmed().compare("PERCUSSION_BANK_END") == 0))
+            else if((!isDrumBank && std::strncmp(line_tr, "MELODIC_BANK_END", line_tr_len) == 0) ||
+                    (isDrumBank && std::strncmp(line_tr, "PERCUSSION_BANK_END", line_tr_len) == 0))
             {
                 if(!msbHas || !lsbHas)
                 {
@@ -229,9 +248,9 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
 
         case 2: // Instrument level
 instrument:
-            if(line.startsWith("INSTRUMENT="))
+            if(str_starts_with(line, line_len, "INSTRUMENT="))
             {
-                if(std::sscanf(line.data(), "INSTRUMENT=%u:", &readU) == 0 || readU > 127)
+                if(std::sscanf(line, "INSTRUMENT=%u:", &readU) == 0 || readU > 127)
                 {
                     bank.reset();
                     return FfmtErrCode::ERR_BADFORMAT;
@@ -252,37 +271,37 @@ instrument:
                 return FfmtErrCode::ERR_BADFORMAT;
             }
 
-            if(line.startsWith("NAME="))
+            if(str_starts_with(line, line_len, "NAME="))
             {
                 size_t i, o;
 
-                for(i = 5, o = 0; o < 33 && i < (size_t)line.size() && line.at(i) != '\n' && line.at(i) != '\r'; ++i, ++o)
-                    curInst->name[o] = line.at(i);
+                for(i = 5, o = 0; o < 33 && i < line_len && line[i] != '\n' && line[i] != '\r'; ++i, ++o)
+                    curInst->name[o] = line[i];
 
                 curInst->name[o] = 0;
             }
-            else if(line.startsWith("FLAGS:"))
+            else if(str_starts_with(line, line_len, "FLAGS:"))
             {
                 int opFlags = 0;
 
-                if(std::strstr(line.data(), "FN;"))
+                if(std::strstr(line, "FN;"))
                     curInst->is_fixed_note = true;
 
-                if(std::strstr(line.data(), "2OP;"))
+                if(std::strstr(line, "2OP;"))
                 {
                     curInst->en_4op = false;
                     curInst->en_pseudo4op = false;
                     ++opFlags;
                 }
 
-                if(std::strstr(line.data(), "DV;"))
+                if(std::strstr(line, "DV;"))
                 {
                     curInst->en_4op = true;
                     curInst->en_pseudo4op = true;
                     ++opFlags;
                 }
 
-                if(std::strstr(line.data(), "4OP;"))
+                if(std::strstr(line, "4OP;"))
                 {
                     curInst->en_4op = true;
                     curInst->en_pseudo4op = false;
@@ -296,11 +315,11 @@ instrument:
                     return FfmtErrCode::ERR_BADFORMAT;
                 }
             }
-            else if(line.startsWith("ATTRS:"))
+            else if(str_starts_with(line, line_len, "ATTRS:"))
             {
                 const char *key;
 
-                if((key = std::strstr(line.data(), "DRUM_KEY=")) != NULL)
+                if((key = std::strstr(line, "DRUM_KEY=")) != NULL)
                 {
                     if(std::sscanf(key, "DRUM_KEY=%u;", &readU) == 0)
                     {
@@ -311,7 +330,7 @@ instrument:
                     curInst->percNoteNum = readU;
                 }
 
-                if((key = std::strstr(line.data(), "NOTE_OFF_1=")) != NULL)
+                if((key = std::strstr(line, "NOTE_OFF_1=")) != NULL)
                 {
                     if(std::sscanf(key, "NOTE_OFF_1=%d;", &readI) == 0)
                     {
@@ -322,7 +341,7 @@ instrument:
                     curInst->note_offset1 = (int16_t)readI;
                 }
 
-                if((key = std::strstr(line.data(), "NOTE_OFF_2=")) != NULL)
+                if((key = std::strstr(line, "NOTE_OFF_2=")) != NULL)
                 {
                     if(std::sscanf(key, "NOTE_OFF_2=%d;", &readI) == 0)
                     {
@@ -333,7 +352,7 @@ instrument:
                     curInst->note_offset2 = (int16_t)readI;
                 }
 
-                if((key = std::strstr(line.data(), "VEL_OFF=")) != NULL)
+                if((key = std::strstr(line, "VEL_OFF=")) != NULL)
                 {
                     if(std::sscanf(key, "VEL_OFF=%d;", &readI) == 0)
                     {
@@ -344,7 +363,7 @@ instrument:
                     curInst->velocity_offset = (int8_t)readI;
                 }
 
-                if((key = std::strstr(line.data(), "FINE_TUNE=")) != NULL)
+                if((key = std::strstr(line, "FINE_TUNE=")) != NULL)
                 {
                     if(std::sscanf(key, "FINE_TUNE=%d;", &readI) == 0)
                     {
@@ -355,7 +374,7 @@ instrument:
                     curInst->fine_tune = (int8_t)readI;
                 }
 
-                if((key = std::strstr(line.data(), "RHYTHM=")) != NULL)
+                if((key = std::strstr(line, "RHYTHM=")) != NULL)
                 {
                     if(std::sscanf(key, "RHYTHM=%u;", &readU) == 0)
                     {
@@ -366,7 +385,7 @@ instrument:
                     curInst->rhythm_drum_type = readU;
                 }
 
-                if((key = std::strstr(line.data(), "DUR_K_ON=")) != NULL)
+                if((key = std::strstr(line, "DUR_K_ON=")) != NULL)
                 {
                     if(std::sscanf(key, "DUR_K_ON=%u;", &readU) == 0)
                     {
@@ -377,7 +396,7 @@ instrument:
                     curInst->ms_sound_kon = readU;
                 }
 
-                if((key = std::strstr(line.data(), "DUR_K_OFF=")) != NULL)
+                if((key = std::strstr(line, "DUR_K_OFF=")) != NULL)
                 {
                     if(std::sscanf(key, "DUR_K_OFF=%u;", &readU) == 0)
                     {
@@ -388,11 +407,11 @@ instrument:
                     curInst->ms_sound_koff = readU;
                 }
             }
-            else if(line.startsWith("FBCONN:"))
+            else if(str_starts_with(line, line_len, "FBCONN:"))
             {
                 const char *key;
 
-                if((key = std::strstr(line.data(), "FB1=")) != NULL)
+                if((key = std::strstr(line, "FB1=")) != NULL)
                 {
                     if(std::sscanf(key, "FB1=%u;", &readU) == 0)
                     {
@@ -403,7 +422,7 @@ instrument:
                     curInst->feedback1 = readU;
                 }
 
-                if((key = std::strstr(line.data(), "FB2=")) != NULL)
+                if((key = std::strstr(line, "FB2=")) != NULL)
                 {
                     if(std::sscanf(key, "FB2=%u;", &readU) == 0)
                     {
@@ -414,7 +433,7 @@ instrument:
                     curInst->feedback2 = readU;
                 }
 
-                if((key = std::strstr(line.data(), "CONN1=")) != NULL)
+                if((key = std::strstr(line, "CONN1=")) != NULL)
                 {
                     if(std::sscanf(key, "CONN1=%u;", &readU) == 0)
                     {
@@ -425,7 +444,7 @@ instrument:
                     curInst->connection1 = readU > 0;
                 }
 
-                if((key = std::strstr(line.data(), "CONN2=")) != NULL)
+                if((key = std::strstr(line, "CONN2=")) != NULL)
                 {
                     if(std::sscanf(key, "CONN2=%u;", &readU) == 0)
                     {
@@ -436,12 +455,13 @@ instrument:
                     curInst->connection2 = readU > 0;
                 }
             }
-            else if(line.startsWith("OP0:") || line.startsWith("OP1:") || line.startsWith("OP2:") || line.startsWith("OP3:"))
+            else if(str_starts_with(line, line_len, "OP0:") || str_starts_with(line, line_len, "OP1:") ||
+                    str_starts_with(line, line_len, "OP2:") || str_starts_with(line, line_len, "OP3:"))
             {
                 const char *key;
                 size_t op;
 
-                if(std::sscanf(line.data(), "OP%u: ", &readU) == 0)
+                if(std::sscanf(line, "OP%u: ", &readU) == 0)
                 {
                     bank.reset();
                     return FfmtErrCode::ERR_BADFORMAT;
@@ -451,7 +471,7 @@ instrument:
 
                 FmBank::Operator &opr = curInst->OP[op];
 
-                if((key = std::strstr(line.data(), "AT=")) != NULL)
+                if((key = std::strstr(line, "AT=")) != NULL)
                 {
                     if(std::sscanf(key, "AT=%u;", &readU) == 0)
                     {
@@ -462,7 +482,7 @@ instrument:
                     opr.attack = readU & 0x0F;
                 }
 
-                if((key = std::strstr(line.data(), "DC=")) != NULL)
+                if((key = std::strstr(line, "DC=")) != NULL)
                 {
                     if(std::sscanf(key, "DC=%u;", &readU) == 0)
                     {
@@ -473,7 +493,7 @@ instrument:
                     opr.decay = readU & 0x0F;
                 }
 
-                if((key = std::strstr(line.data(), "ST=")) != NULL)
+                if((key = std::strstr(line, "ST=")) != NULL)
                 {
                     if(std::sscanf(key, "ST=%u;", &readU) == 0)
                     {
@@ -485,7 +505,7 @@ instrument:
                     opr.sustain = 0x0F - (readU & 0x0F);
                 }
 
-                if((key = std::strstr(line.data(), "RL=")) != NULL)
+                if((key = std::strstr(line, "RL=")) != NULL)
                 {
                     if(std::sscanf(key, "RL=%u;", &readU) == 0)
                     {
@@ -496,7 +516,7 @@ instrument:
                     opr.release = readU & 0x0F;
                 }
 
-                if((key = std::strstr(line.data(), "WF=")) != NULL)
+                if((key = std::strstr(line, "WF=")) != NULL)
                 {
                     if(std::sscanf(key, "WF=%u;", &readU) == 0)
                     {
@@ -507,7 +527,7 @@ instrument:
                     opr.waveform = readU & 0x07;
                 }
 
-                if((key = std::strstr(line.data(), "ML=")) != NULL)
+                if((key = std::strstr(line, "ML=")) != NULL)
                 {
                     if(std::sscanf(key, "ML=%u;", &readU) == 0)
                     {
@@ -518,7 +538,7 @@ instrument:
                     opr.fmult = readU & 0x0F;
                 }
 
-                if((key = std::strstr(line.data(), "TL=")) != NULL)
+                if((key = std::strstr(line, "TL=")) != NULL)
                 {
                     if(std::sscanf(key, "TL=%u;", &readU) == 0)
                     {
@@ -530,7 +550,7 @@ instrument:
                     opr.level = 0x3F - (readU & 0x3F);
                 }
 
-                if((key = std::strstr(line.data(), "KL=")) != NULL)
+                if((key = std::strstr(line, "KL=")) != NULL)
                 {
                     if(std::sscanf(key, "KL=%u;", &readU) == 0)
                     {
@@ -541,7 +561,7 @@ instrument:
                     opr.ksl = readU & 0x03;
                 }
 
-                if((key = std::strstr(line.data(), "VB=")) != NULL)
+                if((key = std::strstr(line, "VB=")) != NULL)
                 {
                     if(std::sscanf(key, "VB=%u;", &readU) == 0)
                     {
@@ -552,7 +572,7 @@ instrument:
                     opr.vib = readU > 0;
                 }
 
-                if((key = std::strstr(line.data(), "AM=")) != NULL)
+                if((key = std::strstr(line, "AM=")) != NULL)
                 {
                     if(std::sscanf(key, "AM=%u;", &readU) == 0)
                     {
@@ -563,7 +583,7 @@ instrument:
                     opr.am = readU > 0;
                 }
 
-                if((key = std::strstr(line.data(), "EG=")) != NULL)
+                if((key = std::strstr(line, "EG=")) != NULL)
                 {
                     if(std::sscanf(key, "EG=%u;", &readU) == 0)
                     {
@@ -574,7 +594,7 @@ instrument:
                     opr.eg = readU > 0;
                 }
 
-                if((key = std::strstr(line.data(), "KR=")) != NULL)
+                if((key = std::strstr(line, "KR=")) != NULL)
                 {
                     if(std::sscanf(key, "KR=%u;", &readU) == 0)
                     {
@@ -585,8 +605,8 @@ instrument:
                     opr.ksr = readU > 0;
                 }
             }
-            else if((!isDrumBank && line.trimmed().compare("MELODIC_BANK_END") == 0) ||
-                    (isDrumBank && line.trimmed().compare("PERCUSSION_BANK_END") == 0))
+            else if((!isDrumBank && std::strncmp(line_tr, "MELODIC_BANK_END", line_tr_len) == 0) ||
+                    (isDrumBank && std::strncmp(line_tr, "PERCUSSION_BANK_END", line_tr_len) == 0))
             {
                 level = 0;
                 curInst = nullptr;
