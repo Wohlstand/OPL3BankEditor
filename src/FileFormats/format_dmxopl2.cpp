@@ -174,7 +174,7 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
 
         if(ins.is_fixed_note) // When fixed note flag is set, DMX ignores the note offset completely
         {
-            if((ins.note_offset1 - 12) < note_number)
+            if((int16_t)note_number - (ins.note_offset1 - 12) < 0)
                 note_number = 0; // lower than 0!
             else
                 note_number += (ins.note_offset1 - 12);
