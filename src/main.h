@@ -19,7 +19,13 @@
 #include <QApplication>
 #include <QTranslator>
 
-#ifdef Q_OS_MACX
+#ifndef Q_OS_MACOS
+#   if defined(Q_OS_MACX)
+#       define Q_OS_MACOS
+#   endif
+#endif
+
+#ifdef Q_OS_MACOS
 #   include <QQueue>
 #   include <QStringList>
 #endif
@@ -28,7 +34,7 @@ class Application : public QApplication
 {
     Q_OBJECT
 
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
     //! Queue used before slot will be connected to collect file paths received via QFileOpenEvent
     QQueue<QString> m_openFileRequests;
     //! Mark means to don't collect file paths and send them via signals
@@ -45,7 +51,7 @@ public:
     QString getQtTranslationDir() const;
     QString getAppTranslationDir() const;
 
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
     /**
      * @brief Disable collecting of the file paths via queue and send any new-received paths via signal
      */

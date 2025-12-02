@@ -24,7 +24,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
 #   include <QFileOpenEvent>
 #endif
 
@@ -119,7 +119,7 @@ QString Application::getAppTranslationDir() const
 }
 
 
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
 
 void Application::setConnected()
 {
