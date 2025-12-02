@@ -368,6 +368,37 @@ void RealtimeGenerator::rt_generate(int16_t *frames, unsigned nframes)
     m_gen->generate(frames, nframes);
 }
 
+void RealtimeGenerator::rt_generate(float *frames, unsigned int nframes)
+{
+    std::unique_lock<mutex_type> lock(m_generator_mutex, std::try_to_lock);
+    if(!lock.owns_lock()) {
+        memset(frames, 0, 2 * nframes * sizeof(*frames));
+        return;
+    }
+
+    MessageHeader header;
+
+    /* handle Control messages */
+    for(Ring_Buffer &rb = *m_rb_ctl;
+         rb.peek(header) && rb.size_used() >= sizeof(header) + header.size;)
+    {
+        rb.discard(sizeof(header));
+        rb.get(m_body.get(), header.size);
+        rt_message_process(header.tag, m_body.get(), header.size);
+    }
+
+    /* handle MIDI messages */
+    for(Ring_Buffer &rb = *m_rb_midi;
+         rb.peek(header) && rb.size_used() >= sizeof(header) + header.size;)
+    {
+        rb.discard(sizeof(header));
+        rb.get(m_body.get(), header.size);
+        rt_message_process(header.tag, m_body.get(), header.size);
+    }
+
+    m_gen->generate(frames, nframes);
+}
+
 void RealtimeGenerator::setAudioWorks(bool works)
 {
     m_audioWorks = works;

@@ -185,15 +185,8 @@ BankEditor::BankEditor(QWidget *parent) :
     m_bank.deep_vibrato = ui->deepVibrato->isChecked();
     m_bankBackup = m_bank;
 
-    initAudio();
-
-#ifdef ENABLE_HW_OPL_PROXY
-    initChip();
-#endif
-
 #ifdef ENABLE_MIDI
-    QAction *midiInAction = m_midiInAction = new QAction(
-        ui->midiIn->icon(), ui->midiIn->text(), this);
+    QAction *midiInAction = m_midiInAction = new QAction(ui->midiIn->icon(), ui->midiIn->text(), this);
     ui->midiIn->setDefaultAction(midiInAction);
     QMenu *midiInMenu = new QMenu(this);
     midiInAction->setMenu(midiInMenu);
@@ -206,8 +199,20 @@ BankEditor::BankEditor(QWidget *parent) :
 #endif
 
     createLanguageChoices();
-
     Application::instance()->translate(m_language);
+
+    initAudio();
+
+#ifdef ENABLE_HW_OPL_PROXY
+    initChip();
+#endif
+
+    if(m_audioOut && !m_audioOut->isValid())
+    {
+        QMessageBox::warning(nullptr,
+                             tr("Error"),
+                             m_audioOut->errorString());
+    }
 }
 
 BankEditor::~BankEditor()

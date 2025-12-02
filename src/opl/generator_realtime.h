@@ -106,6 +106,7 @@ class IRealtimeProcess
 public:
     virtual ~IRealtimeProcess() {}
     virtual void rt_generate(int16_t *frames, unsigned nframes) = 0;
+    virtual void rt_generate(float *frames, unsigned nframes) = 0;
 };
 
 class RealtimeGenerator :
@@ -140,6 +141,7 @@ public:
     void midi_event(const uint8_t *msg, unsigned msglen) override;
     /* Realtime */
     void rt_generate(int16_t *frames, unsigned nframes) override;
+    void rt_generate(float *frames, unsigned nframes) override;
 
     void setAudioWorks(bool works);
 
