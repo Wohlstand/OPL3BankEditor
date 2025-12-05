@@ -77,8 +77,11 @@ Bytes-Lenght  | Description
     2         | Big-Endian 16-bit signed integer, MIDI key offset value
               | (second voice in pseudo 4-operators mode)
     1         | 8-bit signed integer, MIDI Velocity offset
-    1         | 8-bit signed integer, Second voice detune
-              | in pseudo-4-operators mode
+    1         | 8-bit signed integer, Second voice detune in double-voice mode.
+              | It's 1/64 cent of the tone. Formula to compute valid half-tone
+              | value as a float:
+              |   (float) ( ( (int) X + 128 ) >> 1) - 64 / 32.0f
+              |   Where X is the detune value from the file.
     1         | 8-bit unsigned integer, Percussion instrument key number
     1         | 8-bit unsigned integer, Bitwise flags:
               |     [0EDDDCBA]

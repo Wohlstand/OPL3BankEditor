@@ -153,7 +153,13 @@ NOTE_OFF_2=<-127...+127>;    <--- MIDI note offset for the second voice
 
 VEL_OFF=<-127...+127>;       <--- MIDI velocity offset
 
-FINE_TUNE=<-127...+127>;     <--- Detune for the second voice
+FINE_TUNE=<-127...+127>;     <--- Detune for the second voice. It's offset of
+                                  1/64'th cent of the tone. Full formula how to
+                                  get correct floating value of half-tone offset:
+
+                                  (float) ( ( (int) X + 128 ) >> 1) - 64 / 32.0f
+
+                                  Where X is the fine tune value from the file.
 
 RHYTHM=<0, 6,7,8,9,10>       <--- Rhythm mode instrument:
                                   0 - Disable (Regular instrument)
