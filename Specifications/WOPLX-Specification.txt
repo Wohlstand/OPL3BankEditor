@@ -1,0 +1,301 @@
+===============================================================================
+              MIDI playing bank for Yamaha OPL2 (YMF262) chip
+                text-based file format specification (WOPLX)
+===============================================================================
+                        Created in 5'th of December, 2025
+===============================================================================
+Author:             Vitaliy Novichkov "Wohlstand"
+Contacts emails:    admin@wohlnet.ru, nvd339@yandex.ru
+===============================================================================
+
+===============================================================================
+Contents:
+    0. Changelog
+    1. Single-instrument entry
+    2. Instrument file (OPLI)
+    3. MIDI playing bank file (WOPL)
+===============================================================================
+
+===============================================================================
+Changelog:
+===============================================================================
+--------------------------
+5'th of December, 2025
+--------------------------
+Initial version.
+
+===============================================================================
+
+
+This is a text-based bank format that can store instruments in the similar way
+as binary WOPL can. These banks supposed to be readable and editable by human
+via plain text editors, and to be friendly with the version control systems
+to easier track changes that is complicated and just impossible for binary-based
+formats.
+
+There are next requirements for files:
+- All keywords in the file are CASE SENSITIVE.
+- File MUST be saved as UTF-8 without BOM.
+- There are only LF or CRLF line breaks allowed.
+
+===============================================================================
+Structure of the file:
+===============================================================================
+WOPLX-BANK\n            <---- Magic number, it MUST be in begin of the file
+                              and it MUST NOT contain trailing spaces after.
+                              It should just be always tripped and contain
+                              a new-line character. It's allowed to have LF (\n)
+                              or CRLF (\r\n) as well.
+
+BANK_INFO:              <---- Begin of the OPTIONAL info block that describes
+                              the bank and might include license information too.
+
+<---- Here you can include just any plain text data in free format ---->
+
+BANK_INFO_END           <---- Bank info end block.
+
+<-------   Bank file-wide flags and settings:   -------->
+
+DEEP_VIBRATO=<vib>      <---- 0 or 1 - Enable the Deep-Vibrato of OPL2/OPL3 chip
+DEEP_TREMOLO=<am>       <---- 0 or 1 - Enable the Deep-Tremolo of OPL2/OPL3 chip
+VOLUME_MODEL=<v>        <---- From 0 to 13 - Choose one of libADLMIDI's volume
+                              and frequency models.
+
+<-----------------------------------------------------------------------
+    List of banks. Any bank beings with the "MELODIC_BANK:" or
+   "PERCUSSION_BANK:" and ends with "MELODIC_BANK_END" or
+   "PERCUSSION_BANK_END". It's allowed to have multiple melodic
+    and multiple percussion banks to fufill the set of instruments for
+    the GS or XG, or store the content of AIL banks.
+
+    Below are two examples: one melodic bank and one percussion.
+------------------------------------------------------------------------>
+
+MELODIC_BANK:
+<--- Melodic bank's settings --->
+<--- List of bank's instruments --->
+MELODIC_BANK_END
+
+PERCUSSION_BANK:
+<--- Percussion bank's settings --->
+<--- List of bank's instruments --->
+PERCUSSION_BANK_END
+
+===============================================================================
+Bank settings:
+===============================================================================
+At the begin of every bank entry there are next allowed options are going before
+any instrument entry begins:
+
+NAME=<str>                  <---- Name of the bank (optional)
+MIDI_BANK_MSB=<0...127>     <---- The MSB value of the MIDI bank number
+MIDI_BANK_LSB=<0...127>     <---- The LSB value of the MIDI bank number
+
+And once next field appears:
+
+INSTRUMENT=<0...127>        <---- Instrument entry with MIDI patch number
+                                  from 0 to 127
+
+Then no fields but instrument specific are allowed.
+
+===============================================================================
+Instrument entry:
+===============================================================================
+Every instrument begins with the header field:
+
+INSTRUMENT=<0...127>        <---- Instrument entry with MIDI patch number
+                                  from 0 to 127
+
+and ends once another instrument header declares an another one.
+
+Instrumets allowed to have next fields:
+
+NAME=<str>                  <---- Name of the the instrument (optional)
+FLAGS: <flags-list>         <---- Instrument's flags (list below)
+ATTRS: <attributes-list>    <---- Instrument's attributes (list below)
+FBCONN: <fb-conn-list>      <---- Feedback/connection setup (list below)
+OPx: <operator setup>       <---- Per-operator setup. Where "x" is a number
+                                  from 0 to 4 to specify the number of operator.
+
+------------- Flags -------------
+Instrument flags are written as a sequence of "LABEL;" lines without values.
+Every label MUST end with the seicolon.
+
+FN;   <--- Fixed tone. Always enabled on percussion voices. If enable on the
+           melodic voice, the voice will always play the same note with no
+           matter to the pressed MIDI key.
+
+2OP;  <--- The instrument uses 2-operator mode of the chip.
+DV;   <--- The instrument is a double-voice of two 2-operator tones.
+4OP;  <--- The instrument uses 4-operator mode of the chip.
+
+IMPOORTANT: It's requred to have one of flags: 2OP;, DV;, or 4OP;, and it's not
+allowed to have two or all three of them: they are conflicting.
+
+EXAMPLE lists of flags:
+
+FLAGS: 2OP;
+FLAGS: FN;2OP;
+FLAGS: DV;
+
+
+---------- Attributes -----------
+Instrument attributes are written as a sequence of "LABEL=VALUE;" lines.
+Every label MUST end with the seicolon.
+
+DRUM_KEY=<0...127>;          <--- Drum key or key for the fixed note mode.
+
+NOTE_OFF_1=<-127...+127>;    <--- MIDI note offset (in double-voice mode,
+                                 offset of the first voice)
+
+NOTE_OFF_2=<-127...+127>;    <--- MIDI note offset for the second voice
+                                 (Only for double-voice mode)
+
+VEL_OFF=<-127...+127>;       <--- MIDI velocity offset
+
+FINE_TUNE=<-127...+127>;     <--- Detune for the second voice
+
+RHYTHM=<0, 6,7,8,9,10>       <--- Rhythm mode instrument:
+                                  0 - Disable (Regular instrument)
+                                  6 - Bass drum
+                                  7 - Snare
+                                  8 - Tom
+                                  9 - Cymbal
+                                  10 - Hi-Hat
+
+DUR_K_ON=<0...40000>;        <--- Sounding duration in milliseconds for key-on
+                                  (Used by libADLMIDI's default channel
+                                  allocation algorithm)
+
+DUR_K_OFF=<0...40000>;       <--- Sounding duration in milliseconds for
+                                  releasing instrument (Used by libADLMIDI's
+                                  default channel allocation algorithm)
+
+---------- Feedback/Connection -----------
+The same format as for attributes above. They written as a sequence of
+the "LABEL=VALUE;" lines. Every label MUST end with the seicolon.
+
+For everything:
+
+FB1=<0...7>;                 <--- Feedback value for the first pair of operators.
+CONN1:=<0 or 1>;             <--- First pair of operators connection mode:
+                                  0 - Frequency modulation, 1 - Additive synth.
+
+For 4-operator or double-voice instruments:
+
+FB2=<0...7>;                 <--- Feedback value for the second pair of operators.
+CONN2:=<0 or 1>;             <--- Second pair of operators connection mode:
+                                  0 - Frequency modulation, 1 - Additive synth.
+
+---------- Per-operator settings -----------
+There are four different operators can be declared. When 2OP mode is used, it's
+enough to declare only two of them. Every operator begins with the "OPx: "
+label. It's allowed to have "OP0: ", "OP1: ", "OP2: ", or "OP3: ". Role of every
+operator described below. Per-operator values are written in same manner as
+attributes above: They written as a sequence of the "LABEL=VALUE;" lines. Every
+label MUST end with the seicolon.
+
+
+AT=<0...15>;    <--- Attack rate
+DC=<0...15>;    <--- Decay rate
+ST=<15...0>;    <--- Sustain rate in chip native format (15 lowest, 0 highest)
+RL=<0...15>;    <--- Release rate
+WF=<0...7>;     <--- Wave form: 0 - Sine, 1 - Half-Sine,
+                                2 - Abs-Sine, 3 - Pulse-Sine,
+                     OPL3-only:
+                                4 - Sine (even period only),
+                                5 - Abs-Sine (even period only),
+                                6 - Square wave,
+                                7 - Derived square wave
+ML=<0..15>;     <--- Multiplication factor
+TL=<63...0>;    <--- Total level in chip native format (63 lowest, 0 highest)
+KL=<0..3>;      <--- Key-scale level
+VB=<0 or 1>;    <--- Sensitive to frequency modulating LFO (vibrato)
+AM=<0 or 1>;    <--- Sensitive to amplitude moduulating LFO (tremolo)
+EG=<0 or 1>;    <--- Envelope generator (enable sustain keeping)
+KR=<0 or 1>;    <--- Key-scale rate (Enable envelope scaling depending by pitch)
+
+-------------------------------------------------------------------------------
+Operators in the list below has the next roles:
+- Operator 0 - the Carrier1 (Operator 2 for 4-operators mode)
+- Operator 1 - the Modulator1 (Operator 1 for 4-operators mode)
+- Operator 2 - the Carrier2 (Operator 4 for 4-operators mode)
+- Operator 3 - the Modulator2 (Operator 3 for 4-operators mode)
+===============================================================================
+
+
+
+
+===============================================================================
+Example file:
+===============================================================================
+WOPLX-BANK
+
+BANK_INFO:
+This is a sample bank developed by Vitaliy Novichkov for this specification
+article. Everything can be re-used, redone and redistributed freely!
+
+There are few insrtuments placed to simplify the example.
+BANK_INFO_END
+
+DEEP_VIBRATO=1
+DEEP_TREMOLO=0
+VOLUME_MODEL=12
+
+MELODIC_BANK:
+MIDI_BANK_MSB=0
+MIDI_BANK_LSB=0
+
+INSTRUMENT=21:
+NAME=Accordn
+FLAGS: 2OP;
+ATTRS: DUR_K_ON=40000;DUR_K_OFF=146;
+FBCONN: FB1=1;CONN1=0;
+OP0: AT=7;DC=0;ST=8;RL=7;WF=0;ML=1;TL=0;KL=0;VB=1;AM=0;EG=1;KR=0;
+OP1: AT=11;DC=0;ST=0;RL=1;WF=0;ML=4;TL=9;KL=3;VB=1;AM=0;EG=1;KR=0;
+
+INSTRUMENT=27:
+FLAGS: 4OP;
+ATTRS: DUR_K_ON=2006;DUR_K_OFF=2006;
+FBCONN: FB1=4;CONN1=0;FB2=0;CONN2=0;
+OP0: AT=15;DC=3;ST=15;RL=3;WF=0;ML=1;TL=23;KL=2;VB=0;AM=0;EG=0;KR=0;
+OP1: AT=15;DC=10;ST=2;RL=2;WF=0;ML=2;TL=12;KL=1;VB=0;AM=0;EG=0;KR=0;
+OP2: AT=12;DC=1;ST=15;RL=7;WF=0;ML=1;TL=0;KL=0;VB=0;AM=0;EG=0;KR=1;
+OP3: AT=12;DC=2;ST=15;RL=3;WF=1;ML=4;TL=29;KL=2;VB=0;AM=0;EG=0;KR=0;
+
+INSTRUMENT=94:
+NAME=Pad 7 (halo)
+FLAGS: DV;
+ATTRS: NOTE_OFF_1=12;NOTE_OFF_2=12;FINE_TUNE=-2;DUR_K_ON=40000;DUR_K_OFF=566;
+FBCONN: FB1=0;CONN1=0;FB2=0;CONN2=0;
+OP0: AT=9;DC=1;ST=4;RL=6;WF=1;ML=0;TL=0;KL=0;VB=0;AM=1;EG=1;KR=0;
+OP1: AT=5;DC=1;ST=4;RL=5;WF=1;ML=1;TL=13;KL=1;VB=1;AM=1;EG=1;KR=0;
+OP2: AT=8;DC=1;ST=4;RL=6;WF=1;ML=0;TL=0;KL=0;VB=0;AM=1;EG=1;KR=0;
+OP3: AT=5;DC=1;ST=4;RL=5;WF=1;ML=1;TL=13;KL=1;VB=0;AM=1;EG=1;KR=0;
+
+MELODIC_BANK_END
+
+PERCUSSION_BANK:
+MIDI_BANK_MSB=0
+MIDI_BANK_LSB=0
+
+
+INSTRUMENT=35:
+FLAGS: 2OP;
+ATTRS: DRUM_KEY=35;DUR_K_ON=26;DUR_K_OFF=26;
+FBCONN: FB1=4;CONN1=0;
+OP0: AT=15;DC=3;ST=0;RL=6;WF=0;ML=1;TL=0;KL=0;VB=0;AM=0;EG=0;KR=1;
+OP1: AT=15;DC=8;ST=7;RL=7;WF=2;ML=0;TL=4;KL=1;VB=0;AM=0;EG=0;KR=1;
+
+INSTRUMENT=36:
+FLAGS: 4OP;
+ATTRS: DRUM_KEY=35;DUR_K_ON=20;DUR_K_OFF=20;
+FBCONN: FB1=0;CONN1=0;FB2=0;CONN2=1;
+OP0: AT=13;DC=6;ST=3;RL=12;WF=0;ML=0;TL=0;KL=0;VB=0;AM=0;EG=0;KR=0;
+OP1: AT=15;DC=13;ST=0;RL=12;WF=0;ML=1;TL=7;KL=0;VB=0;AM=0;EG=0;KR=0;
+OP2: AT=15;DC=6;ST=0;RL=12;WF=0;ML=0;TL=0;KL=0;VB=0;AM=0;EG=0;KR=0;
+OP3: AT=15;DC=6;ST=0;RL=12;WF=0;ML=0;TL=0;KL=0;VB=0;AM=0;EG=0;KR=0;
+
+PERCUSSION_BANK_END
+
+===============================================================================
