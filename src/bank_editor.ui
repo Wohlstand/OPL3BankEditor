@@ -2101,6 +2101,8 @@ of second voice</string>
      <addaction name="actionEmulatorYmFm"/>
      <addaction name="actionEmulatorYMF262LLE"/>
      <addaction name="actionEmulatorYM3812LLE"/>
+     <addaction name="actionEmulatorVpcOPL3"/>
+     <addaction name="separator"/>
      <addaction name="actionWin9xOPLProxy"/>
      <addaction name="actionSerialPortOPL"/>
     </widget>
@@ -2462,6 +2464,14 @@ of second voice</string>
    </property>
    <property name="text">
     <string notr="true">YM3812-LLE OPL2 [EXPERIMENTAL]</string>
+   </property>
+  </action>
+  <action name="actionEmulatorVpcOPL3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">VirtualPC OPL3</string>
    </property>
   </action>
  </widget>

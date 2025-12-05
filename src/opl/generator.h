@@ -84,6 +84,7 @@ public:
     enum OPL_Chips
     {
         CHIP_BEGIN = 0,
+        // Emulators
         CHIP_Nuked = 0,
         CHIP_DosBox,
         CHIP_Opal,
@@ -94,8 +95,11 @@ public:
         CHIP_YmFm,
         CHIP_YMF262LLE,
         CHIP_YM3812LLE,
+        CHIP_VPC_OPL3,
+        // HW Ports
         CHIP_Win9xProxy,
         CHIP_SerialPort,
+        // END
         CHIP_END
     };
     Generator(uint32_t sampleRate, OPL_Chips initialChip);

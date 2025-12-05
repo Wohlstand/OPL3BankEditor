@@ -32,6 +32,7 @@
 #include "chips/mame_opl2.h"
 #include "chips/ymf262_lle.h"
 #include "chips/ym3812_lle.h"
+#include "chips/vpc_opl3_emu.h"
 
 #ifdef ENABLE_YMFM_EMULATOR
 #include "chips/ymfm_opl2.h"
@@ -349,6 +350,9 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
         break;
     case CHIP_MameOPL2:
         chip.reset(new MameOPL2());
+        break;
+    case CHIP_VPC_OPL3:
+        chip.reset(new VpcOPL3());
         break;
     }
 
