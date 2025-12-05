@@ -141,6 +141,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorYmFm, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorYMF262LLE, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorYM3812LLE, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorVpcOPL3, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionWin9xOPLProxy, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionSerialPortOPL, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
@@ -284,9 +285,9 @@ void BankEditor::loadSettings()
     initChip();
 #endif
 
-    if (m_audioLatency < audioMinimumLatency)
+    if(m_audioLatency < audioMinimumLatency)
         m_audioLatency = audioMinimumLatency;
-    else if (m_audioLatency > audioMaximumLatency)
+    else if(m_audioLatency > audioMaximumLatency)
         m_audioLatency = audioMaximumLatency;
 
     ui->actionEmulatorNuked->setChecked(false);
@@ -299,6 +300,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorYmFm->setChecked(false);
     ui->actionEmulatorYMF262LLE->setChecked(false);
     ui->actionEmulatorYM3812LLE->setChecked(false);
+    ui->actionEmulatorVpcOPL3->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
     ui->actionSerialPortOPL->setChecked(false);
 
@@ -334,6 +336,9 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_YM3812LLE:
         ui->actionEmulatorYM3812LLE->setChecked(true);
+        break;
+    case Generator::CHIP_VPC_OPL3:
+        ui->actionEmulatorVpcOPL3->setChecked(true);
         break;
     case Generator::CHIP_Win9xProxy:
         ui->actionWin9xOPLProxy->setChecked(true);
@@ -1207,6 +1212,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorYmFm->setChecked(false);
     ui->actionEmulatorYMF262LLE->setChecked(false);
     ui->actionEmulatorYM3812LLE->setChecked(false);
+    ui->actionEmulatorVpcOPL3->setChecked(false);
     ui->actionWin9xOPLProxy->setChecked(false);
     ui->actionSerialPortOPL->setChecked(false);
 
@@ -1277,6 +1283,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorYM3812LLE->setChecked(true);
         m_currentChip = Generator::CHIP_YM3812LLE;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorVpcOPL3)
+    {
+        ui->actionEmulatorVpcOPL3->setChecked(true);
+        m_currentChip = Generator::CHIP_VPC_OPL3;
         m_generator->ctl_switchChip(m_currentChip);
     }
     else
