@@ -1553,6 +1553,16 @@
              </item>
              <item>
               <widget class="QCheckBox" name="useMT32Defaults">
+               <property name="toolTip">
+                <string>When this option is set and when this bank is loaded, MIDI defaults
+will match to the pre General MIDI device Roland MT-32. For example:
+
+- General MIDI sets initial controllers state to 100.
+- Roland MT-32 sets initial controllers state to 127.
+- General MIDI sets initial pitch bend sensitivity to 2 half-tones.
+- Roland MT-32 sets initial pitch bend sensitivity to 12 half-tones (whole octave).
+</string>
+               </property>
                <property name="text">
                 <string>Use MT-32's MIDI defaults</string>
                </property>
@@ -2507,7 +2517,7 @@ of second voice</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Roland MT-32</string>
+    <string notr="true">Roland MT-32</string>
    </property>
   </action>
  </widget>
