@@ -485,6 +485,8 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
         }
         else if(line_tr_len == 0)
             continue; // Skip empty lines
+        else if(str_starts_with(line_tr, line_tr_len, "#") || str_starts_with(line_tr, line_tr_len, "//"))
+            continue; // Commentary lines
 
         switch(level)
         {
@@ -801,7 +803,7 @@ FfmtErrCode WohlstandOPL3TeXt::loadFileInst(QString filePath, FmBank::Instrument
 {
     QByteArray lineIn, lineTr;
     QFile file(filePath);
-    char *line;
+    char *line, *line_tr;
     size_t line_len = 0, line_tr_len = 0;
     unsigned readU;
 
@@ -822,10 +824,13 @@ FfmtErrCode WohlstandOPL3TeXt::loadFileInst(QString filePath, FmBank::Instrument
         line_len = lineIn.size();
 
         lineTr = lineIn.trimmed();
+        line_tr = lineTr.data();
         line_tr_len = lineTr.size();
 
         if(line_tr_len == 0)
             continue; // Skip empty lines
+        else if(str_starts_with(line_tr, line_tr_len, "#") || str_starts_with(line_tr, line_tr_len, "//"))
+            continue; // Commentary lines
         else if(str_starts_with(line, line_len, "IS_DRUM="))
         {
             if(std::sscanf(line, "IS_DRUM=%u", &readU) == 0)
