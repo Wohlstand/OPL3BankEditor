@@ -90,6 +90,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new WohlstandOPL3_GM());
 
     registerBankFormat(new WohlstandOPL3TeXt());
+    registerInstFormat(new WohlstandOPL3TeXt());
 
     //Junglevision
     registerBankFormat(new JunleVizion());

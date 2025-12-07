@@ -25,6 +25,8 @@
 
 static const char *woplx_magic      = "WOPLX-BANK\n";
 static const char *woplx_magic_r    = "WOPLX-BANK\r\n"; // Allow files with CRLF too
+static const char *oplix_magic      = "WOPLX-INST\n";
+static const char *oplix_magic_r    = "WOPLX-INST\r\n"; // Allow files with CRLF too
 
 static FILE *qfopen(const QString &file, const QString &mode)
 {
@@ -58,6 +60,11 @@ bool WohlstandOPL3TeXt::detect(const QString &, char *magic)
     return (strncmp(magic, woplx_magic, 11) == 0 || strncmp(magic, woplx_magic_r, 12) == 0);
 }
 
+bool WohlstandOPL3TeXt::detectInst(const QString &filePath, char *magic)
+{
+    return (strncmp(magic, oplix_magic, 11) == 0 || strncmp(magic, oplix_magic_r, 12) == 0);
+}
+
 static bool woplx_read_inst_line(const char *line, size_t line_len, FmBank::Instrument *curInst)
 {
     unsigned readU;
@@ -71,6 +78,8 @@ static bool woplx_read_inst_line(const char *line, size_t line_len, FmBank::Inst
             curInst->name[o] = line[i];
 
         curInst->name[o] = 0;
+
+        return true;
     }
     else if(str_starts_with(line, line_len, "FLAGS:"))
     {
@@ -786,4 +795,89 @@ QString WohlstandOPL3TeXt::formatDefaultExtension() const
 BankFormats WohlstandOPL3TeXt::formatId() const
 {
     return BankFormats::FORMAT_WOHLSTAND_OPL3_TEXT;
+}
+
+FfmtErrCode WohlstandOPL3TeXt::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
+{
+    QByteArray lineIn, lineTr;
+    QFile file(filePath);
+    char *line;
+    size_t line_len = 0, line_tr_len = 0;
+    unsigned readU;
+
+    if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
+        return FfmtErrCode::ERR_NOFILE;
+
+    lineIn = file.readLine();
+    line = lineIn.data();
+    line_len = lineIn.size();
+
+    if(std::strncmp(line, oplix_magic, line_len) != 0 && std::strncmp(line, oplix_magic_r, line_len) != 0)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    while(!file.atEnd())
+    {
+        lineIn = file.readLine();
+        line = lineIn.data();
+        line_len = lineIn.size();
+
+        lineTr = lineIn.trimmed();
+        line_tr_len = lineTr.size();
+
+        if(line_tr_len == 0)
+            continue; // Skip empty lines
+        else if(str_starts_with(line, line_len, "IS_DRUM="))
+        {
+            if(std::sscanf(line, "IS_DRUM=%u", &readU) == 0)
+                return FfmtErrCode::ERR_BADFORMAT;
+
+            if(isDrum)
+                *isDrum = readU;
+        }
+        else if(!woplx_read_inst_line(line, line_len, &inst))
+            return FfmtErrCode::ERR_BADFORMAT;
+    }
+
+    return FfmtErrCode::ERR_OK;
+}
+
+FfmtErrCode WohlstandOPL3TeXt::saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum)
+{
+    FILE *out;
+
+    out = qfopen(filePath, "wb");
+
+    if(!out)
+        return FfmtErrCode::ERR_NOFILE;
+
+    fprintf(out, "%s\n\n", oplix_magic);
+    fprintf(out, "IS_DRUM=%u\n", isDrum ? 1 : 0);
+    woplx_write_inst(out, inst, isDrum);
+
+    return FfmtErrCode::ERR_OK;
+}
+
+int WohlstandOPL3TeXt::formatInstCaps() const
+{
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+}
+
+QString WohlstandOPL3TeXt::formatInstName() const
+{
+    return "Text-based OPL3 instrument format by Wohlstand";
+}
+
+QString WohlstandOPL3TeXt::formatInstExtensionMask() const
+{
+    return "*.oplix";
+}
+
+QString WohlstandOPL3TeXt::formatInstDefaultExtension() const
+{
+    return "oplix";
+}
+
+InstFormats WohlstandOPL3TeXt::formatInstId() const
+{
+    return InstFormats::FORMAT_INST_WOPLX;
 }
