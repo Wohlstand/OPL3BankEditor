@@ -3,6 +3,7 @@
                 text-based file format specification (WOPLX)
 ===============================================================================
                         Created in 5'th of December, 2025
+                        Updated in 7'th of December, 2025
 ===============================================================================
 Author:             Vitaliy Novichkov "Wohlstand"
 Contacts emails:    admin@wohlnet.ru, nvd339@yandex.ru
@@ -11,9 +12,13 @@ Contacts emails:    admin@wohlnet.ru, nvd339@yandex.ru
 ===============================================================================
 Contents:
     0. Changelog
-    1. Single-instrument entry
-    2. Instrument file (OPLI)
-    3. MIDI playing bank file (WOPL)
+    1. Instrument data block
+    2. Structure of the instrument file (OPLIX)
+    3. Structure of the MIDI playing bank file (WOPLX)
+        3.1. Bank settings
+        3.2. Instrument entry
+    4. Example bank file
+    5. Example instrument file
 ===============================================================================
 
 ===============================================================================
@@ -23,6 +28,11 @@ Changelog:
 5'th of December, 2025
 --------------------------
 Initial version.
+
+--------------------------
+7'th of December, 2025
+--------------------------
+Added commentary lines, IS_MT32 flag, and individual instrument files.
 
 ===============================================================================
 
@@ -37,79 +47,14 @@ There are next requirements for files:
 - All keywords in the file are CASE SENSITIVE.
 - File MUST be saved as UTF-8 without BOM.
 - There are only LF or CRLF line breaks allowed.
+- It's allowed to have commentary lines that begins with "#" or with "//".
+- Commentaries should take whole empty line, not continuation of the data line.
 
 ===============================================================================
-Structure of the file:
+Instrument data block:
 ===============================================================================
-WOPLX-BANK\n            <---- Magic number, it MUST be in begin of the file
-                              and it MUST NOT contain trailing spaces after.
-                              It should just be always trimmed and contain
-                              a new-line character. It's allowed to have LF (\n)
-                              or CRLF (\r\n) as well.
-
-BANK_INFO:              <---- Begin of the OPTIONAL info block that describes
-                              the bank and might include license information too.
-
-<---- Here you can include just any plain text data in free format ---->
-
-BANK_INFO_END           <---- Bank info end block.
-
-<-------   Bank file-wide flags and settings:   -------->
-
-DEEP_VIBRATO=<vib>      <---- 0 or 1 - Enable the Deep-Vibrato of OPL2/OPL3 chip
-DEEP_TREMOLO=<am>       <---- 0 or 1 - Enable the Deep-Tremolo of OPL2/OPL3 chip
-IS_MT32=<mt>            <---- 0 or 1 - This bank uses MIDI defaults of the MT-32
-VOLUME_MODEL=<v>        <---- From 0 to 13 - Choose one of libADLMIDI's volume
-                              and frequency models.
-
-<-----------------------------------------------------------------------
-    List of banks. Any bank beings with the "MELODIC_BANK:" or
-   "PERCUSSION_BANK:" and ends with "MELODIC_BANK_END" or
-   "PERCUSSION_BANK_END". It's allowed to have multiple melodic
-    and multiple percussion banks to fufill the set of instruments for
-    the GS or XG, or store the content of AIL banks.
-
-    Below are two examples: one melodic bank and one percussion.
------------------------------------------------------------------------->
-
-MELODIC_BANK:
-<--- Melodic bank's settings --->
-<--- List of bank's instruments --->
-MELODIC_BANK_END
-
-PERCUSSION_BANK:
-<--- Percussion bank's settings --->
-<--- List of bank's instruments --->
-PERCUSSION_BANK_END
-
-===============================================================================
-Bank settings:
-===============================================================================
-At the begin of every bank entry there are next allowed options are going before
-any instrument entry begins:
-
-NAME=<str>                  <---- Name of the bank (optional)
-MIDI_BANK_MSB=<0...127>     <---- The MSB value of the MIDI bank number
-MIDI_BANK_LSB=<0...127>     <---- The LSB value of the MIDI bank number
-
-And once next field appears:
-
-INSTRUMENT=<0...127>        <---- Instrument entry with MIDI patch number
-                                  from 0 to 127
-
-Then no fields but instrument specific are allowed.
-
-===============================================================================
-Instrument entry:
-===============================================================================
-Every instrument begins with the header field:
-
-INSTRUMENT=<0...127>        <---- Instrument entry with MIDI patch number
-                                  from 0 to 127
-
-and ends once another instrument header declares an another one.
-
-Instrumets allowed to have next fields:
+There are parameters shared between individual instrument file (OPLIX) and the
+bank file (WOPLX). Instrumets allowed to have next fields:
 
 NAME=<str>                  <---- Name of the the instrument (optional)
 FLAGS: <flags-list>         <---- Instrument's flags (list below)
@@ -228,13 +173,103 @@ Operators in the list below has the next roles:
 - Operator 1 - the Modulator1 (Operator 1 for 4-operators mode)
 - Operator 2 - the Carrier2 (Operator 4 for 4-operators mode)
 - Operator 3 - the Modulator2 (Operator 3 for 4-operators mode)
+
+
+
+===============================================================================
+Structure of the instrument file (OPLIX):
+===============================================================================
+WOPLX-INST\n            <---- Magic number, it MUST be in begin of the file
+                              and it MUST NOT contain trailing spaces after.
+                              It should just be always trimmed and contain
+                              a new-line character. It's allowed to have LF (\n)
+                              or CRLF (\r\n) as well.
+
+IS_DRUM=<0 or 1>        <---- Is this a percussion instrument?
+
+<--- Parameters of the "Instrument data block" ---->
+
+
+===============================================================================
+Structure of the MIDI playing bank file (WOPLX):
+===============================================================================
+WOPLX-BANK\n            <---- Magic number, it MUST be in begin of the file
+                              and it MUST NOT contain trailing spaces after.
+                              It should just be always trimmed and contain
+                              a new-line character. It's allowed to have LF (\n)
+                              or CRLF (\r\n) as well.
+
+BANK_INFO:              <---- Begin of the OPTIONAL info block that describes
+                              the bank and might include license information too.
+
+<---- Here you can include just any plain text data in free format ---->
+
+BANK_INFO_END           <---- Bank info end block.
+
+<-------   Bank file-wide flags and settings:   -------->
+
+DEEP_VIBRATO=<vib>      <---- 0 or 1 - Enable the Deep-Vibrato of OPL2/OPL3 chip
+DEEP_TREMOLO=<am>       <---- 0 or 1 - Enable the Deep-Tremolo of OPL2/OPL3 chip
+IS_MT32=<mt>            <---- 0 or 1 - This bank uses MIDI defaults of the MT-32
+VOLUME_MODEL=<v>        <---- From 0 to 13 - Choose one of libADLMIDI's volume
+                              and frequency models.
+
+<-----------------------------------------------------------------------
+    List of banks. Any bank beings with the "MELODIC_BANK:" or
+   "PERCUSSION_BANK:" and ends with "MELODIC_BANK_END" or
+   "PERCUSSION_BANK_END". It's allowed to have multiple melodic
+    and multiple percussion banks to fufill the set of instruments for
+    the GS or XG, or store the content of AIL banks.
+
+    Below are two examples: one melodic bank and one percussion.
+------------------------------------------------------------------------>
+
+MELODIC_BANK:
+<--- Melodic bank's settings --->
+<--- List of bank's instruments --->
+MELODIC_BANK_END
+
+PERCUSSION_BANK:
+<--- Percussion bank's settings --->
+<--- List of bank's instruments --->
+PERCUSSION_BANK_END
+
+-------------------------------------------------------------------------------
+Bank settings:
+-------------------------------------------------------------------------------
+At the begin of every bank entry there are next allowed options are going before
+any instrument entry begins:
+
+NAME=<str>                  <---- Name of the bank (optional)
+MIDI_BANK_MSB=<0...127>     <---- The MSB value of the MIDI bank number
+MIDI_BANK_LSB=<0...127>     <---- The LSB value of the MIDI bank number
+
+And once next field appears:
+
+INSTRUMENT=<0...127>        <---- Instrument entry with MIDI patch number
+                                  from 0 to 127
+
+Then no fields but instrument specific are allowed.
+
+-------------------------------------------------------------------------------
+Instrument entry:
+-------------------------------------------------------------------------------
+Every instrument begins with the header field:
+
+INSTRUMENT=<0...127>        <---- Instrument entry with MIDI patch number
+                                  from 0 to 127
+
+and ends once another instrument header declares an another one.
+
+<--- Parameters of the "Instrument data block" ---->
+
 ===============================================================================
 
 
 
 
 ===============================================================================
-Example file:
+Example bank file:
 ===============================================================================
 WOPLX-BANK
 
@@ -245,10 +280,12 @@ article. Everything can be re-used, redone and redistributed freely!
 There are few insrtuments placed to simplify the example.
 BANK_INFO_END
 
+// Bank flags
 DEEP_VIBRATO=1
 DEEP_TREMOLO=0
 VOLUME_MODEL=12
 
+# General-MIDI melodic bank
 MELODIC_BANK:
 MIDI_BANK_MSB=0
 MIDI_BANK_LSB=0
@@ -280,8 +317,12 @@ OP1: AT=5;DC=1;ST=4;RL=5;WF=1;ML=1;TL=13;KL=1;VB=1;AM=1;EG=1;KR=0;
 OP2: AT=8;DC=1;ST=4;RL=6;WF=1;ML=0;TL=0;KL=0;VB=0;AM=1;EG=1;KR=0;
 OP3: AT=5;DC=1;ST=4;RL=5;WF=1;ML=1;TL=13;KL=1;VB=0;AM=1;EG=1;KR=0;
 
+// Here should be more instruments, but I placed only these above
+
 MELODIC_BANK_END
 
+
+// Now, it's a percussion bank!
 PERCUSSION_BANK:
 MIDI_BANK_MSB=0
 MIDI_BANK_LSB=0
@@ -304,5 +345,23 @@ OP2: AT=15;DC=6;ST=0;RL=12;WF=0;ML=0;TL=0;KL=0;VB=0;AM=0;EG=0;KR=0;
 OP3: AT=15;DC=6;ST=0;RL=12;WF=0;ML=0;TL=0;KL=0;VB=0;AM=0;EG=0;KR=0;
 
 PERCUSSION_BANK_END
+
+===============================================================================
+
+
+===============================================================================
+Example instrument file:
+===============================================================================
+WOPLX-INST
+
+IS_DRUM=0
+NAME=Pad 7 (halo)
+FLAGS: DV;
+ATTRS: NOTE_OFF_1=12;NOTE_OFF_2=12;FINE_TUNE=-2;DUR_K_ON=40000;DUR_K_OFF=566;
+FBCONN: FB1=0;CONN1=0;FB2=0;CONN2=0;
+OP0: AT=9;DC=1;ST=4;RL=6;WF=1;ML=0;TL=0;KL=0;VB=0;AM=1;EG=1;KR=0;
+OP1: AT=5;DC=1;ST=4;RL=5;WF=1;ML=1;TL=13;KL=1;VB=1;AM=1;EG=1;KR=0;
+OP2: AT=8;DC=1;ST=4;RL=6;WF=1;ML=0;TL=0;KL=0;VB=0;AM=1;EG=1;KR=0;
+OP3: AT=5;DC=1;ST=4;RL=5;WF=1;ML=1;TL=13;KL=1;VB=0;AM=1;EG=1;KR=0;
 
 ===============================================================================
