@@ -161,6 +161,16 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
 
                 bank.deep_tremolo = readU;
             }
+            else if(str_starts_with(line, line_len, "IS_MT32="))
+            {
+                if(std::sscanf(line, "IS_MT32=%u", &readU) == 0)
+                {
+                    bank.reset();
+                    return FfmtErrCode::ERR_BADFORMAT;
+                }
+
+                bank.is_mt32 = readU;
+            }
             else if(str_starts_with(line, line_len, "VOLUME_MODEL="))
             {
                 if(std::sscanf(line, "VOLUME_MODEL=%u", &readU) == 0)
@@ -668,6 +678,9 @@ FfmtErrCode WohlstandOPL3TeXt::saveFile(QString filePath, FmBank &bank)
     fprintf(out, "DEEP_VIBRATO=%u\n", bank.deep_vibrato ? 1 : 0);
     fprintf(out, "DEEP_TREMOLO=%u\n", bank.deep_tremolo ? 1 : 0);
     fprintf(out, "VOLUME_MODEL=%u\n", bank.volume_model);
+
+    if(bank.is_mt32)
+        fprintf(out, "IS_MT32=1\n");
 
     fprintf(out, "\n\n");
 

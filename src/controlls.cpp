@@ -49,6 +49,12 @@ void BankEditor::on_deepVibrato_clicked(bool checked)
     m_bank.deep_vibrato = checked;
 }
 
+void BankEditor::on_useMT32Defaults_clicked(bool checked)
+{
+    if(m_lock) return;
+    m_bank.is_mt32 = checked;
+}
+
 void BankEditor::on_volumeModel_currentIndexChanged(int index)
 {
     if(m_lock) return;

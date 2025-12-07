@@ -529,6 +529,7 @@ private slots:
 
     void on_deepTremolo_clicked(bool checked);
     void on_deepVibrato_clicked(bool checked);
+    void on_useMT32Defaults_clicked(bool checked);
     void on_volumeModel_currentIndexChanged(int index);
     void on_volumeSlider_valueChanged(int value);
 

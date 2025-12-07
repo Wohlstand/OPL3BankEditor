@@ -107,10 +107,12 @@ BankEditor::BankEditor(QWidget *parent) :
     ui->actionStandardGM2->setData(kMidiSpecGM2|kMidiSpecGM1);
     ui->actionStandardGS->setData(kMidiSpecGS|kMidiSpecSC|kMidiSpecGM1);
     ui->actionStandardXG->setData(kMidiSpecXG|kMidiSpecGM1);
+    ui->actionStandardMT32->setData(kMidiSpecMT32);
     actionGroupStandard->addAction(ui->actionStandardGM);
     actionGroupStandard->addAction(ui->actionStandardGM2);
     actionGroupStandard->addAction(ui->actionStandardGS);
     actionGroupStandard->addAction(ui->actionStandardXG);
+    actionGroupStandard->addAction(ui->actionStandardMT32);
     actionGroupStandard->setExclusive(true);
     ui->actionStandardXG->setChecked(true);
     connect(actionGroupStandard, SIGNAL(triggered(QAction *)),
@@ -185,6 +187,7 @@ BankEditor::BankEditor(QWidget *parent) :
     loadSettings();
     m_bank.deep_tremolo = ui->deepTremolo->isChecked();
     m_bank.deep_vibrato = ui->deepVibrato->isChecked();
+    m_bank.is_mt32 = ui->useMT32Defaults->isChecked();
     m_bankBackup = m_bank;
 
 #ifdef ENABLE_MIDI
@@ -252,6 +255,7 @@ void BankEditor::loadSettings()
     QSettings setup;
     ui->deepTremolo->setChecked(setup.value("deep-tremolo", false).toBool());
     ui->deepVibrato->setChecked(setup.value("deep-vibrato", false).toBool());
+    ui->useMT32Defaults->setChecked(setup.value("use-mt32-defaults", false).toBool());
     m_recentPath = setup.value("recent-path").toString();
     {
         int chipEmulator = setup.value("chip-emulator", defaultChip).toInt();
@@ -362,6 +366,11 @@ void BankEditor::loadSettings()
     case 2: // GS
         ui->actionStandardGS->setChecked(true);
         break;
+
+    case 4: // MT32
+        ui->actionStandardMT32->setChecked(true);
+        break;
+
     default:
     case 3: // XG, initially set by default
         break;
@@ -399,6 +408,8 @@ void BankEditor::saveSettings()
         preferredMidiStandard = 2;
     else if(ui->actionStandardXG->isChecked())
         preferredMidiStandard = 3;
+    else if(ui->actionStandardMT32->isChecked())
+        preferredMidiStandard = 4;
     setup.setValue("preferred-midi-standard", preferredMidiStandard);
 }
 
@@ -529,6 +540,7 @@ void BankEditor::initFileData(QString &filePath)
     m_lock = true;
     ui->deepTremolo->setChecked(m_bank.deep_tremolo);
     ui->deepVibrato->setChecked(m_bank.deep_vibrato);
+    ui->useMT32Defaults->setChecked(m_bank.is_mt32);
     ui->volumeModel->setCurrentIndex((int)m_bank.volume_model);
     m_lock = false;
 
@@ -1835,10 +1847,12 @@ void BankEditor::reloadBankNames()
 {
     int countOfBanks;
     bool isDrum = isDrumsMode();
+
     if(isDrum)
         countOfBanks = ((m_bank.countDrums() - 1) / 128) + 1;
     else
         countOfBanks = ((m_bank.countMelodic() - 1) / 128) + 1;
+
     for(int i = 0; i < countOfBanks; i++)
         refreshBankName(i);
 }

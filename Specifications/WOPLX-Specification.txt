@@ -58,6 +58,7 @@ BANK_INFO_END           <---- Bank info end block.
 
 DEEP_VIBRATO=<vib>      <---- 0 or 1 - Enable the Deep-Vibrato of OPL2/OPL3 chip
 DEEP_TREMOLO=<am>       <---- 0 or 1 - Enable the Deep-Tremolo of OPL2/OPL3 chip
+IS_MT32=<mt>            <---- 0 or 1 - This bank uses MIDI defaults of the MT-32
 VOLUME_MODEL=<v>        <---- From 0 to 13 - Choose one of libADLMIDI's volume
                               and frequency models.
 

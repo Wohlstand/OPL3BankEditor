@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1051</width>
-    <height>908</height>
+    <width>1050</width>
+    <height>954</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -1411,12 +1411,19 @@
 </string>
             </property>
             <property name="title">
-             <string>Bank volume model</string>
+             <string>Bank settings</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Bank volume model</string>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QComboBox" name="volumeModel">
                <property name="maximumSize">
@@ -1542,6 +1549,13 @@
                  </widget>
                 </item>
                </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="useMT32Defaults">
+               <property name="text">
+                <string>Use MT-32's MIDI defaults</string>
+               </property>
               </widget>
              </item>
              <item>
@@ -2001,7 +2015,7 @@ of second voice</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1051</width>
+     <width>1050</width>
      <height>20</height>
     </rect>
    </property>
@@ -2057,6 +2071,7 @@ of second voice</string>
      <addaction name="actionStandardGM2"/>
      <addaction name="actionStandardGS"/>
      <addaction name="actionStandardXG"/>
+     <addaction name="actionStandardMT32"/>
     </widget>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
@@ -2485,6 +2500,14 @@ of second voice</string>
   <action name="actionSaveAsCopy">
    <property name="text">
     <string>Sava a copy of bank as...</string>
+   </property>
+  </action>
+  <action name="actionStandardMT32">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Roland MT-32</string>
    </property>
   </action>
  </widget>

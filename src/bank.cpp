@@ -38,6 +38,7 @@ FmBank::FmBank(const FmBank &fb)
     Banks_Percussion    = fb.Banks_Percussion;
     deep_vibrato        = fb.deep_vibrato;
     deep_tremolo        = fb.deep_tremolo;
+    is_mt32             = fb.is_mt32;
     volume_model        = fb.volume_model;
     InfoString          = fb.InfoString;
 }
@@ -56,6 +57,7 @@ FmBank &FmBank::operator=(const FmBank &fb)
     Banks_Percussion    = fb.Banks_Percussion;
     deep_vibrato        = fb.deep_vibrato;
     deep_tremolo        = fb.deep_tremolo;
+    is_mt32             = fb.is_mt32;
     volume_model        = fb.volume_model;
     InfoString          = fb.InfoString;
     return *this;
@@ -68,6 +70,7 @@ bool FmBank::operator==(const FmBank &fb)
     res &= (volume_model == fb.volume_model);
     res &= (deep_vibrato == fb.deep_vibrato);
     res &= (deep_tremolo == fb.deep_tremolo);
+    res &= (is_mt32 == fb.is_mt32);
     res &= (Ins_Melodic_box.size() == fb.Ins_Melodic_box.size());
     res &= (Ins_Percussion_box.size() == fb.Ins_Percussion_box.size());
     res &= (Banks_Melodic.size() == fb.Banks_Melodic.size());
@@ -122,6 +125,11 @@ void FmBank::reset()
 
     deep_vibrato = false;
     deep_tremolo = false;
+    is_mt32 = false;
+
+    volume_model = 0;
+
+    InfoString.clear();
 }
 
 void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
@@ -152,6 +160,7 @@ void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
 
     deep_vibrato = false;
     deep_tremolo = false;
+    is_mt32 = false;
 
     volume_model = 0;
 

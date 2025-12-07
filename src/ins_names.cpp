@@ -26,7 +26,7 @@
 
 static bool mapsInitialized = false;
 typedef QHash<uint32_t, const MidiProgram *> InstrumentMap;
-static InstrumentMap XgMap, GsMap, ScMap, Gm2Map, Gm1Map;
+static InstrumentMap XgMap, GsMap, ScMap, Gm2Map, Gm1Map, MT32Map;
 
 static void fillInstMap(InstrumentMap &map, const MidiProgram *pgms, unsigned size)
 {
@@ -59,6 +59,7 @@ const MidiProgram *getMidiProgram(MidiProgramId id, unsigned spec, unsigned *spe
         fillInstMap(ScMap, ScSet, sizeof(ScSet) / sizeof(*ScSet));
         fillInstMap(Gm2Map, Gm2Set, sizeof(Gm2Set) / sizeof(*Gm2Set));
         fillInstMap(Gm1Map, Gm1Set, sizeof(Gm1Set) / sizeof(*Gm1Set));
+        fillInstMap(MT32Map, MT32Set, sizeof(MT32Set) / sizeof(*MT32Set));
         mapsInitialized = true;
     }
 
@@ -75,6 +76,7 @@ const MidiProgram *getMidiProgram(MidiProgramId id, unsigned spec, unsigned *spe
         {kMidiSpecSC, &ScMap},
         {kMidiSpecGM2, &Gm2Map},
         {kMidiSpecGM1, &Gm1Map},
+        {kMidiSpecMT32, &MT32Map},
     };
 
     const MidiProgram *pgm = nullptr;

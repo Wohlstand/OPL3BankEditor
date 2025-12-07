@@ -60,6 +60,8 @@ enum MidiSpec
     kMidiSpecGS  = 8,
     //! Yamaha XG Level 1, 2, 3
     kMidiSpecXG  = 16,
+    //! Rolamd MT-32
+    kMidiSpecMT32 = 32,
     //! No MIDI specification
     kMidiSpecNone = 0,
     //! Any MIDI specification

@@ -315,8 +315,13 @@ public:
         uint8_t lsb;
     };
 
+    //! Enable wider frequency modulation by LFO
     bool    deep_vibrato   = false;
+    //! Enable wider amplitude modulation by LFO
     bool    deep_tremolo   = false;
+
+    //! This bank uses MIDI defaults inspired by the pre-GM synthesizer Roland MT-32
+    bool    is_mt32 = false;
 
     enum VolumesScale
     {
