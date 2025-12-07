@@ -26,6 +26,7 @@
 #include <QClipboard>
 #include <QActionGroup>
 #include <QtDebug>
+#include <QTextEdit>
 
 #include "importer.h"
 #include "formats_sup.h"
@@ -596,7 +597,7 @@ bool BankEditor::openOrImportFile(QString filePath)
     return true;
 }
 
-bool BankEditor::saveBankFile(QString filePath, BankFormats format)
+bool BankEditor::saveBankFile(QString filePath, BankFormats format, bool copy)
 {
     if(FmBankFormatFactory::hasCaps(format, (int)FormatCaps::FORMAT_CAPS_MELODIC_ONLY))
     {
@@ -679,8 +680,12 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format)
     else
     {
         //Override 'recently-saved' format
-        m_recentFormat = format;
-        reInitFileDataAfterSave(filePath);
+        if(!copy)
+        {
+            m_recentFormat = format;
+            reInitFileDataAfterSave(filePath);
+        }
+
         statusBar()->showMessage(tr("Bank file '%1' has been saved!").arg(filePath), 5000);
         return true;
     }
@@ -723,7 +728,7 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
     }
 }
 
-bool BankEditor::saveFileAs(const QString &optionalFilePath)
+bool BankEditor::saveFileAs(const QString &optionalFilePath, bool copy)
 {
     QString fileToSave;
     bool canSaveDirectly = false;
@@ -754,10 +759,12 @@ bool BankEditor::saveFileAs(const QString &optionalFilePath)
     if(fileToSave.isEmpty())
         return false;
 
-    if(!saveBankFile(fileToSave, saveFormat))
+    if(!saveBankFile(fileToSave, saveFormat, copy))
        return false;
 
-    m_currentFileFormat = saveFormat;
+    if(!copy)
+        m_currentFileFormat = saveFormat;
+
     return true;
 }
 
@@ -920,6 +927,11 @@ void BankEditor::on_actionSave_triggered()
 void BankEditor::on_actionSaveAs_triggered()
 {
     saveFileAs();
+}
+
+void BankEditor::on_actionSaveAsCopy_triggered()
+{
+    saveFileAs(QString(), true);
 }
 
 void BankEditor::on_actionSaveInstrument_triggered()
@@ -1536,6 +1548,36 @@ void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
         QList<QListWidgetItem *> selected = ui->instruments->selectedItems();
         if(!selected.isEmpty())
             ui->bank_no->setCurrentIndex(selected.front()->data(INS_BANK_ID).toInt());
+    }
+}
+
+void BankEditor::on_actionEditBankInfo_triggered()
+{
+    QDialog d(this);
+    d.setWindowTitle(tr("Edit bank information"));
+    d.resize(680, 400);
+    QGridLayout *grid = new QGridLayout(&d);
+    QLabel *title = new QLabel(tr("Write the description of this bank file. You also can include the license information."), &d);
+    QTextEdit *edit = new QTextEdit(&d);
+    QPushButton *ok = new QPushButton(tr("Ok"), &d);
+    QPushButton *close = new QPushButton(tr("Close"), &d);
+    edit->setAcceptRichText(false);
+    edit->setFont(QFont("Monospace"));
+    edit->setPlainText(m_bank.InfoString);
+
+    grid->setColumnStretch(0, 10000);
+    grid->addWidget(title, 0, 0, 1, 3);
+    grid->addWidget(edit, 1, 0, 1, 3);
+    grid->addWidget(ok, 2, 1, 1, 1);
+    grid->addWidget(close, 2, 2, 1, 1);
+    d.updateGeometry();
+
+    QObject::connect(ok, SIGNAL(clicked(bool)), &d, SLOT(accept()));
+    QObject::connect(close, SIGNAL(clicked(bool)), &d, SLOT(reject()));
+
+    if(d.exec() == QDialog::Accepted)
+    {
+        m_bank.InfoString = edit->toPlainText();
     }
 }
 

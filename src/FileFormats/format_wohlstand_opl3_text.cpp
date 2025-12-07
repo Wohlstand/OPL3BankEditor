@@ -100,10 +100,20 @@ FfmtErrCode WohlstandOPL3TeXt::loadFile(QString filePath, FmBank &bank)
 
         if(parseInfo)
         {
-            if(std::strncmp(line_tr, "BANK_INFO_END", line_tr_len))
+            if(line_tr_len > 0 && std::strncmp(line_tr, "BANK_INFO_END", line_tr_len) == 0)
+            {
                 parseInfo = false;
+
+                // Extra line break before the "BANK_INFO_END"
+                if(bank.InfoString.endsWith("\r\n"))
+                    bank.InfoString.remove(bank.InfoString.size() - 2, 2);
+                else if(bank.InfoString.endsWith('\n'))
+                    bank.InfoString.remove(bank.InfoString.size() - 1, 1);
+            }
             else
                 bank.InfoString.append(QString::fromUtf8(lineIn));
+
+            continue;
         }
         else if(line_tr_len == 0)
             continue; // Skip empty lines
@@ -648,6 +658,10 @@ FfmtErrCode WohlstandOPL3TeXt::saveFile(QString filePath, FmBank &bank)
     if(!bank.InfoString.isEmpty())
     {
         std::string bank_info = bank.InfoString.toStdString();
+        size_t keyword = bank_info.find("BANK_INFO_END");
+        if(keyword != std::string::npos) // Prevent possible damage of the file by keyword saved as a text
+            bank_info[keyword + 1] = '@';
+
         fprintf(out, "BANK_INFO:\n%s\nBANK_INFO_END\n\n", bank_info.c_str());
     }
 

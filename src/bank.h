@@ -320,7 +320,7 @@ public:
 
     enum VolumesScale
     {
-        VOLUME_Generic,
+        VOLUME_Generic = 0,
         VOLUME_CMF,
         VOLUME_DMX,
         VOLUME_APOGEE,
@@ -329,7 +329,11 @@ public:
         VOLUME_APOGEE_FIXED,
         VOLUME_AIL,
         VOLUME_9X_GENERIC_FM,
-        VOLUME_HMI
+        VOLUME_HMI,
+        VOLUME_HMI_OLD,
+        VOLUME_MS_ADLIB,
+        VOLUME_IMF_CREATOR,
+        VOLUME_OCONNEL
     };
     uint8_t volume_model    = (uint8_t)VOLUME_Generic;
 

@@ -6,6 +6,8 @@ Version 1.5.2
 - Fixed incorrect measure of 4-op voices.
 - Reworked the support for IBK files: now they can be saved as melodic and percussion parts independently.
 - Fixed a bug caused deep tremolo and deep vibrato weren't applied to generator after loading a bank file with matched settings.
+- Added support for glitchy VirtualPC OPL3 emulator for various tests and experiments.
+- Added support for brand new format WOPLX - a text-based variant of the WOPL format.
 
 Version 1.5.1
 - Added an ability to set the audio device by user interface

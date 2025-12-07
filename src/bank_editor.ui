@@ -2015,6 +2015,7 @@ of second voice</string>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
+    <addaction name="actionSaveAsCopy"/>
     <addaction name="actionSaveInstrument"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -2082,6 +2083,8 @@ of second voice</string>
     <addaction name="actionAdLibBnkMode"/>
     <addaction name="separator"/>
     <addaction name="menuPreferred_MIDI_standard"/>
+    <addaction name="separator"/>
+    <addaction name="actionEditBankInfo"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
@@ -2472,6 +2475,16 @@ of second voice</string>
    </property>
    <property name="text">
     <string notr="true">VirtualPC OPL3</string>
+   </property>
+  </action>
+  <action name="actionEditBankInfo">
+   <property name="text">
+    <string>Edit bank info...</string>
+   </property>
+  </action>
+  <action name="actionSaveAsCopy">
+   <property name="text">
+    <string>Sava a copy of bank as...</string>
    </property>
   </action>
  </widget>

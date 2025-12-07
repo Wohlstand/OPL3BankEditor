@@ -202,7 +202,7 @@ public:
      * \param format Target format to save a file
      * \return true if file successfully saved, false if failed
      */
-    bool saveBankFile(QString filePath, BankFormats format);
+    bool saveBankFile(QString filePath, BankFormats format, bool copy = false);
     /*!
      * \brief Save current instrument file
      * \param filePath absolute path where to save a file
@@ -213,9 +213,10 @@ public:
     /*!
      * \brief Saves current bank file, asking for file path if necessary
      * \param optionalFilePath absolute path where to save a file, or empty string
+     * \param copy Don't replace the current bank's path and don't mark as saved if not marked
      * \return true if file successfuly saved, false on rejecting or on fail
      */
-    bool saveFileAs(const QString &optionalFilePath = QString());
+    bool saveFileAs(const QString &optionalFilePath = QString(), bool copy = false);
     /*!
      * \brief Open Save-As dialog box for single instrument
      * \return true if file successfuly saved, false on rejecting or on fail
@@ -364,6 +365,10 @@ private slots:
      */
     void on_actionSaveAs_triggered();
     /**
+     * @brief Save current bank state into a selected file
+     */
+    void on_actionSaveAsCopy_triggered();
+    /**
      * @brief Save current instrument into the file
      */
     void on_actionSaveInstrument_triggered();
@@ -496,6 +501,12 @@ private slots:
      * @param checked AdLib BNK mode is turned on
      */
     void on_actionAdLibBnkMode_triggered(bool checked);
+
+    /**
+     * @brief Open the editor of the bank's info string
+     */
+    void on_actionEditBankInfo_triggered();
+
     /**
      * @brief Opens the audio configuration dialog
      */

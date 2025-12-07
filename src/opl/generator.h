@@ -147,7 +147,7 @@ public:
 
     enum VolumesScale
     {
-        VOLUME_Generic,
+        VOLUME_Generic = 0,
         VOLUME_CMF,
         VOLUME_DMX,
         VOLUME_APOGEE,

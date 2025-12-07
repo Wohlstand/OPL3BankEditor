@@ -377,6 +377,7 @@ FfmtErrCode FmBankFormatFactory::OpenBankFile(QString filePath, FmBank &bank, Ba
             break;
         }
     }
+
     if(recent)
         *recent = fmt;
 
