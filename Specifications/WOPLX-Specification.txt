@@ -43,7 +43,7 @@ Structure of the file:
 ===============================================================================
 WOPLX-BANK\n            <---- Magic number, it MUST be in begin of the file
                               and it MUST NOT contain trailing spaces after.
-                              It should just be always tripped and contain
+                              It should just be always trimmed and contain
                               a new-line character. It's allowed to have LF (\n)
                               or CRLF (\r\n) as well.
 
