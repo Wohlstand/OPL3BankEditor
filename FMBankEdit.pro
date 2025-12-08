@@ -177,7 +177,7 @@ SOURCES += \
     src/opl/models/model_generic.c \
     src/opl/models/model_hmi_sos.c \
     src/opl/models/model_msadlib.c \
-    src/opl/models/model_oconnel.c \
+    src/opl/models/model_oconnell.c \
     src/opl/models/model_win9x.c \
     src/piano.cpp \
     src/opl/measurer.cpp \

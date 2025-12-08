@@ -1208,9 +1208,9 @@ void Generator::changeVolumeModel(int volmodel)
         m_getVolume = &oplModel_dmxFixedVolume;
         break;
 
-    case VOLUME_OCONNEL:
-        m_getFreq = &oplModel_OConnelFreq;
-        m_getVolume = &oplModel_OConnelVolume;
+    case VOLUME_OCONNELL:
+        m_getFreq = &oplModel_OConnellFreq;
+        m_getVolume = &oplModel_OConnellVolume;
         break;
     }
 }

@@ -199,7 +199,7 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank, BankFormats 
 
     bank.deep_tremolo = false;
     bank.deep_vibrato = false;
-    bank.volume_model = FmBank::VOLUME_OCONNEL;
+    bank.volume_model = FmBank::VOLUME_OCONNELL;
 
     if(file.read(magic, 4) != 4)
         return FfmtErrCode::ERR_BADFORMAT;
@@ -430,7 +430,7 @@ FfmtErrCode SbIBK_impl::loadFileSBOP(QString filePath, FmBank &bank, BankFormats
         return FfmtErrCode::ERR_NOFILE;
 
     bank.reset();
-    bank.volume_model = FmBank::VOLUME_OCONNEL;
+    bank.volume_model = FmBank::VOLUME_OCONNELL;
 
     qint64  fileSize = file.bytesAvailable();
     bool    fileIs4op = (fileSize == 7680);

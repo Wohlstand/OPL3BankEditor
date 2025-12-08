@@ -338,7 +338,7 @@ public:
         VOLUME_HMI_OLD,
         VOLUME_MS_ADLIB,
         VOLUME_IMF_CREATOR,
-        VOLUME_OCONNEL
+        VOLUME_OCONNELL
     };
     uint8_t volume_model    = (uint8_t)VOLUME_Generic;
 

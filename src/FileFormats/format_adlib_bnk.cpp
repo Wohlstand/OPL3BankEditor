@@ -744,7 +744,7 @@ FfmtErrCode AdLibAndHmiBnk_reader::loadFileInst(QString filePath, FmBank::Instru
     inst.OP[MODULATOR1].waveform = idata[74];
     inst.OP[CARRIER1].waveform = idata[76];
     #else
-    //However, SBANK by Jammie O'Connel produces different:
+    //However, SBANK by Jamie O'Connell produces different:
     if((idata[55] != 0) && (idata[57] != 0))
     {
         memset(&inst, 0, sizeof(FmBank::Instrument));
@@ -783,7 +783,7 @@ FfmtErrCode AdLibAndHmiBnk_reader::saveFileInst(QString filePath, FmBank::Instru
     odata[75] = inst.OP[MODULATOR1].waveform;
     odata[77] = inst.OP[CARRIER1].waveform;
     #else
-    //By SBANK by Jammie O'Connel
+    //By SBANK by Jamie O'Connell
     odata[54] = inst.getWaveForm(MODULATOR1);
     odata[56] = inst.getWaveForm(CARRIER1);
     strncpy(char_p(odata + 58), inst.name, 19);

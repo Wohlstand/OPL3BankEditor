@@ -230,7 +230,7 @@ List of supported volume and frequency models:
 10 - Model of legacy HMI Sound Operating System (Some FM conn. voices will sound incorrectly).
 11 - Model of the AdLib driver for Windows 3.x.
 12 - Model of the IMF Creator utility (Partially based on the DMX).
-13 - Model of Jamie O'Connel's FM Synth driver for Windows 3.x.
+13 - Model of Jamie O'Connell's FM Synth driver for Windows 3.x.
 
 The default channel allocation algorithm will also depend on the selected model:
 - Sounding delay based allocation will be used with models from 0 to 8, and 13.

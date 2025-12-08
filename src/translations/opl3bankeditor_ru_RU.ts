@@ -628,8 +628,8 @@
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1505"/>
-        <source>FM Synth by O&apos;Connel</source>
-        <translation>FM Synth от Джейми О&apos;Коннела</translation>
+        <source>FM Synth by O&apos;Connell</source>
+        <translation>FM Synth от Джейми О&apos;Коннелла</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1538"/>

@@ -41,7 +41,7 @@ Version | What's new
         | (6'th of September, 2020)
         | Change: Added three new volume scaling models: Old variant of HMI
         | with defected FM voices, MS AdLib driver for Windows 3.x, IMF Creator,
-        | and Jammie O'Connel's FM Synth driver for Windowx 3.x
+        | and Jammie O'Connell's FM Synth driver for Windowx 3.x
         | (14'th of November, 2025)
         | Change: Formerly unused bit at the instrument bitwise flags,
         | now became the "Fixed note" flag. Also clarified other bits.
@@ -184,7 +184,7 @@ Bytes-Lenght      |      Description
                   |    10 - HMI Sound Operating System (Ver. 3.0 and below)
                   |    11 - MS AdLib Driver for Windows 9x volume model
                   |    12 - IMF Creator volume model
-                  |    13 - Jammie O'Connel's FM Synth volume model
+                  |    13 - Jammie O'Connell's FM Synth volume model
 --VERSION >= 2---Melodic bank meta-data-----
 (repeat MBanks times)
     32            | Name of melodic bank null-terminated string

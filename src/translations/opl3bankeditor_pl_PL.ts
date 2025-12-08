@@ -515,7 +515,7 @@ Możliwe jest rozstrojenie drugiego głosu i odtwarzanie obu głosów różnymi 
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1505"/>
-        <source>FM Synth by O&apos;Connel</source>
+        <source>FM Synth by O&apos;Connell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
