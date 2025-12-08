@@ -214,6 +214,30 @@ IS_MT32=<mt>            <---- 0 or 1 - This bank uses MIDI defaults of the MT-32
 VOLUME_MODEL=<v>        <---- From 0 to 13 - Choose one of libADLMIDI's volume
                               and frequency models.
 
+<--------------
+List of supported volume and frequency models:
+
+0 - Own libADLMIDI's model.
+1 - Native OPL3 model (direct binding without any formulas).
+2 - DMX model (AM voices will glitch in some conditions).
+3 - Apogee Sound System's model (Second operator will be silent with AM conn.).
+4 - Model of the Sound Blaster 16 driver for Windows 9x.
+5 - Fixed DMX model (AM voices will sound correctly).
+6 - Fixed Apogee Sound System's model (AM voices will sound correctly).
+7 - Miles' AIL model.
+8 - Model of the generic FM Synth based sound cards for Windows 9x.
+9 - Model of HMI Sound Operating System.
+10 - Model of legacy HMI Sound Operating System (Some FM conn. voices will sound incorrectly).
+11 - Model of the AdLib driver for Windows 3.x.
+12 - Model of the IMF Creator utility (Partially based on the DMX).
+13 - Model of Jamie O'Connel's FM Synth driver for Windows 3.x.
+
+The default channel allocation algorithm will also depend on the selected model:
+- Sounding delay based allocation will be used with models from 0 to 8, and 13.
+- Any-released allocation algorithm will be used with models 9 and 10.
+- Same-instrument allocation algorithm will be used with models 11 and 12.
+-------------->
+
 <-----------------------------------------------------------------------
     List of banks. Any bank beings with the "MELODIC_BANK:" or
    "PERCUSSION_BANK:" and ends with "MELODIC_BANK_END" or
