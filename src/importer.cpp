@@ -73,7 +73,7 @@ bool Importer::openFile(QString filePath, bool isBank, FfmtErrCode *errp)
     ui->instruments->setCurrentItem(NULL);
 
     if(isBank)
-        err = FmBankFormatFactory::ImportBankFile(filePath, m_bank, &format);
+        err = FmBankFormatFactory::ImportBankFile(filePath, m_bank, &format, &BankEditor::askMelodicOrDrums, static_cast<QWidget*>(this));
     else
     {
         m_bank.reset();
@@ -82,6 +82,7 @@ bool Importer::openFile(QString filePath, bool isBank, FfmtErrCode *errp)
         FmBank::Instrument ins = FmBank::emptyInst();
         bool isDrum = false;
         err = FmBankFormatFactory::OpenInstrumentFile(filePath, ins, 0, &isDrum, true);
+
         if(err == FfmtErrCode::ERR_OK)
         {
             ui->importReplace->click();
@@ -109,6 +110,9 @@ bool Importer::openFile(QString filePath, bool isBank, FfmtErrCode *errp)
 
     if(err != FfmtErrCode::ERR_OK)
     {
+        if(err == FfmtErrCode::ERR_CANCELLED)
+            return false;
+
         if(!errp)
         {
             QString errText = FileFormats::getErrorText(err);
@@ -116,13 +120,16 @@ bool Importer::openFile(QString filePath, bool isBank, FfmtErrCode *errp)
         }
         else
             *errp = err;
+
         return false;
     }
+
     if(FmBankFormatFactory::isImportOnly(format))
     {
         ui->importReplace->click();
         ui->importAssoc->setEnabled(false);
     }
+
     initFileData(filePath);
     return true;
 }

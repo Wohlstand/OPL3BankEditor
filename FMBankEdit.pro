@@ -130,6 +130,7 @@ SOURCES += \
     src/audio.cpp \
     src/bank.cpp \
     src/bank_editor.cpp \
+    src/bank_type_dlg.cpp \
     src/operator_editor.cpp \
     src/bank_comparison.cpp \
     src/common.cpp \
@@ -185,6 +186,7 @@ SOURCES += \
 
 HEADERS += \
     src/bank_editor.h \
+    src/bank_type_dlg.h \
     src/operator_editor.h \
     src/bank_comparison.h \
     src/bank.h \

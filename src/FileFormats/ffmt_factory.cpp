@@ -360,7 +360,9 @@ QString FmBankFormatFactory::formatName(BankFormats format)
 
 
 
-FfmtErrCode FmBankFormatFactory::OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent)
+FfmtErrCode FmBankFormatFactory::OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent,
+                                              int (*bankTypeCb)(void *, FmBankFormatBase *, const QString &),
+                                              void *bankTypeCbUser)
 {
     char magic[32];
     getMagic(filePath, magic, 32);
@@ -373,6 +375,12 @@ FfmtErrCode FmBankFormatFactory::OpenBankFile(QString filePath, FmBank &bank, Ba
         Q_ASSERT(p.get());//It must be non-null!
         if((p->formatCaps() & (int)FormatCaps::FORMAT_CAPS_OPEN) && p->detect(filePath, magic))
         {
+            if(p->formatCaps() & (int)FormatCaps::FORMAT_CAPS_ASK_TYPE && bankTypeCb)
+            {
+                if(bankTypeCb(bankTypeCbUser, p.get(), filePath) == 0)
+                    return FfmtErrCode::ERR_CANCELLED; // Cancel!
+            }
+
             err = p->loadFile(filePath, bank);
             fmt = p->formatId();
             break;
@@ -385,7 +393,9 @@ FfmtErrCode FmBankFormatFactory::OpenBankFile(QString filePath, FmBank &bank, Ba
     return err;
 }
 
-FfmtErrCode FmBankFormatFactory::ImportBankFile(QString filePath, FmBank &bank, BankFormats *recent)
+FfmtErrCode FmBankFormatFactory::ImportBankFile(QString filePath, FmBank &bank, BankFormats *recent,
+                                                int (*bankTypeCb)(void *, FmBankFormatBase *fmt, const QString &),
+                                                void *bankTypeCbUser)
 {
     char magic[32];
     getMagic(filePath, magic, 32);
@@ -398,6 +408,12 @@ FfmtErrCode FmBankFormatFactory::ImportBankFile(QString filePath, FmBank &bank, 
         Q_ASSERT(p.get());//It must be non-null!
         if((p->formatCaps() & (int)FormatCaps::FORMAT_CAPS_IMPORT) && p->detect(filePath, magic))
         {
+            if(p->formatCaps() & (int)FormatCaps::FORMAT_CAPS_ASK_TYPE && bankTypeCb)
+            {
+                if(bankTypeCb(bankTypeCbUser, p.get(), filePath) == 0)
+                    return FfmtErrCode::ERR_CANCELLED; // Cancel!
+            }
+
             err = p->loadFile(filePath, bank);
             fmt = p->formatId();
             break;

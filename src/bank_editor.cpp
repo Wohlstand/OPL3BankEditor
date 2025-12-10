@@ -29,6 +29,7 @@
 #include <QTextEdit>
 
 #include "importer.h"
+#include "bank_type_dlg.h"
 #include "formats_sup.h"
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
@@ -558,16 +559,30 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
     m_bankBackup = m_bank;
 }
 
+int BankEditor::askMelodicOrDrums(void *self_p, FmBankFormatBase *fmt, const QString &filePath)
+{
+    QWidget *self = reinterpret_cast<QWidget*>(self_p);
+    BankType f(filePath, fmt, self);
+
+    f.exec();
+
+    return f.getAnswer();
+}
+
 bool BankEditor::openFile(QString filePath, FfmtErrCode *errp)
 {
     BankFormats format;
-    FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &format);
+    FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &format, &askMelodicOrDrums, static_cast<QWidget*>(this));
 
     m_recentFormat = format;
 
     if(err != FfmtErrCode::ERR_OK)
     {
-        if (!errp) {
+        if(err == FfmtErrCode::ERR_CANCELLED)
+            return false;
+
+        if(!errp)
+        {
             QString errText = FileFormats::getErrorText(err);
             ErrMessageO(this, errText);
         }

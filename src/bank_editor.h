@@ -180,6 +180,13 @@ private:
      */
     void reInitFileDataAfterSave(QString &filePath);
 
+    /**
+     * @brief The callback to choice melodic or drum bank should be loaded
+     * @param self Pointer to self
+     * @param fileName Requesting filename
+     * @return 0 - cancel, 1 - melodic, 2 - drum
+     */
+    static int askMelodicOrDrums(void *self, FmBankFormatBase *fmt, const QString &filePath);
 public:
     /*!
      * \brief Open file

@@ -131,3 +131,13 @@ QString FmBankFormatBase::formatInstExtensionMaskCase() const
     QString in = formatInstExtensionMask();
     return in + QStringLiteral(" ") + in.toUpper();
 }
+
+void FmBankFormatBase::setLoadAsDrums(bool drums)
+{
+    m_loadAsDrum = drums;
+}
+
+void FmBankFormatBase::setIbkSkipNonRhythm(bool skipNonRhythm)
+{
+    m_ibkSkipNonRhythm = skipNonRhythm;
+}

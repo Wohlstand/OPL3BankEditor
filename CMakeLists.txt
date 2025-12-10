@@ -262,6 +262,8 @@ set(SOURCES
     "src/audio.cpp"
     "src/bank_editor.cpp"
     "src/bank_editor.h"
+    "src/bank_type_dlg.cpp"
+    "src/bank_type_dlg.h"
     "src/operator_editor.cpp"
     "src/operator_editor.h"
     "src/bank_comparison.cpp"

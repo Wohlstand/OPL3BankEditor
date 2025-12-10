@@ -48,6 +48,18 @@ public:
     void reset();
 
     /**
+     * @brief Set melodic side to zero
+     * @param melodic_banks Count of melodic banks
+     */
+    void resetMelodic(uint16_t melodic_banks = 1);
+
+    /**
+     * @brief Set melodic side to zero
+     * @param percussion_banks Count of percussion banks
+     */
+    void resetPercussion(uint16_t percussion_banks = 1);
+
+    /**
      * @brief Set everything to zero and set count of banks
      * @param melodic_banks Count of melodic banks
      * @param percussion_banks Count of percussion banks

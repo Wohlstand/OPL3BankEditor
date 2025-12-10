@@ -92,6 +92,8 @@ enum class FormatCaps
     FORMAT_CAPS_MELODIC_ONLY = 0x20,
     //! Format allows to save percussion only
     FORMAT_CAPS_PERCUSSION_ONLY = 0x40,
+    //! Ask user which type of bank is (melodic or percussion) during the load
+    FORMAT_CAPS_ASK_TYPE = 0x80,
 
     //! Open/Save/Import capabilities
     FORMAT_CAPS_EVERYTHING = FORMAT_CAPS_OPEN|FORMAT_CAPS_SAVE|FORMAT_CAPS_IMPORT,
@@ -114,6 +116,8 @@ enum class FfmtErrCode
     ERR_NOT_IMPLEMENTED,
     //! Detected file format is not supported
     ERR_UNSUPPORTED_FORMAT,
+    //! Loading has been cancelled for any reason
+    ERR_CANCELLED,
     //! Any other error
     ERR_UNKNOWN
 };

@@ -32,7 +32,7 @@ public:
     static bool detectUNIXO2(QString filePath, BankFormats &format);
     static bool detectUNIXO3(QString filePath, BankFormats &format);
     // IBK/SBI for DOS
-    static FfmtErrCode loadFileIBK(QString filePath, FmBank &bank, BankFormats &format);
+    static FfmtErrCode loadFileIBK(QString filePath, FmBank &bank, BankFormats &format, bool loadAsDrums, bool skipNonRhythm);
     static FfmtErrCode saveFileIBK(QString filePath, FmBank &bank, bool drums);
     static FfmtErrCode loadFileSBI(QString filePath, FmBank::Instrument &inst, bool *isDrum = nullptr);
     static FfmtErrCode saveFileSBI(QString filePath, FmBank::Instrument &inst, bool isDrum = false);
@@ -186,7 +186,7 @@ static void sbi2raw(uint8_t *odata, FmBank::Instrument &ins, bool fourOp = false
 }
 
 
-FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank, BankFormats &format)
+FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank, BankFormats &format, bool loadAsDrums, bool skipNonRhythm)
 {
     char magic[4];
     memset(magic, 0, 4);
@@ -195,11 +195,15 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank, BankFormats 
     if(!file.open(QIODevice::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;
 
-    bank.reset();
+    if(loadAsDrums)
+        bank.resetPercussion();
+    else
+        bank.resetMelodic();
 
     bank.deep_tremolo = false;
     bank.deep_vibrato = false;
     bank.volume_model = FmBank::VOLUME_OCONNELL;
+    bank.InfoString.clear();
 
     if(file.read(magic, 4) != 4)
         return FfmtErrCode::ERR_BADFORMAT;
@@ -207,26 +211,26 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank, BankFormats 
     if(strncmp(magic, ibk_magic, 4) != 0)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    bool drumFlags[128], isDrumBank = false;
-    memset(drumFlags, 0, sizeof(bool) * 128);
+    // bool drumFlags[128], isDrumBank = false;
+    // memset(drumFlags, 0, sizeof(bool) * 128);
 
     // Check does bank contains any rhythm-mode instruments?
-    for(uint16_t i = 0; i < 128; i++)
-    {
-        char byte;
+    // for(uint16_t i = 0; i < 128; i++)
+    // {
+    //     char byte;
 
-        file.seek(4 + 11 + (16 * i));
+    //     file.seek(4 + 11 + (16 * i));
 
-        if(file.read(char_p(&byte), 1) != 1)
-        {
-            bank.reset();
-            return FfmtErrCode::ERR_BADFORMAT;
-        }
+    //     if(file.read(char_p(&byte), 1) != 1)
+    //     {
+    //         bank.reset();
+    //         return FfmtErrCode::ERR_BADFORMAT;
+    //     }
 
-        isDrumBank |= (byte != 0x00);
-    }
+    //     isDrumBank |= (byte != 0x00);
+    // }
 
-    format = isDrumBank ? BankFormats::FORMAT_IBK_DRUMS : BankFormats::FORMAT_IBK;
+    format = loadAsDrums ? BankFormats::FORMAT_IBK_DRUMS : BankFormats::FORMAT_IBK;
 
     file.seek(4);
 
@@ -242,20 +246,27 @@ FfmtErrCode SbIBK_impl::loadFileIBK(QString filePath, FmBank &bank, BankFormats 
         char tempName[10];
         snprintf(tempName, 10, "NONAME%03d", i);
 
-        if(isDrumBank)
+        if(loadAsDrums)
             strncpy(bank.Ins_Percussion[i].name, tempName, 9);
         else
             strncpy(bank.Ins_Melodic[i].name, tempName, 9);
 
-        FmBank::Instrument &ins = isDrumBank ? bank.Ins_Percussion[i] : bank.Ins_Melodic[i];
-        drumFlags[i] = (idata[11] != 0x00);
+        FmBank::Instrument &ins = loadAsDrums ? bank.Ins_Percussion[i] : bank.Ins_Melodic[i];
+        // drumFlags[i] = (idata[11] != 0x00);
         raw2sbi(ins, idata, false);
+
+        // Mark as blank
+        if(skipNonRhythm && loadAsDrums && ins.rhythm_drum_type == 0)
+        {
+            ins = FmBank::emptyInst();
+            ins.is_blank = true;
+        }
     }
 
     //fetch bank names
     for(uint16_t i = 0; i < 128; i++)
     {
-        FmBank::Instrument &ins = isDrumBank ?
+        FmBank::Instrument &ins = loadAsDrums ?
                                   bank.Ins_Percussion[i] :
                                   bank.Ins_Melodic[i];
 
@@ -575,12 +586,12 @@ bool SbIBK_DOS_READ::detect(const QString &, char *magic)
 FfmtErrCode SbIBK_DOS_READ::loadFile(QString filePath, FmBank &bank)
 {
     m_recentFormat = BankFormats::FORMAT_UNKNOWN;
-    return SbIBK_impl::loadFileIBK(filePath, bank, m_recentFormat);
+    return SbIBK_impl::loadFileIBK(filePath, bank, m_recentFormat, m_loadAsDrum, m_ibkSkipNonRhythm);
 }
 
 int SbIBK_DOS_READ::formatCaps() const
 {
-    return int(FormatCaps::FORMAT_CAPS_OPEN) | int(FormatCaps::FORMAT_CAPS_IMPORT);
+    return int(FormatCaps::FORMAT_CAPS_OPEN) | int(FormatCaps::FORMAT_CAPS_IMPORT) | int(FormatCaps::FORMAT_CAPS_ASK_TYPE);
 }
 
 QString SbIBK_DOS_READ::formatName() const
