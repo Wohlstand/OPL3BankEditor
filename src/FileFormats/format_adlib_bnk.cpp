@@ -62,7 +62,7 @@ public:
     };
     static bool detectBank(char *magic);
     static bool detectInst(const QString &filePath);
-    static FfmtErrCode loadBankFile(QString filePath, FmBank &bank, BankFormats &format);
+    static FfmtErrCode loadBankFile(QString filePath, FmBank &bank, BankFormats &format, bool loadAsDrums);
     static FfmtErrCode saveBankFile(QString filePath, FmBank &bank, BnkType type, bool hmiIsDrum);
 };
 
@@ -95,11 +95,10 @@ bool AdLibBnk_impl::detectInst(const QString &filePath)
     return hasExt(filePath, ".ins") && ((fileSize == 80) || (fileSize == 54));
 }
 
-FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankFormats &format)
+FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankFormats &format, bool loadAsDrums)
 {
     char magic[8];
     memset(magic, 0, 8);
-    format = BankFormats::FORMAT_ADLIB_BKN1;
 
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
@@ -113,12 +112,6 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
     uint32_t    size  = uint32_t(fileData.size());
     uint8_t     *dataU = (uint8_t *)fileData.data();
     char        *dataS = (char *)fileData.data();
-
-    bank.reset();
-
-    bank.deep_tremolo = false;
-    bank.deep_vibrato = false;
-    bank.volume_model = FmBank::VOLUME_CMF;
 
     if(size < 28)   //File too small!
         return FfmtErrCode::ERR_BADFORMAT;
@@ -141,6 +134,32 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
     {
         isHMI = true;
         bank.volume_model = FmBank::VOLUME_HMI;
+
+        if(loadAsDrums)
+        {
+            format = BankFormats::FORMAT_ADLIB_BKNHMI_DRUMS;
+            bank.resetPercussion();
+            bank.Ins_Percussion_box.clear();
+        }
+        else
+        {
+            format = BankFormats::FORMAT_ADLIB_BKNHMI;
+            bank.resetMelodic();
+            bank.Ins_Melodic_box.clear();
+        }
+    }
+    else
+    {
+        bank.reset();
+
+        bank.deep_tremolo = false;
+        bank.deep_vibrato = false;
+        bank.volume_model = FmBank::VOLUME_CMF;
+
+        bank.Ins_Melodic_box.clear();
+        bank.Ins_Percussion_box.clear();
+
+        format = BankFormats::FORMAT_ADLIB_BKN1;
     }
 
     //uint16_t  totalInsUsed = 0;
@@ -152,9 +171,6 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
     totalIns     = toUint16LE(dataU + BNK_HEAD_OFFSET + 2);
     offsetName   = toUint32LE(dataU + BNK_HEAD_OFFSET + 4);
     offsetData   = toUint32LE(dataU + BNK_HEAD_OFFSET + 8);
-
-    bank.Ins_Melodic_box.clear();
-    bank.Ins_Percussion_box.clear();
 
     //offsetInstr = offsetData + (index * sizeof(PackedTimbre))
     for(uint32_t i = 0; i < totalIns; i++)
@@ -219,15 +235,21 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
         {
             //Store both melodic and percussion while loading HMI bank
             FmBank::Instrument ins = FmBank::emptyInst();
-            bank.Ins_Melodic_box.push_back(ins);
-            bank.Ins_Percussion_box.push_back(ins);
-            bank.Ins_Melodic    = bank.Ins_Melodic_box.data();
-            bank.Ins_Percussion = bank.Ins_Percussion_box.data();
-            ins_m = &bank.Ins_Melodic_box.last();
-            ins_p = &bank.Ins_Percussion_box.last();
+            if(loadAsDrums)
+            {
+                bank.Ins_Percussion_box.push_back(ins);
+                bank.Ins_Percussion = bank.Ins_Percussion_box.data();
+                ins_p = &bank.Ins_Percussion_box.last();
+            }
+            else
+            {
+                bank.Ins_Melodic_box.push_back(ins);
+                bank.Ins_Melodic    = bank.Ins_Melodic_box.data();
+                ins_m = &bank.Ins_Melodic_box.last();
+            }
         }
 
-        FmBank::Instrument &ins = *ins_m;
+        FmBank::Instrument &ins = isHMI && loadAsDrums ? *ins_p : *ins_m;
 
         strncpy(ins.name, dataS + name_address + 3, 8);
         try
@@ -305,10 +327,10 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
 
             ins.OP[CARRIER1].waveform   = dataU[ins_address + 29] & 0x07;
 
-            if(isHMI)
+            if(isHMI && loadAsDrums)
             {
                 //in HMI instead of "is Used" flag is the actual percussion note number
-                memcpy(ins_p, ins_m, sizeof(FmBank::Instrument));
+                // memcpy(ins_p, ins_m, sizeof(FmBank::Instrument));
                 ins_p->percNoteNum = ins_used;
             }
         }
@@ -609,18 +631,33 @@ FfmtErrCode AdLibBnk_impl::saveBankFile(QString filePath, FmBank &bank, BnkType 
 
 bool AdLibAndHmiBnk_reader::detect(const QString &, char *magic)
 {
-    return AdLibBnk_impl::detectBank(magic);
+    m_recentFormat = BankFormats::FORMAT_UNKNOWN;
+    bool ret = AdLibBnk_impl::detectBank(magic);
+
+    if(ret)
+    {
+        m_recentFormat = magic[0] == 0 && magic[1] == 0 ?
+                         BankFormats::FORMAT_ADLIB_BKNHMI :
+                         BankFormats::FORMAT_ADLIB_BKN1;
+    }
+
+    return ret;
 }
 
 FfmtErrCode AdLibAndHmiBnk_reader::loadFile(QString filePath, FmBank &bank)
 {
     m_recentFormat = BankFormats::FORMAT_UNKNOWN;
-    return AdLibBnk_impl::loadBankFile(filePath, bank, m_recentFormat);
+    return AdLibBnk_impl::loadBankFile(filePath, bank, m_recentFormat, m_loadAsDrum);
 }
 
 int AdLibAndHmiBnk_reader::formatCaps() const
 {
-    return int(FormatCaps::FORMAT_CAPS_OPEN) | int(FormatCaps::FORMAT_CAPS_IMPORT);
+    int ret = int(FormatCaps::FORMAT_CAPS_OPEN) | int(FormatCaps::FORMAT_CAPS_IMPORT);
+
+    if(m_recentFormat == BankFormats::FORMAT_ADLIB_BKNHMI || m_recentFormat == BankFormats::FORMAT_ADLIB_BKNHMI_DRUMS)
+        ret |= int(FormatCaps::FORMAT_CAPS_ASK_TYPE);
+
+    return ret;
 }
 
 QString AdLibAndHmiBnk_reader::formatName() const
