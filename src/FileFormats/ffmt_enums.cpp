@@ -45,6 +45,7 @@ QString FileFormats::getErrorText(FfmtErrCode err)
         errText = QCoreApplication::translate(
             "FileFormats", "unknown error occurred");
         break;
+    case FfmtErrCode::ERR_CANCELLED:
     case FfmtErrCode::ERR_OK:
         break;
     }
