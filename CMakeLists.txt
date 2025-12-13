@@ -40,7 +40,11 @@ endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_definitions("-D_USE_MATH_DEFINES")
+    # Enforce the Windows XP compatibility
+    add_definitions(-DWINVER=0x0501 -D_WIN32_WINNT=0x0501)
 endif()
+
+
 
 option(USE_RTMIDI "Use RtMidi" ON)
 option(USE_VENDORED_RTMIDI "Use vendored RtMidi instead of system-installed one" OFF)

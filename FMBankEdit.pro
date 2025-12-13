@@ -53,6 +53,13 @@ greaterThan(QT_MAJOR_VERSION, 4):{
 
 win32 {
     DEFINES += _USE_MATH_DEFINES
+    greaterThan(QT_MAJOR_VERSION, 4):{
+        # Enforce the Windows XP compatibility
+        DEFINES += WINVER=0x0501 _WIN32_WINNT=0x0501
+    } else {
+        # Enforce the Windows 98 compatibility
+        DEFINES += WINVER=0x0500 _WIN32_WINNT=0x0500
+    }
 }
 
 CONFIG += rtmidi
