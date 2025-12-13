@@ -147,6 +147,7 @@ SOURCES += \
     src/FileFormats/format_bisqwit.cpp \
     src/FileFormats/format_cmf_importer.cpp \
     src/FileFormats/format_dmxopl2.cpp \
+    src/FileFormats/format_ea_importer.cpp \
     src/FileFormats/format_imf_importer.cpp \
     src/FileFormats/format_junlevizion.cpp \
     src/FileFormats/format_rad_importer.cpp \
@@ -203,6 +204,7 @@ HEADERS += \
     src/FileFormats/format_bisqwit.h \
     src/FileFormats/format_cmf_importer.h \
     src/FileFormats/format_dmxopl2.h \
+    src/FileFormats/format_ea_importer.h \
     src/FileFormats/format_imf_importer.h \
     src/FileFormats/format_junlevizion.h \
     src/FileFormats/format_rad_importer.h \

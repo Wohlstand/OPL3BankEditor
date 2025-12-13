@@ -156,6 +156,8 @@ set(FILEFORMATS_SOURCES
     "src/FileFormats/format_cmf_importer.h"
     "src/FileFormats/format_dmxopl2.cpp"
     "src/FileFormats/format_dmxopl2.h"
+    "src/FileFormats/format_ea_importer.cpp"
+    "src/FileFormats/format_ea_importer.h"
     "src/FileFormats/format_imf_importer.cpp"
     "src/FileFormats/format_imf_importer.h"
     "src/FileFormats/format_junlevizion.cpp"

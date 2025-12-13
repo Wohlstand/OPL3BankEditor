@@ -698,6 +698,7 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format, bool copy)
         case FfmtErrCode::ERR_UNKNOWN:
             errText = tr("unknown error occurred");
             break;
+        case FfmtErrCode::ERR_CANCELLED:
         case FfmtErrCode::ERR_OK:
             break;
         }
@@ -742,6 +743,7 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
         case FfmtErrCode::ERR_UNKNOWN:
             errText = tr("unknown error occurred");
             break;
+        case FfmtErrCode::ERR_CANCELLED:
         case FfmtErrCode::ERR_OK:
             break;
         }
