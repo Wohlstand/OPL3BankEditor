@@ -134,6 +134,8 @@ FfmtErrCode AdLibBnk_impl::loadBankFile(QString filePath, FmBank &bank, BankForm
     {
         isHMI = true;
         bank.volume_model = FmBank::VOLUME_HMI;
+        bank.deep_tremolo = true;
+        bank.deep_vibrato = true;
 
         if(loadAsDrums)
         {
