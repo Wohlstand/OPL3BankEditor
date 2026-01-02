@@ -2120,6 +2120,7 @@ of second voice</string>
       <string>Choose chip emulator</string>
      </property>
      <addaction name="actionEmulatorNuked"/>
+     <addaction name="actionEmulatorNukedOPL2"/>
      <addaction name="actionEmulatorDosBox"/>
      <addaction name="actionEmulatorOpal"/>
      <addaction name="actionEmulatorJava"/>
@@ -2518,6 +2519,14 @@ of second voice</string>
    </property>
    <property name="text">
     <string notr="true">Roland MT-32</string>
+   </property>
+  </action>
+  <action name="actionEmulatorNukedOPL2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Nuked OPL2 Lite</string>
    </property>
   </action>
  </widget>

@@ -136,6 +136,7 @@ BankEditor::BankEditor(QWidget *parent) :
     m_measurer = new Measurer(this);
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
     connect(ui->actionEmulatorNuked, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorNukedOPL2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorDosBox, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorOpal, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorJava, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
@@ -297,6 +298,7 @@ void BankEditor::loadSettings()
         m_audioLatency = audioMaximumLatency;
 
     ui->actionEmulatorNuked->setChecked(false);
+    ui->actionEmulatorNukedOPL2->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
@@ -315,6 +317,9 @@ void BankEditor::loadSettings()
     default:
     case Generator::CHIP_Nuked:
         ui->actionEmulatorNuked->setChecked(true);
+        break;
+    case Generator::CHIP_NukedOPL2:
+        ui->actionEmulatorNukedOPL2->setChecked(true);
         break;
     case Generator::CHIP_DosBox:
         ui->actionEmulatorDosBox->setChecked(true);
@@ -1244,6 +1249,7 @@ void BankEditor::toggleEmulator()
 {
     QObject *menuItem = sender();
     ui->actionEmulatorNuked->setChecked(false);
+    ui->actionEmulatorNukedOPL2->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
@@ -1261,6 +1267,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorNuked->setChecked(true);
         m_currentChip = Generator::CHIP_Nuked;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorNukedOPL2)
+    {
+        ui->actionEmulatorNukedOPL2->setChecked(true);
+        m_currentChip = Generator::CHIP_NukedOPL2;
         m_generator->ctl_switchChip(m_currentChip);
     }
     else

@@ -42,6 +42,7 @@
 #include "chips/opl_chip_base.h"
 #include "chips/nuked_opl3.h"
 #include "chips/nuked_opl3_v174.h"
+#include "chips/nuked_opl2.h"
 #include "chips/dosbox_opl3.h"
 #include "chips/opal_opl3.h"
 #include "chips/java_opl3.h"
@@ -696,7 +697,7 @@ static void MeasureDurationsBenchmark(FmBank::Instrument *in_p, OPLChipBase *chi
 
     res.name = QString::fromUtf8(chip->emulatorName());
 
-    if(in_p->en_4op && chip->chipType() == OPLChipBase::CHIPTYPE_OPL2)
+    if(in_p->en_4op && !in_p->en_pseudo4op && chip->chipType() == OPLChipBase::CHIPTYPE_OPL2)
     {
         // Skip incompatible emulator (OPL2 can't play 4-operator instruments)
         res.elapsed = 0;
@@ -720,6 +721,7 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
     {
         std::shared_ptr<OPLChipBase>(new NukedOPL3v174),
         std::shared_ptr<OPLChipBase>(new NukedOPL3),
+        std::shared_ptr<OPLChipBase>(new NukedOPL2),
         std::shared_ptr<OPLChipBase>(new DosBoxOPL3),
         std::shared_ptr<OPLChipBase>(new OpalOPL3),
         std::shared_ptr<OPLChipBase>(new JavaOPL3),
