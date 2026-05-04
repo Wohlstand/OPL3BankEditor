@@ -36,9 +36,9 @@ Linux | Windows | macOS
 * **Stable builds:** https://github.com/Wohlstand/OPL3BankEditor/releases
 * **Fresh dev auto-builds:**
   * **Windows**:
-    * [Download for Windows x86_64 (7/8/8.1/10 with Nuked OPL3 emulator)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win64.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml))
-    * [Download for Windows x86 (XP/Vista/7/8/8.1/10 with Nuked OPL3 emulator)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win32.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml))
-    * [Download for Windows x86 (98/ME with proxy to real OPL3 chip)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win9x.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml))
+    * [Download for Windows x86_64 (7/8/8.1/10 with OPL2/OPL3 emulators)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win64.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml))
+    * [Download for Windows x86 (XP/Vista/7/8/8.1/10 with OPL2/OPL3 emulators)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win32.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml))
+    * [Download for Windows x86 (98/ME with a proxy to real OPL3 chip)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opl3-bank-editor/opl3-bank-editor-dev-win9x.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/windows-ci.yml))
   * **macOS**:
     * [Download for macOS x64 (DMG)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opl3-bank-editor/opl3-bank-editor-x86_64-master.dmg) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/macos-ci.yml))
     * [Download for macOS x64 (ZIP)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opl3-bank-editor/opl3-bank-editor-x86_64-master.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPL3BankEditor/actions/workflows/macos-ci.yml))
