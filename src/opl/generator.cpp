@@ -25,6 +25,7 @@
 #include "models/opl_models.h"
 
 #include "chips/nuked_opl3.h"
+#include "chips/nuked_opl3_fast.h"
 #include "chips/nuked_opl2.h"
 #include "chips/dosbox_opl3.h"
 #include "chips/opal_opl3.h"
@@ -339,6 +340,9 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
     default:
     case CHIP_Nuked:
         chip.reset(new NukedOPL3());
+        break;
+    case CHIP_NukedOPL3Fast:
+        chip.reset(new NukedOPL3v174());
         break;
     case CHIP_NukedOPL2:
         chip.reset(new NukedOPL2());

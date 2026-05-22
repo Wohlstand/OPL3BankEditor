@@ -97,6 +97,7 @@ public:
         CHIP_YM3812LLE,
         CHIP_VPC_OPL3,
         CHIP_NukedOPL2,
+        CHIP_NukedOPL3Fast,
         // HW Ports
         CHIP_Win9xProxy,
         CHIP_SerialPort,

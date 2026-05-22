@@ -41,7 +41,7 @@
 //Measurer is always needs for emulator
 #include "chips/opl_chip_base.h"
 #include "chips/nuked_opl3.h"
-#include "chips/nuked_opl3_v174.h"
+#include "chips/nuked_opl3_fast.h"
 #include "chips/nuked_opl2.h"
 #include "chips/dosbox_opl3.h"
 #include "chips/opal_opl3.h"

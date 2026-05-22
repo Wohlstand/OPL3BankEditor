@@ -2120,6 +2120,7 @@ of second voice</string>
       <string>Choose chip emulator</string>
      </property>
      <addaction name="actionEmulatorNuked"/>
+     <addaction name="actionEmulatorNukedOPL3Fast"/>
      <addaction name="actionEmulatorNukedOPL2"/>
      <addaction name="actionEmulatorDosBox"/>
      <addaction name="actionEmulatorOpal"/>
@@ -2527,6 +2528,14 @@ of second voice</string>
    </property>
    <property name="text">
     <string notr="true">Nuked OPL2 Lite</string>
+   </property>
+  </action>
+  <action name="actionEmulatorNukedOPL3Fast">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Nuked OPL3 Fast (optimised)</string>
    </property>
   </action>
  </widget>

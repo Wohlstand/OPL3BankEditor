@@ -11,6 +11,7 @@ Version 1.5.2
 - Added an ability to manage MT-32 style banks.
 - Added loading settings for some bank formats like IBK or HMI BNK to simplify combining of separated melodic and drum bank files.
 - Added support for the Nuked OPL2 Lite emulator.
+- Replaced old Nuked OPL3 v1.7 emulator with the Nuked OPL3 Fast, an optimised fork of Nuked OPL3 emulator made by @tgies.
 
 Version 1.5.1
 - Added an ability to set the audio device by user interface
