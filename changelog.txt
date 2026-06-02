@@ -6,12 +6,13 @@ Version 1.5.2
 - Fixed incorrect measure of 4-op voices.
 - Reworked the support for IBK files: now they can be saved as melodic and percussion parts independently.
 - Fixed a bug caused deep tremolo and deep vibrato weren't applied to generator after loading a bank file with matched settings.
-- Added support for glitchy VirtualPC OPL3 emulator for various tests and experiments.
+- Added the glitchy VirtualPC OPL3 emulator for various tests and experiments.
 - Added support for brand new format WOPLX - a text-based variant of the WOPL format.
 - Added an ability to manage MT-32 style banks.
 - Added loading settings for some bank formats like IBK or HMI BNK to simplify combining of separated melodic and drum bank files.
-- Added support for the Nuked OPL2 Lite emulator.
+- Added the Nuked OPL2 Lite emulator.
 - Replaced old Nuked OPL3 v1.7 emulator with the Nuked OPL3 Fast, an optimised fork of Nuked OPL3 emulator made by @tgies.
+- Added the Nuked CQM emulator.
 
 Version 1.5.1
 - Added an ability to set the audio device by user interface

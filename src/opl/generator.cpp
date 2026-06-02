@@ -27,6 +27,7 @@
 #include "chips/nuked_opl3.h"
 #include "chips/nuked_opl3_fast.h"
 #include "chips/nuked_opl2.h"
+#include "chips/nuked_cqm.h"
 #include "chips/dosbox_opl3.h"
 #include "chips/opal_opl3.h"
 #include "chips/java_opl3.h"
@@ -346,6 +347,9 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
         break;
     case CHIP_NukedOPL2:
         chip.reset(new NukedOPL2());
+        break;
+    case CHIP_NukedCQM:
+        chip.reset(new NukedCQM());
         break;
     case CHIP_Opal:
         chip.reset(new OpalOPL3());

@@ -138,6 +138,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorNuked, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorNukedOPL3Fast, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorNukedOPL2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorNukedCQM, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorDosBox, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorOpal, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorJava, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
@@ -301,6 +302,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorNuked->setChecked(false);
     ui->actionEmulatorNukedOPL3Fast->setChecked(false);
     ui->actionEmulatorNukedOPL2->setChecked(false);
+    ui->actionEmulatorNukedCQM->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
@@ -325,6 +327,9 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_NukedOPL2:
         ui->actionEmulatorNukedOPL2->setChecked(true);
+        break;
+    case Generator::CHIP_NukedCQM:
+        ui->actionEmulatorNukedCQM->setChecked(true);
         break;
     case Generator::CHIP_DosBox:
         ui->actionEmulatorDosBox->setChecked(true);
@@ -1256,6 +1261,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorNuked->setChecked(false);
     ui->actionEmulatorNukedOPL3Fast->setChecked(false);
     ui->actionEmulatorNukedOPL2->setChecked(false);
+    ui->actionEmulatorNukedCQM->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
@@ -1287,6 +1293,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorNukedOPL2->setChecked(true);
         m_currentChip = Generator::CHIP_NukedOPL2;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorNukedCQM)
+    {
+        ui->actionEmulatorNukedCQM->setChecked(true);
+        m_currentChip = Generator::CHIP_NukedCQM;
         m_generator->ctl_switchChip(m_currentChip);
     }
     else

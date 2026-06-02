@@ -2122,6 +2122,7 @@ of second voice</string>
      <addaction name="actionEmulatorNuked"/>
      <addaction name="actionEmulatorNukedOPL3Fast"/>
      <addaction name="actionEmulatorNukedOPL2"/>
+     <addaction name="actionEmulatorNukedCQM"/>
      <addaction name="actionEmulatorDosBox"/>
      <addaction name="actionEmulatorOpal"/>
      <addaction name="actionEmulatorJava"/>
@@ -2536,6 +2537,14 @@ of second voice</string>
    </property>
    <property name="text">
     <string>Nuked OPL3 Fast (optimised)</string>
+   </property>
+  </action>
+  <action name="actionEmulatorNukedCQM">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Nuked CQM</string>
    </property>
   </action>
  </widget>
