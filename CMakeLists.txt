@@ -212,6 +212,9 @@ endif()
 
 OPTION(ENABLE_OPL3_PROXY "Enable OPL3 proxy support through 'liboplproxy' plugin" ${OPL3_PROXY_DEFAULT})
 
+set(OPL_CHIPSET_ENABLE_LLE_OPL2 ON)
+set(OPL_CHIPSET_ENABLE_LLE_OPL3 ON)
+set(OPL_CHIPSET_ENABLE_VPC ON)
 include(src/opl/chips/chipset.cmake)
 if(ENABLE_Win9X_OPL3_PROXY)
     include(src/opl/chips/win9x_opl_proxy.cmake)
