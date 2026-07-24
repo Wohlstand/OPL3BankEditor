@@ -184,6 +184,8 @@ set(FILEFORMATS_SOURCES
     "src/FileFormats/format_misc_cif.h"
     "src/FileFormats/format_misc_hsc.cpp"
     "src/FileFormats/format_misc_hsc.h"
+    "src/FileFormats/format_furnace_fui.cpp"
+    "src/FileFormats/format_furnace_fui.h"
     "src/FileFormats/format_wohlstand_opl3.cpp"
     "src/FileFormats/format_wohlstand_opl3.h"
     "src/FileFormats/format_wohlstand_opl3_text.cpp"

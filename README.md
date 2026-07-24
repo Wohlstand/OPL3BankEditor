@@ -26,6 +26,7 @@ Linux | Windows | macOS
 * 2-operator Sound Blaster instruments for DOS and UNIX (.SBI) ([Specification](http://www.shikadi.net/moddingwiki/SBI_Format))
 * 4-operator Sound Blaster instruments for UNIX (.SBI)
 * Legacy AdLib instruments (.INS) ([Specification](http://www.shikadi.net/moddingwiki/AdLib_Instrument_Bank_Format))
+* Furnace Tracker instrument (.FUI) (OPL FM instruments, 2-op and 4-op)
 
 ## Currently supported music formats to import instruments
 * Id-Software Music Format (.IMF) ([Specification](http://www.shikadi.net/moddingwiki/IMF_Format))

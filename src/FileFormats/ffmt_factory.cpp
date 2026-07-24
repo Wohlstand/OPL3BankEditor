@@ -47,6 +47,7 @@
 #include "format_misc_sgi.h"
 #include "format_misc_cif.h"
 #include "format_misc_hsc.h"
+#include "format_furnace_fui.h"
 #include "format_wohlstand_opl3.h"
 #include "format_wohlstand_opl3_text.h"
 #include "format_flatbuffer_opl3.h"
@@ -150,6 +151,9 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new Misc_SGI());
     registerInstFormat(new Misc_CIF());
     registerInstFormat(new Misc_HSC());
+
+    //Furnace Tracker instrument (OPL FM subset)
+    registerInstFormat(new FurnaceFUI());
 }
 
 

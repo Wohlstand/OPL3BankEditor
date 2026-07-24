@@ -73,6 +73,7 @@ enum class InstFormats
     FORMAT_INST_SGI,
     FORMAT_INST_CIF,
     FORMAT_INST_HSC,
+    FORMAT_INST_FUI,
 };
 
 enum class FormatCaps
