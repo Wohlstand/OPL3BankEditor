@@ -2124,6 +2124,7 @@ of second voice</string>
      <addaction name="actionEmulatorNukedOPL2"/>
      <addaction name="actionEmulatorNukedCQM"/>
      <addaction name="actionEmulatorDosBox"/>
+     <addaction name="actionEmulatorDosBoxOPL2"/>
      <addaction name="actionEmulatorOpal"/>
      <addaction name="actionEmulatorJava"/>
      <addaction name="actionEmulatorESFMu"/>
@@ -2330,7 +2331,7 @@ of second voice</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>DosBox 0.74</string>
+    <string>DosBox 0.74 OPL3</string>
    </property>
   </action>
   <action name="actionChipsBenchmark">
@@ -2545,6 +2546,14 @@ of second voice</string>
    </property>
    <property name="text">
     <string notr="true">Nuked CQM</string>
+   </property>
+  </action>
+  <action name="actionEmulatorDosBoxOPL2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>DosBox 0.74 OPL2</string>
    </property>
   </action>
  </widget>

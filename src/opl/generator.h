@@ -99,6 +99,7 @@ public:
         CHIP_NukedOPL2,
         CHIP_NukedOPL3Fast,
         CHIP_NukedCQM,
+        CHIP_DosBoxOPL2,
         // HW Ports
         CHIP_Win9xProxy,
         CHIP_SerialPort,

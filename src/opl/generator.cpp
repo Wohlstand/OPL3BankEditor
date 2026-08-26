@@ -29,6 +29,7 @@
 #include "chips/nuked_opl2.h"
 #include "chips/nuked_cqm.h"
 #include "chips/dosbox_opl3.h"
+#include "chips/dosbox_opl2.h"
 #include "chips/opal_opl3.h"
 #include "chips/java_opl3.h"
 #include "chips/esfmu_opl3.h"
@@ -337,6 +338,9 @@ void Generator::switchChip(Generator::OPL_Chips chipId)
         break;
     case CHIP_DosBox:
         chip.reset(new DosBoxOPL3());
+        break;
+    case CHIP_DosBoxOPL2:
+        chip.reset(new DosBoxOPL2());
         break;
     default:
     case CHIP_Nuked:

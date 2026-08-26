@@ -140,6 +140,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorNukedOPL2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorNukedCQM, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorDosBox, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorDosBoxOPL2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorOpal, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorJava, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorESFMu, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
@@ -304,6 +305,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorNukedOPL2->setChecked(false);
     ui->actionEmulatorNukedCQM->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
+    ui->actionEmulatorDosBoxOPL2->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
     ui->actionEmulatorESFMu->setChecked(false);
@@ -333,6 +335,9 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_DosBox:
         ui->actionEmulatorDosBox->setChecked(true);
+        break;
+    case Generator::CHIP_DosBoxOPL2:
+        ui->actionEmulatorDosBoxOPL2->setChecked(true);
         break;
     case Generator::CHIP_Opal:
         ui->actionEmulatorOpal->setChecked(true);
@@ -1263,6 +1268,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorNukedOPL2->setChecked(false);
     ui->actionEmulatorNukedCQM->setChecked(false);
     ui->actionEmulatorDosBox->setChecked(false);
+    ui->actionEmulatorDosBoxOPL2->setChecked(false);
     ui->actionEmulatorOpal->setChecked(false);
     ui->actionEmulatorJava->setChecked(false);
     ui->actionEmulatorESFMu->setChecked(false);
@@ -1307,6 +1313,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorDosBox->setChecked(true);
         m_currentChip = Generator::CHIP_DosBox;
+        m_generator->ctl_switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorDosBoxOPL2)
+    {
+        ui->actionEmulatorDosBoxOPL2->setChecked(true);
+        m_currentChip = Generator::CHIP_DosBoxOPL2;
         m_generator->ctl_switchChip(m_currentChip);
     }
     else
