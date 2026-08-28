@@ -852,8 +852,15 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
 #endif
 }
 
-bool Measurer::doMeasurement(FmBank::Instrument &instrument)
+bool Measurer::doMeasurement(FmBank::Instrument &instrument, bool hideProgressDialogue)
 {
+    if(hideProgressDialogue)
+    {
+        QCoreApplication::instance()->processEvents();
+        MeasureDurationsDefault(&instrument);
+        return true;
+    }
+
     QProgressDialog m_progressBox(m_parentWindow);
     m_progressBox.setWindowModality(Qt::WindowModal);
     m_progressBox.setWindowTitle(tr("Sounding delay calculation"));
@@ -878,6 +885,338 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
     MeasureDurationsDefault(&instrument);
     return true;
 #endif
+}
+
+static void print_envelope_info(FILE *fh, const Measurer::EnvelopeInfo &e)
+{
+    fprintf(fh, "note={%u,%u} ar=%d dr=%d sl=%d rr=%d tl=%d nts=%d ksr=%d ksl=%d sustained=%d wave=%u",
+        e.note.block, e.note.fnum,
+        e.ar, e.dr, e.sl, e.rr, e.tl, e.nts, e.ksr, e.ksl, e.sustained, e.wave);
+}
+
+static unsigned effective_rate(unsigned rate, unsigned ksr, unsigned nts, unsigned fnum, unsigned block)
+{
+    unsigned effective_rate = 4 * rate;
+    if (!ksr)
+        effective_rate += block >> 1;
+    else
+        effective_rate += (block << 1) | ((fnum >> (9 - nts)) & 1);
+
+    return effective_rate;
+}
+
+static double wave_rms(unsigned wave)
+{
+    static constexpr double opl3_wave_rms[8] =
+    {
+        0.70561416881800276, 0.38471346311423527,
+        0.30705309587280949, 0.38471346311423527,
+        0.49798248543363655, 0.38426129383516933,
+        0.99767965006992609, 0.21419520618172677,
+    };
+
+    return opl3_wave_rms[wave & 7];
+}
+
+static double level_modifier(Measurer::NoteInfo note, int tl, int ksl)
+{
+    // ksl tables from nuked
+    static const uint8_t kslrom[16] =
+        { 0, 32, 40, 45, 48, 51, 53, 55, 56, 58, 59, 60, 61, 62, 63, 64 };
+    static const uint8_t kslshift[4] =
+        { 8, 1, 2, 0 };
+
+    int tli = tl << 2;
+    int ksli = (kslrom[note.fnum >> 6] << 2) - ((8 - note.block) << 5);
+    ksli = (ksli > 0) ? ksli : 0;
+    ksli >>= kslshift[ksl];
+    return (tli + ksli) / 512.0;
+}
+
+static double solve_attack(double vrms, const Measurer::EnvelopeInfo egp[], unsigned egcount)
+{
+    // attack phase approx: E(t,r) = 1-exp(-a*b^(r+c)*t)
+    static constexpr double attack_a = 1.149779557179130,
+                            attack_b = 1.189578077537087,
+                            attack_c = -1.771203939904738;
+
+    constexpr unsigned egmax = 6; /* 2 notes, 3 carriers */
+    assert(egcount <= egmax);
+
+    // precompute the constant rate argument
+    double arg[egmax];
+    // and the level modifier
+    double lmod[egmax];
+
+    for (unsigned i = 0; i < egcount; ++i)
+    {
+        unsigned eff_rate = effective_rate(egp[i].ar, egp[i].ksr, egp[i].nts, egp[i].note.fnum, egp[i].note.block);
+        arg[i] = -attack_a * std::pow(attack_b, eff_rate + attack_c);
+        lmod[i] = level_modifier(egp[i].note, egp[i].tl, egp[i].ksl);
+    }
+
+    // evaluator of total rms level at time t
+    auto evaluate = [&arg, &lmod, &egp, egcount](double t) -> double
+    {
+        double v = 0.0;
+
+        for (unsigned i = 0; i < egcount; ++i)
+        {
+            // compute basic envelope
+            double e = 1.0 - std::exp(t * arg[i]);
+            // apply level modifications
+            e -= lmod[i];
+            e = (e > 0) ? e : 0;
+            // compute rms modulated with envelope
+            double w = e * wave_rms(egp[i].wave);
+            v += w * w;
+        }
+
+        // compute rms total
+        return std::sqrt(v);
+    };
+
+    // find t by binary search
+    double t1 = 0.0, t2 = 10.0;
+    double t = (t2 + t1) * 0.5;
+    constexpr unsigned iterations = 16;  /* increase for precision */
+
+    for(unsigned i = 0; i < iterations; ++i)
+    {
+        double v = evaluate(t);
+//fprintf(stderr, "attack iteration %u: t=%f v=%f vt=%f\n", i + 1, t, v, vrms);
+        if (vrms < v)
+            t2 = t;
+        else
+            t1 = t;
+
+        t = (t2 + t1) * 0.5;
+    }
+
+    return t;
+}
+
+static double solve_release(double vrms, const Measurer::EnvelopeInfo egp[], unsigned egcount)
+{
+    // release phase approx: E(t,r) = 1-a*b^(r+c)*t
+    static constexpr double release_a = 0.010612748520266,
+                            release_b = 1.185551946574785,
+                            release_c = 1.013799170930869;
+
+    constexpr unsigned egmax = 6; /* 2 notes, 3 carriers */
+    assert(egcount <= egmax);
+
+    // precompute the constant rate argument
+    double arg[egmax];
+    // and the level modifier
+    double lmod[egmax];
+    for (unsigned i = 0; i < egcount; ++i) {
+        unsigned eff_rate = effective_rate(egp[i].ar, egp[i].ksr, egp[i].nts, egp[i].note.fnum, egp[i].note.block);
+        arg[i] = -release_a * std::pow(release_b, eff_rate + release_c);
+        lmod[i] = (egp[i].sustained) ? ((egp[i].sl << 4) / 512.0) : 0.0;
+        lmod[i] += level_modifier(egp[i].note, egp[i].tl, egp[i].ksl);
+    }
+
+    // evaluator of total rms level at time t
+    auto evaluate =
+        [&arg, &lmod, &egp, egcount](double t) -> double
+            {
+                double v = 0.0;
+                for (unsigned i = 0; i < egcount; ++i)
+                {
+                    // compute basic envelope
+                    double e = 1.0 + t * arg[i];
+                    // apply level modifications
+                    e -= lmod[i];
+                    e = (e > 0) ? e : 0;
+                    // compute rms modulated with envelope
+                    double w = e * wave_rms(egp[i].wave);
+                    v += w * w;
+                }
+                // compute rms total
+                return std::sqrt(v);
+            };
+
+    // find t by binary search
+    double t1 = 0.0, t2 = 50.0;
+    double t = (t2 + t1) * 0.5;
+    constexpr unsigned iterations = 16;  /* increase for precision */
+    for (unsigned i = 0; i < iterations; ++i) {
+        double v = evaluate(t);
+//fprintf(stderr, "release iteration %u: t=%f v=%f vt=%f\n", i + 1, t, v, vrms);
+        if (vrms > v) { t2 = t; }
+        else { t1 = t; }
+        t = (t2 + t1) * 0.5;
+    }
+    return t;
+}
+
+static double solve_release_faster(double vrms, const Measurer::EnvelopeInfo egp[], unsigned egcount)
+{
+    // release phase approx: E(t,r) = 1-a*b^(r+c)*t
+    static constexpr double release_a = 0.010612748520266,
+                            release_b = 1.185551946574785,
+                            release_c = 1.013799170930869;
+
+    double poly[3] = {- vrms * vrms, 0, 0};
+
+    // compute second degree polynomial
+    for(unsigned i = 0; i < egcount; ++i)
+    {
+        unsigned eff_rate = effective_rate(egp[i].ar, egp[i].ksr, egp[i].nts, egp[i].note.fnum, egp[i].note.block);
+        double r = release_a * std::pow(release_b, eff_rate + release_c);
+        double lmod = (egp[i].sustained) ? ((egp[i].sl << 4) / 512.0) : 0.0;
+        lmod += level_modifier(egp[i].note, egp[i].tl, egp[i].ksl);
+        double v = 1.0 - lmod;
+        v = (v > 0) ? v : 0;
+        double w = wave_rms(egp[i].wave);
+        poly[0] += v * v * w * w;
+        poly[1] += -2 * r * v * w * w;
+        poly[2] += r * r * w * w;
+    }
+
+    // solve t
+    double delta = poly[1] * poly[1] - 4 * poly[2] * poly[0];  // b^2-4ac
+    if (delta < 0)  // no real solutions
+        return HUGE_VAL;
+    delta = std::sqrt(delta);
+    double sol1 = (-poly[1] + delta) / (2 * poly[2]);
+    double sol2 = (-poly[1] - delta) / (2 * poly[2]);
+    return std::max(sol1, sol2);
+}
+
+bool Measurer::doEstimation(FmBank::Instrument &in)
+{
+    const unsigned n_notes = in.en_4op || in.en_pseudo4op ? 2 : 1;
+    enum { max_notes = 2 };
+    enum { max_algorithms = 6, max_carriers = 3 };
+
+    unsigned algorithm = in.getFBConn1() & 1;
+    if(in.en_4op || in.en_pseudo4op)
+        algorithm = 2 + (algorithm | ((in.getFBConn2() & 1) << 1));
+
+    const int notenum = in.percNoteNum >= 128 ? (in.percNoteNum - 128) : in.percNoteNum;
+    unsigned x[2] = {0, 0};
+    uint8_t carriers[max_carriers];
+    unsigned num_carriers = 0;
+
+    NoteInfo notes[max_notes];
+
+    for(unsigned n = 0; n < n_notes; ++n)
+    {
+        NoteInfo &note = notes[n];
+
+        double hertz = 172.00093 * std::exp(0.057762265 * (notenum + in.fine_tune));
+        if(hertz > 131071)
+        {
+            std::fprintf(stderr, "MEASURER WARNING: Why does note %d + finetune %d produce hertz %g?          \n",
+                         notenum, in.fine_tune, hertz);
+            hertz = 131071;
+        }
+        x[n] = 0x2000;
+
+        note.block = 0;
+        while(hertz >= 1023.5)
+        {
+            hertz /= 2.0;    // Calculate octave
+            ++note.block;
+        }
+        x[n] += note.block * 0x400;
+
+        note.fnum = (unsigned int)(hertz + 0.5);
+        x[n] += note.fnum;
+        // Keyon the note
+        // WRITE_REG(0xA0 + n * 3, x[n] & 0xFF);
+        // WRITE_REG(0xB0 + n * 3, x[n] >> 8);
+    }
+
+    switch(algorithm)
+    {
+    case 0:
+        carriers[num_carriers++] = MODULATOR1;
+        carriers[num_carriers++] = CARRIER1;
+        break;
+    case 1:
+        carriers[num_carriers++] = CARRIER1;
+        break;
+    case 2:
+        carriers[num_carriers++] = CARRIER2;
+        break;
+    case 3:
+        carriers[num_carriers++] = MODULATOR1;
+        carriers[num_carriers++] = CARRIER2;
+        break;
+    case 4:
+        carriers[num_carriers++] = CARRIER1;
+        carriers[num_carriers++] = CARRIER2;
+        break;
+    case 5:
+        carriers[num_carriers++] = MODULATOR1;
+        carriers[num_carriers++] = MODULATOR2;
+        carriers[num_carriers++] = CARRIER2;
+        break;
+    }
+
+    fprintf(stderr, "algorithm %u carriers {", algorithm);
+
+    for(unsigned n = 0; n < num_carriers; ++n)
+        fprintf(stderr, " %u", carriers[n]);
+
+    fprintf(stderr, " }\n");
+
+    EnvelopeInfo envelopes[max_carriers * max_notes];
+    for(unsigned i = 0; i < num_carriers * n_notes; ++i)
+    {
+        EnvelopeInfo &env = envelopes[i];
+        env.note = notes[i / num_carriers];
+        unsigned op = carriers[i % num_carriers];
+        env.ar = in.OP[op].attack;
+        env.dr = in.OP[op].decay;
+        env.sl = in.OP[op].sustain;
+        env.rr = in.OP[op].release;
+        env.tl = in.OP[op].level;
+        env.nts = false;  // is this good?
+        env.ksr = in.OP[op].ksr;
+        env.ksl = in.OP[op].ksl;
+        env.sustained = in.OP[op].eg;
+        env.wave = in.OP[op].waveform;
+    }
+
+    for(unsigned n = 0; n < num_carriers * n_notes; ++n)
+    {
+        fprintf(stderr, "envelope %u: ", n + 1);
+        print_envelope_info(stderr, envelopes[n]);
+        fprintf(stderr, "\n");
+    }
+
+    double solver_max_amplitude = 0.0;
+    for(unsigned n = 0; n < num_carriers * n_notes; ++n)
+    {
+        EnvelopeInfo &env = envelopes[n];
+        double lmod = level_modifier(env.note, env.tl, env.ksl);
+fprintf(stderr, "LMOD[%u] %f\n", n, lmod);
+        double amp = std::max(1.0 - lmod, 0.0);
+fprintf(stderr, "AMP[%u] %f\n", n, amp);
+        solver_max_amplitude += amp * amp;
+    }
+
+    solver_max_amplitude = std::sqrt(solver_max_amplitude);
+    fprintf(stderr, "AMP TOTAL %f\n", solver_max_amplitude);
+
+    double solver_attack_time = solve_attack(0.2 * solver_max_amplitude, envelopes, num_carriers * n_notes);
+    double solver_release_time = solve_release(0.2 * solver_max_amplitude, envelopes, num_carriers * n_notes);
+    double solver_release2_time = solve_release_faster(0.2 * solver_max_amplitude, envelopes, num_carriers * n_notes);
+
+    fprintf(stderr, "Attack time (ms) %u real, %f estimate\n",
+        (unsigned)in.ms_sound_kon, solver_attack_time * 1000);
+    fprintf(stderr, "Release time (ms) %u real, %f estimate %f estimate2\n",
+        (unsigned)in.ms_sound_koff, solver_release_time * 1000, solver_release2_time * 1000);
+    // fprintf(stderr, "Max amplitude %f real, %f estimate\n", peak_amplitude_value, solver_max_amplitude);
+
+    in.ms_sound_kon = (uint16_t)(solver_attack_time * 1000);
+    in.ms_sound_koff = (uint16_t)(solver_release_time * 1000);
+
+    return true;
 }
 
 bool Measurer::doComputation(const FmBank::Instrument &instrument, DurationInfo &result)

@@ -36,7 +36,30 @@ public:
     ~Measurer();
 
     bool doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset = false);
-    bool doMeasurement(FmBank::Instrument &instrument);
+    bool doMeasurement(FmBank::Instrument &instrument, bool hideProgressDialogue = false);
+
+    struct NoteInfo
+    {
+        unsigned block;
+        unsigned fnum;
+    };
+
+    struct EnvelopeInfo
+    {
+        NoteInfo note;
+        int ar;
+        int dr;
+        int sl;
+        int rr;
+        int tl;
+        bool nts;
+        bool ksr;
+        int ksl;
+        bool sustained;
+        unsigned wave;
+    };
+
+    bool doEstimation(FmBank::Instrument &instrument);
 
     struct DurationInfo
     {
