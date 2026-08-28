@@ -19,8 +19,6 @@
 #include <FileFormats/format_wohlstand_opl3.h>
 #include <opl/measurer.h>
 #include <QApplication>
-#include <atomic>
-#include <memory>
 #include <cstring>
 
 int main(int argc, char *argv[])
