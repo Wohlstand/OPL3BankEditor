@@ -67,11 +67,13 @@ FfmtErrCode DmxOPL2::loadFile(QString filePath, FmBank &bank)
             bank.reset();
             return FfmtErrCode::ERR_BADFORMAT;
         }
+
         if(file.read(char_p(&note_number), 1) != 1)
         {
             bank.reset();
             return FfmtErrCode::ERR_BADFORMAT;
         }
+
         if(file.read(char_p(idata), 32) != 32)
         {
             bank.reset();
@@ -174,10 +176,8 @@ FfmtErrCode DmxOPL2::saveFile(QString filePath, FmBank &bank)
 
         if(ins.is_fixed_note) // When fixed note flag is set, DMX ignores the note offset completely
         {
-            if((int16_t)note_number - (ins.note_offset1 - 12) < 0)
-                note_number = 0; // lower than 0!
-            else
-                note_number += (ins.note_offset1 - 12);
+            int16_t res = (int16_t)note_number + (ins.note_offset1 - 12);
+            note_number = (res < 0) ? 0 : ((res > 127) ? 127 : res); // If lower than 0, just clip to 0, or if bigger 127, then clip to 127
         }
 
         odata[0]  = ins.getAVEKM(MODULATOR1);
